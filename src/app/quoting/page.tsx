@@ -21,7 +21,6 @@ export const metadata = pageMeta({
     "programming fee",
     "lowest price wire forming",
   ],
-  ],
 });
 
 const toc = [
