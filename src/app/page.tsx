@@ -17,7 +17,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
-  description: `${COMPANY}: 50+ years of industry experience. Lowest prices guaranteed — we will not be beat. No minimum orders. 3D CNC wire forming in 4–14 mm.`,
+  description: `${COMPANY}: 50+ years of industry experience. Lowest prices guaranteed — we will not be beat. 100-piece minimum. 3D CNC wire forming in 4–14 mm.`,
   path: "/",
   absoluteTitle: true,
   keywords: [
@@ -27,7 +27,6 @@ export const metadata = pageMeta({
     "custom wire forms",
     "Numalliance Robomac",
     "lowest price wire forming",
-    "no minimum order",
   ],
 });
 
@@ -39,7 +38,7 @@ export default function Home() {
           large
           kicker={WIRE.metric}
           title={COMPANY}
-          lede="50+ years of industry experience. Lowest prices guaranteed — we will not be beat. No minimum orders. 3D CNC for frames, wire baskets, and guards."
+          lede="50+ years of industry experience. Lowest prices guaranteed — we will not be beat. 100-piece minimum. 3D CNC for frames, wire baskets, and guards."
         >
           <ButtonLink href="/instant-quote">Get instant quote</ButtonLink>
           <ButtonLink href="/contact" variant="ghost">

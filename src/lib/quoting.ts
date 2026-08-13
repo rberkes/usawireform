@@ -13,9 +13,11 @@ export const ESTIMATE = {
   cut: 2,
   bend: 1,
   setup: 175,
-  qtyBreak: 1000,
-  qtyDiscount: 0.05,
-  qtyDiscountCap: 0.15,
+  qtyMin: 100,
+  qtyBreaks: [
+    { qty: 1000, rate: 0.05 },
+    { qty: 10000, rate: 0.1 },
+  ],
 } as const;
 
 /** Carbon forming rate by stock diameter. Stainless is 2×. */
@@ -70,11 +72,12 @@ export function formingPerInch(diameterIn: number, stainless: boolean) {
 }
 
 export function quantityDiscount(qty: number) {
-  if (!Number.isFinite(qty) || qty < ESTIMATE.qtyBreak) return 0;
-  return Math.min(
-    Math.floor(qty / ESTIMATE.qtyBreak) * ESTIMATE.qtyDiscount,
-    ESTIMATE.qtyDiscountCap,
-  );
+  if (!Number.isFinite(qty)) return 0;
+  let rate = 0;
+  for (const row of ESTIMATE.qtyBreaks) {
+    if (qty >= row.qty) rate = row.rate;
+  }
+  return rate;
 }
 
 export function estimatePiece({
@@ -97,7 +100,7 @@ export function estimatePiece({
   const gross = forming + cut + bendCost;
   const discountRate = quantityDiscount(quantity);
   const piece = gross * (1 - discountRate);
-  const qty = Number.isFinite(quantity) && quantity > 0 ? quantity : 0;
+  const qty = Number.isFinite(quantity) && quantity >= ESTIMATE.qtyMin ? quantity : 0;
   const setup = ESTIMATE.setup;
   return {
     inchRate,
@@ -115,3 +118,4 @@ export function estimatePiece({
 export const toolingRange = `${usd(QUOTE.toolingMin)}–${usd(QUOTE.toolingMax)}`;
 export const programmingFee = usd(ESTIMATE.setup);
 export const coilMinRange = `${QUOTE.coilMinLbs.toLocaleString("en-US")}–${QUOTE.coilMaxLbs.toLocaleString("en-US")} lb`;
+export const qtyBreakCopy = `${ESTIMATE.qtyMin} pc min. −5% at 1,000. −10% at 10,000.`;

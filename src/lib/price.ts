@@ -1,5 +1,5 @@
 export const PRICE_LINE =
-  "Lowest prices guaranteed. We will not be beat. No minimum orders.";
+  "Lowest prices guaranteed. We will not be beat. 100-piece minimum.";
 
 export const PRICE_ITEMS = [
   {
@@ -11,7 +11,7 @@ export const PRICE_ITEMS = [
     value: "Show a competing quote on the same print. Our prices will not be beat.",
   },
   {
-    label: "No minimums",
-    value: "No minimum order quantity. One piece or a production run.",
+    label: "100-piece minimum",
+    value: "100 pcs to start. 5% off at 1,000. 10% off at 10,000.",
   },
 ] as const;

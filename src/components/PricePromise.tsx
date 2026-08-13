@@ -22,7 +22,7 @@ export function PricePromise({
   return (
     <Section
       kicker="Price"
-      title="Lowest prices. No minimum orders."
+      title="Lowest prices. 100-piece minimum."
       className={className}
     >
       {grid}

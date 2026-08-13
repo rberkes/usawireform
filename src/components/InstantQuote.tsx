@@ -38,13 +38,16 @@ export function InstantQuote() {
   const material = ESTIMATE_MATERIALS.find((row) => row.id === materialId);
 
   const inBand = diameterIn >= WIRE.minIn && diameterIn <= WIRE.maxIn;
+  const qtyOk =
+    Number.isFinite(quantity) && quantity >= ESTIMATE.qtyMin;
   const ready =
     Boolean(material) &&
     inBand &&
     Number.isFinite(bendCount) &&
     bendCount >= 0 &&
     Number.isFinite(length) &&
-    length > 0;
+    length > 0 &&
+    qtyOk;
 
   const result = useMemo(() => {
     if (!ready || !material) return null;
@@ -53,11 +56,11 @@ export function InstantQuote() {
       bends: bendCount,
       lengthIn: length,
       stainless: material.stainless,
-      quantity: Number.isFinite(quantity) && quantity >= 1 ? quantity : 1,
+      quantity,
     });
   }, [ready, material, diameterIn, bendCount, length, quantity]);
 
-  const lotReady = result && Number.isFinite(quantity) && quantity >= 1;
+  const lotReady = Boolean(result && qtyOk);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
@@ -141,11 +144,11 @@ export function InstantQuote() {
             </select>
           </label>
           <label className="block text-sm">
-            Quantity
+            Quantity ({ESTIMATE.qtyMin} min)
             <input
               className={`mt-1.5 ${fieldClass}`}
               type="number"
-              min="1"
+              min={ESTIMATE.qtyMin}
               step="1"
               value={qty}
               onChange={(event) => setQty(event.target.value)}
@@ -156,7 +159,8 @@ export function InstantQuote() {
           Piece = ${ESTIMATE.cut} cut + ${ESTIMATE.bend} × bends + $0.09 ×
           inches on 3/8 in, $0.10 × inches on 7/16 in (0.4375), $0.11 × inches
           on 1/2 in. Stainless 2×. Setup {usd2(ESTIMATE.setup)} per job. Coil
-          steel is not in this number.
+          steel is not in this number. {ESTIMATE.qtyMin} pc min. −5% at 1,000.
+          −10% at 10,000.
         </p>
       </Panel>
 
@@ -167,9 +171,13 @@ export function InstantQuote() {
               Estimate
             </p>
             <p className="mt-3 text-sm leading-6 text-muted">
-              Enter a diameter in {WIRE.short}, bends, length, and material.
+              Enter a diameter in {WIRE.short}, bends, length, material, and
+              at least {ESTIMATE.qtyMin} pcs.
               {stockId === "other" && customMm && !inBand
                 ? ` ${WIRE.short} only.`
+                : null}
+              {Number.isFinite(quantity) && quantity > 0 && !qtyOk
+                ? ` Quantity starts at ${ESTIMATE.qtyMin}.`
                 : null}
             </p>
           </>
@@ -209,8 +217,8 @@ export function InstantQuote() {
             <p className="mt-6 text-sm leading-6 text-muted">
               Forming is $0.09/in on 3/8, $0.10/in on 7/16, $0.11/in on 1/2.
               Stainless is double. Setup is {usd2(ESTIMATE.setup)} per job.
-              Coil steel, weld, plate, powder, and tooling are not in this
-              number.
+              {ESTIMATE.qtyMin} pc min. −5% at 1,000. −10% at 10,000. Coil
+              steel, weld, plate, powder, and tooling are not in this number.
             </p>
           </>
         )}

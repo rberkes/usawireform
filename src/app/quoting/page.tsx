@@ -3,6 +3,7 @@ import { DocPage, QuoteBand } from "@/components/DocPage";
 import { STOCK } from "@/lib/catalog";
 import { PRICE_LINE } from "@/lib/price";
 import {
+  ESTIMATE,
   QUOTE,
   coilMinRange,
   programmingFee,
@@ -18,8 +19,8 @@ export const metadata = pageMeta({
   keywords: [
     "wire forming tooling",
     "programming fee",
-    "no minimum order",
     "lowest price wire forming",
+  ],
   ],
 });
 
@@ -40,11 +41,11 @@ export default function QuotingPage() {
       lede={`${PRICE_LINE} ${STOCK} is on the floor. Other sizes in ${WIRE.short} still form — they need tooling, a program, and a coil. ${QUOTE.year} pricing.`}
       toc={toc}
     >
-      <h2 id="price">Lowest prices. No minimum orders.</h2>
+      <h2 id="price">Lowest prices. 100-piece minimum.</h2>
       <p>
-        {PRICE_LINE} One piece is a valid order. Quantity breaks on the{" "}
-        <Link href="/instant-quote">instant estimate</Link> are a discount,
-        not a floor.
+        {PRICE_LINE} Instant estimates start at {ESTIMATE.qtyMin} pcs. 5%
+        off at 1,000. 10% off at 10,000. See the{" "}
+        <Link href="/instant-quote">instant estimate</Link>.
       </p>
 
       <h2 id="stock">Stock vs everything else</h2>

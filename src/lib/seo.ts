@@ -16,7 +16,6 @@ export const CORE_KEYWORDS = [
   "wire frames",
   "wire guards",
   "lowest price wire forming",
-  "no minimum order",
 ];
 
 function unique(values: string[]) {
@@ -84,7 +83,7 @@ export function organizationJsonLd() {
         url: SITE_URL,
         email: QUOTE_EMAIL,
         description:
-          "3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. Lowest prices guaranteed. No minimum orders. Northeast Ohio.",
+          "3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. Lowest prices guaranteed. 100-piece minimum. Northeast Ohio.",
         address: {
           "@type": "PostalAddress",
           addressRegion: "OH",
