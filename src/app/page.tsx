@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { StepQuoteBlock } from "@/components/StepUpload";
+import { CapabilityStrip } from "@/components/CapabilityStrip";
 import {
   ButtonLink,
   LinkList,
@@ -28,17 +30,29 @@ export const metadata = pageMeta({
 export default function Home() {
   return (
     <Page>
-      <PageHero
-        large
-        kicker={WIRE.metric}
-        title={COMPANY}
-        lede="50+ years of industry experience. 3D CNC for frames, wire baskets, and guards — production quotes in 4–14 mm."
-      >
-        <ButtonLink href="/instant-quote">Get instant quote</ButtonLink>
-        <ButtonLink href="/contact" variant="ghost">
-          Send a STEP
-        </ButtonLink>
-      </PageHero>
+      <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+        <PageHero
+          large
+          kicker={WIRE.metric}
+          title={COMPANY}
+          lede="50+ years of industry experience. 3D CNC for frames, wire baskets, and guards — production quotes in 4–14 mm."
+        >
+          <ButtonLink href="/instant-quote">Get instant quote</ButtonLink>
+          <ButtonLink href="/contact" variant="ghost">
+            Send a STEP
+          </ButtonLink>
+        </PageHero>
+        <div className="relative aspect-[1024/687] overflow-hidden bg-inset">
+          <Image
+            src="/shop/hero-forms.jpg"
+            alt="3D CNC wire forms: nested hooks and frames in 4–14 mm steel"
+            fill
+            priority
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="object-contain"
+          />
+        </div>
+      </div>
 
       <StatRow
         className="mt-16"
@@ -49,6 +63,8 @@ export default function Home() {
           { value: "Northeast Ohio", label: "Shop + production" },
         ]}
       />
+
+      <CapabilityStrip />
 
       <Section className="mt-16">
         <LinkList
