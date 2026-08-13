@@ -2,13 +2,12 @@ import { InstantQuote } from "@/components/InstantQuote";
 import { PricePromise } from "@/components/PricePromise";
 import { Page, PageHero, TextLink } from "@/components/ui";
 import { PRICE_LINE } from "@/lib/price";
-import { ESTIMATE, INCH_RATES, qtyBreakCopy } from "@/lib/quoting";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Instant Quote",
   description:
-    `${PRICE_LINE} Estimate a 4–14 mm wire form: $2 cut, $0.09–$0.11/in, $175 setup. ${qtyBreakCopy} Coil not included.`,
+    `${PRICE_LINE} Instant estimate for 4–14 mm CNC wire forms.`,
   path: "/instant-quote",
   keywords: [
     "wire forming quote",
@@ -25,7 +24,7 @@ export default function InstantQuotePage() {
       <PageHero
         kicker="Quote"
         title="Instant estimate"
-        lede={`$${ESTIMATE.cut} to cut. Forming ${INCH_RATES.map((row) => `${row.label} $${row.carbon.toFixed(2)}/in`).join(", ")}. Stainless 2×. Setup $${ESTIMATE.setup} per job. Coil steel is not in this number. $${ESTIMATE.bend} a bend. ${qtyBreakCopy} Not a production quote.`}
+        lede="Fill diameter, bends, length, material, and quantity. Not a production quote."
       />
       <PricePromise titled={false} className="mt-10" />
       <div className="mt-10">

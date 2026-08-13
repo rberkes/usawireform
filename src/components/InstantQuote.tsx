@@ -155,13 +155,6 @@ export function InstantQuote() {
             />
           </label>
         </div>
-        <p className="mt-5 font-mono text-[12px] leading-6 text-muted">
-          Piece = ${ESTIMATE.cut} cut + ${ESTIMATE.bend} × bends + $0.09 ×
-          inches on 3/8 in, $0.10 × inches on 7/16 in (0.4375), $0.11 × inches
-          on 1/2 in. Stainless 2×. Setup {usd2(ESTIMATE.setup)} per job. Coil
-          steel is not in this number. {ESTIMATE.qtyMin} pc min. −5% at 1,000.
-          −10% at 10,000.
-        </p>
       </Panel>
 
       <Panel>
@@ -214,12 +207,6 @@ export function InstantQuote() {
               ) : null}
               <Row label="Setup · once" value={usd2(result.setup)} />
             </dl>
-            <p className="mt-6 text-sm leading-6 text-muted">
-              Forming is $0.09/in on 3/8, $0.10/in on 7/16, $0.11/in on 1/2.
-              Stainless is double. Setup is {usd2(ESTIMATE.setup)} per job.
-              {ESTIMATE.qtyMin} pc min. −5% at 1,000. −10% at 10,000. Coil
-              steel, weld, plate, powder, and tooling are not in this number.
-            </p>
           </>
         )}
       </Panel>
