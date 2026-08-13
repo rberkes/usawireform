@@ -5,11 +5,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Videos",
-  description: "Numalliance CNC wire forming video: Robomac 214 and the shop cell, from the YouTube channel.",
+  description: "Numalliance CNC wire forming video: Robomac 214TF and the shop cell, from the YouTube channel.",
   path: '/videos',
   keywords: [
     "CNC wire forming video",
-    "Robomac 214",
+    "Robomac 214TF",
   ],
 });
 
@@ -26,7 +26,7 @@ export default async function VideosPage() {
         title="Numalliance CNC, on camera."
         lede={
           <>
-            Robomac 214 and the rest of the forming cell — pulled from the
+            Robomac 214TF and the rest of the forming cell — pulled from the
             shop YouTube channel. Process pages stay in the{" "}
             <TextLink href="/processes">library</TextLink>; this is the
             machine running.

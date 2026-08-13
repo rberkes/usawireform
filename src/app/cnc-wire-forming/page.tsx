@@ -6,9 +6,9 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "CNC Wire Forming",
-  description: `CNC wire forming in 4–14 mm: 2D and 3D from coil. ${COMPANY} — Robomac 214, then weld and finish.`,
+  description: `CNC wire forming in 4–14 mm: 2D and 3D from coil. ${COMPANY} — Robomac 214TF, then weld and finish.`,
   path: "/cnc-wire-forming",
-  keywords: ["CNC wire forming", "2D wire forming", "3D wire forming", "Robomac 214"],
+  keywords: ["CNC wire forming", "2D wire forming", "3D wire forming", "Robomac 214TF"],
 });
 
 const toc = [
@@ -36,7 +36,7 @@ export default function CncWireFormingPage() {
       </p>
       <p>
         {COMPANY} runs this on a{" "}
-        <Link href="/equipment">Numalliance Robomac 214</Link>. Process
+        <Link href="/equipment">Numalliance Robomac 214TF</Link>. Process
         theory:{" "}
         <Link href="/wire-forming">wire forming in the USA</Link>.
         Fabrication around the form:{" "}

@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
 import { COMPANY, SITE_URL } from "@/lib/company";
+import { PRICE_LINE } from "@/lib/price";
 import { CORE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     template: `%s — ${COMPANY}`,
   },
   description:
-    `${COMPANY}: 4–14 mm 3D CNC wire forming in Northeast Ohio — frames, wire baskets, guards, design rules, and process selection.`,
+    `${COMPANY}: 4–14 mm 3D CNC wire forming in Northeast Ohio. ${PRICE_LINE} Frames, wire baskets, guards, design rules, and process selection.`,
   keywords: CORE_KEYWORDS,
   authors: [{ name: COMPANY, url: SITE_URL }],
   creator: COMPANY,
@@ -48,13 +49,13 @@ export const metadata: Metadata = {
     siteName: COMPANY,
     title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
     description:
-      "3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. Northeast Ohio.",
+      `3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. ${PRICE_LINE} Northeast Ohio.`,
   },
   twitter: {
     card: "summary",
     title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
     description:
-      "3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. Northeast Ohio.",
+      `3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. ${PRICE_LINE} Northeast Ohio.`,
   },
 };
 

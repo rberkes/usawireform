@@ -1,17 +1,21 @@
 import { InstantQuote } from "@/components/InstantQuote";
+import { PricePromise } from "@/components/PricePromise";
 import { Page, PageHero, TextLink } from "@/components/ui";
-import { ESTIMATE } from "@/lib/quoting";
+import { PRICE_LINE } from "@/lib/price";
+import { ESTIMATE, INCH_RATES } from "@/lib/quoting";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Instant Quote",
   description:
-    "Estimate a 4–14 mm wire form from diameter, bends, length, and material. Shop rates: $2 cut, $1 per bend, $0.45 per inch on 3/8 in carbon.",
+    `${PRICE_LINE} Estimate a 4–14 mm wire form: $2 cut, $0.09–$0.11/in, setup $125, diameter change $125, coil change $75.`,
   path: "/instant-quote",
   keywords: [
     "wire forming quote",
     "instant quote",
     "CNC wire form price",
+    "lowest price wire forming",
+    "no minimum order",
   ],
 });
 
@@ -21,8 +25,9 @@ export default function InstantQuotePage() {
       <PageHero
         kicker="Quote"
         title="Instant estimate"
-        lede={`Shop rates: $${ESTIMATE.cut} to cut, $${ESTIMATE.bend} a bend, $${ESTIMATE.inch.toFixed(2)} per inch of 3/8 in carbon. Diameter and material scale the wire line. Not a production quote.`}
+        lede={`$${ESTIMATE.cut} to cut. Forming ${INCH_RATES.map((row) => `${row.label} $${row.carbon.toFixed(2)}/in`).join(", ")}. Stainless 2×. Setup $${ESTIMATE.setup}. Diameter change $${ESTIMATE.diameterChange}. Coil change $${ESTIMATE.coilChange}. Coil steel is not in this number. $${ESTIMATE.bend} a bend. −${Math.round(ESTIMATE.qtyDiscount * 100)}% per ${ESTIMATE.qtyBreak.toLocaleString("en-US")} pcs, max ${Math.round(ESTIMATE.qtyDiscountCap * 100)}%. Not a production quote.`}
       />
+      <PricePromise titled={false} className="mt-10" />
       <div className="mt-10">
         <InstantQuote />
       </div>

@@ -1,11 +1,12 @@
 import { ContactForm } from "@/components/ContactForm";
 import { Page, PageHero, TextLink } from "@/components/ui";
 import { QUOTE_EMAIL } from "@/lib/company";
+import { PRICE_LINE } from "@/lib/price";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Contact",
-  description: "Request a quote for custom CNC wire forms.",
+  description: `Request a quote for custom CNC wire forms. ${PRICE_LINE}`,
   path: '/contact',
   keywords: [
     "request a quote",
@@ -23,7 +24,8 @@ export default function ContactPage() {
           title="Request a quote"
           lede={
             <>
-              Production quote from a drawing. For a ballpark first, use the{" "}
+              Production quote from a drawing. {PRICE_LINE} For a ballpark
+              first, use the{" "}
               <TextLink href="/instant-quote">instant estimate</TextLink> —
               diameter, bends, length, and material.
             </>

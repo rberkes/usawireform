@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
+import { PRICE_LINE } from "@/lib/price";
 import { WireMark } from "./WireMark";
 import { Container } from "./ui";
 
@@ -43,7 +44,7 @@ export function Footer() {
           </Link>
           <p className="mt-3 max-w-xs text-sm leading-6 text-muted">
             4–14 mm wire forming — 3D CNC, frames, wire baskets, hangers, and
-            guards.
+            guards. {PRICE_LINE}
           </p>
           <p className="mt-4 flex gap-4 text-sm">
             <Link

@@ -5,7 +5,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "CNC Wire Bending",
-  description: "CNC wire bending in 4–14 mm: the same cell as CNC wire forming — straighten, feed, bend, cut. 2D and 3D on a Numalliance Robomac 214.",
+  description: "CNC wire bending in 4–14 mm: the same cell as CNC wire forming — straighten, feed, bend, cut. 2D and 3D on a Numalliance Robomac 214TF.",
   path: '/cnc-wire-bending',
   keywords: [
     "CNC wire bending",
@@ -27,7 +27,7 @@ export default function CncWireBendingPage() {
     <DocPage
       kicker="Process"
       title="CNC wire bending"
-      lede="CNC wire bending is CNC wire forming by another search. Round wire from coil, a programmed bend sequence, cutoff. This shop runs 4–14 mm on a Numalliance Robomac 214."
+      lede="CNC wire bending is CNC wire forming by another search. Round wire from coil, a programmed bend sequence, cutoff. This shop runs 4–14 mm on a Numalliance Robomac 214TF."
       toc={toc}
     >
       <h2 id="what">Bending and forming are the same cell</h2>
@@ -50,7 +50,7 @@ export default function CncWireBendingPage() {
       <h2 id="cell">What actually bends it</h2>
       <p>
         Production bending here is the{" "}
-        <Link href="/equipment">Robomac 214</Link>, plus Lubow manuals
+        <Link href="/equipment">Robomac 214TF</Link>, plus Lubow manuals
         for short runs and secondary legs. Cycle: decoil, straighten,
         feed, bend, rotate, cut. Ends, welds, and finish are
         secondaries —{" "}

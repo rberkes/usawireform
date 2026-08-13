@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
+import { PricePromise } from "@/components/PricePromise";
 import {
   ButtonLink,
   LinkList,
@@ -15,7 +17,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
-  description: `${COMPANY}: 50+ years of industry experience. 3D CNC wire forming in 4–14 mm — frames, wire baskets, and guards.`,
+  description: `${COMPANY}: 50+ years of industry experience. Lowest prices guaranteed — we will not be beat. No minimum orders. 3D CNC wire forming in 4–14 mm.`,
   path: "/",
   absoluteTitle: true,
   keywords: [
@@ -24,6 +26,8 @@ export const metadata = pageMeta({
     "3D CNC wire baskets",
     "custom wire forms",
     "Numalliance Robomac",
+    "lowest price wire forming",
+    "no minimum order",
   ],
 });
 
@@ -35,7 +39,7 @@ export default function Home() {
           large
           kicker={WIRE.metric}
           title={COMPANY}
-          lede="50+ years of industry experience. 3D CNC for frames, wire baskets, and guards — production quotes in 4–14 mm."
+          lede="50+ years of industry experience. Lowest prices guaranteed — we will not be beat. No minimum orders. 3D CNC for frames, wire baskets, and guards."
         >
           <ButtonLink href="/instant-quote">Get instant quote</ButtonLink>
           <ButtonLink href="/contact" variant="ghost">
@@ -63,6 +67,25 @@ export default function Home() {
           { value: "Northeast Ohio", label: "Shop + production" },
         ]}
       />
+
+      <Section kicker="The cell" title="Numalliance Robomac 214TF">
+        <Link href="/equipment" className="group mt-8 block">
+          <div className="relative aspect-[3/2] overflow-hidden bg-inset">
+            <Image
+              src="/shop/hero-robomac.jpg"
+              alt="Numalliance Robomac 214TF with decoiler — 4–14 mm from coil"
+              fill
+              sizes="(min-width: 1152px) 1152px, 100vw"
+              className="object-contain"
+            />
+          </div>
+          <p className="mt-4 text-sm leading-6 text-muted group-hover:text-copper">
+            3D CNC from coil, 4–14 mm. Named on the equipment list.
+          </p>
+        </Link>
+      </Section>
+
+      <PricePromise />
 
       <CapabilityStrip />
 
@@ -112,7 +135,7 @@ export default function Home() {
             {
               href: "/videos",
               title: "Shop video",
-              body: "Numalliance CNC on the floor — Robomac 214 and the forming cell.",
+              body: "Numalliance CNC on the floor — Robomac 214TF and the forming cell.",
             },
           ]}
         />

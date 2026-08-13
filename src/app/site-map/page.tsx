@@ -50,7 +50,7 @@ export default function SiteMapPage() {
             {
               href: "/equipment",
               title: "Equipment",
-              body: "Robomac 214 and the floor list.",
+              body: "Robomac 214TF and the floor list.",
             },
             {
               href: "/secondary-operations",

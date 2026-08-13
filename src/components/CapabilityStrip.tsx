@@ -7,7 +7,8 @@ const shots = [
     src: "/shop/capability-01.jpg",
     title: "3D CNC forming",
     href: "/processes/3d-cnc-wire-forming",
-    body: "Robomac cell, 4–14 mm from coil.",
+    body: "Numalliance Robomac 214TF, 4–14 mm from coil.",
+    alt: "Numalliance Robomac 214TF on the shop floor",
   },
   {
     src: "/shop/capability-02.jpg",
@@ -39,7 +40,7 @@ export function CapabilityStrip() {
               <div className="relative aspect-[4/3] overflow-hidden bg-inset">
                 <Image
                   src={shot.src}
-                  alt={shot.title}
+                  alt={"alt" in shot ? shot.alt : shot.title}
                   fill
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"

@@ -202,11 +202,13 @@ export function StatRow({
 
 export function FactGrid({
   items,
+  className,
 }: {
   items: { label: string; value: string }[];
+  className?: string;
 }) {
   return (
-    <dl className="mt-16 grid gap-px bg-line sm:grid-cols-3">
+    <dl className={cx("grid gap-px bg-line sm:grid-cols-3", className ?? "mt-16")}>
       {items.map((item) => (
         <div key={item.label} className="bg-background px-6 py-8">
           <dt className="font-mono text-[11px] tracking-widest text-copper uppercase">

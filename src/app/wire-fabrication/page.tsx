@@ -162,7 +162,7 @@ export default function WireFabricationPage() {
         <li>
           <Link href="/processes/2d-cnc-wire-forming">2D CNC</Link> and{" "}
           <Link href="/processes/3d-cnc-wire-forming">3D CNC</Link>{" "}
-          forming — Numalliance Robomac 214, plus Lubow manuals
+          forming — Numalliance Robomac 214TF, plus Lubow manuals
         </li>
         <li>
           Cut-to-length and{" "}

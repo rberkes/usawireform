@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { STOCK } from "@/lib/catalog";
+import { PRICE_LINE } from "@/lib/price";
 import {
   QUOTE,
+  coilChangeFee,
   coilMinRange,
+  diameterChangeFee,
   programmingFee,
   toolingRange,
 } from "@/lib/quoting";
@@ -12,15 +15,21 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Quotes, Tooling, and Coil",
-  description: `Stock ${STOCK} runs on existing tooling. Other diameters in ${WIRE.short} need tooling (${toolingRange}, ${QUOTE.year}). Programming ${programmingFee}. Coil buy-in ${coilMinRange} when we do not carry the steel.`,
+  description: `${PRICE_LINE} Stock ${STOCK} runs on existing tooling. Other diameters in ${WIRE.short} need tooling (${toolingRange}, ${QUOTE.year}). Setup ${programmingFee}. Diameter change ${diameterChangeFee}. Coil change ${coilChangeFee}. Coil buy-in ${coilMinRange} when we do not carry the steel.`,
   path: "/quoting",
-  keywords: ["wire forming tooling", "programming fee", "coil minimum"],
+  keywords: [
+    "wire forming tooling",
+    "programming fee",
+    "no minimum order",
+    "lowest price wire forming",
+  ],
 });
 
 const toc = [
+  { id: "price", label: "Price" },
   { id: "stock", label: "Stock vs tooling" },
   { id: "tooling", label: "Tooling" },
-  { id: "programming", label: "Programming" },
+  { id: "programming", label: "Setup" },
   { id: "coil", label: "Coil we do not carry" },
   { id: "next", label: "Related" },
 ];
@@ -30,9 +39,16 @@ export default function QuotingPage() {
     <DocPage
       kicker="Shop"
       title="Quotes, tooling, and coil"
-      lede={`${STOCK} is on the floor. Other sizes in ${WIRE.short} still form — they need tooling, a program, and a coil. ${QUOTE.year} pricing.`}
+      lede={`${PRICE_LINE} ${STOCK} is on the floor. Other sizes in ${WIRE.short} still form — they need tooling, a program, and a coil. ${QUOTE.year} pricing.`}
       toc={toc}
     >
+      <h2 id="price">Lowest prices. No minimum orders.</h2>
+      <p>
+        {PRICE_LINE} One piece is a valid order. Quantity breaks on the{" "}
+        <Link href="/instant-quote">instant estimate</Link> are a discount,
+        not a floor.
+      </p>
+
       <h2 id="stock">Stock vs everything else</h2>
       <p>
         Production coil is{" "}
@@ -61,17 +77,25 @@ export default function QuotingPage() {
         1/2 in. Tooling applies.
       </p>
 
-      <h2 id="programming">Programming</h2>
+      <h2 id="programming">Setup, diameter change, coil change</h2>
       <p>
         {programmingFee} to set up the job. That is the program: feed,
         bends, cutoff, first-article prove-out on the cell. Revisions
         that change the centerline are a new setup.
       </p>
+      <p>
+        A wire-diameter change on the cell is {diameterChangeFee} once.
+        A coil change on the decoiler is {coilChangeFee} once. Those are
+        lot fees, not piece-price adders. The{" "}
+        <Link href="/instant-quote">instant estimate</Link> can include
+        them.
+      </p>
 
       <h2 id="coil">Coil we do not carry</h2>
       <p>
         If we do not carry the steel for a single run, we ask the client
-        to purchase the material. We run that coil out — we do not sit
+        to purchase the material. That mill buy-in is not an order-quantity
+        minimum on formed parts. We run that coil out — we do not sit
         on a leftover diameter or alloy from a one-off.
       </p>
       <p>

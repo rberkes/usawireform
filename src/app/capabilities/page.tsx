@@ -116,7 +116,7 @@ export default function CapabilitiesPage() {
 
       <Section title="Equipment">
         <p className="mt-4 max-w-2xl text-sm leading-7 text-muted">
-          The CNC cell is a Numalliance Robomac 214. Lubow manuals, a 40-ton
+          The CNC cell is a Numalliance Robomac 214TF. Lubow manuals, a 40-ton
           Clearing press, 75 kVA resistance weld, and Miller MIG sit with it.
           Inspection is granite, DRO, and a height gauge. Named list:{" "}
           <TextLink href="/equipment">equipment</TextLink>.

@@ -4,10 +4,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Equipment",
-  description: "Shop floor list: Numalliance Robomac 214, Lubow manual benders, 40-ton Clearing press, 75 kVA resistance weld, Miller MIG, granite inspection, and coil handling.",
+  description: "Shop floor list: Numalliance Robomac 214TF, Lubow manual benders, 40-ton Clearing press, 75 kVA resistance weld, Miller MIG, granite inspection, and coil handling.",
   path: '/equipment',
   keywords: [
-    "Numalliance Robomac 214",
+    "Numalliance Robomac 214TF",
+    "Robomac 214TF",
     "Lubow",
     "resistance welder",
   ],
@@ -36,7 +37,7 @@ export default function EquipmentPage() {
           items={[
             {
               href: "/processes/3d-cnc-wire-forming",
-              title: "Numalliance Robomac 214",
+              title: "Numalliance Robomac 214TF",
               note: "CNC",
               body: "The production wire-forming cell — 2D and 3D programs in 4–14 mm from coil.",
             },
