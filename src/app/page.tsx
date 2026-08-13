@@ -70,7 +70,7 @@ export default function Home() {
         ]}
       />
 
-      <Section kicker="The cell" title="Numalliance Robomac 214TF">
+      <Section kicker="Equipment list" title="Named machines, not a generic cell.">
         <Link href="/equipment" className="group mt-8 block">
           <div className="relative aspect-[3/2] overflow-hidden bg-inset">
             <Image
@@ -82,9 +82,44 @@ export default function Home() {
             />
           </div>
           <p className="mt-4 text-sm leading-6 text-muted group-hover:text-copper">
-            3D CNC from coil, 4–14 mm. Named on the equipment list.
+            Numalliance Robomac 214TF — 3D CNC from coil, 4–14 mm.
           </p>
         </Link>
+        <LinkList
+          className="mt-8"
+          items={[
+            {
+              href: "/equipment",
+              title: "Numalliance Robomac 214TF",
+              note: "CNC",
+              body: "2D and 3D programs in 4–14 mm from coil.",
+            },
+            {
+              href: "/equipment",
+              title: "Lubow manual benders",
+              note: "Manual",
+              body: "Prototypes, short runs, and secondary legs off the CNC head.",
+            },
+            {
+              href: "/equipment",
+              title: "40-ton Clearing press",
+              note: "Press",
+              body: "Pierce, coin, flatten, and stamp.",
+            },
+            {
+              href: "/equipment",
+              title: "75 kVA resistance welder",
+              note: "Resistance",
+              body: "Cross-wire and projection welds on baskets, grids, and frames.",
+            },
+            {
+              href: "/equipment",
+              title: "Miller MIG",
+              note: "MIG",
+              body: "Tacks and fillets a resistance nugget cannot reach.",
+            },
+          ]}
+        />
       </Section>
 
       <PricePromise />
@@ -137,7 +172,7 @@ export default function Home() {
             {
               href: "/videos",
               title: "Shop video",
-              body: "Numalliance CNC on the floor — Robomac 214TF and the forming cell.",
+              body: "Numalliance CNC on the floor — Robomac 214TF and the named machines.",
             },
           ]}
         />

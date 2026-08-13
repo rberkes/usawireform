@@ -39,7 +39,7 @@ export default function EquipmentPage() {
               href: "/processes/3d-cnc-wire-forming",
               title: "Numalliance Robomac 214TF",
               note: "CNC",
-              body: "The production wire-forming cell — 2D and 3D programs in 4–14 mm from coil.",
+              body: "2D and 3D programs in 4–14 mm from coil.",
             },
             {
               href: "/processes/wire-form-shapes",

@@ -32,7 +32,7 @@ const shots = [
 
 export function CapabilityStrip() {
   return (
-    <Section kicker="On the cell" title="What the machine runs.">
+    <Section kicker="On the floor" title="What the machines run.">
       <ul className="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
         {shots.map((shot) => (
           <li key={shot.href} className="bg-background">
