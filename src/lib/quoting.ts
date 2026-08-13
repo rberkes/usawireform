@@ -2,7 +2,7 @@ export const QUOTE = {
   year: 2026,
   toolingMin: 2500,
   toolingMax: 6900,
-  programming: 125,
+  programming: 175,
   coilMinLbs: 1500,
   coilMaxLbs: 2500,
   exampleNonStockMm: 5.5,
@@ -12,9 +12,7 @@ export const QUOTE = {
 export const ESTIMATE = {
   cut: 2,
   bend: 1,
-  setup: 125,
-  diameterChange: 125,
-  coilChange: 75,
+  setup: 175,
   qtyBreak: 1000,
   qtyDiscount: 0.05,
   qtyDiscountCap: 0.15,
@@ -85,16 +83,12 @@ export function estimatePiece({
   lengthIn,
   stainless,
   quantity,
-  diameterChange = false,
-  coilChange = false,
 }: {
   diameterIn: number;
   bends: number;
   lengthIn: number;
   stainless: boolean;
   quantity: number;
-  diameterChange?: boolean;
-  coilChange?: boolean;
 }) {
   const inchRate = formingPerInch(diameterIn, stainless);
   const forming = lengthIn * inchRate;
@@ -105,9 +99,6 @@ export function estimatePiece({
   const piece = gross * (1 - discountRate);
   const qty = Number.isFinite(quantity) && quantity > 0 ? quantity : 0;
   const setup = ESTIMATE.setup;
-  const diameterFee = diameterChange ? ESTIMATE.diameterChange : 0;
-  const coilFee = coilChange ? ESTIMATE.coilChange : 0;
-  const jobFees = setup + diameterFee + coilFee;
   return {
     inchRate,
     forming,
@@ -117,15 +108,10 @@ export function estimatePiece({
     discountRate,
     piece,
     setup,
-    diameterFee,
-    coilFee,
-    jobFees,
-    lot: piece * qty + jobFees,
+    lot: piece * qty + setup,
   };
 }
 
 export const toolingRange = `${usd(QUOTE.toolingMin)}–${usd(QUOTE.toolingMax)}`;
 export const programmingFee = usd(ESTIMATE.setup);
-export const diameterChangeFee = usd(ESTIMATE.diameterChange);
-export const coilChangeFee = usd(ESTIMATE.coilChange);
 export const coilMinRange = `${QUOTE.coilMinLbs.toLocaleString("en-US")}–${QUOTE.coilMaxLbs.toLocaleString("en-US")} lb`;

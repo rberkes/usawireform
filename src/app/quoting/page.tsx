@@ -4,9 +4,7 @@ import { STOCK } from "@/lib/catalog";
 import { PRICE_LINE } from "@/lib/price";
 import {
   QUOTE,
-  coilChangeFee,
   coilMinRange,
-  diameterChangeFee,
   programmingFee,
   toolingRange,
 } from "@/lib/quoting";
@@ -15,7 +13,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Quotes, Tooling, and Coil",
-  description: `${PRICE_LINE} Stock ${STOCK} runs on existing tooling. Other diameters in ${WIRE.short} need tooling (${toolingRange}, ${QUOTE.year}). Setup ${programmingFee}. Diameter change ${diameterChangeFee}. Coil change ${coilChangeFee}. Coil buy-in ${coilMinRange} when we do not carry the steel.`,
+  description: `${PRICE_LINE} Stock ${STOCK} runs on existing tooling. Other diameters in ${WIRE.short} need tooling (${toolingRange}, ${QUOTE.year}). Setup ${programmingFee}. Coil buy-in ${coilMinRange} when we do not carry the steel.`,
   path: "/quoting",
   keywords: [
     "wire forming tooling",
@@ -77,18 +75,14 @@ export default function QuotingPage() {
         1/2 in. Tooling applies.
       </p>
 
-      <h2 id="programming">Setup, diameter change, coil change</h2>
+      <h2 id="programming">Setup</h2>
       <p>
-        {programmingFee} to set up the job. That is the program: feed,
-        bends, cutoff, first-article prove-out on the cell. Revisions
-        that change the centerline are a new setup.
-      </p>
-      <p>
-        A wire-diameter change on the cell is {diameterChangeFee} once.
-        A coil change on the decoiler is {coilChangeFee} once. Those are
-        lot fees, not piece-price adders. The{" "}
-        <Link href="/instant-quote">instant estimate</Link> can include
-        them.
+        {programmingFee} to set up the job. That covers the program, a
+        diameter change, and a coil change: feed, bends, cutoff,
+        first-article prove-out on the cell. Revisions that change the
+        centerline are a new setup. It is a lot fee, not a piece-price
+        adder. The{" "}
+        <Link href="/instant-quote">instant estimate</Link> includes it.
       </p>
 
       <h2 id="coil">Coil we do not carry</h2>

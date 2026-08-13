@@ -2,9 +2,7 @@ import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import {
   QUOTE,
-  coilChangeFee,
   coilMinRange,
-  diameterChangeFee,
   programmingFee,
   toolingRange,
 } from "@/lib/quoting";
@@ -201,9 +199,8 @@ export default function SizesPage() {
       <h2 id="tooling">Tooling, programming, and coil</h2>
       <p>
         Non-stock wire in {WIRE.short} is {toolingRange} in tooling (
-        {QUOTE.year} pricing). Setup is {programmingFee}. A diameter
-        change is {diameterChangeFee}. A coil change is {coilChangeFee}.
-        If we do not carry the steel for a single run, the
+        {QUOTE.year} pricing). Setup is {programmingFee} per job. If we
+        do not carry the steel for a single run, the
         client buys the coil — typically {coilMinRange} depending on
         the supplier — and we run that material out.
       </p>

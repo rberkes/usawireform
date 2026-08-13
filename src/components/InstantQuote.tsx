@@ -24,8 +24,6 @@ export function InstantQuote() {
   const [lengthIn, setLengthIn] = useState("24");
   const [materialId, setMaterialId] = useState<EstimateMaterialId>("1018");
   const [qty, setQty] = useState("100");
-  const [diameterChange, setDiameterChange] = useState(false);
-  const [coilChange, setCoilChange] = useState(false);
 
   const stock = stockOptions.find((option) => option.id === stockId);
   const customMmValue = Number(customMm);
@@ -56,19 +54,8 @@ export function InstantQuote() {
       lengthIn: length,
       stainless: material.stainless,
       quantity: Number.isFinite(quantity) && quantity >= 1 ? quantity : 1,
-      diameterChange,
-      coilChange,
     });
-  }, [
-    ready,
-    material,
-    diameterIn,
-    bendCount,
-    length,
-    quantity,
-    diameterChange,
-    coilChange,
-  ]);
+  }, [ready, material, diameterIn, bendCount, length, quantity]);
 
   const lotReady = result && Number.isFinite(quantity) && quantity >= 1;
 
@@ -85,11 +72,7 @@ export function InstantQuote() {
             <select
               className={`mt-1.5 ${fieldClass}`}
               value={stockId}
-              onChange={(event) => {
-                const value = event.target.value;
-                setStockId(value);
-                if (value === "other") setDiameterChange(true);
-              }}
+              onChange={(event) => setStockId(event.target.value)}
             >
               {stockOptions.map((option) => (
                 <option key={option.id} value={option.id}>
@@ -146,11 +129,9 @@ export function InstantQuote() {
             <select
               className={`mt-1.5 ${fieldClass}`}
               value={materialId}
-              onChange={(event) => {
-                const id = event.target.value as EstimateMaterialId;
-                setMaterialId(id);
-                if (id !== "1018") setCoilChange(true);
-              }}
+              onChange={(event) =>
+                setMaterialId(event.target.value as EstimateMaterialId)
+              }
             >
               {ESTIMATE_MATERIALS.map((row) => (
                 <option key={row.id} value={row.id}>
@@ -170,37 +151,12 @@ export function InstantQuote() {
               onChange={(event) => setQty(event.target.value)}
             />
           </label>
-          <label className="flex items-start gap-2.5 text-sm sm:col-span-2">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={diameterChange}
-              onChange={(event) => setDiameterChange(event.target.checked)}
-            />
-            <span>
-              Diameter change · {usd2(ESTIMATE.diameterChange)} once, if this
-              run is a different wire size than the last job.
-            </span>
-          </label>
-          <label className="flex items-start gap-2.5 text-sm sm:col-span-2">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={coilChange}
-              onChange={(event) => setCoilChange(event.target.checked)}
-            />
-            <span>
-              Coil change · {usd2(ESTIMATE.coilChange)} once, if this run
-              loads a different coil.
-            </span>
-          </label>
         </div>
         <p className="mt-5 font-mono text-[12px] leading-6 text-muted">
           Piece = ${ESTIMATE.cut} cut + ${ESTIMATE.bend} × bends + $0.09 ×
           inches on 3/8 in, $0.10 × inches on 7/16 in (0.4375), $0.11 × inches
-          on 1/2 in. Stainless 2×. Setup {usd2(ESTIMATE.setup)} per job.
-          Diameter change {usd2(ESTIMATE.diameterChange)}. Coil change{" "}
-          {usd2(ESTIMATE.coilChange)}. Coil steel is not in this number.
+          on 1/2 in. Stainless 2×. Setup {usd2(ESTIMATE.setup)} per job. Coil
+          steel is not in this number.
         </p>
       </Panel>
 
@@ -229,7 +185,7 @@ export function InstantQuote() {
             {lotReady ? (
               <p className="mt-2 text-lg text-foreground">
                 {usd2(result.lot)} for {quantity.toLocaleString("en-US")} pcs
-                including job fees
+                including setup
               </p>
             ) : null}
             <dl className="mt-8 space-y-3 border-t border-line pt-6 text-sm">
@@ -249,15 +205,6 @@ export function InstantQuote() {
                 />
               ) : null}
               <Row label="Setup · once" value={usd2(result.setup)} />
-              {result.diameterFee > 0 ? (
-                <Row
-                  label="Diameter change · once"
-                  value={usd2(result.diameterFee)}
-                />
-              ) : null}
-              {result.coilFee > 0 ? (
-                <Row label="Coil change · once" value={usd2(result.coilFee)} />
-              ) : null}
             </dl>
             <p className="mt-6 text-sm leading-6 text-muted">
               Forming is $0.09/in on 3/8, $0.10/in on 7/16, $0.11/in on 1/2.
