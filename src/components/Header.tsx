@@ -39,7 +39,7 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <Link href="/instant-quote" className={btn.compact}>
+          <Link href="/instant-quote" className={btn.quote}>
             Instant quote
           </Link>
         </nav>
@@ -87,7 +87,7 @@ export function Header() {
             ))}
             <Link
               href="/instant-quote"
-              className={`${btn.compact} w-fit`}
+              className={`${btn.quote} w-fit`}
               onClick={() => setOpen(false)}
             >
               Instant quote

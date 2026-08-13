@@ -40,7 +40,9 @@ export default function Home() {
           title={COMPANY}
           lede="50+ years of industry experience. Lowest prices guaranteed — we will not be beat. 100-piece minimum. 3D CNC for frames, wire baskets, and guards."
         >
-          <ButtonLink href="/instant-quote">Get instant quote</ButtonLink>
+          <ButtonLink href="/instant-quote" variant="quote">
+            Get instant quote
+          </ButtonLink>
           <ButtonLink href="/contact" variant="ghost">
             Send a STEP
           </ButtonLink>

@@ -12,6 +12,8 @@ export const btn = {
     "inline-flex items-center justify-center rounded-sm border border-line px-5 py-2.5 text-sm text-foreground transition-colors hover:border-copper/50",
   compact:
     "inline-flex items-center justify-center rounded-sm bg-copper px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-copper-dim",
+  quote:
+    "inline-flex items-center justify-center rounded-sm bg-zoom px-6 py-3 text-base font-medium text-white transition-colors hover:bg-zoom-dim",
 } as const;
 
 export function Button({
