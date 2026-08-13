@@ -218,6 +218,46 @@ export function LinkedInField({
   );
 }
 
+export function QuoteNeedFields() {
+  return (
+    <div className="grid gap-5 sm:grid-cols-3">
+      <label className="block text-sm">
+        Target price
+        <input
+          className={`mt-1.5 ${fieldClass}`}
+          name="targetPrice"
+          required
+          inputMode="decimal"
+          placeholder="$ / piece"
+        />
+      </label>
+      <label className="block text-sm">
+        Required timeline
+        <select className={`mt-1.5 ${fieldClass}`} name="timeline" required>
+          <option value="">Select</option>
+          <option value="2-weeks">2 weeks</option>
+          <option value="4-weeks">4 weeks</option>
+          <option value="6-8-weeks">6–8 weeks</option>
+          <option value="12-weeks">12 weeks</option>
+          <option value="flexible">Flexible</option>
+        </select>
+      </label>
+      <label className="block text-sm">
+        Quality standard
+        <select className={`mt-1.5 ${fieldClass}`} name="quality" required>
+          <option value="">Select</option>
+          <option value="print">Print tolerances</option>
+          <option value="iso-9001">ISO 9001</option>
+          <option value="ppap">PPAP</option>
+          <option value="fair">First article (FAIR)</option>
+          <option value="aws">AWS weld spec</option>
+          <option value="customer">Customer spec (in notes)</option>
+        </select>
+      </label>
+    </div>
+  );
+}
+
 export function StepQuoteBlock({
   title = "Have a form to run?",
   className = "",
@@ -232,10 +272,16 @@ export function StepQuoteBlock({
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const email = String(new FormData(form).get("email") ?? "");
-    const linkedin = String(new FormData(form).get("linkedin") ?? "");
-    if (!file || !email || !isLinkedInUrl(linkedin)) {
-      setError("All fields are required — drawing, email, and LinkedIn.");
+    const data = new FormData(form);
+    const email = String(data.get("email") ?? "");
+    const linkedin = String(data.get("linkedin") ?? "");
+    const needs = ["targetPrice", "timeline", "quality"].every((name) =>
+      String(data.get(name) ?? "").trim(),
+    );
+    if (!file || !email || !isLinkedInUrl(linkedin) || !needs) {
+      setError(
+        "All fields are required — drawing, email, LinkedIn, target price, timeline, and quality standard.",
+      );
       return;
     }
     setError(null);
@@ -276,10 +322,14 @@ export function StepQuoteBlock({
           program.
         </p>
         <p className="mt-3 text-sm font-medium text-copper">
-          All fields required — drawing, email, and LinkedIn.
+          All fields required — drawing, email, LinkedIn, target price,
+          timeline, and quality standard.
         </p>
         <div className="mt-5">
           <StepUpload file={file} onChange={setFile} required />
+        </div>
+        <div className="mt-4">
+          <QuoteNeedFields />
         </div>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <label className="block min-w-0 flex-1 text-sm">

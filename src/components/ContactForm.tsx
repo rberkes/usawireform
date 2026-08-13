@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { isLinkedInUrl, LinkedInField, StepUpload } from "./StepUpload";
+import { isLinkedInUrl, LinkedInField, QuoteNeedFields, StepUpload } from "./StepUpload";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
 
@@ -14,9 +14,18 @@ export function ContactForm() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const linkedin = String(data.get("linkedin") ?? "");
-    const filled = ["name", "company", "email", "phone", "material", "diameter", "notes"].every(
-      (name) => String(data.get(name) ?? "").trim(),
-    );
+    const filled = [
+      "name",
+      "company",
+      "email",
+      "phone",
+      "material",
+      "diameter",
+      "notes",
+      "targetPrice",
+      "timeline",
+      "quality",
+    ].every((name) => String(data.get(name) ?? "").trim());
     if (!file || !filled || !isLinkedInUrl(linkedin)) {
       setError("All fields are required.");
       return;
@@ -102,6 +111,9 @@ export function ContactForm() {
               placeholder="e.g. 8 mm or 0.315 in"
             />
           </label>
+        </div>
+        <div className="mt-5">
+          <QuoteNeedFields />
         </div>
         <label className="mt-5 block text-sm">
           Part notes

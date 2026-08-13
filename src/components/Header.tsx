@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { COMPANY } from "@/lib/company";
-import { WireMark } from "./WireMark";
+import { BrandLockup } from "./WireMark";
 import { btn, Container } from "./ui";
 
 const links = [
@@ -18,15 +17,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-background/85 backdrop-blur-md">
       <Container className="flex h-16 items-center justify-between">
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 text-copper"
-          onClick={() => setOpen(false)}
-        >
-          <WireMark />
-          <span className="font-mono text-[12px] font-medium tracking-[0.14em] text-foreground uppercase sm:text-[13px]">
-            {COMPANY}
-          </span>
+        <Link href="/" onClick={() => setOpen(false)}>
+          <BrandLockup />
         </Link>
 
         <nav className="hidden items-center gap-6 lg:gap-8 md:flex">

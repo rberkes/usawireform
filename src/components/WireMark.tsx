@@ -1,4 +1,4 @@
-export function WireMark({ className = "h-7 w-7" }: { className?: string }) {
+export function WireMark({ className = "h-8 w-8" }: { className?: string }) {
   return (
     <svg
       className={className}
@@ -7,13 +7,28 @@ export function WireMark({ className = "h-7 w-7" }: { className?: string }) {
       aria-hidden="true"
     >
       <path
-        d="M3 22c4-12 8-12 12 0s8 12 12 0"
+        d="M4.5 7.5 11 25.5 16 12.5 21 25.5 27.5 7.5"
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2.4"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <circle cx="3" cy="22" r="1.6" fill="currentColor" />
-      <circle cx="29" cy="22" r="1.6" fill="currentColor" />
     </svg>
+  );
+}
+
+export function BrandLockup() {
+  return (
+    <span className="flex items-center gap-2.5">
+      <WireMark className="h-8 w-8 text-zoom" />
+      <span className="leading-[1.05]">
+        <span className="block font-mono text-[10px] font-medium tracking-[0.22em] text-zoom uppercase">
+          USA
+        </span>
+        <span className="block font-mono text-[13px] font-medium tracking-[0.14em] text-foreground uppercase">
+          Wire Form
+        </span>
+      </span>
+    </span>
   );
 }

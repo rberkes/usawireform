@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
 import { PRICE_LINE } from "@/lib/price";
-import { WireMark } from "./WireMark";
+import { BrandLockup } from "./WireMark";
 import { Container } from "./ui";
 
 const library = [
@@ -36,11 +36,8 @@ export function Footer() {
     <footer className="mt-auto border-t border-line">
       <Container className="flex flex-col gap-8 py-10 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <Link href="/" className="flex items-center gap-2.5 text-copper">
-            <WireMark className="h-6 w-6" />
-            <span className="font-mono text-[12px] tracking-[0.14em] text-foreground uppercase">
-              {COMPANY}
-            </span>
+          <Link href="/">
+            <BrandLockup />
           </Link>
           <p className="mt-3 max-w-xs text-sm leading-6 text-muted">
             4–14 mm wire forming — 3D CNC, frames, wire baskets, hangers, and
