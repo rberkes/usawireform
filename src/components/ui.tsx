@@ -105,7 +105,7 @@ export function PageHero({
   children,
 }: {
   kicker: string;
-  title: string;
+  title: ReactNode;
   lede?: ReactNode;
   large?: boolean;
   children?: ReactNode;
@@ -115,10 +115,13 @@ export function PageHero({
       <Kicker>{kicker}</Kicker>
       <h1
         className={cx(
-          "mt-4 max-w-3xl font-medium tracking-tight",
-          large
-            ? "text-4xl leading-[1.08] sm:text-6xl"
-            : "text-4xl leading-[1.12] sm:text-5xl",
+          "mt-4",
+          typeof title === "string" &&
+            "max-w-3xl font-medium tracking-tight",
+          typeof title === "string" &&
+            (large
+              ? "text-4xl leading-[1.08] sm:text-6xl"
+              : "text-4xl leading-[1.12] sm:text-5xl"),
         )}
       >
         {title}

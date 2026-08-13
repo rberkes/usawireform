@@ -11,6 +11,7 @@ import {
   Section,
   StatRow,
 } from "@/components/ui";
+import { BrandLockup } from "@/components/WireMark";
 import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
 import { pageMeta } from "@/lib/seo";
@@ -37,7 +38,7 @@ export default function Home() {
         <PageHero
           large
           kicker={WIRE.metric}
-          title={COMPANY}
+          title={<BrandLockup size="hero" />}
           lede="50+ years of industry experience. Lowest prices guaranteed — we will not be beat. 100-piece minimum. 3D CNC for frames, wire baskets, and guards."
         >
           <ButtonLink href="/instant-quote" variant="quote">
@@ -71,10 +72,10 @@ export default function Home() {
 
       <Section kicker="The cell" title="Numalliance Robomac 214TF">
         <Link href="/equipment" className="group mt-8 block">
-          <div className="relative aspect-[4/3] overflow-hidden bg-inset">
+          <div className="relative aspect-[3/2] overflow-hidden bg-inset">
             <Image
-              src="/shop/capability-01.jpg"
-              alt="Numalliance Robomac 214TF on the shop floor — 4–14 mm from coil"
+              src="/shop/robomac-214tf.jpg"
+              alt="Numalliance Robomac 214TF — 3D CNC from coil, 4–14 mm"
               fill
               sizes="(min-width: 1152px) 1152px, 100vw"
               className="object-cover"

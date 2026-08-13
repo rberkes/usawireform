@@ -1,3 +1,5 @@
+import { cx } from "@/lib/cx";
+
 export function WireMark({ className = "h-8 w-8" }: { className?: string }) {
   return (
     <svg
@@ -17,15 +19,40 @@ export function WireMark({ className = "h-8 w-8" }: { className?: string }) {
   );
 }
 
-export function BrandLockup() {
+export function BrandLockup({
+  size = "nav",
+}: {
+  size?: "nav" | "hero";
+}) {
+  const hero = size === "hero";
   return (
-    <span className="flex items-center gap-2.5">
-      <WireMark className="h-8 w-8 text-zoom" />
-      <span className="leading-[1.05]">
-        <span className="block font-mono text-[10px] font-medium tracking-[0.22em] text-zoom uppercase">
+    <span className={cx("flex items-center", hero ? "gap-5" : "gap-2.5")}>
+      <WireMark
+        className={
+          hero
+            ? "h-16 w-16 text-zoom sm:h-24 sm:w-24"
+            : "h-8 w-8 text-zoom"
+        }
+      />
+      <span className={hero ? "leading-[1.02]" : "leading-[1.05]"}>
+        <span
+          className={cx(
+            "block font-mono font-medium uppercase text-zoom",
+            hero
+              ? "text-lg tracking-[0.22em] sm:text-2xl"
+              : "text-[10px] tracking-[0.22em]",
+          )}
+        >
           USA
         </span>
-        <span className="block font-mono text-[13px] font-medium tracking-[0.14em] text-foreground uppercase">
+        <span
+          className={cx(
+            "block font-mono font-medium uppercase text-foreground",
+            hero
+              ? "text-4xl tracking-[0.12em] sm:text-6xl"
+              : "text-[13px] tracking-[0.14em]",
+          )}
+        >
           Wire Form
         </span>
       </span>
