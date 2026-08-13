@@ -136,6 +136,7 @@ function cleanTitle(title: string) {
 
 const HIDDEN_IDS = new Set([
   "ppjcbCgzJQo", // China Manufacturing
+  "0fxaGqcFnvY", // Calvin
 ]);
 
 function normalizedTitle(title: string) {
@@ -147,6 +148,7 @@ export function isHiddenVideo(video: YoutubeVideo) {
   const title = normalizedTitle(`${video.title} ${cleanTitle(video.title)}`);
   return (
     title.includes("berkes") ||
+    title.includes("calvin") ||
     title.includes("chinamanufacturing") ||
     title.includes("tompetty") ||
     title.includes("pasadena")
