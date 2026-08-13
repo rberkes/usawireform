@@ -3,7 +3,7 @@ import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
-import { COMPANY, SITE_URL } from "@/lib/company";
+import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 import { PRICE_LINE } from "@/lib/price";
 import { CORE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
@@ -12,12 +12,16 @@ const ibmSans = IBM_Plex_Sans({
   variable: "--font-ibm-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+  display: "swap",
+  preload: true,
 });
 
 const ibmMono = IBM_Plex_Mono({
   variable: "--font-ibm-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -39,9 +43,21 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
   alternates: { canonical: "/" },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
+  other: {
+    "contact:email": QUOTE_EMAIL,
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -52,7 +68,7 @@ export const metadata: Metadata = {
       `3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. ${PRICE_LINE} Northeast Ohio.`,
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
     description:
       `3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. ${PRICE_LINE} Northeast Ohio.`,

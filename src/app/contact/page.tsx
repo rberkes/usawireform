@@ -6,7 +6,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Contact",
-  description: `Request a quote for custom CNC wire forms. ${PRICE_LINE}`,
+  description: `Request a quote for custom CNC wire forms. ${PRICE_LINE} Email ${QUOTE_EMAIL}.`,
   path: '/contact',
   keywords: [
     "request a quote",

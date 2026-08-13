@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  compress: true,
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: "https",
@@ -9,6 +13,19 @@ const nextConfig: NextConfig = {
         pathname: "/vi/**",
       },
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: "/shop/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=86400",
+          },
+        ],
+      },
+    ];
   },
   async redirects() {
     return [
