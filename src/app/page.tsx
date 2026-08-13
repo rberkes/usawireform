@@ -69,13 +69,13 @@ export default function Home() {
 
       <Section kicker="The cell" title="Numalliance Robomac 214TF">
         <Link href="/equipment" className="group mt-8 block">
-          <div className="relative aspect-[3/2] overflow-hidden bg-inset">
+          <div className="relative aspect-[4/3] overflow-hidden bg-inset">
             <Image
-              src="/shop/hero-robomac.jpg"
-              alt="Numalliance Robomac 214TF with decoiler — 4–14 mm from coil"
+              src="/shop/capability-01.jpg"
+              alt="Numalliance Robomac 214TF on the shop floor — 4–14 mm from coil"
               fill
               sizes="(min-width: 1152px) 1152px, 100vw"
-              className="object-contain"
+              className="object-cover"
             />
           </div>
           <p className="mt-4 text-sm leading-6 text-muted group-hover:text-copper">
