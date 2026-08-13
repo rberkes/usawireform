@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Railroad Wire Forming",
-  description:
-    "Railroad yard and shop wire forming in 7/16 and 1/2 in: guards, hangers, partitions, and baskets — not a light clip cell.",
-};
+  description: "Railroad yard and shop wire forming in 7/16 and 1/2 in: guards, hangers, partitions, and baskets — not a light clip cell.",
+  path: '/industries/railroad',
+  keywords: [
+    "railroad",
+    "railroad wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function RailroadPage() {
   return (

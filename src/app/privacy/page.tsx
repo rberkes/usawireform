@@ -1,11 +1,13 @@
-import type { Metadata } from "next";
 import { Page, PageHero, TextLink } from "@/components/ui";
 import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Privacy Policy",
   description: `How ${COMPANY} handles quote requests and email.`,
-};
+  path: "/privacy",
+  keywords: ["privacy policy"],
+});
 
 export default function PrivacyPage() {
   return (

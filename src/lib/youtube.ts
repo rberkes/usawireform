@@ -134,10 +134,34 @@ function cleanTitle(title: string) {
     .trim();
 }
 
+const HIDDEN_IDS = new Set([
+  "ppjcbCgzJQo", // China Manufacturing
+]);
+
+function normalizedTitle(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+export function isHiddenVideo(video: YoutubeVideo) {
+  if (HIDDEN_IDS.has(video.id)) return true;
+  const title = normalizedTitle(`${video.title} ${cleanTitle(video.title)}`);
+  return (
+    title.includes("berkes") ||
+    title.includes("chinamanufacturing") ||
+    title.includes("tompetty") ||
+    title.includes("pasadena")
+  );
+}
+
+export function visibleVideos(videos: YoutubeVideo[]) {
+  return videos.filter((video) => !isHiddenVideo(video));
+}
+
 function presentVideos(videos: YoutubeVideo[]) {
-  return videos
-    .filter((video) => !/berkes/i.test(video.title))
-    .map((video) => ({ ...video, title: cleanTitle(video.title) || video.title }));
+  return visibleVideos(videos).map((video) => ({
+    ...video,
+    title: cleanTitle(video.title) || video.title,
+  }));
 }
 
 function videosFromLockups(data: unknown): YoutubeVideo[] {

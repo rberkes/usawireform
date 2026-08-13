@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Data Center and AI Wire Forming",
-  description:
-    "Wire cable trays, wire baskets, and guards for AI and data center builds — 4–14 mm, resistance welded, revisions on CNC.",
-};
+  description: "Wire cable trays, wire baskets, and guards for AI and data center builds — 4–14 mm, resistance welded, revisions on CNC.",
+  path: '/industries/data-centers',
+  keywords: [
+    "data centers",
+    "data centers wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function DataCentersPage() {
   return (

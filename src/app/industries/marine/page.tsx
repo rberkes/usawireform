@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Marine Wire Forming",
-  description:
-    "Marine wire forming in 3/8, 7/16, and 1/2 in: 304 and 316 frames, baskets, and guards for wet service — not a marine-cert catalog.",
-};
+  description: "Marine wire forming in 3/8, 7/16, and 1/2 in: 304 and 316 frames, baskets, and guards for wet service — not a marine-cert catalog.",
+  path: '/industries/marine',
+  keywords: [
+    "marine",
+    "marine wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function MarinePage() {
   return (

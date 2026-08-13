@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Automotive Wire Forming",
-  description:
-    "Automotive wire forming in 3/8, 7/16, and 1/2 in: seat frames, trailer latches, handles, L-pins, plant guards — not music-wire clips.",
-};
+  description: "Automotive wire forming in 3/8, 7/16, and 1/2 in: seat frames, trailer latches, handles, L-pins, plant guards — not music-wire clips.",
+  path: '/industries/automotive',
+  keywords: [
+    "automotive",
+    "automotive wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function AutomotivePage() {
   return (

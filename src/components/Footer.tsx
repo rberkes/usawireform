@@ -20,11 +20,13 @@ const shop = [
   { href: "/industries", label: "Industries" },
   { href: "/products", label: "Products" },
   { href: "/capabilities", label: "Capabilities" },
+  { href: "/secondary-operations", label: "Secondaries" },
   { href: "/equipment", label: "Equipment" },
   { href: "/videos", label: "Videos" },
+  { href: "/instant-quote", label: "Instant quote" },
   { href: "/quoting", label: "Tooling & coil" },
   { href: "/about", label: "About" },
-  { href: "/cleveland", label: "Cleveland" },
+  { href: "/cleveland", label: "Northeast Ohio" },
   { href: "/contact", label: "Contact" },
 ];
 

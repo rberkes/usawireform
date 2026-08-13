@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "2D CNC Wire Forming",
-  description:
-    "2D CNC wire forming in 4–14 mm: planar bends, when to use it instead of 3D CNC or fourslide, design rules, and inspection.",
-};
+  description: "2D CNC wire forming in 4–14 mm: planar bends, when to use it instead of 3D CNC or fourslide, design rules, and inspection.",
+  path: '/processes/2d-cnc-wire-forming',
+  keywords: [
+    "2d cnc wire forming",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what-it-is", label: "What it is" },

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import {
   CardGrid,
@@ -11,11 +10,14 @@ import {
 } from "@/components/ui";
 import { WIRE } from "@/lib/range";
 import { QUOTE, toolingRange } from "@/lib/quoting";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Capabilities",
   description: `3D CNC wire forming in ${WIRE.label}: frames, wire baskets, guards, rack plating, and in-line powder.`,
-};
+  path: "/capabilities",
+  keywords: ["wire forming capabilities", "rack plating", "powder coat"],
+});
 
 const forming = [
   {

@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Solar Wire Forming",
-  description:
-    "Wire forms for solar: tracker and rack parts, cable hangers, grounding, cable trays, and outdoor 304 or galvanized coil in 4–14 mm.",
-};
+  description: "Wire forms for solar: tracker and rack parts, cable hangers, grounding, cable trays, and outdoor 304 or galvanized coil in 4–14 mm.",
+  path: '/industries/solar',
+  keywords: [
+    "solar",
+    "solar wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function SolarPage() {
   return (

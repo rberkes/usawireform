@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import {
@@ -8,12 +7,18 @@ import {
   stainless300,
 } from "@/lib/materials";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Wire Forming Materials from Coil",
-  description:
-    "Coil materials for 4–14 mm wire forming: cold-roll 1010 and 1018, medium and high spring steels, 300-series stainless including 330, brass, and copper.",
-};
+  description: "Coil materials for 4–14 mm wire forming: cold-roll 1010 and 1018, medium and high spring steels, 300-series stainless including 330, brass, and copper.",
+  path: '/materials',
+  keywords: [
+    "wire forming materials",
+    "1018 wire",
+    "300 series stainless",
+  ],
+});
 
 const toc = [
   { id: "run", label: "What we run" },

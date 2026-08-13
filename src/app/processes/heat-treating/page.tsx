@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Heat Treating Wire Forms",
-  description:
-    "Heat treating of 4–14 mm wire forms: stress relief after bend and weld, vs heat-treat wire baskets as a product made from high-temp wire.",
-};
+  description: "Heat treating of 4–14 mm wire forms: stress relief after bend and weld, vs heat-treat wire baskets as a product made from high-temp wire.",
+  path: '/processes/heat-treating',
+  keywords: [
+    "heat treating",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "two", label: "Two different things" },

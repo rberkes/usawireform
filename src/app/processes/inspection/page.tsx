@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Inspecting Wire Forms",
-  description:
-    "Inspection of 4–14 mm 2D and 3D CNC wire forms: fixtures, overlays, CMM, first article, and why chained ±0.005 in on every leg is the wrong print.",
-};
+  description: "Inspection of 4–14 mm 2D and 3D CNC wire forms: fixtures, overlays, CMM, first article, and why chained ±0.005 in on every leg is the wrong print.",
+  path: '/processes/inspection',
+  keywords: [
+    "inspection",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What to measure" },

@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Resistance Welding Wire Forms",
-  description:
-    "Resistance welding for 4–14 mm wire forms: cross-wire and projection welds, when to use it instead of MIG/TIG, and what the print should allow.",
-};
+  description: "Resistance welding for 4–14 mm wire forms: cross-wire and projection welds, when to use it instead of MIG/TIG, and what the print should allow.",
+  path: '/processes/resistance-welding',
+  keywords: [
+    "resistance welding",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What it is" },

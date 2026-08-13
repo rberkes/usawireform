@@ -1,13 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Rod Bending",
-  description:
-    "Rod bending in 4–14 mm: heavy round stock from coil on the same CNC cell as wire forming. 3/8, 7/16, and 1/2 in stock.",
-};
+  description: "Rod bending in 4–14 mm: heavy round stock from coil on the same CNC cell as wire forming. 3/8, 7/16, and 1/2 in stock.",
+  path: '/rod-bending',
+  keywords: [
+    "rod bending",
+    "heavy round wire",
+    "CNC rod",
+  ],
+});
 
 const toc = [
   { id: "what", label: "Rod vs wire" },

@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Wire Furniture",
-  description:
-    "Wire furniture we form and weld: chairs, tables, racks, and frames in 3/8, 7/16, and 1/2 in — 1018, powder, or 300-series stainless.",
-};
+  description: "Wire furniture we form and weld: chairs, tables, racks, and frames in 3/8, 7/16, and 1/2 in — 1018, powder, or 300-series stainless.",
+  path: '/products/wire-furniture',
+  keywords: [
+    "wire furniture",
+    "wire chairs",
+    "wire tables",
+  ],
+});
 
 export default function WireFurniturePage() {
   return (

@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Mesh Wire Grids and Cable Trays",
-  description:
-    "Secondary operations for 4–14 mm mesh wire grids and cable trays: resistance welding, MIG, and TIG — rims, intersections, mounts, and splices.",
-};
+  description: "Secondary operations for 4–14 mm mesh wire grids and cable trays: resistance welding, MIG, and TIG — rims, intersections, mounts, and splices.",
+  path: '/processes/mesh-grids-and-cable-trays',
+  keywords: [
+    "mesh grids and cable trays",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What we run" },

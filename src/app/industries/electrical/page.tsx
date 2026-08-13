@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Electrical Wire Forming",
-  description:
-    "Electrical wire forming in 3/8, 7/16, and 1/2 in: cable trays, J-hooks, hangers, and routing forms — not 9-gauge clip wire.",
-};
+  description: "Electrical wire forming in 3/8, 7/16, and 1/2 in: cable trays, J-hooks, hangers, and routing forms — not 9-gauge clip wire.",
+  path: '/industries/electrical',
+  keywords: [
+    "electrical",
+    "electrical wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function ElectricalPage() {
   return (

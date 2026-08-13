@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Wire Form Shapes",
-  description:
-    "Wire form shapes in 4–14 mm: cut-to-length, L, U, J, S, C, V, serpentine, eyes, rings, and closed frames. Stock 3/8, 7/16, and 1/2 in.",
-};
+  description: "Wire form shapes in 4–14 mm: cut-to-length, L, U, J, S, C, V, serpentine, eyes, rings, and closed frames. Stock 3/8, 7/16, and 1/2 in.",
+  path: '/processes/wire-form-shapes',
+  keywords: [
+    "wire form shapes",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "straight", label: "Cut-to-length" },

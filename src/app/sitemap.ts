@@ -29,6 +29,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...catalog.map((item) => `/products/${item.slug}`),
     ...shopLines.map((item) => `/products/${item.slug}`),
     "/quoting",
+    "/instant-quote",
+    "/secondary-operations",
     "/contact",
     "/privacy",
     "/site-map",
@@ -38,5 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return paths.map((path) => ({
     url: `${SITE_URL}${path}`,
     lastModified: new Date(),
+    changeFrequency: path === "" ? "weekly" : "monthly",
+    priority: path === "" ? 1 : path.startsWith("/products/") ? 0.7 : 0.6,
   }));
 }

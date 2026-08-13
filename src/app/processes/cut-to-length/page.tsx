@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Cut-to-Length Wire",
-  description:
-    "Cut-to-length for 4–14 mm wire forming: in-line shear vs saw, end deformation, length tolerance, and when cutoff is a separate station.",
-};
+  description: "Cut-to-length for 4–14 mm wire forming: in-line shear vs saw, end deformation, length tolerance, and when cutoff is a separate station.",
+  path: '/processes/cut-to-length',
+  keywords: [
+    "cut to length",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What it is" },

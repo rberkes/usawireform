@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/JsonLd";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import {
   Page,
@@ -13,6 +13,7 @@ import {
   catalog,
   getCatalogItem,
 } from "@/lib/catalog";
+import { pageMeta, productJsonLd } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -22,14 +23,16 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const item = getCatalogItem(slug);
   if (!item) return {};
-  return {
+  return pageMeta({
     title: item.title,
     description: `${item.title} in ${STOCK} wire. ${item.summary}`,
-  };
+    path: `/products/${slug}`,
+    keywords: [item.title, item.group, "custom wire form", STOCK],
+  });
 }
 
 export default async function CatalogProductPage({ params }: Props) {
@@ -43,6 +46,11 @@ export default async function CatalogProductPage({ params }: Props) {
 
   return (
     <Page>
+      <JsonLd data={productJsonLd({
+        title: item.title,
+        description: `${item.title} in ${STOCK} wire. ${item.summary}`,
+        path: `/products/${slug}`,
+      })} />
       <PageHero kicker={`${STOCK} · ${item.group}`} title={item.title} lede={item.lede} />
       <SpecList
         rows={[

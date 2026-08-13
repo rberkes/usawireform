@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Fourslide Wire Forming",
-  description:
-    "Fourslide and multislide wire forming explained: cam tooling, when it beats CNC, and why it is usually the wrong cell for 4–14 mm frames.",
-};
+  description: "Fourslide and multislide wire forming explained: cam tooling, when it beats CNC, and why it is usually the wrong cell for 4–14 mm frames.",
+  path: '/processes/fourslide',
+  keywords: [
+    "fourslide",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What it is" },

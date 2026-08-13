@@ -1,14 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Wire Fabrication 4–14 mm",
-  description:
-    "Wire fabrication in 4–14 mm: low to high carbon, all stainless, and other ferrous and non-ferrous coil — CNC form, weld, and finish.",
-};
+  description: "Wire fabrication in 4–14 mm: low to high carbon, all stainless, and other ferrous and non-ferrous coil — CNC form, weld, and finish.",
+  path: '/wire-fabrication',
+  keywords: [
+    "wire fabrication",
+    "stainless wire",
+    "carbon steel coil",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What it is" },
@@ -186,7 +191,7 @@ export default function WireFabricationPage() {
       <h2 id="next">Related</h2>
       <ul>
         <li>
-          <Link href="/cleveland">Cleveland</Link> — mills, wire drawers,
+          <Link href="/cleveland">Northeast Ohio</Link> — mills, wire drawers,
           short-haul coil
         </li>
         <li>

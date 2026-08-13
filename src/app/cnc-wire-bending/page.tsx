@@ -1,13 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "CNC Wire Bending",
-  description:
-    "CNC wire bending in 4–14 mm: the same cell as CNC wire forming — straighten, feed, bend, cut. 2D and 3D on a Numalliance Robomac 214.",
-};
+  description: "CNC wire bending in 4–14 mm: the same cell as CNC wire forming — straighten, feed, bend, cut. 2D and 3D on a Numalliance Robomac 214.",
+  path: '/cnc-wire-bending',
+  keywords: [
+    "CNC wire bending",
+    "wire bender",
+    "from coil",
+  ],
+});
 
 const toc = [
   { id: "what", label: "Bending vs forming" },

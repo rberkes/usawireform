@@ -1,17 +1,22 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `${COMPANY} in Cleveland`,
-  description:
-    "Cleveland is a strategic location for low-cost 4–14 mm wire forming and secondary operations: local mills, wire drawers, and short-haul coil.",
-};
+export const metadata = pageMeta({
+  title: `${COMPANY} in Northeast Ohio`,
+  description: "Northeast Ohio is a strategic location for low-cost 4–14 mm wire forming and secondary operations: local mills, wire drawers, and short-haul coil.",
+  path: '/cleveland',
+  keywords: [
+    "Northeast Ohio wire forming",
+    "wire drawing",
+    "short-haul coil",
+  ],
+});
 
 const toc = [
-  { id: "why", label: "Why Cleveland" },
+  { id: "why", label: "Why Northeast Ohio" },
   { id: "mills", label: "Mills and rod" },
   { id: "drawers", label: "Wire drawers" },
   { id: "freight", label: "Freight" },
@@ -24,17 +29,17 @@ export default function ClevelandPage() {
   return (
     <DocPage
       kicker="Location"
-      title="Cleveland is the coil, not a zip code."
+      title="Northeast Ohio is the coil, not a zip code."
       lede={`Wire forming is heavy. ${COMPANY} sits next to mills and wire drawers so 4–14 mm coil, CNC forming, and secondary operations stay short-haul — that is the low-cost shop, not a cheaper bend.`}
       toc={toc}
     >
-      <h2 id="why">Why this city</h2>
+      <h2 id="why">Why this region</h2>
       <p>
         A 4–14 mm form is mostly steel by weight. The quote follows the
         coil: mill, draw, freight in, then form, weld, and finish. Put
         the cell next to the rod and the drawers and you cut the legs
         that do not add a bend. That is why{" "}
-        <Link href="/">{COMPANY}</Link> is in Cleveland —
+        <Link href="/">{COMPANY}</Link> is in Northeast Ohio —
         Lake Erie, the steel corridor, and the Midwest plants that buy
         the parts.
       </p>
@@ -45,8 +50,8 @@ export default function ClevelandPage() {
 
       <h2 id="mills">Local mills</h2>
       <p>
-        Cleveland still makes steel. Integrated mill capacity is in the
-        city and the Cuyahoga. Rod and bar that become forming wire do
+        Northeast Ohio still makes steel. Integrated mill capacity is in
+        the region and the Cuyahoga. Rod and bar that become forming wire do
         not have to start on a coast and ride a railcar across the
         country before they see a die. For {WIRE.short} carbon — 1010,
         1018, and the medium-to-high grades — mill proximity is inbound
@@ -80,7 +85,7 @@ export default function ClevelandPage() {
 
       <h2 id="freight">Short-haul, not coast-to-coast</h2>
       <p>
-        Cleveland is I-90, I-80 / the Turnpike, I-71, and I-77. Lake
+        Northeast Ohio is I-90, I-80 / the Turnpike, I-71, and I-77. Lake
         Erie takes bulk. Rail still serves the mill. A skid of 4–14 mm
         coil is thousands of pounds. Trucking it from a distant mill is
         a line item; trucking it across town is not.
@@ -96,7 +101,7 @@ export default function ClevelandPage() {
       <h2 id="secondaries">Forming and secondaries in one building</h2>
       <p>
         Low-cost wire forming fails when the form is cheap and the rest
-        of the part is three other vendors. A frame that leaves Cleveland
+        of the part is three other vendors. A frame that leaves the shop
         for weld, then Ohio again for zinc, then somewhere else for
         powder, has paid freight three times and queued three times.
       </p>
@@ -125,7 +130,7 @@ export default function ClevelandPage() {
         <li>Freight out — to the plant that bolts it on</li>
       </ul>
       <p>
-        Cleveland attacks the first and last lines and collapses the
+        Northeast Ohio attacks the first and last lines and collapses the
         middle into one shop. Piece price follows. It is not a discount
         on a 9-gauge clip from a catalog. It is heavy wire, short-haul
         steel, and secondaries that do not leave the building.

@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
 import { Page, PageHero, TextLink } from "@/components/ui";
 import { QUOTE_EMAIL } from "@/lib/company";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Contact",
   description: "Request a quote for custom CNC wire forms.",
-};
+  path: '/contact',
+  keywords: [
+    "request a quote",
+    "STEP file upload",
+    "wire forming quote",
+  ],
+});
 
 export default function ContactPage() {
   return (
@@ -15,7 +21,13 @@ export default function ContactPage() {
         <PageHero
           kicker="Contact"
           title="Request a quote"
-          lede="All fields required. Include quantity, material, and diameter. Stock is 3/8, 7/16, and 1/2 in. Other sizes in 4–14 mm need tooling and coil."
+          lede={
+            <>
+              Production quote from a drawing. For a ballpark first, use the{" "}
+              <TextLink href="/instant-quote">instant estimate</TextLink> —
+              diameter, bends, length, and material.
+            </>
+          }
         />
         <dl className="mt-10 space-y-5 text-sm">
           <div>
@@ -23,7 +35,7 @@ export default function ContactPage() {
               Shop
             </dt>
             <dd className="mt-1">
-              <TextLink href="/cleveland">Cleveland, Ohio</TextLink>
+              <TextLink href="/cleveland">Northeast Ohio</TextLink>
               {" — mills, wire drawers, short-haul coil"}
             </dd>
           </div>

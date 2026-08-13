@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { LinkList, Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Equipment",
-  description:
-    "Shop floor list: Numalliance Robomac 214, Lubow manual benders, 40-ton Clearing press, 75 kVA resistance weld, Miller MIG, granite inspection, and coil handling.",
-};
+  description: "Shop floor list: Numalliance Robomac 214, Lubow manual benders, 40-ton Clearing press, 75 kVA resistance weld, Miller MIG, granite inspection, and coil handling.",
+  path: '/equipment',
+  keywords: [
+    "Numalliance Robomac 214",
+    "Lubow",
+    "resistance welder",
+  ],
+});
 
 export default function EquipmentPage() {
   return (

@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "CNC Wire Forming",
-  description:
-    `CNC wire forming in 4–14 mm: 2D and 3D from coil. ${COMPANY} — Robomac 214, then weld and finish.`,
-};
+  description: `CNC wire forming in 4–14 mm: 2D and 3D from coil. ${COMPANY} — Robomac 214, then weld and finish.`,
+  path: "/cnc-wire-forming",
+  keywords: ["CNC wire forming", "2D wire forming", "3D wire forming", "Robomac 214"],
+});
 
 const toc = [
   { id: "what", label: "What it is" },

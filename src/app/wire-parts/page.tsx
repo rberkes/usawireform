@@ -1,13 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { CardGrid, Page, PageHero, Section, TextLink } from "@/components/ui";
 import { STOCK } from "@/lib/catalog";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Wire Parts",
-  description:
-    "Wire parts and wire form parts in 4–14 mm: hooks, hangers, baskets, grids, guards, racks, handles — CNC from coil.",
-};
+  description: "Wire parts and wire form parts in 4–14 mm: hooks, hangers, baskets, grids, guards, racks, handles — CNC from coil.",
+  path: '/wire-parts',
+  keywords: [
+    "wire parts",
+    "wire form parts",
+    "custom wire hardware",
+  ],
+});
 
 const families = [
   {

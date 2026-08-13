@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "3D CNC Wire Forming",
-  description:
-    "3D CNC wire forming in 4–14 mm: how the cell works, design rules, and what to send on a print. This shop quotes parts.",
-};
+  description: "3D CNC wire forming in 4–14 mm: how the cell works, design rules, and what to send on a print. This shop quotes parts.",
+  path: '/processes/3d-cnc-wire-forming',
+  keywords: [
+    "3d cnc wire forming",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what-it-is", label: "What it is" },

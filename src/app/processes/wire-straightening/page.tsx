@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Wire Straightening",
-  description:
-    "Wire straightening for 4–14 mm CNC forming: rotary vs roll, coil cast and helix, and why a weak straightener prints banana into every span.",
-};
+  description: "Wire straightening for 4–14 mm CNC forming: rotary vs roll, coil cast and helix, and why a weak straightener prints banana into every span.",
+  path: '/processes/wire-straightening',
+  keywords: [
+    "wire straightening",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What it is" },

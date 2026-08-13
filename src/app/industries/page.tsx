@@ -1,13 +1,17 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { CardGrid, Page, PageHero } from "@/components/ui";
 import { industries } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Industries",
-  description:
-    "Wire forming by sector: named industries we actually run in 4–14 mm — frames, trays, hangers, wire baskets, and guards. Not every SIC code.",
-};
+  description: "Wire forming by sector: named industries we actually run in 4–14 mm — frames, trays, hangers, wire baskets, and guards. Not every SIC code.",
+  path: '/industries',
+  keywords: [
+    "wire forming industries",
+    "OEM wire forms",
+  ],
+});
 
 export default function IndustriesPage() {
   return (

@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Mining Wire Forming",
-  description:
-    "Heavy wire forming for mining: 7/16 and 1/2 in guards, grids, cable trays, J-hooks, and wire baskets for harsh service.",
-};
+  description: "Heavy wire forming for mining: 7/16 and 1/2 in guards, grids, cable trays, J-hooks, and wire baskets for harsh service.",
+  path: '/industries/mining',
+  keywords: [
+    "mining",
+    "mining wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function MiningPage() {
   return (

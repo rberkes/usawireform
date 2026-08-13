@@ -1,13 +1,18 @@
-import type { Metadata } from "next";
 import { FactGrid, Page, PageHero, Section, TextLink } from "@/components/ui";
 import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "About",
-  description:
-    "50+ years of industry experience: 4–14 mm wire forms for named industries — not a list of every SIC code.",
-};
+  description: "50+ years of industry experience: 4–14 mm wire forms for named industries — not a list of every SIC code.",
+  path: '/about',
+  keywords: [
+    "USA Wire Form about",
+    "50 years wire forming",
+    "Northeast Ohio shop",
+  ],
+});
 
 export default function AboutPage() {
   return (
@@ -29,11 +34,11 @@ export default function AboutPage() {
           powder.
         </p>
         <p>
-          The shop is in Cleveland because the steel is. Mills and wire
+          The shop is in Northeast Ohio because the steel is. Mills and wire
           drawers sit on the same map, so 4–14 mm coil is a short haul
           and forming plus weld, plate, and powder stay in one building.
           That is the cost of a heavy form — detail on{" "}
-          <TextLink href="/cleveland">Cleveland</TextLink>.
+          <TextLink href="/cleveland">Northeast Ohio</TextLink>.
         </p>
         <p>
           Contract work goes into plants, fields, and facilities. The
@@ -80,7 +85,7 @@ export default function AboutPage() {
       <FactGrid
         items={[
           { label: "Shop", value: "50+ years of industry experience" },
-          { label: "Location", value: "Cleveland — mills and wire drawers" },
+          { label: "Location", value: "Northeast Ohio — mills and wire drawers" },
           { label: "Band", value: WIRE.label },
           { label: "Stock", value: "3/8, 7/16, and 1/2 in coil" },
         ]}

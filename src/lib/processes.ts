@@ -149,6 +149,14 @@ export function publishedProcesses() {
   return processes.filter((process) => process.published);
 }
 
+export function secondaryOperations() {
+  return processes.filter(
+    (process) =>
+      process.published &&
+      (process.category === "secondary" || process.category === "joining"),
+  );
+}
+
 export function processesByCategory() {
   return processCategories.map((category) => ({
     ...category,

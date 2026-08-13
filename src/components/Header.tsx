@@ -7,9 +7,9 @@ import { WireMark } from "./WireMark";
 import { btn, Container } from "./ui";
 
 const links = [
-  { href: "/wire-forming", label: "Wire forming" },
-  { href: "/processes", label: "Processes" },
-  { href: "/sizes", label: "3/8 · 7/16 · 1/2" },
+  { href: "/about", label: "About" },
+  { href: "/equipment", label: "Equipment" },
+  { href: "/secondary-operations", label: "Secondary ops" },
 ];
 
 export function Header() {
@@ -29,7 +29,7 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -39,8 +39,8 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <Link href="/contact" className={btn.compact}>
-            Quote
+          <Link href="/instant-quote" className={btn.compact}>
+            Instant quote
           </Link>
         </nav>
 
@@ -86,11 +86,11 @@ export function Header() {
               </Link>
             ))}
             <Link
-              href="/contact"
+              href="/instant-quote"
               className={`${btn.compact} w-fit`}
               onClick={() => setOpen(false)}
             >
-              Quote
+              Instant quote
             </Link>
           </div>
         </nav>

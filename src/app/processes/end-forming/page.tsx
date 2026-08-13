@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "End Forming",
-  description:
-    "End forming for 4–14 mm wire: chamfer, coin, flatten, pierce, swage, and thread so the wire mates to a hole, screw, or weld.",
-};
+  description: "End forming for 4–14 mm wire: chamfer, coin, flatten, pierce, swage, and thread so the wire mates to a hole, screw, or weld.",
+  path: '/processes/end-forming',
+  keywords: [
+    "end forming",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What it is" },

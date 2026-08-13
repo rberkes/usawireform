@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "MIG TIG Wire Form Assembly",
-  description:
-    "MIG and TIG assembly of 4–14 mm wire forms: when filler metal beats resistance weld, distortion, and what to put on the print.",
-};
+  description: "MIG and TIG assembly of 4–14 mm wire forms: when filler metal beats resistance weld, distortion, and what to put on the print.",
+  path: '/processes/mig-tig-assembly',
+  keywords: [
+    "mig tig assembly",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What it is" },

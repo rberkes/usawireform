@@ -1,12 +1,16 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Outdoor Wire Products",
-  description:
-    "Our own line of outdoor wire products — formed and welded in 4–14 mm on the same cells as contract work.",
-};
+  description: "Our own line of outdoor wire products — formed and welded in 4–14 mm on the same cells as contract work.",
+  path: '/products/outdoor-products',
+  keywords: [
+    "outdoor wire products",
+    "galvanized wire forms",
+  ],
+});
 
 export default function OutdoorProductsPage() {
   return (

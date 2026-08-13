@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Manufacturing and OEM Wire Forming",
-  description:
-    "OEM contract wire forming in 3/8, 7/16, and 1/2 in: frames, handles, guards, and hardware to the buyer’s print.",
-};
+  description: "OEM contract wire forming in 3/8, 7/16, and 1/2 in: frames, handles, guards, and hardware to the buyer’s print.",
+  path: '/industries/manufacturing-oem',
+  keywords: [
+    "manufacturing oem",
+    "manufacturing oem wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function ManufacturingOemPage() {
   return (

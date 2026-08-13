@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Agriculture Wire Forming",
-  description:
-    "Wire forms for agriculture: ground staples, harvest wire baskets, trellis structures, and galvanized 3/8 to 1/2 in frames.",
-};
+  description: "Wire forms for agriculture: ground staples, harvest wire baskets, trellis structures, and galvanized 3/8 to 1/2 in frames.",
+  path: '/industries/agriculture',
+  keywords: [
+    "agriculture",
+    "agriculture wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function AgriculturePage() {
   return (

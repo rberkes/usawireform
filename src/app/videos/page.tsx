@@ -1,18 +1,23 @@
-import type { Metadata } from "next";
 import { VideoGallery } from "@/components/VideoGallery";
 import { btn, Page, PageHero, TextLink } from "@/components/ui";
-import { getYoutubeFeed } from "@/lib/youtube";
+import { getYoutubeFeed, visibleVideos } from "@/lib/youtube";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Videos",
-  description:
-    "Numalliance CNC wire forming video: Robomac 214 and the shop cell, from the YouTube channel.",
-};
+  description: "Numalliance CNC wire forming video: Robomac 214 and the shop cell, from the YouTube channel.",
+  path: '/videos',
+  keywords: [
+    "CNC wire forming video",
+    "Robomac 214",
+  ],
+});
 
-export const revalidate = 3600;
+export const revalidate = 0;
 
 export default async function VideosPage() {
   const feed = await getYoutubeFeed();
+  const videos = visibleVideos(feed.videos);
 
   return (
     <Page>
@@ -40,8 +45,8 @@ export default async function VideosPage() {
         ) : null}
       </PageHero>
 
-      {feed.videos.length > 0 ? (
-        <VideoGallery videos={feed.videos} />
+      {videos.length > 0 ? (
+        <VideoGallery videos={videos} />
       ) : (
         <p className="mt-12 max-w-xl text-sm leading-7 text-muted">
           The YouTube feed did not return videos. Try the channel link, or

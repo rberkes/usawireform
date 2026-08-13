@@ -1,14 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { stainless300 } from "@/lib/materials";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "300 Series Stainless Wire Forming",
-  description:
-    "300-series stainless from coil for 4–14 mm wire forming: 301, 302, 304, 304L, 316, 316L, 321, 330, and the rest — springback, weld, passivate, 3/8 to 1/2 in.",
-};
+  description: "300-series stainless from coil for 4–14 mm wire forming: 301, 302, 304, 304L, 316, 316L, 321, 330, and the rest — springback, weld, passivate, 3/8 to 1/2 in.",
+  path: '/materials/300-series-stainless',
+  keywords: [
+    "304 wire",
+    "316 wire",
+    "330 stainless wire",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What 300-series is" },

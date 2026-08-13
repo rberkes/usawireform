@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import {
   ButtonLink,
@@ -10,14 +9,21 @@ import {
 } from "@/components/ui";
 import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: {
-    absolute: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
-  },
-  description:
-    `${COMPANY}: 50+ years of industry experience. 3D CNC wire forming in 4–14 mm — frames, wire baskets, and guards.`,
-};
+export const metadata = pageMeta({
+  title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
+  description: `${COMPANY}: 50+ years of industry experience. 3D CNC wire forming in 4–14 mm — frames, wire baskets, and guards.`,
+  path: "/",
+  absoluteTitle: true,
+  keywords: [
+    "USA Wire Form",
+    "CNC wire forming Northeast Ohio",
+    "3D CNC wire baskets",
+    "custom wire forms",
+    "Numalliance Robomac",
+  ],
+});
 
 export default function Home() {
   return (
@@ -28,9 +34,9 @@ export default function Home() {
         title={COMPANY}
         lede="50+ years of industry experience. 3D CNC for frames, wire baskets, and guards — production quotes in 4–14 mm."
       >
-        <ButtonLink href="/contact">Send a STEP</ButtonLink>
-        <ButtonLink href="/processes" variant="ghost">
-          Processes
+        <ButtonLink href="/instant-quote">Get instant quote</ButtonLink>
+        <ButtonLink href="/contact" variant="ghost">
+          Send a STEP
         </ButtonLink>
       </PageHero>
 
@@ -40,7 +46,7 @@ export default function Home() {
           { value: WIRE.metric, label: "Diameter band" },
           { value: "3D CNC", label: "Primary process" },
           { value: "50+ yrs", label: "Industry experience" },
-          { value: "Cleveland", label: "Shop + production" },
+          { value: "Northeast Ohio", label: "Shop + production" },
         ]}
       />
 
@@ -49,7 +55,7 @@ export default function Home() {
           items={[
             {
               href: "/cleveland",
-              title: "Cleveland",
+              title: "Northeast Ohio",
               body: "Mills, wire drawers, and short-haul coil — the low-cost location for 4–14 mm forming and secondaries.",
             },
             {

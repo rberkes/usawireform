@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { CardGrid, Page, PageHero, Section, TextLink } from "@/components/ui";
 import { catalog, catalogByGroup, STOCK } from "@/lib/catalog";
+import { pageMeta } from "@/lib/seo";
 import { shopLines } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Product directory",
   description: `SKU directory of wire forms in ${STOCK}: hooks, hangers, grids, trays, frames, and hardware.`,
-};
+  path: "/products",
+  keywords: ["wire form catalog", "wire hooks", "wire hangers", "wire trays"],
+});
 
 export default function ProductsPage() {
   return (

@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { BandTable } from "@/components/BandTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Plating and In-Line Powder Coating",
-  description:
-    "Rack zinc, zinc-nickel, and zinc-iron plating plus in-line powder coating for 4–14 mm wire forms: form, weld, plate, powder.",
-};
+  description: "Rack zinc, zinc-nickel, and zinc-iron plating plus in-line powder coating for 4–14 mm wire forms: form, weld, plate, powder.",
+  path: '/processes/plating-and-coating',
+  keywords: [
+    "plating and coating",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "what", label: "What it is" },

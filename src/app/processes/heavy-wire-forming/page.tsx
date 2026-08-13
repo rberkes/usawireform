@@ -1,13 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Heavy Wire Forming 4–14 mm",
-  description:
-    "Heavy wire forming from 4 mm to 14 mm (0.157–0.551 in): 3D CNC, frames, wire baskets, guards, bend radii, machines, and what light-wire shops cannot run.",
-};
+  description: "Heavy wire forming from 4 mm to 14 mm (0.157–0.551 in): 3D CNC, frames, wire baskets, guards, bend radii, machines, and what light-wire shops cannot run.",
+  path: '/processes/heavy-wire-forming',
+  keywords: [
+    "heavy wire forming",
+    "wire forming process",
+    "4-14 mm",
+    "CNC",
+  ],
+});
 
 const toc = [
   { id: "band", label: "The 4–14 mm band" },

@@ -3,14 +3,15 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { YoutubeVideo } from "@/lib/youtube";
-import { youtubeEmbed, youtubeThumb } from "@/lib/youtube";
+import { visibleVideos, youtubeEmbed, youtubeThumb } from "@/lib/youtube";
 
 export function VideoGallery({ videos }: { videos: YoutubeVideo[] }) {
   const [playing, setPlaying] = useState<string | null>(null);
+  const shown = visibleVideos(videos);
 
   return (
     <ul className="mt-12 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
-      {videos.map((video) => {
+      {shown.map((video) => {
         const active = playing === video.id;
         return (
           <li key={video.id} className="bg-background">

@@ -1,19 +1,26 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
-import { COMMON_SIZES, WIRE } from "@/lib/range";
 import {
   QUOTE,
   coilMinRange,
   programmingFee,
   toolingRange,
 } from "@/lib/quoting";
+import { COMMON_SIZES, WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Common Wire Sizes: 3/8, 7/16, and 1/2 in",
   description:
     "Production wire diameters we run: 3/8 in (9.53 mm), 7/16 in (11.11 mm), and 1/2 in (12.7 mm) — CNC forming, mesh grids, cable trays, and weld.",
-};
+  path: "/sizes",
+  keywords: [
+    "3/8 inch wire",
+    "7/16 inch wire",
+    "1/2 inch wire",
+    "wire diameter",
+  ],
+});
 
 const toc = [
   { id: "stock", label: "Stock sizes" },

@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Design for Wire Forming",
-  description:
-    "Design-for-manufacturing rules for 2D and 3D CNC wire forms: bend radius, min legs, springback, tolerances, ends, and what to put on the print.",
-};
+  description: "Design-for-manufacturing rules for 2D and 3D CNC wire forms: bend radius, min legs, springback, tolerances, ends, and what to put on the print.",
+  path: '/guide/design-for-wire-forming',
+  keywords: [
+    "design for wire forming",
+    "bend radius",
+    "springback",
+    "DFM wire",
+  ],
+});
 
 const toc = [
   { id: "print", label: "What the print must say" },

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { STOCK } from "@/lib/catalog";
@@ -9,11 +8,14 @@ import {
   toolingRange,
 } from "@/lib/quoting";
 import { WIRE } from "@/lib/range";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Quotes, Tooling, and Coil",
   description: `Stock ${STOCK} runs on existing tooling. Other diameters in ${WIRE.short} need tooling (${toolingRange}, ${QUOTE.year}). Programming ${programmingFee}. Coil buy-in ${coilMinRange} when we do not carry the steel.`,
-};
+  path: "/quoting",
+  keywords: ["wire forming tooling", "programming fee", "coil minimum"],
+});
 
 const toc = [
   { id: "stock", label: "Stock vs tooling" },
@@ -86,6 +88,10 @@ export default function QuotingPage() {
         </li>
         <li>
           <Link href="/materials">Coil materials</Link>
+        </li>
+        <li>
+          <Link href="/instant-quote">Instant estimate</Link> — cut, bend,
+          and wire from shop rates
         </li>
         <li>
           <Link href="/contact">Request a quote</Link> — STEP, STP, IGES,

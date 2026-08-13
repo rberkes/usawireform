@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
 import { LinkList, Page, PageHero, Section, TextLink } from "@/components/ui";
 import { processesByCategory } from "@/lib/processes";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Wire Form Processes",
-  description:
-    "Process index for 4–14 mm wire forming: 2D and 3D CNC, straightening, cutoff, end forming, weld, finish, and inspection.",
-};
+  description: "Process index for 4–14 mm wire forming: 2D and 3D CNC, straightening, cutoff, end forming, weld, finish, and inspection.",
+  path: '/processes',
+  keywords: [
+    "wire forming processes",
+    "CNC forming",
+    "resistance welding",
+  ],
+});
 
 export default function ProcessesIndexPage() {
   const groups = processesByCategory();

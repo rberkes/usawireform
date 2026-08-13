@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Ventilation Wire Forming",
-  description:
-    "Ventilation and HVAC wire forming: fan and equipment guards with a 3/8 to 1/2 in frame. Light infill named, not a residential register.",
-};
+  description: "Ventilation and HVAC wire forming: fan and equipment guards with a 3/8 to 1/2 in frame. Light infill named, not a residential register.",
+  path: '/industries/ventilation',
+  keywords: [
+    "ventilation",
+    "ventilation wire forming",
+    "4-14 mm wire",
+    "CNC wire forms",
+  ],
+});
 
 export default function VentilationPage() {
   return (

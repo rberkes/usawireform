@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
 import { LinkList, Page, PageHero, Section } from "@/components/ui";
 import { catalogByGroup } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
 import { publishedProcesses } from "@/lib/processes";
+import { pageMeta } from "@/lib/seo";
 import { industries, shopLines } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Sitemap",
-  description:
-    `${COMPANY} site map: processes, 4–14 mm products, industries, and the shop.`,
-};
+  description: `${COMPANY} site map: processes, 4–14 mm products, industries, and the shop.`,
+  path: "/site-map",
+  keywords: ["sitemap"],
+});
 
 export default function SiteMapPage() {
   const processLinks = publishedProcesses().map((process) => ({
@@ -38,7 +39,7 @@ export default function SiteMapPage() {
             },
             {
               href: "/cleveland",
-              title: "Cleveland",
+              title: "Northeast Ohio",
               body: "Mills, wire drawers, short-haul coil.",
             },
             {
@@ -50,6 +51,16 @@ export default function SiteMapPage() {
               href: "/equipment",
               title: "Equipment",
               body: "Robomac 214 and the floor list.",
+            },
+            {
+              href: "/secondary-operations",
+              title: "Secondary operations",
+              body: "Weld, plate, powder, ends, inspect.",
+            },
+            {
+              href: "/instant-quote",
+              title: "Instant quote",
+              body: "Estimate from diameter, bends, length, and material.",
             },
             {
               href: "/videos",

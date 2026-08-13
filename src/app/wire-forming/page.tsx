@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: "Wire Forming in the USA",
-  description:
-    "Wire forming in the 4–14 mm band: 3D CNC, heavy frames, wire baskets, guards, and how the USA process map fits together.",
-};
+  description: "Wire forming in the 4–14 mm band: 3D CNC, heavy frames, wire baskets, guards, and how the USA process map fits together.",
+  path: '/wire-forming',
+  keywords: [
+    "wire forming USA",
+    "heavy wire forming",
+    "3D CNC",
+  ],
+});
 
 const toc = [
   { id: "definition", label: "Definition" },
@@ -106,10 +111,10 @@ export default function WireFormingPillarPage() {
 
       <h2 id="usa">USA production</h2>
       <p>
-        This shop has 50+ years of industry experience in Cleveland.
-        The city sits on mills and wire drawers, so 4–14 mm coil is
+        This shop has 50+ years of industry experience in Northeast Ohio.
+        The region sits on mills and wire drawers, so 4–14 mm coil is
         short-haul and forming plus secondaries stay in one building —{" "}
-        <Link href="/cleveland">why Cleveland</Link>.
+        <Link href="/cleveland">why Northeast Ohio</Link>.
         Wire forms are what we run here: 2D and 3D CNC in 4–14 mm, then
         resistance weld, MIG, and TIG. Prints move. Lots are mixed.
         That is why CNC is the center of the floor, and why the work is
