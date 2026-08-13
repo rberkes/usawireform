@@ -15,7 +15,7 @@ export default function PrivacyPage() {
       <PageHero
         kicker="Legal"
         title="Privacy"
-        lede="Quote files and contact details go to the shop. We do not sell them."
+        lede="Quote files and contact details go to headquarters. We do not sell them."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>

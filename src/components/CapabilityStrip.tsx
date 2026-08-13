@@ -14,7 +14,7 @@ const shots = [
     src: "/shop/capability-02.jpg",
     title: "Wire baskets",
     href: "/products/heavy-duty-wire-baskets",
-    body: "Form, weld, and finish in one shop.",
+    body: "Form, weld, and finish at headquarters.",
   },
   {
     src: "/shop/capability-03.jpg",

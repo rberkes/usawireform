@@ -20,7 +20,7 @@ export default function SecondaryOperationsPage() {
   return (
     <Page>
       <PageHero
-        kicker="Shop"
+        kicker="Headquarters"
         title="Secondary operations"
         lede="Form first. Then the ops that make the part install: ends, weld, plate, powder, inspect. Same building as the CNC cell."
       />

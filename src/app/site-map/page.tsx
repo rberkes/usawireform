@@ -7,7 +7,7 @@ import { industries, shopLines } from "@/lib/site";
 
 export const metadata = pageMeta({
   title: "Sitemap",
-  description: `${COMPANY} site map: processes, 4–14 mm products, industries, and the shop.`,
+  description: `${COMPANY} site map: processes, 4–14 mm products, industries, and headquarters.`,
   path: "/site-map",
   keywords: ["sitemap"],
 });
@@ -27,7 +27,7 @@ export default function SiteMapPage() {
         lede="Every public page. Wire forming, fabrication, and the 3/8 · 7/16 · 1/2 in directory — not a list of other companies."
       />
 
-      <Section title="Shop">
+      <Section title="Headquarters">
         <LinkList
           className="mt-5"
           items={[

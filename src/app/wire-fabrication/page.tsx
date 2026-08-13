@@ -41,7 +41,7 @@ export default function WireFabricationPage() {
         <Link href="/processes/resistance-welding">resistance weld</Link>,{" "}
         <Link href="/processes/mig-tig-assembly">MIG / TIG</Link>, pierce,
         and finish. The starting stock is round wire from coil, not plate
-        or tube. Geometry is a centerline. The shop is{" "}
+        or tube. Geometry is a centerline. Our corp headquarters is{" "}
         <Link href="/">{COMPANY}</Link>.
       </p>
       <p>

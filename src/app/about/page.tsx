@@ -10,7 +10,7 @@ export const metadata = pageMeta({
   keywords: [
     "USA Wire Form about",
     "50 years wire forming",
-    "Northeast Ohio shop",
+    "Northeast Ohio headquarters",
   ],
 });
 
@@ -34,7 +34,7 @@ export default function AboutPage() {
           powder.
         </p>
         <p>
-          The shop is in Northeast Ohio because the steel is. Mills and wire
+          Our corp headquarters is in Northeast Ohio because the steel is. Mills and wire
           drawers sit on the same map, so 4–14 mm coil is a short haul
           and forming plus weld, plate, and powder stay in one building.
           That is the cost of a heavy form — detail on{" "}
@@ -69,7 +69,7 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <Section title="Library and shop">
+      <Section title="Library and headquarters">
         <p className="mt-4 max-w-2xl text-sm leading-7 text-muted">
           Process pages in the{" "}
           <TextLink href="/processes">index</TextLink> are reference.{" "}
@@ -84,7 +84,7 @@ export default function AboutPage() {
 
       <FactGrid
         items={[
-          { label: "Shop", value: "50+ years of industry experience" },
+          { label: "Headquarters", value: "50+ years of industry experience" },
           { label: "Location", value: "Northeast Ohio — mills and wire drawers" },
           { label: "Band", value: WIRE.label },
           { label: "Stock", value: "3/8, 7/16, and 1/2 in coil" },

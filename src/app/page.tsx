@@ -66,7 +66,7 @@ export default function Home() {
           { value: WIRE.metric, label: "Diameter band" },
           { value: "3D CNC", label: "Primary process" },
           { value: "50+ yrs", label: "Industry experience" },
-          { value: "Northeast Ohio", label: "Shop + production" },
+          { value: "Northeast Ohio", label: "Headquarters + production" },
         ]}
       />
 

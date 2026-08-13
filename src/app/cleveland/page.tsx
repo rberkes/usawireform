@@ -30,7 +30,7 @@ export default function ClevelandPage() {
     <DocPage
       kicker="Location"
       title="Northeast Ohio is the coil, not a zip code."
-      lede={`Wire forming is heavy. ${COMPANY} sits next to mills and wire drawers so 4–14 mm coil, CNC forming, and secondary operations stay short-haul — that is the low-cost shop, not a cheaper bend.`}
+      lede={`Wire forming is heavy. ${COMPANY} sits next to mills and wire drawers so 4–14 mm coil, CNC forming, and secondary operations stay short-haul — that is the low-cost headquarters, not a cheaper bend.`}
       toc={toc}
     >
       <h2 id="why">Why this region</h2>
@@ -101,7 +101,7 @@ export default function ClevelandPage() {
       <h2 id="secondaries">Forming and secondaries in one building</h2>
       <p>
         Low-cost wire forming fails when the form is cheap and the rest
-        of the part is three other vendors. A frame that leaves the shop
+        of the part is three other vendors. A frame that leaves headquarters
         for weld, then Ohio again for zinc, then somewhere else for
         powder, has paid freight three times and queued three times.
       </p>
@@ -131,7 +131,7 @@ export default function ClevelandPage() {
       </ul>
       <p>
         Northeast Ohio attacks the first and last lines and collapses the
-        middle into one shop. Piece price follows. It is not a discount
+        middle into one headquarters. Piece price follows. It is not a discount
         on a 9-gauge clip from a catalog. It is heavy wire, short-haul
         steel, and secondaries that do not leave the building.
       </p>
@@ -139,7 +139,7 @@ export default function ClevelandPage() {
       <h2 id="next">Related</h2>
       <ul>
         <li>
-          <Link href="/about">About</Link> — the shop
+          <Link href="/about">About</Link> — headquarters
         </li>
         <li>
           <Link href="/wire-fabrication">Wire fabrication, 4–14 mm</Link>

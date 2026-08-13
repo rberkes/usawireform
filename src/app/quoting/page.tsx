@@ -35,7 +35,7 @@ const toc = [
 export default function QuotingPage() {
   return (
     <DocPage
-      kicker="Shop"
+      kicker="Headquarters"
       title="Quotes, tooling, and coil"
       lede={`${PRICE_LINE} ${STOCK} is on the floor. Other sizes in ${WIRE.short} still form — they need tooling, a program, and a coil. ${QUOTE.year} pricing.`}
       toc={toc}

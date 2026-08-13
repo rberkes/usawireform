@@ -61,7 +61,7 @@ export function Footer() {
 
         <div className="flex gap-16 text-sm">
           <NavCol title="Library" links={library} />
-          <NavCol title="Shop" links={shop} />
+          <NavCol title="Headquarters" links={shop} />
           <div className="flex flex-col gap-2">
             <span className="font-mono text-[11px] tracking-widest text-muted uppercase">
               Quotes

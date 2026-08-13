@@ -27,13 +27,13 @@ export default function WireFormingPillarPage() {
     <DocPage
       kicker="Reference"
       title="Wire forming in the USA"
-      lede="Wire forming takes round wire from coil and turns it into a specified 2D or 3D shape. This shop runs 4–14 mm — frames, wire baskets, guards, trays, and routing forms — not music-wire clips."
+      lede="Wire forming takes round wire from coil and turns it into a specified 2D or 3D shape. Our corp headquarters runs 4–14 mm — frames, wire baskets, guards, trays, and routing forms — not music-wire clips."
       toc={toc}
     >
       <h2 id="definition">A working definition</h2>
       <p>
-        Wire forming starts with a coil of specified alloy and diameter. The
-        shop straightens that wire, feeds it, bends it to a centerline,
+        Wire forming starts with a coil of specified alloy and diameter. Headquarters
+        straightens that wire, feeds it, bends it to a centerline,
         cuts it, and often adds end work or a weld. The part is the wire. There
         is no blank, no chip, no mold. Geometry comes from bend sequence and
         tooling, not from a cutter path through solid stock.
@@ -111,7 +111,7 @@ export default function WireFormingPillarPage() {
 
       <h2 id="usa">USA production</h2>
       <p>
-        This shop has 50+ years of industry experience in Northeast Ohio.
+        Our corp headquarters has 50+ years of industry experience in Northeast Ohio.
         The region sits on mills and wire drawers, so 4–14 mm coil is
         short-haul and forming plus secondaries stay in one building —{" "}
         <Link href="/cleveland">why Northeast Ohio</Link>.

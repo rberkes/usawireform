@@ -27,7 +27,7 @@ export default function CncWireBendingPage() {
     <DocPage
       kicker="Process"
       title="CNC wire bending"
-      lede="CNC wire bending is CNC wire forming by another search. Round wire from coil, a programmed bend sequence, cutoff. This shop runs 4–14 mm on a Numalliance Robomac 214TF."
+      lede="CNC wire bending is CNC wire forming by another search. Round wire from coil, a programmed bend sequence, cutoff. Our corp headquarters runs 4–14 mm on a Numalliance Robomac 214TF."
       toc={toc}
     >
       <h2 id="what">Bending and forming are the same cell</h2>

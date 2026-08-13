@@ -34,7 +34,7 @@ export default function ContactPage() {
         <dl className="mt-10 space-y-5 text-sm">
           <div>
             <dt className="font-mono text-[11px] tracking-widest text-muted uppercase">
-              Shop
+              Headquarters
             </dt>
             <dd className="mt-1">
               <TextLink href="/cleveland">Northeast Ohio</TextLink>

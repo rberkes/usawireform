@@ -38,7 +38,7 @@ export default function OutdoorProductsPage() {
           <TextLink href="/products">product directory</TextLink>.
         </p>
       </div>
-      <Section title="Same shop">
+      <Section title="Same headquarters">
         <ul className="mt-6 max-w-2xl list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
           <li>
             <TextLink href="/products/wire-furniture">Wire furniture</TextLink>
