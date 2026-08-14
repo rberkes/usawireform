@@ -44,13 +44,13 @@ export default function EquipmentPage() {
           className="mt-5"
           items={[
             {
-              href: "/equipment/machines/robomac-tf",
+              href: "/equipment/machines/numalliance-robomac-tf",
               title: "Robomac TF",
               note: "3D CNC",
               body: "High-performance wire bending with 1–3 heads, 2–16 mm capacity.",
             },
             {
-              href: "/equipment/machines/ftx",
+              href: "/equipment/machines/numalliance-ftx",
               title: "FTX",
               note: "3D CNC",
               body: "Advanced double-bend technology with slip-free forming, 3–16 mm.",

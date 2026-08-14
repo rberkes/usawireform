@@ -15,7 +15,7 @@ export type Machine = {
 
 export const machines: Machine[] = [
   {
-    slug: "robomac-tf",
+    slug: "numalliance-robomac-tf",
     name: "Robomac TF",
     shortName: "Robomac TF",
     category: "3d",
@@ -53,7 +53,7 @@ export const machines: Machine[] = [
     ],
   },
   {
-    slug: "robomac-e-motion",
+    slug: "numalliance-robomac-e-motion",
     name: "Robomac e-Motion",
     shortName: "e-Motion",
     category: "3d",
@@ -91,7 +91,7 @@ export const machines: Machine[] = [
     ],
   },
   {
-    slug: "robomac-tfe",
+    slug: "numalliance-robomac-tfe",
     name: "Robomac TFE",
     shortName: "Robomac TFE",
     category: "3d",
@@ -129,7 +129,7 @@ export const machines: Machine[] = [
     ],
   },
   {
-    slug: "robomac-2-heads",
+    slug: "numalliance-robomac-2-heads",
     name: "Robomac 2 Heads",
     shortName: "2 Heads",
     category: "3d",
@@ -167,7 +167,7 @@ export const machines: Machine[] = [
     ],
   },
   {
-    slug: "robomac-r4xx",
+    slug: "numalliance-robomac-r4xx",
     name: "Robomac R4xx",
     shortName: "R4xx",
     category: "3d",
@@ -205,7 +205,7 @@ export const machines: Machine[] = [
     ],
   },
   {
-    slug: "frx",
+    slug: "numalliance-frx",
     name: "FRX",
     shortName: "FRX",
     category: "3d",
@@ -243,7 +243,7 @@ export const machines: Machine[] = [
     ],
   },
   {
-    slug: "ftx",
+    slug: "numalliance-ftx",
     name: "FTX",
     shortName: "FTX",
     category: "3d",
@@ -281,7 +281,7 @@ export const machines: Machine[] = [
     ],
   },
   {
-    slug: "f2d",
+    slug: "numalliance-f2d",
     name: "F2D",
     shortName: "F2D",
     category: "2d",
