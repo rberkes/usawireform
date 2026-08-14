@@ -1,5 +1,21 @@
 import { NextRequest } from "next/server";
+import { Resend } from "resend";
 import { QUOTE_EMAIL } from "@/lib/company";
+import { getDirectoryCompany } from "@/lib/directory";
+import { recordLead } from "@/lib/leads";
+
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 interface DirectoryLead {
   name: string;
@@ -32,23 +48,59 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Log the lead for tracking (in production, save to database or send email)
-    console.log("Directory Lead Received:", {
-      ...data,
-      receivedAt: new Date().toISOString(),
-      ip: request.headers.get("x-forwarded-for") || "unknown",
-      userAgent: request.headers.get("user-agent") || "unknown",
+    // Resolve against our own directory data so the stored record reflects
+    // the real listing even if the client payload were tampered with.
+    const company = getDirectoryCompany(data.referredCompanySlug);
+    const referredCompany = company?.name ?? data.referredCompany;
+
+    const receivedAt = new Date().toISOString();
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const userAgent = request.headers.get("user-agent") || "unknown";
+
+    console.log("Directory Lead Received:", { ...data, referredCompany, receivedAt, ip, userAgent });
+
+    await recordLead({
+      type: "directory-inquiry",
+      email: data.email,
+      visitorName: data.name,
+      visitorCompany: data.company,
+      visitorPhone: data.phone,
+      message: data.message,
+      referredCompany,
+      referredCompanySlug: data.referredCompanySlug,
+      receivedAt,
+      ip,
+      userAgent,
     });
 
-    // In production, you would:
-    // 1. Save to database (e.g., leads table)
-    // 2. Send notification email to QUOTE_EMAIL
-    // 3. Potentially notify the referred company
+    if (resend && process.env.RESEND_FROM_EMAIL) {
+      try {
+        await resend.emails.send({
+          from: process.env.RESEND_FROM_EMAIL,
+          to: QUOTE_EMAIL,
+          replyTo: data.email,
+          subject: `Directory inquiry: ${data.name} → ${referredCompany}`,
+          html: `
+            <h2>Directory inquiry</h2>
+            <p><strong>Name:</strong> ${escapeHtml(data.name)}</p>
+            <p><strong>Email:</strong> <a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></p>
+            <p><strong>Phone:</strong> ${escapeHtml(data.phone || "Not provided")}</p>
+            <p><strong>Their company:</strong> ${escapeHtml(data.company || "Not provided")}</p>
+            <p><strong>Message:</strong> ${escapeHtml(data.message || "None").replace(/\n/g, "<br />")}</p>
+            <hr />
+            <p><strong>Asking about:</strong> ${escapeHtml(referredCompany)}</p>
+            <hr />
+            <p><small>${escapeHtml(receivedAt)} · ${escapeHtml(ip)}</small></p>
+          `,
+        });
+      } catch (error) {
+        console.error("[Directory Lead Email Error]", error);
+      }
+    }
 
-    // For now, return success
     return Response.json({
       success: true,
-      message: `Lead for ${data.referredCompany} received. Contact: ${QUOTE_EMAIL}`,
+      message: `Lead for ${referredCompany} received. Contact: ${QUOTE_EMAIL}`,
     });
   } catch (error) {
     console.error("Directory lead error:", error);

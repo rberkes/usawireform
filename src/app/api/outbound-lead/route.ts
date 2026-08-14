@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { Resend } from "resend";
 import { QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 import { getDirectoryCompany } from "@/lib/directory";
+import { recordLead } from "@/lib/leads";
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -62,6 +63,18 @@ export async function POST(request: NextRequest) {
       userAgent: request.headers.get("user-agent") ?? "unknown",
       referer: request.headers.get("referer") ?? "unknown",
     };
+
+    await recordLead({
+      type: event === "capture" ? "outbound-capture" : "outbound-revisit",
+      email,
+      visitorCompany: lead.visitorCompany,
+      referredCompany: company.name,
+      referredCompanySlug: company.slug,
+      destinationUrl: lead.destinationUrl,
+      receivedAt: lead.receivedAt,
+      ip: lead.ip,
+      userAgent: lead.userAgent,
+    });
 
     if (resend && process.env.RESEND_FROM_EMAIL) {
       try {
