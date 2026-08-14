@@ -51,12 +51,13 @@ const navSections = [
     items: [
       { href: "/guide/design-for-wire-forming", label: "Design Guide" },
       { href: "/materials", label: "Materials" },
+      { href: "/locations", label: "Service Locations" },
+      { href: "/solutions", label: "Industry Solutions" },
       { href: "/sizes", label: "Wire Sizes" },
       { href: "/equipment", label: "Equipment" },
       { href: "/directory", label: "Company Directory" },
       { href: "/videos", label: "Videos" },
       { href: "/about", label: "About Us" },
-      { href: "/careers", label: "Careers" },
     ],
   },
 ];

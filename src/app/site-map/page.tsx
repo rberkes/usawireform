@@ -213,6 +213,34 @@ export default function SiteMapPage() {
         })}
       </Section>
 
+      <Section title="Service locations">
+        <p className="mt-3 text-sm leading-6 text-muted">
+          CNC wire forming shipped nationwide from Northeast Ohio. Each city
+          page has unique content about local industry and why wire forms
+          matter there.
+        </p>
+        <LinkList
+          className="mt-5"
+          items={[
+            {
+              href: "/locations",
+              title: "All service locations",
+              body: "Browse cities by region.",
+            },
+            {
+              href: "/services",
+              title: "Products by city",
+              body: "Wire baskets, cable trays, guards, and more — by location.",
+            },
+            {
+              href: "/solutions",
+              title: "Industry solutions",
+              body: "Automotive, aerospace, medical, food processing, and more.",
+            },
+          ]}
+        />
+      </Section>
+
       <Section title="This site">
         <LinkList
           className="mt-5"

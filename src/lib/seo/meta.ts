@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { COMPANY, SITE_URL } from "@/lib/company";
-import { CORE_KEYWORDS } from "./keywords";
+import { ALL_KEYWORDS } from "./keywords";
 import type { SeoRecord } from "./pages";
 
 function unique(values: string[]) {
@@ -37,7 +37,7 @@ export function pageMeta({
     keywords: unique([
       ...keywords,
       title.replace(/\s+—.*$/, ""),
-      ...CORE_KEYWORDS,
+      ...ALL_KEYWORDS,
     ]),
     authors: [{ name: COMPANY, url: SITE_URL }],
     creator: COMPANY,

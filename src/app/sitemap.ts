@@ -6,6 +6,12 @@ import { industries } from "@/lib/site";
 import { machines } from "@/lib/machines";
 import { publishedProcesses } from "@/lib/processes";
 import { allSeoPages } from "@/lib/seo";
+import { cities } from "@/lib/seo-pages/cities";
+import { materials } from "@/lib/seo-pages/materials";
+import {
+  getProductLocationCombos,
+  getIndustryProductCombos,
+} from "@/lib/seo-pages/combinations";
 
 type ChangeFreq = "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 
@@ -126,6 +132,82 @@ export default function sitemap(): MetadataRoute.Sitemap {
   allUrls.set(directoryIndexPage.url, directoryIndexPage);
   for (const page of directoryPages) {
     allUrls.set(page.url, page);
+  }
+
+  // Location pages (programmatic SEO)
+  const locationsIndexPage = {
+    url: `${SITE_URL}/locations`,
+    lastModified: now,
+    changeFrequency: "monthly" as ChangeFreq,
+    priority: 0.7,
+  };
+  allUrls.set(locationsIndexPage.url, locationsIndexPage);
+
+  for (const city of cities) {
+    const url = `${SITE_URL}/locations/${city.slug}`;
+    allUrls.set(url, {
+      url,
+      lastModified: now,
+      changeFrequency: "monthly" as ChangeFreq,
+      priority: 0.6,
+    });
+  }
+
+  // Services pages (product + location combinations)
+  const servicesIndexPage = {
+    url: `${SITE_URL}/services`,
+    lastModified: now,
+    changeFrequency: "monthly" as ChangeFreq,
+    priority: 0.7,
+  };
+  allUrls.set(servicesIndexPage.url, servicesIndexPage);
+
+  for (const combo of getProductLocationCombos()) {
+    const url = `${SITE_URL}/services/${combo.slug}`;
+    allUrls.set(url, {
+      url,
+      lastModified: now,
+      changeFrequency: "monthly" as ChangeFreq,
+      priority: 0.5,
+    });
+  }
+
+  // Solutions pages (industry + product combinations)
+  const solutionsIndexPage = {
+    url: `${SITE_URL}/solutions`,
+    lastModified: now,
+    changeFrequency: "monthly" as ChangeFreq,
+    priority: 0.7,
+  };
+  allUrls.set(solutionsIndexPage.url, solutionsIndexPage);
+
+  for (const combo of getIndustryProductCombos()) {
+    const url = `${SITE_URL}/solutions/${combo.slug}`;
+    allUrls.set(url, {
+      url,
+      lastModified: now,
+      changeFrequency: "monthly" as ChangeFreq,
+      priority: 0.5,
+    });
+  }
+
+  // Materials pages
+  const materialsIndexPage = {
+    url: `${SITE_URL}/materials`,
+    lastModified: now,
+    changeFrequency: "monthly" as ChangeFreq,
+    priority: 0.7,
+  };
+  allUrls.set(materialsIndexPage.url, materialsIndexPage);
+
+  for (const material of materials) {
+    const url = `${SITE_URL}/materials/${material.slug}`;
+    allUrls.set(url, {
+      url,
+      lastModified: now,
+      changeFrequency: "monthly" as ChangeFreq,
+      priority: 0.6,
+    });
   }
 
   // Boost high-priority pages

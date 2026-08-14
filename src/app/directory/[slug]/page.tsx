@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DirectoryLeadForm } from "@/components/DirectoryLeadForm";
+import { OutboundLinkGate } from "@/components/OutboundLinkGate";
 import { ServiceSchema } from "@/components/SeoSchemas";
 import {
   Page,
@@ -106,14 +107,11 @@ export default async function DirectoryCompanyPage({ params }: Props) {
 
             {company.website && (
               <p className="mt-4">
-                <a
+                <OutboundLinkGate
                   href={company.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-copper hover:underline"
-                >
-                  Visit website →
-                </a>
+                  companyName={company.name}
+                  companySlug={company.slug}
+                />
               </p>
             )}
 
@@ -152,6 +150,25 @@ export default async function DirectoryCompanyPage({ params }: Props) {
           </div>
 
           <div className="lg:sticky lg:top-8 lg:self-start">
+            {company.website && (
+              <div className="mb-6 border border-line bg-inset/30 p-6">
+                <h3 className="text-lg font-medium">
+                  Visit {company.name}
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-muted">
+                  We&apos;ll ask for your email first so we can follow up if
+                  they are not the right fit for your job.
+                </p>
+                <p className="mt-4">
+                  <OutboundLinkGate
+                    href={company.website}
+                    companyName={company.name}
+                    companySlug={company.slug}
+                    label={`Go to ${company.name}`}
+                  />
+                </p>
+              </div>
+            )}
             <div className="border border-line bg-inset/30 p-6">
               <DirectoryLeadForm
                 companyName={company.name}

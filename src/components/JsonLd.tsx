@@ -209,3 +209,70 @@ export function BreadcrumbJsonLd({
     />
   );
 }
+
+export function LocalBusinessJsonLd({
+  name,
+  description,
+  areaServed,
+}: {
+  name: string;
+  description: string;
+  areaServed: string;
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name,
+    description,
+    url: SITE_URL,
+    email: QUOTE_EMAIL,
+    areaServed,
+    address: {
+      "@type": "PostalAddress",
+      addressRegion: "OH",
+      addressCountry: "US",
+    },
+    priceRange: "$$",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function ServiceJsonLd({
+  name,
+  description,
+  provider,
+  areaServed,
+  url,
+}: {
+  name: string;
+  description: string;
+  provider?: string;
+  areaServed?: string;
+  url: string;
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name,
+    description,
+    provider: {
+      "@type": "Organization",
+      name: provider ?? COMPANY,
+    },
+    areaServed: areaServed ?? "United States",
+    url: `${SITE_URL}${url}`,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
