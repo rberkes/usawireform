@@ -1,3 +1,5 @@
+import { BreadcrumbJsonLd } from "@/components/JsonLd";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { CardGrid, Page, PageHero } from "@/components/ui";
 import { industries } from "@/lib/site";
@@ -14,8 +16,12 @@ export const metadata = pageMeta({
 });
 
 export default function IndustriesPage() {
+  const breadcrumbItems = [{ label: "Industries" }];
+
   return (
     <Page>
+      <BreadcrumbJsonLd items={[{ name: "Industries", url: "/industries" }]} />
+      <Breadcrumbs items={breadcrumbItems} />
       <PageHero
         kicker="Industries"
         title="Where the forms go."

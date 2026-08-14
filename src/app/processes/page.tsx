@@ -1,3 +1,5 @@
+import { BreadcrumbJsonLd } from "@/components/JsonLd";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { LinkList, Page, PageHero, Section, TextLink } from "@/components/ui";
 import { processesByCategory } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
@@ -15,9 +17,12 @@ export const metadata = pageMeta({
 
 export default function ProcessesIndexPage() {
   const groups = processesByCategory();
+  const breadcrumbItems = [{ label: "Processes" }];
 
   return (
     <Page>
+      <BreadcrumbJsonLd items={[{ name: "Processes", url: "/processes" }]} />
+      <Breadcrumbs items={breadcrumbItems} />
       <PageHero
         kicker="Library"
         title="Wire form processes"

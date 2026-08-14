@@ -1,34 +1,44 @@
+import { BreadcrumbJsonLd } from "@/components/JsonLd";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepQuoteBlock } from "@/components/StepUpload";
-import { CardGrid, Page, PageHero, Section, TextLink } from "@/components/ui";
-import { catalog, catalogByGroup, STOCK } from "@/lib/catalog";
-import { pageMeta } from "@/lib/seo";
+import { CardGrid, Page, PageHero, Section } from "@/components/ui";
+import { catalog, catalogGroups, catalogByGroup, STOCK } from "@/lib/catalog";
 import { shopLines } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Product directory",
-  description: `SKU directory of wire forms in ${STOCK}: hooks, hangers, grids, trays, frames, and hardware.`,
+  title: "Wire Form Products",
+  description: `Custom wire form products in ${STOCK}: hooks, rings, hangers, frames, guards, baskets, and hardware. 4–14 mm CNC forming.`,
   path: "/products",
-  keywords: ["wire form catalog", "wire hooks", "wire hangers", "wire trays"],
+  keywords: [
+    "wire form products",
+    "custom wire forms",
+    "S-hooks",
+    "D-rings",
+    "wire baskets",
+    "machine guards",
+  ],
 });
 
 export default function ProductsPage() {
+  const groups = catalogByGroup();
+  const breadcrumbItems = [{ label: "Products" }];
+
   return (
     <Page>
+      <BreadcrumbJsonLd items={[{ name: "Products", url: "/products" }]} />
+      <Breadcrumbs items={breadcrumbItems} />
       <PageHero
-        kicker={`${STOCK} · directory`}
-        title={`${catalog.length} part families in stock coil.`}
-        lede={
-          <>
-            Every SKU here is formed from 3/8, 7/16, or 1/2 in wire. No
-            part numbers until a print is frozen. Process detail lives in
-            the <TextLink href="/processes">library</TextLink>.
-          </>
-        }
+        kicker="Catalog"
+        title="Wire form products"
+        lede={`Heavy wire products in ${STOCK} — hooks, rings, hangers, frames, guards, and baskets. 100+ forms in the production catalog.`}
       />
-      {catalogByGroup().map(({ group, items }) => (
-        <Section key={group} title={group}>
+
+      {groups.map((group) => (
+        <Section key={group.group} kicker={group.group} className="mt-12 first:mt-8">
           <CardGrid
-            items={items.map((item) => ({
+            columns={3}
+            items={group.items.map((item) => ({
               href: `/products/${item.slug}`,
               title: item.title,
               body: item.summary,
@@ -36,20 +46,20 @@ export default function ProductsPage() {
           />
         </Section>
       ))}
-      <Section title="Shop lines">
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-muted">
-          Our own goods, run on the same cells. Not a SKU in the
-          directory above.
-        </p>
+
+      {/* Shop lines */}
+      <Section kicker="Shop lines" className="mt-16">
         <CardGrid
-          items={shopLines.map((item) => ({
-            href: `/products/${item.slug}`,
-            title: item.title,
-            body: item.summary,
+          columns={2}
+          items={shopLines.map((line) => ({
+            href: `/products/${line.slug}`,
+            title: line.title,
+            body: line.summary,
           }))}
         />
       </Section>
-      <StepQuoteBlock className="mt-16" title="Need a hook, hanger, grid, or frame?" />
+
+      <StepQuoteBlock className="mt-16" title="Have a product to quote?" />
     </Page>
   );
 }

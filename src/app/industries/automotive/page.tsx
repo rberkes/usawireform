@@ -1,3 +1,5 @@
+import { BreadcrumbJsonLd } from "@/components/JsonLd";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { Page, PageHero, Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
@@ -15,8 +17,20 @@ export const metadata = pageMeta({
 });
 
 export default function AutomotivePage() {
+  const breadcrumbItems = [
+    { label: "Industries", href: "/industries" },
+    { label: "Automotive" },
+  ];
+
   return (
     <Page>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Industries", url: "/industries" },
+          { name: "Automotive", url: "/industries/automotive" },
+        ]}
+      />
+      <Breadcrumbs items={breadcrumbItems} />
       <PageHero
         kicker="Industries"
         title="Automotive"
@@ -28,7 +42,7 @@ export default function AutomotivePage() {
           <TextLink href="/products/wire-frames">Seat frames</TextLink>,
           headrest and lock rods, visor skeletons — 3D paths in{" "}
           <TextLink href="/sizes">3/8 to 1/2 in</TextLink>.{" "}
-          <TextLink href="/materials">1018</TextLink> or the print’s
+          <TextLink href="/materials">1018</TextLink> or the print's
           carbon; 304 when washdown or corrosion says so.{" "}
           <TextLink href="/processes/plating-and-coating">
             Zinc-nickel

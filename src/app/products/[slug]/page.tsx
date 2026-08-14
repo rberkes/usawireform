@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { JsonLd } from "@/components/JsonLd";
+import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/JsonLd";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import {
   Page,
@@ -13,7 +14,7 @@ import {
   catalog,
   getCatalogItem,
 } from "@/lib/catalog";
-import { pageMeta, productJsonLd } from "@/lib/seo";
+import { pageMeta } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -44,13 +45,26 @@ export default async function CatalogProductPage({ params }: Props) {
     .map((relatedSlug) => getCatalogItem(relatedSlug))
     .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
 
+  const breadcrumbItems = [
+    { label: "Products", href: "/products" },
+    { label: item.group, href: "/products" },
+    { label: item.title },
+  ];
+
   return (
     <Page>
-      <JsonLd data={productJsonLd({
-        title: item.title,
-        description: `${item.title} in ${STOCK} wire. ${item.summary}`,
-        path: `/products/${slug}`,
-      })} />
+      <ProductJsonLd
+        name={item.title}
+        description={`${item.title} in ${STOCK} wire. ${item.summary}`}
+        url={`/products/${slug}`}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Products", url: "/products" },
+          { name: item.title, url: `/products/${slug}` },
+        ]}
+      />
+      <Breadcrumbs items={breadcrumbItems} />
       <PageHero kicker={`${STOCK} · ${item.group}`} title={item.title} lede={item.lede} />
       <SpecList
         rows={[
