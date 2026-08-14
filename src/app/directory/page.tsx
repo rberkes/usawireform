@@ -60,6 +60,12 @@ export default function DirectoryPage() {
         Click any company for details and to request a connection.
       </p>
 
+      <div className="mt-8 border border-line bg-inset/30 p-4 text-xs leading-5 text-muted">
+        <p>
+          <strong className="text-foreground">Disclaimer:</strong> The companies listed in this directory are not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. This directory is provided for informational purposes only. We make no representations about the accuracy, reliability, or quality of the listed companies. Contact companies directly to verify their capabilities and credentials.
+        </p>
+      </div>
+
       {DIRECTORY_REGIONS.map((region) => {
         const companies = getCompaniesByRegion(region);
         if (companies.length === 0) return null;

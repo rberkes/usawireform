@@ -161,6 +161,12 @@ export default async function DirectoryCompanyPage({ params }: Props) {
           </div>
         </div>
 
+        <div className="mt-12 border border-line bg-inset/30 p-4 text-xs leading-5 text-muted">
+          <p>
+            <strong className="text-foreground">Disclaimer:</strong> {company.name} is not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. This listing is provided for informational purposes only. Contact {company.name} directly to verify their capabilities, credentials, and current business status.
+          </p>
+        </div>
+
         {relatedCompanies.length > 0 && (
           <section className="mt-20 border-t border-line pt-12">
             <Kicker>More in {company.region}</Kicker>
