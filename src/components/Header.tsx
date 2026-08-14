@@ -61,6 +61,7 @@ const navSections = [
       { href: "/equipment", label: "Equipment" },
       { href: "/directory", label: "Company Directory" },
       { href: "/videos", label: "Videos" },
+      { href: "/trade-shows", label: "Trade Shows" },
       { href: "/about", label: "About Us" },
       { href: "/careers", label: "Careers" },
     ],

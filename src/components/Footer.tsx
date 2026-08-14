@@ -29,6 +29,7 @@ const shop = [
   { href: "/quoting", label: "Tooling & coil" },
   { href: "/about", label: "About" },
   { href: "/cleveland", label: "Northeast Ohio" },
+  { href: "/trade-shows", label: "Trade Shows" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },
 ];
