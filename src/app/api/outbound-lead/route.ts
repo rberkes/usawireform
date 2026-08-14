@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { Resend } from "resend";
-import { QUOTE_EMAIL, SITE_URL } from "@/lib/company";
+import { LEAD_NOTIFICATION_EMAIL, SITE_URL } from "@/lib/company";
 import { getDirectoryCompany } from "@/lib/directory";
 import { recordLead } from "@/lib/leads";
 
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       try {
         await resend.emails.send({
           from: process.env.RESEND_FROM_EMAIL,
-          to: QUOTE_EMAIL,
+          to: LEAD_NOTIFICATION_EMAIL,
           replyTo: email,
           subject:
             event === "capture"
