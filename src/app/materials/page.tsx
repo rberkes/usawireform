@@ -258,6 +258,21 @@ export default function MaterialsPage() {
         <li>
           <Link href="/processes/3d-cnc-wire-forming">3D CNC wire forming</Link>
         </li>
+        <li>
+          <Link href="/materials/stainless-steel-304-wire-forming">
+            304 stainless wire forming
+          </Link>
+        </li>
+        <li>
+          <Link href="/materials/stainless-steel-316-wire-forming">
+            316 stainless wire forming
+          </Link>
+        </li>
+        <li>
+          <Link href="/materials/carbon-steel-wire-forming">
+            Carbon steel wire forming
+          </Link>
+        </li>
       </ul>
 
       <QuoteBand title="Have a grade and a diameter?" />
