@@ -70,9 +70,7 @@ export function OutboundLinkGate({
     if (known) {
       reportOutbound({
         email: known,
-        referredCompany: companyName,
         referredCompanySlug: companySlug,
-        destinationUrl: href,
         event: "revisit",
       }).catch(() => {});
       window.open(href, "_blank", "noopener,noreferrer");
@@ -90,9 +88,7 @@ export function OutboundLinkGate({
       const response = await reportOutbound({
         email: email.trim(),
         visitorCompany: visitorCompany.trim(),
-        referredCompany: companyName,
         referredCompanySlug: companySlug,
-        destinationUrl: href,
         event: "capture",
       });
 

@@ -10,9 +10,7 @@ const resend = process.env.RESEND_API_KEY
 interface OutboundLead {
   email: string;
   visitorCompany?: string;
-  referredCompany: string;
   referredCompanySlug: string;
-  destinationUrl: string;
   event?: "capture" | "revisit";
 }
 
@@ -35,7 +33,7 @@ export async function POST(request: NextRequest) {
     const email = (data.email ?? "").trim();
     const event = data.event === "revisit" ? "revisit" : "capture";
 
-    if (!email || !data.referredCompanySlug || !data.destinationUrl) {
+    if (!email || !data.referredCompanySlug) {
       return Response.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -43,10 +41,10 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Invalid email format" }, { status: 400 });
     }
 
-    // Resolve the company from our own data so the attribution cannot be
-    // spoofed by whatever the client posted.
+    // Resolve the company and its destination from our own data. Nothing about
+    // the attribution comes from the request body, so it cannot be spoofed.
     const company = getDirectoryCompany(data.referredCompanySlug);
-    if (!company) {
+    if (!company?.website) {
       return Response.json({ error: "Unknown company" }, { status: 400 });
     }
 
@@ -56,7 +54,7 @@ export async function POST(request: NextRequest) {
       referredCompany: company.name,
       referredCompanySlug: company.slug,
       referredCompanyLocation: company.location,
-      destinationUrl: company.website ?? data.destinationUrl,
+      destinationUrl: company.website,
       directoryPage: `${SITE_URL}/directory/${company.slug}`,
       event,
       receivedAt: new Date().toISOString(),
