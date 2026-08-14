@@ -8,7 +8,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Wire Form Products",
-  description: `Custom wire form products in ${STOCK}: hooks, rings, hangers, frames, guards, baskets, and hardware. 4–14 mm CNC forming.`,
+  description: `Browse 100+ custom wire form products in ${STOCK}: S-hooks, D-rings, hangers, frames, guards & baskets. Made in USA with 50+ years experience. Request a quote today.`,
   path: "/products",
   keywords: [
     "wire form products",
@@ -17,6 +17,8 @@ export const metadata = pageMeta({
     "D-rings",
     "wire baskets",
     "machine guards",
+    "wire hooks",
+    "wire hangers",
   ],
 });
 

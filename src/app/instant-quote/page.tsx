@@ -7,7 +7,7 @@ import { pageMeta } from "@/lib/seo";
 export const metadata = pageMeta({
   title: "Instant Quote",
   description:
-    `${PRICE_LINE} Instant estimate for 4–14 mm CNC wire forms.`,
+    `Get an instant wire forming estimate in seconds. ${PRICE_LINE} Enter diameter, bends, length & quantity for 4–14 mm CNC wire forms. No signup required.`,
   path: "/instant-quote",
   keywords: [
     "wire forming quote",
@@ -15,6 +15,7 @@ export const metadata = pageMeta({
     "CNC wire form price",
     "lowest price wire forming",
     "100 piece minimum",
+    "wire forming calculator",
   ],
 });
 

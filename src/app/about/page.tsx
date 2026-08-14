@@ -5,12 +5,14 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "About",
-  description: "50+ years of industry experience: 4–14 mm wire forms for named industries — not a list of every SIC code.",
+  description: "USA Wire Form: 50+ years of precision CNC wire forming expertise. Northeast Ohio headquarters near steel mills for cost-effective 4–14 mm production. ISO-certified quality.",
   path: '/about',
   keywords: [
     "USA Wire Form about",
     "50 years wire forming",
     "Northeast Ohio headquarters",
+    "wire forming company",
+    "American wire forming",
   ],
 });
 

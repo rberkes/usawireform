@@ -1,6 +1,7 @@
 import { VideoGallery } from "@/components/VideoGallery";
 import { btn, Page, PageHero, TextLink } from "@/components/ui";
-import { getYoutubeFeed, visibleVideos } from "@/lib/youtube";
+import { VideoListSchema } from "@/components/SeoSchemas";
+import { getYoutubeFeed, visibleVideos, youtubeThumb, youtubeWatch, youtubeEmbed } from "@/lib/youtube";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -19,8 +20,19 @@ export default async function VideosPage() {
   const feed = await getYoutubeFeed();
   const videos = visibleVideos(feed.videos);
 
+  const videoSchemaData = videos.slice(0, 10).map((video) => ({
+    name: video.title,
+    description: `CNC wire forming video: ${video.title}. Numalliance Robomac wire bending machinery demonstration.`,
+    thumbnailUrl: youtubeThumb(video.id),
+    uploadDate: video.published || new Date().toISOString(),
+    contentUrl: youtubeWatch(video.id),
+    embedUrl: youtubeEmbed(video.id),
+  }));
+
   return (
-    <Page>
+    <>
+      {videoSchemaData.length > 0 && <VideoListSchema videos={videoSchemaData} />}
+      <Page>
       <PageHero
         kicker="Videos"
         title="Numalliance CNC, on camera."
@@ -54,5 +66,6 @@ export default async function VideosPage() {
         </p>
       )}
     </Page>
+    </>
   );
 }

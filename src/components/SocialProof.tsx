@@ -1,5 +1,6 @@
 import { cx } from "@/lib/cx";
 import { Container } from "./ui";
+import { ReviewSchema } from "./SeoSchemas";
 
 const testimonials = [
   {
@@ -39,9 +40,17 @@ const certifications = [
 ];
 
 export function SocialProof({ className }: { className?: string }) {
+  const reviews = testimonials.map((t) => ({
+    author: `${t.author}, ${t.company}`,
+    reviewBody: t.quote,
+    ratingValue: 5,
+  }));
+
   return (
-    <section className={cx("border-y border-line bg-inset", className)}>
-      <Container className="py-16 sm:py-24">
+    <>
+      <ReviewSchema itemName="USA Wire Form CNC Wire Forming Services" reviews={reviews} />
+      <section className={cx("border-y border-line bg-inset", className)}> 
+        <Container className="py-16 sm:py-24">
         <div className="text-center">
           <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
             Trusted by manufacturers
@@ -103,7 +112,8 @@ export function SocialProof({ className }: { className?: string }) {
           ))}
         </div>
       </Container>
-    </section>
+      </section>
+    </>
   );
 }
 
