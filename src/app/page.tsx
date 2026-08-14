@@ -72,7 +72,7 @@ export default function Home() {
           ]}
         />
 
-        <Section kicker="Equipment list" title="Named machines, not a generic cell.">
+        <Section kicker="Equipment list" title="Precision 3D bending from coil to form.">
           <Link href="/equipment" className="group mt-8 block">
             <div className="relative aspect-[3/2] overflow-hidden bg-inset">
               <Image
