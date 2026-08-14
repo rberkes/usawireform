@@ -42,12 +42,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  // Careers page
+  const careersPage = {
+    url: `${SITE_URL}/careers`,
+    lastModified: now,
+    changeFrequency: "weekly" as ChangeFreq,
+    priority: 0.7,
+  };
+
   // High-priority pages
   const highPriorityPaths = [
     "/instant-quote",
     "/contact",
     "/products",
     "/guide/design-for-wire-forming",
+    "/careers",
   ];
 
   // Combine and deduplicate
@@ -70,6 +79,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const page of processPages) {
     allUrls.set(page.url, page);
   }
+
+  // Add careers page
+  allUrls.set(careersPage.url, careersPage);
 
   // Boost high-priority pages
   for (const path of highPriorityPaths) {

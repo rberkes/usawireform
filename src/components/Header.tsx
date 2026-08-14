@@ -55,6 +55,7 @@ const navSections = [
       { href: "/equipment", label: "Equipment" },
       { href: "/videos", label: "Videos" },
       { href: "/about", label: "About Us" },
+      { href: "/careers", label: "Careers" },
     ],
   },
 ];

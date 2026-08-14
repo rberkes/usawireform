@@ -1,6 +1,10 @@
 "use server";
 
+import { Resend } from "resend";
+import { put } from "@vercel/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
+
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export type QuoteFormState = {
   success: boolean;
@@ -99,21 +103,72 @@ export async function submitContactForm(
     };
   }
 
-  // In production, integrate with:
-  // - Email service (Resend, SendGrid, AWS SES)
-  // - CRM (Salesforce, HubSpot)
-  // - Database (store lead data)
-  // - File storage (S3, Vercel Blob for the drawing)
+  // Upload drawing to Vercel Blob if configured
+  let drawingUrl: string | undefined;
+  if (file && file.size > 0 && process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const timestamp = Date.now();
+      const safeCompany = data.company.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
+      const ext = file.name.split(".").pop();
+      const blobFilename = `quotes/${safeCompany}_${timestamp}.${ext}`;
+      
+      const blob = await put(blobFilename, file, {
+        access: "public",
+        addRandomSuffix: false,
+      });
+      
+      drawingUrl = blob.url;
+    } catch (error) {
+      console.error("[Drawing Upload Error]", error);
+    }
+  }
 
-  // For now, log the submission (in production, remove this)
+  // Send notification email if Resend configured
+  if (resend && process.env.RESEND_FROM_EMAIL) {
+    try {
+      await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL,
+        to: QUOTE_EMAIL,
+        replyTo: data.email,
+        subject: `Quote Request: ${data.company} - ${data.material} ${data.diameter}`,
+        html: `
+          <h2>New Quote Request</h2>
+          <p><strong>Contact:</strong> ${data.name}</p>
+          <p><strong>Company:</strong> ${data.company}</p>
+          <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
+          <p><strong>LinkedIn:</strong> <a href="${data.linkedin}">${data.linkedin}</a></p>
+          <p><strong>Phone:</strong> ${data.phone}</p>
+          <hr />
+          <h3>Part Details</h3>
+          <p><strong>Material:</strong> ${data.material}</p>
+          <p><strong>Wire Diameter:</strong> ${data.diameter}</p>
+          <p><strong>Target Price:</strong> ${data.targetPrice}</p>
+          <p><strong>Timeline:</strong> ${data.timeline}</p>
+          <p><strong>Quality Standard:</strong> ${data.quality}</p>
+          <h4>Notes:</h4>
+          <p>${data.notes.replace(/\n/g, "<br />")}</p>
+          <hr />
+          <p><strong>Drawing:</strong> ${
+            drawingUrl 
+              ? `<a href="${drawingUrl}">${data.fileName}</a>` 
+              : data.fileName || "Not uploaded"
+          }</p>
+          <hr />
+          <p><small>Submitted at ${new Date().toISOString()}</small></p>
+        `,
+      });
+    } catch (error) {
+      console.error("[Email Send Error]", error);
+    }
+  }
+
+  // Always log for debugging
   console.log("[Quote Request]", {
     ...data,
+    drawingUrl,
     timestamp: new Date().toISOString(),
     recipient: QUOTE_EMAIL,
   });
-
-  // Simulate processing delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
 
   return {
     success: true,
@@ -159,13 +214,62 @@ export async function submitQuickQuote(
     };
   }
 
+  // Upload drawing to Vercel Blob if configured
+  let drawingUrl: string | undefined;
+  if (file && file.size > 0 && process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const timestamp = Date.now();
+      const ext = file.name.split(".").pop();
+      const blobFilename = `quick-quotes/${timestamp}.${ext}`;
+      
+      const blob = await put(blobFilename, file, {
+        access: "public",
+        addRandomSuffix: false,
+      });
+      
+      drawingUrl = blob.url;
+    } catch (error) {
+      console.error("[Drawing Upload Error]", error);
+    }
+  }
+
+  // Send notification email if Resend configured
+  if (resend && process.env.RESEND_FROM_EMAIL) {
+    try {
+      await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL,
+        to: QUOTE_EMAIL,
+        replyTo: data.email,
+        subject: `Quick Quote: ${data.timeline} - ${data.quality}`,
+        html: `
+          <h2>Quick Quote Request</h2>
+          <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
+          <p><strong>LinkedIn:</strong> <a href="${data.linkedin}">${data.linkedin}</a></p>
+          <hr />
+          <p><strong>Target Price:</strong> ${data.targetPrice}</p>
+          <p><strong>Timeline:</strong> ${data.timeline}</p>
+          <p><strong>Quality Standard:</strong> ${data.quality}</p>
+          <hr />
+          <p><strong>Drawing:</strong> ${
+            drawingUrl 
+              ? `<a href="${drawingUrl}">${data.fileName}</a>` 
+              : data.fileName || "Not uploaded"
+          }</p>
+          <hr />
+          <p><small>Submitted at ${new Date().toISOString()}</small></p>
+        `,
+      });
+    } catch (error) {
+      console.error("[Email Send Error]", error);
+    }
+  }
+
   console.log("[Quick Quote]", {
     ...data,
+    drawingUrl,
     timestamp: new Date().toISOString(),
     recipient: QUOTE_EMAIL,
   });
-
-  await new Promise((resolve) => setTimeout(resolve, 500));
 
   return {
     success: true,
