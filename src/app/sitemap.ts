@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/company";
 import { catalog } from "@/lib/catalog";
+import { directoryCompanies } from "@/lib/directory";
 import { industries } from "@/lib/site";
 import { machines } from "@/lib/machines";
 import { publishedProcesses } from "@/lib/processes";
@@ -66,6 +67,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   };
 
+  // Directory index page
+  const directoryIndexPage = {
+    url: `${SITE_URL}/directory`,
+    lastModified: now,
+    changeFrequency: "weekly" as ChangeFreq,
+    priority: 0.8,
+  };
+
+  // All directory company pages
+  const directoryPages = directoryCompanies.map((company) => ({
+    url: `${SITE_URL}/directory/${company.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as ChangeFreq,
+    priority: 0.6,
+  }));
+
   // High-priority pages
   const highPriorityPaths = [
     "/instant-quote",
@@ -104,6 +121,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Add careers page
   allUrls.set(careersPage.url, careersPage);
+
+  // Add directory pages
+  allUrls.set(directoryIndexPage.url, directoryIndexPage);
+  for (const page of directoryPages) {
+    allUrls.set(page.url, page);
+  }
 
   // Boost high-priority pages
   for (const path of highPriorityPaths) {
