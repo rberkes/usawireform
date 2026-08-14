@@ -44,6 +44,7 @@ const industryAssociations = [
 ];
 
 const wireSuppliers = [
+  { href: "https://www.jadesterling.com", label: "Jade Sterling Steel" },
   { href: "https://www.bekaert.com", label: "Bekaert" },
   { href: "https://www.insteel.com", label: "Insteel Wire Products" },
   { href: "https://www.nationalstandard.com", label: "National Standard" },
