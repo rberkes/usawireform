@@ -1,15 +1,16 @@
 import { LinkList, Page, PageHero, Section } from "@/components/ui";
 import { catalogByGroup } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
+import { industryPeers } from "@/lib/industry-peers";
 import { publishedProcesses } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
 import { industries, shopLines } from "@/lib/site";
 
 export const metadata = pageMeta({
   title: "Sitemap",
-  description: `${COMPANY} site map: processes, 4–14 mm products, industries, and headquarters.`,
+  description: `${COMPANY} site map: processes, 4–14 mm products, industries, headquarters, and wire forming companies across the USA.`,
   path: "/site-map",
-  keywords: ["sitemap"],
+  keywords: ["sitemap", "wire forming companies", "wire form manufacturers"],
 });
 
 export default function SiteMapPage() {
@@ -24,7 +25,7 @@ export default function SiteMapPage() {
       <PageHero
         kicker="Index"
         title="Sitemap"
-        lede="Every public page. Wire forming, fabrication, and the 3/8 · 7/16 · 1/2 in directory — not a list of other companies."
+        lede="Every public page. Wire forming, fabrication, the 3/8 · 7/16 · 1/2 in directory, and wire forming companies across the industry."
       />
 
       <Section title="Headquarters">
@@ -166,6 +167,23 @@ export default function SiteMapPage() {
             href: `/industries/${item.slug}`,
             title: item.title,
             body: item.summary,
+          }))}
+        />
+      </Section>
+
+      <Section title="Wire forming companies">
+        <p className="mt-3 text-sm leading-6 text-muted">
+          Other wire forming shops across the country. Not competitors — peers
+          in the trade. Different capabilities, different diameters, different
+          regions. If we cannot run a job, one of these shops might.
+        </p>
+        <LinkList
+          className="mt-5"
+          items={industryPeers.map((peer) => ({
+            href: peer.url,
+            title: peer.name,
+            note: peer.location,
+            body: peer.focus,
           }))}
         />
       </Section>
