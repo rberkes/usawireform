@@ -24,11 +24,13 @@ const shop = [
   { href: "/secondary-operations", label: "Secondaries" },
   { href: "/equipment", label: "Equipment" },
   { href: "/directory", label: "Company Directory" },
+  { href: "/blog", label: "Blog" },
   { href: "/videos", label: "Videos" },
   { href: "/instant-quote", label: "Instant quote" },
   { href: "/quoting", label: "Tooling & coil" },
   { href: "/about", label: "About" },
   { href: "/cleveland", label: "Northeast Ohio" },
+  { href: "/trade-shows", label: "Trade Shows" },
   { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" },
 ];
@@ -37,11 +39,15 @@ const industryAssociations = [
   { href: "https://smihq.org", label: "Spring Manufacturers Institute" },
   { href: "https://wirenet.org", label: "Wire Association International" },
   { href: "https://pma.org", label: "Precision Metalforming Assoc." },
+  { href: "https://ntma.org", label: "Natl Tooling & Machining Assoc." },
   { href: "https://casmi-springworld.org", label: "CASMI / SpringWorld" },
   { href: "https://www.fmanet.org", label: "Fabricators & Manufacturers" },
   { href: "https://www.metalformingmagazine.com", label: "MetalForming Magazine" },
   { href: "https://astm.org", label: "ASTM International" },
   { href: "https://aws.org", label: "American Welding Society" },
+  { href: "https://nam.org", label: "Natl Assoc. of Manufacturers" },
+  { href: "https://sme.org", label: "Society of Mfg Engineers" },
+  { href: "https://indfast.org", label: "Industrial Fasteners Institute" },
 ];
 
 const wireSuppliers = [
