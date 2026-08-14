@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
+import { SkipToContent } from "@/components/SkipToContent";
+import { BackToTop } from "@/components/BackToTop";
 import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 import { PRICE_LINE } from "@/lib/price";
 import { CORE_KEYWORDS } from "@/lib/seo";
@@ -87,11 +89,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.youtube.com" />
+      </head>
       <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
+        <SkipToContent />
         <JsonLd />
         <Header />
-        {children}
+        <div id="main-content">
+          {children}
+        </div>
         <Footer />
+        <BackToTop />
         <Analytics />
       </body>
     </html>

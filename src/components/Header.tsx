@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useState, useEffect, useRef } from "react";
 import { BrandLockup } from "./WireMark";
-import { SearchButton, SearchDialog } from "./Search";
+import { SearchButton } from "./Search";
 import { btn, Container } from "./ui";
 import { industries } from "@/lib/site";
 import { catalogGroups, catalog } from "@/lib/catalog";
 import { processesByCategory } from "@/lib/processes";
 import { cx } from "@/lib/cx";
+
+const SearchDialog = dynamic(
+  () => import("./Search").then((mod) => ({ default: mod.SearchDialog })),
+  { ssr: false }
+);
 
 const navSections = [
   {
