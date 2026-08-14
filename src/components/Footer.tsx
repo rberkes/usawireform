@@ -32,14 +32,31 @@ const shop = [
   { href: "/contact", label: "Contact" },
 ];
 
-const industryResources = [
+const industryAssociations = [
   { href: "https://smihq.org", label: "Spring Manufacturers Institute" },
   { href: "https://wirenet.org", label: "Wire Association International" },
   { href: "https://pma.org", label: "Precision Metalforming Assoc." },
   { href: "https://casmi-springworld.org", label: "CASMI / SpringWorld" },
-  { href: "https://www.numalliance.com", label: "Numalliance" },
+  { href: "https://www.fmanet.org", label: "Fabricators & Manufacturers" },
+  { href: "https://www.metalformingmagazine.com", label: "MetalForming Magazine" },
   { href: "https://astm.org", label: "ASTM International" },
   { href: "https://aws.org", label: "American Welding Society" },
+];
+
+const wireSuppliers = [
+  { href: "https://www.bekaert.com", label: "Bekaert" },
+  { href: "https://www.insteel.com", label: "Insteel Wire Products" },
+  { href: "https://www.nationalstandard.com", label: "National Standard" },
+  { href: "https://www.treeisland.com", label: "Tree Island Steel" },
+  { href: "https://www.mid-southwire.com", label: "Mid-South Wire" },
+  { href: "https://www.centralwire.com", label: "Central Wire Industries" },
+  { href: "https://www.ulbrich.com", label: "Ulbrich Stainless" },
+];
+
+const equipmentMfrs = [
+  { href: "https://www.numalliance.com", label: "Numalliance" },
+  { href: "https://www.wafios.com", label: "Wafios" },
+  { href: "https://www.sleeveco.com", label: "Sleeveco (Straighteners)" },
 ];
 
 export function Footer() {
@@ -73,7 +90,9 @@ export function Footer() {
         <div className="flex flex-wrap gap-10 text-sm sm:gap-16">
           <NavCol title="Library" links={library} />
           <NavCol title="Headquarters" links={shop} />
-          <ExternalNavCol title="Industry" links={industryResources} />
+          <ExternalNavCol title="Associations" links={industryAssociations} />
+          <ExternalNavCol title="Wire Suppliers" links={wireSuppliers} />
+          <ExternalNavCol title="Equipment" links={equipmentMfrs} />
           <div className="flex flex-col gap-2">
             <span className="font-mono text-[11px] tracking-widest text-muted uppercase">
               Quotes
