@@ -159,9 +159,49 @@ const associations = [
     description: "Trade association for the metal stamping, fabricating, spinning, and forming industries.",
   },
   {
+    name: "National Tooling and Machining Association (NTMA)",
+    website: "https://ntma.org",
+    description: "Represents the precision custom manufacturing industry in the United States.",
+  },
+  {
     name: "Fabricators & Manufacturers Association (FMA)",
     website: "https://fmanet.org",
     description: "Association for metal fabrication professionals.",
+  },
+  {
+    name: "CASMI / SpringWorld",
+    website: "https://casmi-springworld.org",
+    description: "Spring industry events and technical resources.",
+  },
+  {
+    name: "American Welding Society (AWS)",
+    website: "https://aws.org",
+    description: "Advancing the science, technology and application of welding.",
+  },
+  {
+    name: "ASTM International",
+    website: "https://astm.org",
+    description: "Standards organization for materials, products, systems, and services.",
+  },
+  {
+    name: "National Association of Manufacturers (NAM)",
+    website: "https://nam.org",
+    description: "The largest manufacturing association in the United States.",
+  },
+  {
+    name: "Manufacturer & Business Association (MBA)",
+    website: "https://mbausa.org",
+    description: "Regional association supporting manufacturers in the tri-state area.",
+  },
+  {
+    name: "Industrial Fasteners Institute (IFI)",
+    website: "https://indfast.org",
+    description: "Trade association for North American manufacturers of bolts, nuts, screws, and related products.",
+  },
+  {
+    name: "Society of Manufacturing Engineers (SME)",
+    website: "https://sme.org",
+    description: "Professional society for manufacturing engineers and technologists.",
   },
 ];
 
@@ -254,7 +294,7 @@ export default function TradeShowsPage() {
           These associations host events, publish technical resources, and connect 
           wire forming professionals. Many offer membership directories to find suppliers.
         </p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {associations.map((assoc) => (
             <a
               key={assoc.name}
