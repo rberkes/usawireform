@@ -58,6 +58,11 @@ export const metadata: Metadata = {
     : undefined,
   other: {
     "contact:email": QUOTE_EMAIL,
+    // Geo-targeting for Northeast Ohio / USA
+    "geo.region": "US-OH",
+    "geo.placename": "Cleveland",
+    "geo.position": "41.4993;-81.6944",
+    "ICBM": "41.4993, -81.6944",
   },
   openGraph: {
     type: "website",

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Breadcrumbs, type BreadcrumbItem } from "./Breadcrumbs";
 import { StepQuoteBlock } from "./StepUpload";
 import { Kicker, Page, PageHero } from "./ui";
 
@@ -9,17 +10,20 @@ export function DocPage({
   title,
   lede,
   toc,
+  breadcrumbs,
   children,
 }: {
   kicker: string;
   title: string;
   lede: string;
   toc: TocItem[];
+  breadcrumbs?: BreadcrumbItem[];
   children: ReactNode;
 }) {
   return (
     <Page className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_220px]">
       <article className="min-w-0">
+        {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
         <PageHero kicker={kicker} title={title} lede={lede} />
         <div className="article mt-12">{children}</div>
       </article>
