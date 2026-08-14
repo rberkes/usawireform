@@ -31,6 +31,16 @@ const shop = [
   { href: "/contact", label: "Contact" },
 ];
 
+const industryResources = [
+  { href: "https://smihq.org", label: "Spring Manufacturers Institute" },
+  { href: "https://wirenet.org", label: "Wire Association International" },
+  { href: "https://pma.org", label: "Precision Metalforming Assoc." },
+  { href: "https://casmi-springworld.org", label: "CASMI / SpringWorld" },
+  { href: "https://www.numalliance.com", label: "Numalliance" },
+  { href: "https://astm.org", label: "ASTM International" },
+  { href: "https://aws.org", label: "American Welding Society" },
+];
+
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-line">
@@ -59,9 +69,10 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="flex gap-16 text-sm">
+        <div className="flex flex-wrap gap-10 text-sm sm:gap-16">
           <NavCol title="Library" links={library} />
           <NavCol title="Headquarters" links={shop} />
+          <ExternalNavCol title="Industry" links={industryResources} />
           <div className="flex flex-col gap-2">
             <span className="font-mono text-[11px] tracking-widest text-muted uppercase">
               Quotes
@@ -105,6 +116,33 @@ function NavCol({
         >
           {link.label}
         </Link>
+      ))}
+    </div>
+  );
+}
+
+function ExternalNavCol({
+  title,
+  links,
+}: {
+  title: string;
+  links: { href: string; label: string }[];
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="font-mono text-[11px] tracking-widest text-muted uppercase">
+        {title}
+      </span>
+      {links.map((link) => (
+        <a
+          key={link.href}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-foreground/90 hover:text-copper"
+        >
+          {link.label}
+        </a>
       ))}
     </div>
   );
