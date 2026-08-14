@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
@@ -81,11 +82,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">
+      <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
         <JsonLd />
         <Header />
         {children}
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
