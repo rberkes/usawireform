@@ -9,16 +9,31 @@ export const catalogGroups = [
 
 export type CatalogGroup = (typeof catalogGroups)[number];
 
+/**
+ * Type for catalog items
+ * Note: `related` contains slugs that reference other catalog items.
+ * Run `npx tsx src/lib/catalog-validation.ts` to validate all references.
+ */
 export type CatalogItem = {
+  /** URL-safe identifier for the product */
   slug: string;
+  /** Display name */
   title: string;
+  /** Product category */
   group: CatalogGroup;
+  /** Short description for listings */
   summary: string;
+  /** Opening paragraph for product page */
   lede: string;
+  /** Body paragraphs */
   body: string[];
+  /** Typical job applications */
   jobs: string[];
+  /** CTA text for quote block */
   quote: string;
-  processHref: string;
+  /** Link to the relevant process page */
+  processHref: `/processes/${string}`;
+  /** Slugs of related products (validated at build time) */
   related: string[];
 };
 
