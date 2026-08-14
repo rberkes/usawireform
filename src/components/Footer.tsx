@@ -25,6 +25,7 @@ const shop = [
   { href: "/solutions", label: "Industry Solutions" },
   { href: "/equipment", label: "Equipment" },
   { href: "/directory", label: "Company Directory" },
+  { href: "/videos", label: "Videos" },
   { href: "/instant-quote", label: "Instant quote" },
   { href: "/about", label: "About" },
   { href: "/cleveland", label: "Northeast Ohio" },
