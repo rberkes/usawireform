@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/company";
 import { catalog } from "@/lib/catalog";
 import { industries } from "@/lib/site";
+import { machines } from "@/lib/machines";
 import { publishedProcesses } from "@/lib/processes";
 import { allSeoPages } from "@/lib/seo";
 
@@ -42,6 +43,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  // Machine pages - NumAlliance equipment
+  const machineIndexPage = {
+    url: `${SITE_URL}/equipment/machines`,
+    lastModified: now,
+    changeFrequency: "monthly" as ChangeFreq,
+    priority: 0.7,
+  };
+
+  const machinePages = machines.map((machine) => ({
+    url: `${SITE_URL}/equipment/machines/${machine.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as ChangeFreq,
+    priority: 0.7,
+  }));
+
   // Careers page
   const careersPage = {
     url: `${SITE_URL}/careers`,
@@ -77,6 +93,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   for (const page of processPages) {
+    allUrls.set(page.url, page);
+  }
+
+  // Add machine pages
+  allUrls.set(machineIndexPage.url, machineIndexPage);
+  for (const page of machinePages) {
     allUrls.set(page.url, page);
   }
 

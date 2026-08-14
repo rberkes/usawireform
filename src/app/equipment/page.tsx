@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { StepQuoteBlock } from "@/components/StepUpload";
-import { LinkList, Page, PageHero, Section, TextLink } from "@/components/ui";
+import { btn, LinkList, Page, PageHero, Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -29,7 +30,40 @@ export default function EquipmentPage() {
             <TextLink href="/videos">Videos</TextLink> is the floor on camera.
           </>
         }
-      />
+      >
+        <Link href="/equipment/machines" className={btn.ghost}>
+          View NumAlliance Machines
+        </Link>
+      </PageHero>
+
+      <Section title="NumAlliance Wire Forming Machines">
+        <p className="mt-3 text-sm leading-7 text-muted">
+          Our CNC wire forming capabilities are powered by NumAlliance equipment—precision-engineered machines built for industrial production.
+        </p>
+        <LinkList
+          className="mt-5"
+          items={[
+            {
+              href: "/equipment/machines/numalliance-robomac-tf",
+              title: "Robomac TF",
+              note: "3D CNC",
+              body: "High-performance wire bending with 1–3 heads, 2–16 mm capacity.",
+            },
+            {
+              href: "/equipment/machines/numalliance-ftx",
+              title: "FTX",
+              note: "3D CNC",
+              body: "Advanced double-bend technology with slip-free forming, 3–16 mm.",
+            },
+            {
+              href: "/equipment/machines",
+              title: "View All Machines →",
+              note: "8 models",
+              body: "Complete catalog of NumAlliance wire forming equipment.",
+            },
+          ]}
+        />
+      </Section>
 
       <Section title="Forming">
         <LinkList
