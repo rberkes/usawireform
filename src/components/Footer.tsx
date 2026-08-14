@@ -24,6 +24,7 @@ const shop = [
   { href: "/secondary-operations", label: "Secondaries" },
   { href: "/equipment", label: "Equipment" },
   { href: "/directory", label: "Company Directory" },
+  { href: "/blog", label: "Blog" },
   { href: "/videos", label: "Videos" },
   { href: "/instant-quote", label: "Instant quote" },
   { href: "/quoting", label: "Tooling & coil" },

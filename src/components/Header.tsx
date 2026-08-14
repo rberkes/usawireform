@@ -60,6 +60,7 @@ const navSections = [
       { href: "/sizes", label: "Wire Sizes" },
       { href: "/equipment", label: "Equipment" },
       { href: "/directory", label: "Company Directory" },
+      { href: "/blog", label: "Blog" },
       { href: "/videos", label: "Videos" },
       { href: "/trade-shows", label: "Trade Shows" },
       { href: "/about", label: "About Us" },
