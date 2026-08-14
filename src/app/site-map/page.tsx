@@ -1,15 +1,16 @@
 import { LinkList, Page, PageHero, Section } from "@/components/ui";
 import { catalogByGroup } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
+import { directoryCompanies, DIRECTORY_REGIONS, getCompaniesByRegion } from "@/lib/directory";
 import { publishedProcesses } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
 import { industries, shopLines } from "@/lib/site";
 
 export const metadata = pageMeta({
   title: "Sitemap",
-  description: `${COMPANY} site map: processes, 4–14 mm products, industries, and headquarters.`,
+  description: `${COMPANY} site map: processes, 4–14 mm products, industries, headquarters, and directory of ${directoryCompanies.length}+ wire forming companies across the USA and Canada.`,
   path: "/site-map",
-  keywords: ["sitemap"],
+  keywords: ["sitemap", "wire forming companies", "wire form manufacturers", "wire forming directory"],
 });
 
 export default function SiteMapPage() {
@@ -24,7 +25,7 @@ export default function SiteMapPage() {
       <PageHero
         kicker="Index"
         title="Sitemap"
-        lede="Every public page. Wire forming, fabrication, and the 3/8 · 7/16 · 1/2 in directory — not a list of other companies."
+        lede="Every public page. Wire forming, fabrication, the 3/8 · 7/16 · 1/2 in directory, and wire forming companies across the industry."
       />
 
       <Section title="Headquarters">
@@ -168,6 +169,48 @@ export default function SiteMapPage() {
             body: item.summary,
           }))}
         />
+      </Section>
+
+      <Section title={`Wire Forming Directory (${directoryCompanies.length} companies)`}>
+        <p className="mt-3 text-sm leading-6 text-muted">
+          {directoryCompanies.length} wire forming shops across the USA and Canada. Not competitors — peers
+          in the trade. Different capabilities, different diameters, different
+          regions. If we cannot run a job, one of these shops might.
+        </p>
+        <LinkList
+          className="mt-5"
+          items={[
+            {
+              href: "/directory",
+              title: "Wire Forming Companies Directory",
+              body: `Browse all ${directoryCompanies.length} companies by region, with lead capture forms.`,
+            },
+          ]}
+        />
+        {DIRECTORY_REGIONS.map((region) => {
+          const companies = getCompaniesByRegion(region);
+          if (companies.length === 0) return null;
+          return (
+            <div key={region} className="mt-6">
+              <h4 className="text-sm font-medium text-muted">{region} ({companies.length})</h4>
+              <LinkList
+                className="mt-2"
+                items={companies.slice(0, 5).map((company) => ({
+                  href: `/directory/${company.slug}`,
+                  title: company.name,
+                  note: company.location,
+                  body: company.capabilities.slice(0, 3).join(", "),
+                }))}
+              />
+              {companies.length > 5 && (
+                <p className="mt-2 text-xs text-muted">
+                  + {companies.length - 5} more in {region}...{" "}
+                  <a href="/directory" className="text-copper hover:underline">View all</a>
+                </p>
+              )}
+            </div>
+          );
+        })}
       </Section>
 
       <Section title="This site">
