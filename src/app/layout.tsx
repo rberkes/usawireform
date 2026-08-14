@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
 import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 import { PRICE_LINE } from "@/lib/price";
-import { CORE_KEYWORDS } from "@/lib/seo";
+import { ALL_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
 
 const ibmSans = IBM_Plex_Sans({
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   description:
     `${COMPANY}: 4–14 mm 3D CNC wire forming in Northeast Ohio. ${PRICE_LINE} Frames, wire baskets, guards, design rules, and process selection.`,
-  keywords: CORE_KEYWORDS,
+  keywords: ALL_KEYWORDS,
   authors: [{ name: COMPANY, url: SITE_URL }],
   creator: COMPANY,
   publisher: COMPANY,
