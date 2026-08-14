@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BreadcrumbJsonLd } from "@/components/JsonLd";
+import { BreadcrumbJsonLd, FAQJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Page, PageHero, Section, Kicker } from "@/components/ui";
 import {
@@ -28,9 +28,25 @@ export default function DirectoryPage() {
   const usaCount = directoryCompanies.filter((c) => c.country === "USA").length;
   const canadaCount = directoryCompanies.filter((c) => c.country === "Canada").length;
 
+  const faqQuestions = [
+    {
+      question: "What is this wire forming company directory?",
+      answer: "This directory lists 97 wire forming and spring manufacturing companies across the United States and Canada. These are industry peers, not competitors. If USA Wire Form cannot run a job due to diameter, material, or capacity constraints, one of these shops might be able to help.",
+    },
+    {
+      question: "Are these companies affiliated with USA Wire Form?",
+      answer: "No. The companies listed in this directory are not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. Contact companies directly to verify their capabilities and credentials.",
+    },
+    {
+      question: "How can I find a wire forming company in my region?",
+      answer: "Browse the directory by region: Northeast, Southeast, Midwest, Southwest, West, or Canada. Each company listing includes their location, capabilities, industries served, and contact information.",
+    },
+  ];
+
   return (
     <Page>
       <BreadcrumbJsonLd items={[{ name: "Directory", url: "/directory" }]} />
+      <FAQJsonLd questions={faqQuestions} />
       <Breadcrumbs items={[{ label: "Directory" }]} />
 
       <PageHero
