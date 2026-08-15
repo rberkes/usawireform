@@ -5,7 +5,6 @@ import { useState } from "react";
 import { submitContactForm, type QuoteFormState } from "@/app/actions/quote";
 import { isLinkedInUrl, LinkedInField, QuoteNeedFields, StepUpload } from "./StepUpload";
 import { QUOTE_EMAIL } from "@/lib/company";
-import { PRICE_LINE } from "@/lib/price";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
 
 const initialState: QuoteFormState = {
@@ -19,7 +18,7 @@ export function ContactForm() {
 
   if (state.success) {
     return (
-      <Panel className="bg-background">
+      <Panel>
         <Kicker>Received</Kicker>
         <h2 className="mt-3 text-2xl tracking-tight">We'll review your request.</h2>
         <p className="mt-3 max-w-md text-sm leading-6 text-muted">
@@ -38,17 +37,8 @@ export function ContactForm() {
 
   return (
     <form action={formAction}>
-      <Panel className="bg-background">
-        <Kicker>Project inquiry</Kicker>
-        <h2 className="mt-3 text-2xl tracking-tight">Tell us about the part</h2>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
-          Diameter, material, quantity, and a drawing are enough for a
-          production quote. {PRICE_LINE}
-        </p>
-        <p className="mt-3 text-sm text-copper">
-          * Typically answered within one business day
-        </p>
-        <p className="mt-5 mb-5 text-sm font-medium text-copper">
+      <Panel>
+        <p className="mb-5 text-sm font-medium text-copper">
           All fields required.
         </p>
         {state.message && !state.success && (

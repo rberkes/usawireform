@@ -89,12 +89,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <link rel="dns-prefetch" href="https://www.youtube.com" />
-        <link
-          rel="alternate"
-          type="text/plain"
-          href="/llms.txt"
-          title="LLM information"
-        />
       </head>
       <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
         <SkipToContent />

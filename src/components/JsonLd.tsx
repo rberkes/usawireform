@@ -1,18 +1,5 @@
 import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 
-function catalogService(name: string, path: string) {
-  return {
-    "@type": "Offer",
-    url: `${SITE_URL}${path}`,
-    itemOffered: {
-      "@type": "Service",
-      name,
-      url: `${SITE_URL}${path}`,
-      provider: { "@type": "Organization", name: COMPANY },
-    },
-  };
-}
-
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -47,18 +34,18 @@ const organizationJsonLd = {
         "@type": "OfferCatalog",
         name: "Hooks and Rings",
         itemListElement: [
-          catalogService("S-hooks", "/products/s-hooks"),
-          catalogService("D-rings", "/products/d-rings"),
-          catalogService("J-hooks", "/products/j-hooks"),
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "S-hooks" } },
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "D-rings" } },
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "J-hooks" } },
         ],
       },
       {
         "@type": "OfferCatalog",
         name: "Frames and Guards",
         itemListElement: [
-          catalogService("Wire Frames", "/products/wire-frames"),
-          catalogService("Machine Guards", "/products/machine-guards"),
-          catalogService("Fan Guards", "/products/fan-guards"),
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Wire Frames" } },
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Machine Guards" } },
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Fan Guards" } },
         ],
       },
     ],
@@ -133,21 +120,33 @@ export function ProductJsonLd({
 }) {
   const data = {
     "@context": "https://schema.org",
-    "@type": "Service",
+    "@type": "Product",
     name,
     description,
     url: `${SITE_URL}${url}`,
     image: image ?? `${SITE_URL}/shop/hero-forms.jpg`,
-    provider: {
+    brand: {
+      "@type": "Brand",
+      name: COMPANY,
+    },
+    manufacturer: {
       "@type": "Organization",
       name: COMPANY,
-      url: SITE_URL,
     },
-    areaServed: {
-      "@type": "Country",
-      name: "United States",
+    offers: {
+      "@type": "Offer",
+      availability: "https://schema.org/InStock",
+      priceCurrency: "USD",
+      priceSpecification: {
+        "@type": "PriceSpecification",
+        priceCurrency: "USD",
+        eligibleQuantity: {
+          "@type": "QuantitativeValue",
+          minValue: 100,
+          unitText: "pieces",
+        },
+      },
     },
-    serviceType: "CNC wire forming",
   };
 
   return (
