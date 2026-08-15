@@ -42,6 +42,11 @@ const industryAssociations = [
   { href: "https://www.metalformingmagazine.com", label: "MetalForming Magazine" },
   { href: "https://astm.org", label: "ASTM International" },
   { href: "https://aws.org", label: "American Welding Society" },
+  { href: "https://natm.com", label: "NATM (Trailer Manufacturers)" },
+  { href: "https://trucktrailer.org", label: "TTMA (Truck Trailers)" },
+  { href: "https://www.natda.org", label: "NATDA (Trailer Dealers)" },
+  { href: "https://www.rvia.org", label: "RV Industry Association" },
+  { href: "https://www.ntea.com", label: "NTEA (Work Truck)" },
 ];
 
 const wireSuppliers = [

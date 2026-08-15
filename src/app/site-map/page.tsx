@@ -227,6 +227,16 @@ export default function SiteMapPage() {
               title: "XML sitemap",
               body: "For crawlers.",
             },
+            {
+              href: "/llms.txt",
+              title: "llms.txt",
+              body: "Index for ChatGPT, Claude, Perplexity, and other AI crawlers.",
+            },
+            {
+              href: "/llms-full.txt",
+              title: "llms-full.txt",
+              body: "Single-file brief: band, quote rules, equipment, catalog.",
+            },
           ]}
         />
       </Section>

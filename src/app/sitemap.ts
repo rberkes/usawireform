@@ -92,6 +92,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/careers",
   ];
 
+  const llmPages = [
+    {
+      url: `${SITE_URL}/llms.txt`,
+      lastModified: now,
+      changeFrequency: "weekly" as ChangeFreq,
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/llms-full.txt`,
+      lastModified: now,
+      changeFrequency: "weekly" as ChangeFreq,
+      priority: 0.7,
+    },
+  ];
+
   // Combine and deduplicate
   const allUrls = new Map<string, MetadataRoute.Sitemap[number]>();
 
@@ -125,6 +140,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Add directory pages
   allUrls.set(directoryIndexPage.url, directoryIndexPage);
   for (const page of directoryPages) {
+    allUrls.set(page.url, page);
+  }
+
+  for (const page of llmPages) {
     allUrls.set(page.url, page);
   }
 

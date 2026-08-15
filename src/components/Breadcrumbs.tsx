@@ -9,35 +9,37 @@ export type BreadcrumbItem = {
 export function Breadcrumbs({
   items,
   className,
+  tone = "default",
 }: {
   items: BreadcrumbItem[];
   className?: string;
+  tone?: "default" | "inverse";
 }) {
   if (items.length === 0) return null;
+
+  const inverse = tone === "inverse";
+  const linkClass = inverse
+    ? "text-white/55 transition-colors hover:text-white"
+    : "text-muted transition-colors hover:text-copper";
+  const currentClass = inverse ? "text-white" : "text-foreground";
 
   return (
     <nav aria-label="Breadcrumb" className={cx("mb-6", className)}>
       <ol className="flex flex-wrap items-center gap-1 text-sm">
         <li>
-          <Link
-            href="/"
-            className="text-muted transition-colors hover:text-copper"
-          >
+          <Link href="/" className={linkClass}>
             Home
           </Link>
         </li>
         {items.map((item, index) => (
           <li key={item.label} className="flex items-center gap-1">
-            <ChevronIcon />
+            <ChevronIcon className={inverse ? "text-white/25" : "text-line"} />
             {item.href && index < items.length - 1 ? (
-              <Link
-                href={item.href}
-                className="text-muted transition-colors hover:text-copper"
-              >
+              <Link href={item.href} className={linkClass}>
                 {item.label}
               </Link>
             ) : (
-              <span className="text-foreground" aria-current="page">
+              <span className={currentClass} aria-current="page">
                 {item.label}
               </span>
             )}
@@ -48,14 +50,14 @@ export function Breadcrumbs({
   );
 }
 
-function ChevronIcon() {
+function ChevronIcon({ className }: { className?: string }) {
   return (
     <svg
       width="16"
       height="16"
       viewBox="0 0 16 16"
       fill="none"
-      className="text-line"
+      className={className ?? "text-line"}
       aria-hidden
     >
       <path
