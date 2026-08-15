@@ -135,15 +135,41 @@ export function ProductJsonLd({
     },
     offers: {
       "@type": "Offer",
-      availability: "https://schema.org/InStock",
+      url: `${SITE_URL}${url}`,
       priceCurrency: "USD",
-      priceSpecification: {
-        "@type": "PriceSpecification",
-        priceCurrency: "USD",
-        eligibleQuantity: {
-          "@type": "QuantitativeValue",
-          minValue: 100,
-          unitText: "pieces",
+      price: 0,
+      priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: {
+        "@type": "Organization",
+        name: COMPANY,
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "US",
+        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+      },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "US",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 5,
+            maxValue: 15,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 2,
+            maxValue: 7,
+            unitCode: "DAY",
+          },
         },
       },
     },
