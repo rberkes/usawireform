@@ -247,6 +247,54 @@ export const staticSeoPages: SeoRecord[] = [
     keywords: ["sitemap"],
     priority: 0.4,
   }),
+  // Comparison pages
+  record({
+    path: "/wire-forming-vs-stamping",
+    title: "Wire Forming vs Stamping: Which Process for Your Part?",
+    description:
+      "Compare wire forming and stamping for metal parts. Learn when CNC wire forming beats stamping on cost, tooling, and design flexibility for 4–14 mm applications.",
+    section: "forming",
+    keywords: ["wire forming vs stamping", "metal forming comparison", "CNC vs stamping"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/cnc-vs-fourslide",
+    title: "CNC Wire Forming vs Fourslide: Which Process Wins?",
+    description:
+      "Compare CNC wire forming and fourslide for production parts. Learn when programmable CNC beats cam tooling on cost, flexibility, and lead time.",
+    section: "forming",
+    keywords: ["CNC vs fourslide", "fourslide vs CNC", "wire forming processes"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/2d-vs-3d-wire-forming",
+    title: "2D vs 3D Wire Forming: When Do You Need the Third Axis?",
+    description:
+      "Compare 2D and 3D CNC wire forming. Learn when flat-plane bending is enough and when you need rotary axis capability for frames and complex geometry.",
+    section: "forming",
+    keywords: ["2D vs 3D wire forming", "3D wire bending", "rotary axis wire forming"],
+    priority: 0.8,
+  }),
+  // Glossary
+  record({
+    path: "/glossary",
+    title: "Wire Forming Glossary: 100+ Industry Terms Defined",
+    description:
+      "Comprehensive glossary of wire forming terminology. Definitions for CNC wire bending, forming processes, materials, tolerances, and industry standards.",
+    section: "company",
+    keywords: ["wire forming glossary", "wire forming terms", "wire bending terminology"],
+    priority: 0.7,
+  }),
+  // Case studies
+  record({
+    path: "/case-studies",
+    title: "Wire Forming Case Studies",
+    description:
+      "Real-world wire forming projects: cable trays for data centers, solar hangers, mining guards, and custom manufacturing solutions.",
+    section: "company",
+    keywords: ["wire forming case studies", "wire forming projects", "custom wire form examples"],
+    priority: 0.8,
+  }),
 ];
 
 function processPages(): SeoRecord[] {

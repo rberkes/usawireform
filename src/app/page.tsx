@@ -131,6 +131,29 @@ export default function Home() {
 
         <CapabilityStrip />
 
+        <Section kicker="Projects" title="See our work in action.">
+          <LinkList
+            className="mt-8"
+            items={[
+              {
+                href: "/case-studies",
+                title: "Case studies",
+                body: "Real projects: data center trays, solar hangers, mining guards.",
+              },
+              {
+                href: "/wire-forming-vs-stamping",
+                title: "Wire forming vs stamping",
+                body: "When to choose each process — tooling, volume, geometry.",
+              },
+              {
+                href: "/glossary",
+                title: "Wire forming glossary",
+                body: "100+ industry terms defined — from annealing to yield strength.",
+              },
+            ]}
+          />
+        </Section>
+
         <Section className="mt-16">
           <LinkList
             items={[

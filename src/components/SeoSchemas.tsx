@@ -92,6 +92,7 @@ export function VideoListSchema({
 
 /**
  * Review Schema for testimonials
+ * Uses LocalBusiness type (not Product) to avoid Merchant listing requirements
  */
 export function ReviewSchema({
   itemName,
@@ -108,8 +109,10 @@ export function ReviewSchema({
   
   const data = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "LocalBusiness",
+    "@id": `${SITE_URL}/#reviews`,
     name: itemName,
+    url: SITE_URL,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: avgRating.toFixed(1),
@@ -298,6 +301,7 @@ export function ArticleSchema({
 
 /**
  * Aggregate Rating Schema (for future use with reviews)
+ * Uses LocalBusiness type (not Product) to avoid Merchant listing requirements
  */
 export function AggregateRatingSchema({
   itemName,
@@ -314,8 +318,10 @@ export function AggregateRatingSchema({
 }) {
   const data = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "LocalBusiness",
+    "@id": `${SITE_URL}/#ratings`,
     name: itemName,
+    url: SITE_URL,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue,

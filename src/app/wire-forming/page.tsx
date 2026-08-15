@@ -174,6 +174,26 @@ export default function WireFormingPillarPage() {
         </li>
       </ul>
 
+      <h2>Process comparisons</h2>
+      <ul>
+        <li>
+          <Link href="/wire-forming-vs-stamping">Wire forming vs stamping</Link>{" "}
+          — when to choose each process
+        </li>
+        <li>
+          <Link href="/cnc-vs-fourslide">CNC vs fourslide</Link> — programmable
+          vs cam tooling
+        </li>
+        <li>
+          <Link href="/2d-vs-3d-wire-forming">2D vs 3D wire forming</Link> — when
+          you need the rotary axis
+        </li>
+        <li>
+          <Link href="/glossary">Wire forming glossary</Link> — industry
+          terminology defined
+        </li>
+      </ul>
+
       <QuoteBand />
     </DocPage>
   );
