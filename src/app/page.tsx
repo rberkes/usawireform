@@ -36,7 +36,7 @@ export default function Home() {
   return (
     <>
       <Page>
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
           <PageHero
             large
             kicker={WIRE.metric}
@@ -50,14 +50,17 @@ export default function Home() {
               Send a STEP
             </ButtonLink>
           </PageHero>
-          <div className="relative aspect-[1024/687] overflow-hidden bg-inset">
+          <div className="overflow-hidden bg-inset">
             <Image
               src="/shop/hero-forms.jpg"
               alt="3D CNC wire forms: nested hooks and frames in 4–14 mm steel"
-              fill
-              priority
+              width={1024}
+              height={687}
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-contain"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
+              className="h-auto w-full object-contain"
             />
           </div>
         </div>
@@ -183,7 +186,6 @@ export default function Home() {
         <StepQuoteBlock className="mt-16" title="Drop a STEP" />
       </Page>
 
-      {/* Social proof section - full width */}
       <SocialProof className="mt-8" />
     </>
   );

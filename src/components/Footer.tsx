@@ -63,7 +63,7 @@ const equipmentMfrs = [
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-line">
+    <footer className="border-t border-line">
       <Container className="flex flex-col gap-8 py-10 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <Link href="/">

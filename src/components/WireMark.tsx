@@ -26,7 +26,7 @@ export function BrandLockup({
 }) {
   const hero = size === "hero";
   return (
-    <span className={cx("flex items-center", hero ? "gap-5" : "gap-2.5")}>
+    <span className={cx("flex items-center", hero ? "min-h-16 gap-5 sm:min-h-24" : "gap-2.5")}>
       <WireMark
         className={
           hero

@@ -15,16 +15,14 @@ const ibmSans = IBM_Plex_Sans({
   variable: "--font-ibm-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  display: "swap",
-  preload: true,
+  adjustFontFallback: true,
 });
 
 const ibmMono = IBM_Plex_Mono({
   variable: "--font-ibm-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
-  display: "swap",
-  preload: true,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -90,15 +88,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
     >
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.youtube.com" />
       </head>
       <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
         <SkipToContent />
         <JsonLd />
         <Header />
-        <div id="main-content">
+        <div id="main-content" className="flex-1">
           {children}
         </div>
         <Footer />

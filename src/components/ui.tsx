@@ -66,7 +66,7 @@ export function Page({
   return (
     <main
       className={cx(
-        "mx-auto w-full max-w-6xl px-5 py-16 sm:py-24",
+        "mx-auto w-full max-w-6xl flex-1 px-5 py-16 sm:py-24",
         className,
       )}
     >
