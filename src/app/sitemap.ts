@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/company";
 import { catalog } from "@/lib/catalog";
+import { publishedCaseStudies } from "@/lib/case-studies";
 import { directoryCompanies } from "@/lib/directory";
 import { industries } from "@/lib/site";
 import { machines } from "@/lib/machines";
@@ -129,6 +130,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
   allUrls.set(directoryIndexPage.url, directoryIndexPage);
   for (const page of directoryPages) {
     allUrls.set(page.url, page);
+  }
+
+  // Case study pages
+  const caseStudyIndexPage = {
+    url: `${SITE_URL}/case-studies`,
+    lastModified: recentUpdateDate,
+    changeFrequency: "monthly" as ChangeFreq,
+    priority: 0.8,
+  };
+  allUrls.set(caseStudyIndexPage.url, caseStudyIndexPage);
+
+  for (const study of publishedCaseStudies()) {
+    allUrls.set(`${SITE_URL}/case-studies/${study.slug}`, {
+      url: `${SITE_URL}/case-studies/${study.slug}`,
+      lastModified: recentUpdateDate,
+      changeFrequency: "monthly" as ChangeFreq,
+      priority: 0.7,
+    });
   }
 
   // Boost high-priority pages
