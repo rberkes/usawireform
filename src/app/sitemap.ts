@@ -10,12 +10,15 @@ import { allSeoPages } from "@/lib/seo";
 type ChangeFreq = "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  // Use a stable date for content that doesn't change frequently
+  // This helps Google trust your lastModified values
+  const staticContentDate = new Date("2025-01-15");
+  const recentUpdateDate = new Date("2025-08-01");
   
   // Static SEO pages from the seo/pages.ts registry
   const staticPages = allSeoPages().map((page) => ({
     url: page.path === "/" ? SITE_URL : `${SITE_URL}${page.path}`,
-    lastModified: now,
+    lastModified: page.path === "/" ? recentUpdateDate : staticContentDate,
     changeFrequency: (page.changeFrequency ?? (page.path === "/" ? "weekly" : "monthly")) as ChangeFreq,
     priority: page.priority ?? (page.path === "/" ? 1 : 0.6),
   }));
@@ -23,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // All product pages - high priority for commerce
   const productPages = catalog.map((product) => ({
     url: `${SITE_URL}/products/${product.slug}`,
-    lastModified: now,
+    lastModified: staticContentDate,
     changeFrequency: "monthly" as ChangeFreq,
     priority: 0.8,
   }));
@@ -31,7 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // All industry pages
   const industryPages = industries.map((industry) => ({
     url: `${SITE_URL}/industries/${industry.slug}`,
-    lastModified: now,
+    lastModified: staticContentDate,
     changeFrequency: "monthly" as ChangeFreq,
     priority: 0.7,
   }));
@@ -39,7 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // All process pages
   const processPages = publishedProcesses().map((process) => ({
     url: `${SITE_URL}/processes/${process.slug}`,
-    lastModified: now,
+    lastModified: staticContentDate,
     changeFrequency: "monthly" as ChangeFreq,
     priority: 0.7,
   }));
@@ -47,22 +50,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Machine pages - NumAlliance equipment
   const machineIndexPage = {
     url: `${SITE_URL}/equipment/machines`,
-    lastModified: now,
+    lastModified: staticContentDate,
     changeFrequency: "monthly" as ChangeFreq,
     priority: 0.7,
   };
 
   const machinePages = machines.map((machine) => ({
     url: `${SITE_URL}/equipment/machines/${machine.slug}`,
-    lastModified: now,
+    lastModified: staticContentDate,
     changeFrequency: "monthly" as ChangeFreq,
     priority: 0.7,
   }));
 
-  // Careers page
+  // Careers page - updates more frequently
   const careersPage = {
     url: `${SITE_URL}/careers`,
-    lastModified: now,
+    lastModified: recentUpdateDate,
     changeFrequency: "weekly" as ChangeFreq,
     priority: 0.7,
   };
@@ -70,7 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Directory index page
   const directoryIndexPage = {
     url: `${SITE_URL}/directory`,
-    lastModified: now,
+    lastModified: recentUpdateDate,
     changeFrequency: "weekly" as ChangeFreq,
     priority: 0.8,
   };
@@ -78,7 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // All directory company pages
   const directoryPages = directoryCompanies.map((company) => ({
     url: `${SITE_URL}/directory/${company.slug}`,
-    lastModified: now,
+    lastModified: staticContentDate,
     changeFrequency: "monthly" as ChangeFreq,
     priority: 0.6,
   }));
