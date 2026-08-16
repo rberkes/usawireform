@@ -48,6 +48,8 @@ const searchItems: SearchItem[] = [
   { title: "About", href: "/about", category: "Pages", description: "About USA Wire Form and our capabilities." },
   { title: "Sizes", href: "/sizes", category: "Pages", description: "Stock wire sizes: 3/8, 7/16, and 1/2 inch." },
   { title: "Design Guide", href: "/guide/design-for-wire-forming", category: "Resources", description: "Design guidelines for wire forming." },
+  { title: "Open Cable Support", href: "/guide/open-cable-support", category: "Resources", description: "Specify trays and J-hooks instead of a patented hanger catalog." },
+  { title: "Guides", href: "/guide", category: "Resources", description: "Wire forming design and specification guides." },
   { title: "Videos", href: "/videos", category: "Resources", description: "Watch our CNC wire forming in action." },
 ];
 

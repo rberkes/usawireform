@@ -165,6 +165,11 @@ export default function Home() {
                 body: "Bend radius, min legs, springback, and datums.",
               },
               {
+                href: "/guide/open-cable-support",
+                title: "Open cable support",
+                body: "Specify trays and J-hooks instead of a patented hanger catalog.",
+              },
+              {
                 href: "/industries",
                 title: "Industries",
                 body: "Named sectors we actually form for. Each one is its own directory.",

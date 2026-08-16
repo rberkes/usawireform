@@ -131,6 +131,11 @@ export default function SiteMapPage() {
               title: "Design guide",
               body: "Radius, legs, springback, datums.",
             },
+            {
+              href: "/guide/open-cable-support",
+              title: "Open cable support",
+              body: "Trays, J-hooks, and bolted U-hangers instead of a patented clip catalog.",
+            },
             ...processLinks,
           ]}
         />

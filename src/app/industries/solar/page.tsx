@@ -367,6 +367,11 @@ export default function SolarPage() {
               body: "Pre-coat vs form-then-finish. Rack zinc, powder, and why jackets wait until after the bend.",
             },
             {
+              href: "/guide/open-cable-support",
+              title: "Open cable support",
+              body: "Specify trays, J-hooks, and bolted U-hangers instead of a patented hanger catalog.",
+            },
+            {
               href: "/guide/design-for-wire-forming",
               title: "Design for wire forming",
               body: "Radii, diameters, and what to put on the print before the RFQ.",

@@ -13,7 +13,9 @@ const library = [
   { href: "/processes/3d-cnc-wire-forming", label: "3D CNC" },
   { href: "/processes/mesh-grids-and-cable-trays", label: "Grids & trays" },
   { href: "/processes", label: "All processes" },
+  { href: "/guide", label: "Guides" },
   { href: "/guide/design-for-wire-forming", label: "Design guide" },
+  { href: "/guide/open-cable-support", label: "Open cable support" },
   { href: "/processes/wire-form-shapes", label: "Shapes" },
 ];
 

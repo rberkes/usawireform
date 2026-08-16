@@ -113,12 +113,33 @@ export const staticSeoPages: SeoRecord[] = [
     section: "processes",
   }),
   record({
+    path: "/guide",
+    title: "Wire Forming Guides",
+    description:
+      "Guides for 4–14 mm CNC wire forming: design-for-manufacturing rules, and how to specify cable support without a patented hanger catalog.",
+    section: "processes",
+    keywords: ["wire forming guide", "DFM wire forms"],
+  }),
+  record({
     path: "/guide/design-for-wire-forming",
     title: "Design for Wire Forming",
     description:
       "Design-for-manufacturing rules for 2D and 3D CNC wire forms: bend radius, min legs, springback, tolerances, ends, and what to put on the print.",
     section: "processes",
     keywords: ["design for wire forming", "bend radius", "wire form print"],
+  }),
+  record({
+    path: "/guide/open-cable-support",
+    title: "Specifying Cable Support Without a Patented Catalog",
+    description:
+      "How engineers specify trays, J-hooks, and bolted U-hangers instead of paying a premium for patented messenger-lock or snap-on hanger catalogs.",
+    section: "processes",
+    keywords: [
+      "cable support specification",
+      "solar cable tray design",
+      "J-hook cable support",
+      "unpatented cable hangers",
+    ],
   }),
   record({
     path: "/sizes",
