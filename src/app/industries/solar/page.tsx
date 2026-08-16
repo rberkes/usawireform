@@ -5,7 +5,6 @@ import { StepQuoteBlock } from "@/components/StepUpload";
 import {
   CardGrid,
   ChipList,
-  FactGrid,
   LinkList,
   Page,
   PageHero,
@@ -18,65 +17,55 @@ import {
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Solar Cable Hangers and Trays",
+  title: "Solar Cable Trays and Array Hardware",
   description:
-    "Solar cable hangers and trays in 3/8–1/2 in: messenger, multi-carrier, under-panel. 1018 galv after form or 304/316. Coat after the bend.",
+    "Solar array trays, J-hooks, U-hangers, and pad guards in 3/8–1/2 in. 1018 galv after form or 304/316. We do not copy patented hanger catalogs.",
   path: "/industries/solar",
   keywords: [
-    "solar cable hangers",
     "solar cable trays",
-    "solar cable management",
-    "PV array hangers",
     "PV cable trays",
-    "messenger wire hangers",
-    "multi-carrier solar hangers",
-    "torque tube cable hangers",
-    "under panel cable hangers",
-    "solar grounding hangers",
-    "utility scale solar wire forms",
-    "galvanized solar hangers",
+    "solar J-hooks",
+    "solar array wire forms",
+    "utility scale solar trays",
+    "galvanized solar trays",
     "1018 galvanized solar",
-    "304 solar hangers",
+    "304 solar hardware",
     "ground-mount solar cable support",
     "wire mesh solar tray",
+    "inverter pad guards",
   ],
 });
 
 const faqs = [
   {
-    question: "What steel is used for solar cable hangers and trays?",
+    question: "Do you copy patented solar hanger catalogs?",
     answer:
-      "Trays and most round-wire hangers in this shop are low-carbon 1008, 1010, or 1018. Stock production is 1018. The industry does not use a special low-conductivity alloy — carbon steel already carries cable, not current. Coastal and owner-stainless specs move to 304 or 316.",
+      "No. We will not quote a third-party solar hanger SKU, a reverse of that SKU, or a round-wire lookalike. That includes locking messenger hangers, cooperating gripper-hook hangers, snap-on torque-tube hangers, copper-composite messenger-as-ground kits, and mid-pier grounding bracket sets. Send those part numbers elsewhere.",
+  },
+  {
+    question: "What will you form for a solar array?",
+    answer:
+      "Welded wire cable trays, J-hooks and U-hangers that bolt or hang from structure, ground staples, and pad guards in 4–14 mm. Stock coil is 3/8, 7/16, and 1/2 in, 1018 zinc after form or 304 / 316. The print has to be the customer’s geometry, not a catalog reverse.",
+  },
+  {
+    question: "What steel is used for solar trays and hooks?",
+    answer:
+      "Trays and most round-wire hooks in this shop are low-carbon 1008, 1010, or 1018. Stock production is 1018. Coastal and owner-stainless specs move to 304 or 316. We do not run a patented spring-clip hanger catalog in high-carbon Class 3 wire.",
   },
   {
     question: "Can a dielectric coating go on the wire before forming?",
     answer:
-      "Not if the coat has to stay a barrier. PVC, plastisol, and powder crack, thin, or burn at CNC bends, straightener rolls, cut ends, and every weld. Form and weld bare 1018 or stainless, zinc after form, then plastisol or powder on the finished part. Pre-galv is zinc, not insulation, and it still conducts.",
+      "Not if the coat has to stay a barrier. PVC, plastisol, and powder crack, thin, or burn at CNC bends, straightener rolls, cut ends, and every weld. Form and weld bare 1018 or stainless, zinc after form, then powder or plastisol on the finished part. Pre-galv is zinc, not insulation.",
   },
   {
-    question: "Do you supply messenger strand or guy wire?",
+    question: "Do you supply messenger strand or integrated grounding?",
     answer:
-      "No. Messenger is ASTM A475 extra-high-strength galvanized strand, usually 1×7. We form the hangers that clip or wrap that strand. Send messenger OD so the grip matches; do not send us the reel of strand.",
+      "No. We do not strand messenger, copper-composite messenger, or listed EGC/GEC messenger-as-ground packages. We do not form the mid-pier L-bracket and clamp kits that go with those systems. Ground staples and simple bonding hardware are wire parts to the customer’s print only.",
   },
   {
-    question: "Do you sell a patented solar hanger catalog?",
+    question: "What diameter and quantity do you run?",
     answer:
-      "No. Spiral and snap-on torque-tube catalogs are often patented buy-outs. We CNC round-wire hangers, carriers, and trays to your print in 4–14 mm — 3/8, 7/16, and 1/2 in as stock. If the geometry is a stamped flat ring we cannot run, we say so.",
-  },
-  {
-    question: "When do solar hangers need spring steel instead of 1018?",
-    answer:
-      "When the part must spring-clip a messenger and reopen. That is ASTM A227 or A229 (about 1065–1070), Class 3 zinc, then a jacket after form. Most 3/8–1/2 in row hangers, trays, and structure saddles are 1018 that stays bent. Name the temper on the print; do not assume 1018 will clip.",
-  },
-  {
-    question: "Is the hanger or tray part of the grounding system?",
-    answer:
-      "Only if the electrical drawing says so. We form bonding clips, ground hangers, and ground staples to print. Listed messenger-as-ground packages, EGC/GEC equivalents, and UL solar listings belong to the electrical vendor. A PVC or plastisol jacket is there so the form does not touch the circuit.",
-  },
-  {
-    question: "What diameter and quantity do you run for solar hardware?",
-    answer:
-      "Production band is 4–14 mm. Stock coil is 3/8, 7/16, and 1/2 in. Lighter tray mesh in the band is named, not pretended as stock. 100-piece minimum. A project BOM is a print, a finish, and a quantity — not a color chip.",
+      "Production band is 4–14 mm. Stock coil is 3/8, 7/16, and 1/2 in. Lighter tray mesh in the band is named, not pretended as stock. 100-piece minimum.",
   },
 ];
 
@@ -89,10 +78,10 @@ export default function SolarPage() {
   return (
     <Page>
       <ServiceSchema
-        name="Solar Cable Hangers and Trays"
-        description="Custom solar cable hangers, multi-carrier supports, and welded wire trays in 4–14 mm. Galvanized after form or 304/316, to the array print."
+        name="Solar Cable Trays and Array Hardware"
+        description="Custom welded wire cable trays, J-hooks, U-hangers, and pad guards for solar arrays in 4–14 mm. Galvanized after form or 304/316. Not a patented hanger catalog."
         url="/industries/solar"
-        serviceType="Solar cable hanger and tray wire forming"
+        serviceType="Solar array wire forming"
       />
       <FAQSchema questions={faqs} />
       <BreadcrumbJsonLd
@@ -104,31 +93,33 @@ export default function SolarPage() {
       <Breadcrumbs items={breadcrumbItems} />
       <PageHero
         kicker="Industries"
-        title="Solar cable hangers and trays"
-        lede="Utility-scale and ground-mount arrays need cable off the dirt for the life of the plant. We form hangers, carriers, and trays in 4–14 mm outdoor coil — messenger, structure, under-panel, and pad — not a 9-gauge clip cell."
+        title="Solar cable trays and array hardware"
+        lede="Utility-scale and ground-mount arrays still need cable off the dirt. We form trays, J-hooks, U-hangers, and pad guards in 4–14 mm outdoor coil — not a patented messenger-lock or snap-on torque-tube catalog."
       />
 
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
-          Solar hardware here is weather plus volume plus running changes on
-          tracker steel. A row is a{" "}
-          <TextLink href="/products/solar-hangers">hanger</TextLink> on a
-          messenger or a tube, a carrier count, and a finish that still holds
-          after twenty-five summers. Stock diameters{" "}
-          <TextLink href="/sizes">3/8, 7/16, and 1/2 in</TextLink>. Coil is{" "}
+          Solar work in this shop is weather plus volume on{" "}
+          <TextLink href="/sizes">3/8, 7/16, and 1/2 in</TextLink> coil.{" "}
+          <TextLink href="/products/cable-trays">Welded trays</TextLink> along
+          the row or at the inverter pad.{" "}
+          <TextLink href="/products/j-hooks">J-hooks</TextLink> and{" "}
+          <TextLink href="/products/u-hangers">U-hangers</TextLink> that hang
+          or bolt from a purlin, pier, or rack member.{" "}
           <TextLink href="/materials">1018 galvanized</TextLink> after form, or{" "}
           <TextLink href="/materials/300-series-stainless">304 / 316</TextLink>{" "}
           when the spec is stainless. Pre-galv that splits at the bend is the
           wrong finish for a desert array.
         </p>
         <p>
-          Purpose-built hangers beat zip ties, light clips, and a trench when
-          the run is exposed. We form the print in round wire. We do not sell
-          someone else’s coated catalog, and we do not quote music-wire rings
-          under 4 mm as production. Electrical forms{" "}
-          <TextLink href="/industries/electrical">carry cable, not current</TextLink>
-          . Isolation, when the drawing wants it, is a jacket after the geometry
-          exists — not a magic mill chemistry.
+          We form the customer’s print. We do not reverse a third-party solar
+          hanger SKU, and we do not sell a round-wire “equivalent” of a
+          patented clip. Electrical forms{" "}
+          <TextLink href="/industries/electrical">
+            carry cable, not current
+          </TextLink>
+          . Isolation, when the drawing wants it, is a jacket after the
+          geometry exists.
         </p>
       </div>
 
@@ -146,29 +137,29 @@ export default function SolarPage() {
         <CardGrid
           items={[
             {
-              href: "/products/solar-hangers",
-              title: "Solar hangers",
-              body: "Messenger and structure hangers in round 3/8, 7/16, or 1/2 in. Single or multi-carrier. Galv after form or 304 / 316.",
-            },
-            {
-              href: "/products/cable-hangers",
-              title: "Cable hangers",
-              body: "Plant-style messenger hangers and multi-loop carriers when the run is utility, not a solar SKU name.",
-            },
-            {
               href: "/products/cable-trays",
               title: "Cable trays",
               body: "Welded wire channel along the row or at the inverter pad. 1018, zinc after weld. 304 when the spec is stainless.",
             },
             {
               href: "/products/j-hooks",
-              title: "J-hooks and U-hangers",
-              body: "String, feeder, AC, and data off a purlin or a pier. Same stock diameters as the hangers.",
+              title: "J-hooks",
+              body: "Open hooks off a purlin, pier, or rack. String, feeder, AC, and data. Simple hang — not a captive messenger lock.",
+            },
+            {
+              href: "/products/u-hangers",
+              title: "U-hangers",
+              body: "Two legs and a radius. Bolt or clamp to structure. Inside width on the print. Threaded or flattened ends when named.",
+            },
+            {
+              href: "/products/cable-hangers",
+              title: "Plant-style hangers",
+              body: "Open loops and side-mounts to the customer’s print. Mining and plant work. Not a solar locking-hanger SKU.",
             },
             {
               href: "/products/ground-staples",
-              title: "Ground staples and hangers",
-              body: "Wire parts on the bonding BOM. We form the hardware; listed EGC packages stay with the electrical vendor.",
+              title: "Ground staples",
+              body: "Wire staples to the print. Not a listed messenger-as-ground package, and not mid-pier clamp kits.",
             },
             {
               href: "/products/machine-guards",
@@ -179,84 +170,38 @@ export default function SolarPage() {
         />
       </Section>
 
-      <Section id="messenger" title="Messenger hangers along the row">
+      <Section id="not-this" title="What we will not quote">
         <div className="mt-6 max-w-2xl space-y-5 text-sm leading-6 text-muted">
           <p>
-            A common layout strings a messenger between piers. Hangers wrap or
-            clip that strand at a pitch you name so they do not walk the wire
-            in wind and ice. Cables load into open carriers, then the hanger
-            closes on the messenger. The same form can be opened later to add
-            a homerun or to pull a failed string — if the print wants a
-            reopenable grip, say so. That grip is a temper question, not a
-            paint color.
-          </p>
-          <p>
-            Multi-carrier hangers keep string DC, feeder, AC, and comms in
-            separate loops when the electrical spec wants isolation. One
-            hanger type, several pockets. Carrier ID, bundle count, and
-            messenger OD belong on the drawing. We CNC that geometry in{" "}
-            <TextLink href="/processes/2d-cnc-wire-forming">2D</TextLink> or{" "}
-            <TextLink href="/processes/3d-cnc-wire-forming">3D</TextLink> from
-            stock coil. We do not draw or strand the messenger itself.
+            A third-party solar hanger catalog is protected by utility patents
+            (function) and design patents (look). Round wire instead of flat
+            wire does not dodge either. If the RFQ is a part number from that
+            catalog, a photo of that hanger, or “make it like this clip,” we
+            decline it.
           </p>
         </div>
-        <SpecList
-          rows={[
-            {
-              label: "Grip",
-              value: "Wrap or clip to named messenger OD — not a universal ring",
-            },
-            {
-              label: "Carriers",
-              value: "One loop or several; DC / AC / comms kept apart when the spec says so",
-            },
-            {
-              label: "Coil",
-              value: "1018 that stays bent, or A227 / A229 when it must spring-clip",
-            },
-            {
-              label: "Pitch",
-              value: "On the drawing. Wind and ice walk a loose hanger down the strand",
-            },
-          ]}
-        />
-      </Section>
-
-      <Section id="under-panel" title="Under-panel and torque-tube forms">
-        <div className="mt-6 max-w-2xl space-y-5 text-sm leading-6 text-muted">
-          <p>
-            Under the module, hangers saddle a torque tube, a purlin, or a
-            fixed-tilt member so homeruns sit in the shade of the panel.
-            Bifacial rows still need that path off the backsheet. Spiral and
-            snap-on catalog parts are often patented; we form a round-wire
-            equivalent to your tube OD and bundle, or we say the print is a
-            buy-out.
-          </p>
-          <p>
-            Tracker, ballasted, and fixed-tilt all run on the same cell. The
-            difference is the mating steel and the motion, not a different
-            diameter band. A tracker hanger has to live with daily rotation;
-            a ballasted roof hanger has to clear membrane and ballast blocks.
-            Name the member OD and the motion on the RFQ.
-          </p>
-        </div>
-        <FactGrid
-          className="mt-10"
+        <LinkList
+          className="mt-8"
           items={[
             {
-              label: "Tracker",
-              value:
-                "Saddle the torque tube. Allow rotation and keep bundles off the backsheet. Round wire to the tube OD.",
+              title: "Locking messenger hangers",
+              body: "Captive spiral / closed-lock arms that stay on the strand when bumped, then squeeze shut. Clock-style CLK geometry.",
             },
             {
-              label: "Fixed tilt",
-              value:
-                "Purlin or pier mount. Same stock coil. Geometry follows the rack, not a tracker catalog.",
+              title: "Gripping messenger hangers",
+              body: "Cooperating hooks that compress together with an interference-fit eye on the messenger. Open-lock OLK geometry.",
             },
             {
-              label: "Ballasted / roof",
-              value:
-                "Low profile, membrane clearance, often 304. Still 4–14 mm — not a rooftop clip bag.",
+              title: "Snap-on torque-tube hangers",
+              body: "Spring grips that flex over square, octagon, round, hex, or D tubes. Spiral under-panel catalogs. We do not form an equivalent.",
+            },
+            {
+              title: "Integrated grounding kits",
+              body: "Copper-composite messenger used as EGC/GEC, mid-pier L-brackets, grounding clamps, and the listed package around them.",
+            },
+            {
+              title: "Catalog lookalikes",
+              body: "Nested inner/outer carriers, orange plastisol SKUs, double safety-hook designs, and any reverse of a patented ornamental shape.",
             },
           ]}
         />
@@ -265,9 +210,9 @@ export default function SolarPage() {
       <Section id="trays" title="Welded cable trays on the row and at the pad">
         <div className="mt-6 max-w-2xl space-y-5 text-sm leading-6 text-muted">
           <p>
-            When the run is a channel instead of a hanger on a strand, it is a{" "}
-            <TextLink href="/products/cable-trays">cable tray</TextLink>
-            : mesh bottom, sidewalls, lip, splices. Same family as plant and{" "}
+            When the run is a channel, it is a{" "}
+            <TextLink href="/products/cable-trays">cable tray</TextLink>: mesh
+            bottom, sidewalls, lip, splices. Same family as plant and{" "}
             <TextLink href="/industries/data-centers">data-hall</TextLink>{" "}
             trays, built for outdoor service. Usual coil is{" "}
             <TextLink href="/materials">1018</TextLink>, zinc after weld, in
@@ -290,11 +235,31 @@ export default function SolarPage() {
         </div>
       </Section>
 
+      <Section id="hooks" title="J-hooks, U-hangers, and bolted structure mounts">
+        <div className="mt-6 max-w-2xl space-y-5 text-sm leading-6 text-muted">
+          <p>
+            Tracker, fixed-tilt, and ballasted racks all have members you can
+            hang or bolt from. A{" "}
+            <TextLink href="/products/j-hooks">J-hook</TextLink> off a purlin
+            or pier is an open hang. A{" "}
+            <TextLink href="/products/u-hangers">U-hanger</TextLink> with
+            named inside width can clamp or take threaded ends. Those are
+            structure mounts to the print — not a messenger clip and not a
+            snap-on tube grip.
+          </p>
+          <p>
+            Name the member, the hang style, and whether the part bolts.
+            Daily tracker motion still matters for clearance; it does not
+            turn the job into a patented torque-tube hanger.
+          </p>
+        </div>
+      </Section>
+
       <Section id="materials" title="Coil, zinc, and dielectric coats">
         <div className="mt-6 max-w-2xl space-y-5 text-sm leading-6 text-muted">
           <p>
             Outdoor service is the coating and the alloy, not a slogan. Low
-            carbon is the tray and hanger default because it forms, welds, and
+            carbon is the tray and hook default because it forms, welds, and
             does not try to carry current. A dielectric barrier is a jacket on
             the finished part. Zinc is corrosion protection; it still conducts.
           </p>
@@ -303,15 +268,11 @@ export default function SolarPage() {
           rows={[
             {
               label: "1018 (stock)",
-              value: "Default hangers, trays, frames. Zinc after form or weld.",
+              value: "Default trays, J-hooks, U-hangers, frames. Zinc after form or weld.",
             },
             {
               label: "1008 / 1010",
               value: "Softer tray and mesh wire when the form is severe or the coat is picky.",
-            },
-            {
-              label: "A227 / A229",
-              value: "Spring clip hangers only. About 1065–1070. Class 3 zinc, then jacket.",
             },
             {
               label: "304 / 316",
@@ -323,7 +284,11 @@ export default function SolarPage() {
             },
             {
               label: "PVC / plastisol / powder",
-              value: "After form (and after weld). Covers bends, nuggets, and cut ends. That is the dielectric path.",
+              value: "After form (and after weld). Covers bends, nuggets, and cut ends.",
+            },
+            {
+              label: "Spring-clip catalogs",
+              value: "A227 / A229 Class 3 messenger-lock and tube-snap catalogs are a buy-out. We do not run them.",
             },
           ]}
         />
@@ -332,55 +297,18 @@ export default function SolarPage() {
           <TextLink href="/processes/plating-and-coating">
             plating and coating
           </TextLink>{" "}
-          if the hanger or tray has to be fully insulated. Copper, brass, and
+          if the tray or hook has to be fully insulated. Copper, brass, and
           copper-clad steel are electrical conductors — they do not belong on
-          a support BOM unless the print is a ground lead.
+          a support BOM unless the print is a ground lead we can actually form.
         </p>
         <ChipList
           items={[
             "Zinc after form (A123 / rack zinc)",
             "Powder over pretreated mill or plate",
-            "Plastisol dip on the finished hanger",
+            "Plastisol dip on the finished part",
             "304 / 316 passivate",
             "No pre-coat as a dielectric",
-            "No copper on the support hang",
-          ]}
-        />
-      </Section>
-
-      <Section id="grounding" title="Grounding hardware vs listings">
-        <div className="mt-6 max-w-2xl space-y-5 text-sm leading-6 text-muted">
-          <p>
-            Bonding clips, ground hangers, and{" "}
-            <TextLink href="/products/ground-staples">ground staples</TextLink>{" "}
-            are wire parts on the BOM. Listed messenger-as-ground packages,
-            EGC/GEC equivalents, and UL solar listings are the electrical
-            vendor’s. We form the hardware; we do not stamp someone else’s
-            listing on the crate.
-          </p>
-        </div>
-      </Section>
-
-      <Section id="not-this" title="What this page is not">
-        <LinkList
-          className="mt-8"
-          items={[
-            {
-              title: "Messenger strand",
-              body: "A475 EHS 1×7 is a mill product. We hang on it; we do not strand it.",
-            },
-            {
-              title: "Patented catalog clips",
-              body: "Rolled-flat rings, orange plastisol SKUs, and snap-on patents are buy-outs unless the print is round wire we can CNC.",
-            },
-            {
-              title: "Music-wire and 9-gauge cells",
-              body: "Under 4 mm is a different shop. We will say so instead of quoting it as production.",
-            },
-            {
-              title: "Pre-coated dielectric coil",
-              body: "A jacket that has to isolate current goes on after the bend and the weld. Cut ends and nuggets are otherwise live steel.",
-            },
+            "No copper messenger kits",
           ]}
         />
       </Section>
@@ -388,21 +316,20 @@ export default function SolarPage() {
       <Section id="quote" title="What to send">
         <div className="mt-6 max-w-2xl space-y-5 text-sm leading-6 text-muted">
           <p>
-            Send hanger style, carrier count, messenger or tube OD, coating,
-            and quantity. A project BOM is a print plus a finish — not a
-            color chip. 100-piece minimum.
+            Send the customer’s drawing, not a competitor’s part number. A
+            project BOM is a print plus a finish — not a color chip. 100-piece
+            minimum.
           </p>
         </div>
         <Panel className="mt-8 max-w-2xl">
           <h3 className="font-medium">RFQ checklist</h3>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
             <li>PDF with diameters, inside radii, and critical-to-fit dims</li>
-            <li>Messenger OD or torque-tube / purlin OD</li>
-            <li>Carrier count and what each pocket holds (DC, AC, comms)</li>
-            <li>Alloy and temper — 1018, spring, 304, or 316</li>
+            <li>What the part hangs or bolts from (purlin, pier, rack) — not a catalog clip</li>
+            <li>Alloy — 1018, 304, or 316</li>
             <li>Finish sequence — zinc after form, then powder or plastisol if isolated</li>
-            <li>Tracker / fixed / ballasted and whether the hanger must reopen</li>
             <li>Quantity: first article, row count, and whether the print is frozen</li>
+            <li>Do not send third-party hanger SKUs, photos of those SKUs, or “make it like this”</li>
           </ul>
         </Panel>
       </Section>
@@ -450,7 +377,7 @@ export default function SolarPage() {
 
       <StepQuoteBlock
         className="mt-16"
-        title="Have a solar hanger, tray, or staple print?"
+        title="Have a tray, J-hook, or pad-guard print?"
       />
     </Page>
   );

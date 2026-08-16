@@ -15,7 +15,7 @@ export const industries = [
     slug: "solar",
     title: "Solar",
     summary:
-      "Messenger and structure solar hangers, multi-carrier supports, welded row trays, and outdoor 1018 galv or 304 — coat after form, to the array print.",
+      "Welded row trays, J-hooks, U-hangers, and pad guards in outdoor 1018 galv or 304 — customer prints, not patented hanger catalogs.",
   },
   {
     slug: "mining",
