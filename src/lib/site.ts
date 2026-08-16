@@ -15,7 +15,7 @@ export const industries = [
     slug: "solar",
     title: "Solar",
     summary:
-      "Tracker and rack forms, cable hangers, grounding, and outdoor stainless or galv.",
+      "Welded row trays, J-hooks, U-hangers, and pad guards in outdoor 1018 galv or 304 — customer prints, not patented hanger catalogs.",
   },
   {
     slug: "mining",

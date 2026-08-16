@@ -53,9 +53,11 @@ const navSections = [
   },
   {
     label: "Resources",
-    href: "/guide/design-for-wire-forming",
+    href: "/guide",
     items: [
+      { href: "/guide", label: "Guides" },
       { href: "/guide/design-for-wire-forming", label: "Design Guide" },
+      { href: "/guide/open-cable-support", label: "Open Cable Support" },
       { href: "/materials", label: "Materials" },
       { href: "/sizes", label: "Wire Sizes" },
       { href: "/equipment", label: "Equipment" },

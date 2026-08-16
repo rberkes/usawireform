@@ -141,14 +141,16 @@ export function Section({
   title,
   children,
   className,
+  id,
 }: {
   kicker?: string;
   title?: string;
   children: ReactNode;
   className?: string;
+  id?: string;
 }) {
   return (
-    <section className={cx("mt-16", className)}>
+    <section id={id} className={cx("mt-16", className)}>
       {kicker ? <Kicker>{kicker}</Kicker> : null}
       {title ? (
         <h2 className={cx("text-2xl tracking-tight", kicker ? "mt-3" : "")}>

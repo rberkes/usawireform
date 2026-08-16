@@ -258,6 +258,10 @@ export default function DesignGuidePage() {
             <Link href="/processes/3d-cnc-wire-forming">3D CNC</Link>
           </li>
           <li>
+            <Link href="/guide/open-cable-support">Open cable support</Link>{" "}
+            — trays, J-hooks, and bolted U-hangers instead of a patented catalog
+          </li>
+          <li>
             <Link href="/processes">Process index</Link>
           </li>
         </ul>
