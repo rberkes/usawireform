@@ -11,6 +11,7 @@ import {
   PageHero,
   Section,
   StatRow,
+  TextLink,
 } from "@/components/ui";
 import { BrandLockup } from "@/components/WireMark";
 import { COMPANY } from "@/lib/company";
@@ -130,6 +131,14 @@ export default function Home() {
         <PricePromise />
 
         <CapabilityStrip />
+
+        <Section kicker="Coil" title="Amstek Metal">
+          <p className="mt-3 max-w-2xl text-base leading-7 text-muted">
+            Engineered stainless, spring, and carbon wire and strip — a mill
+            supplier and stocking warehouse for precision fabricators.{" "}
+            <TextLink href="http://amstekmetal.com">amstekmetal.com</TextLink>
+          </p>
+        </Section>
 
         <Section className="mt-16">
           <LinkList
