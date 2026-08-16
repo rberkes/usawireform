@@ -6,6 +6,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { catalog } from "./catalog";
+import { machines } from "./machines";
 
 type ValidationError = {
   slug: string;
@@ -99,6 +100,20 @@ export function validateCatalog(): ValidationError[] {
   return errors;
 }
 
+export function validateMachines(): ValidationError[] {
+  const errors: ValidationError[] = [];
+  for (const machine of machines) {
+    if (!Number.isFinite(machine.priceUsd) || machine.priceUsd <= 0) {
+      errors.push({
+        slug: machine.slug,
+        field: "priceUsd",
+        message: "Machine Product snippets require a positive USD list price that matches the page.",
+      });
+    }
+  }
+  return errors;
+}
+
 /** Site-wide JSON-LD must not emit Product nodes; Google flags them as product snippets. */
 export function validateSiteJsonLd(): ValidationError[] {
   const errors: ValidationError[] = [];
@@ -127,7 +142,7 @@ export function getAllCatalogSlugs(): string[] {
 
 // Run validation if this file is executed directly
 if (require.main === module || process.argv[1]?.includes("catalog-validation")) {
-  const errors = [...validateCatalog(), ...validateSiteJsonLd()];
+  const errors = [...validateCatalog(), ...validateMachines(), ...validateSiteJsonLd()];
   
   if (errors.length === 0) {
     console.log("✓ Catalog validation passed");

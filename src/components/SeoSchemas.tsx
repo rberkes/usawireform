@@ -216,7 +216,7 @@ export function ServiceSchema({
 /**
  * Product schema for NumAlliance machines sold from this site.
  * Custom wire forms are Services, not Products — do not reuse this on catalog pages.
- * Google product snippets also need a visible USD `price` on the page; omit it until one exists.
+ * `price` must match the visible USD price on the page for product snippets.
  */
 export function MachineProductSchema({
   name,
@@ -225,6 +225,7 @@ export function MachineProductSchema({
   imagePath,
   mpn,
   category,
+  priceUsd,
 }: {
   name: string;
   description: string;
@@ -232,6 +233,7 @@ export function MachineProductSchema({
   imagePath: string;
   mpn?: string;
   category: "3d" | "2d";
+  priceUsd: number;
 }) {
   const pageUrl = `${SITE_URL}${path}`;
   const data = {
@@ -257,10 +259,11 @@ export function MachineProductSchema({
     },
     offers: {
       "@type": "Offer",
-      url: `${SITE_URL}/contact`,
+      url: pageUrl,
+      price: priceUsd,
+      priceCurrency: "USD",
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
-      priceCurrency: "USD",
       seller: {
         "@type": "Organization",
         name: COMPANY,

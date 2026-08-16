@@ -7,6 +7,8 @@ export type Machine = {
   description: string;
   wireDiameter: string;
   wireDiameterMetric: string;
+  /** Base list price in USD. Must match the visible price on the machine page. */
+  priceUsd: number;
   features: string[];
   applications: string[];
   youtubeSearchTerms: string[];
@@ -24,6 +26,7 @@ export const machines: Machine[] = [
       "The Robomac TF series represents decades of industrial wire forming expertise in a compact, robust package. With configurations ranging from single to triple bending heads, this CNC platform handles wire diameters from 2mm to 16mm with exceptional repeatability. The bending head moves freely around the wire, enabling complex 3D geometries without material slip or marking.",
     wireDiameter: ".08–.625″",
     wireDiameterMetric: "2–16 mm",
+    priceUsd: 225_000,
     features: [
       "3D bending from coil",
       "Compact and robust frame",
@@ -62,6 +65,7 @@ export const machines: Machine[] = [
       "The Robomac e-Motion delivers the performance DNA of the TF series in a fully electric package. Faster cycle times, higher precision, and more versatile tooling make this the choice for shops prioritizing energy efficiency without sacrificing capability. The electric drive system eliminates hydraulic maintenance while providing smoother, more controlled motion throughout the bending sequence.",
     wireDiameter: ".08–.375″",
     wireDiameterMetric: "2–12 mm",
+    priceUsd: 195_000,
     features: [
       "100% electric bending arm",
       "Faster cycle times than hydraulic",
@@ -100,6 +104,7 @@ export const machines: Machine[] = [
       "The Robomac TFE bridges the gap between electric efficiency and heavy-wire forming capacity. Purpose-built for wire diameters from 4mm to 16mm, this dual-head machine delivers the cycle time advantages of electric drive while handling the industrial wire gauges that smaller electric machines cannot. The modular design allows shops to evolve their capability as production demands change.",
     wireDiameter: ".16–.625″",
     wireDiameterMetric: "4–16 mm",
+    priceUsd: 255_000,
     features: [
       "100% electric operation",
       "High precision with reduced cycle times",
@@ -138,6 +143,7 @@ export const machines: Machine[] = [
       "The Robomac 2 Heads machine is engineered specifically for long-length and symmetrical wire forms. The retractable central orientation clamp achieves extremely short distances between the final two bends—down to 75mm—enabling geometries that single-head machines cannot efficiently produce. Both heads can operate independently, opening possibilities for asymmetrical parts and optimized cycle times.",
     wireDiameter: ".065–.47″",
     wireDiameterMetric: "1.8–12 mm",
+    priceUsd: 245_000,
     features: [
       "Double bending head configuration",
       "Retractable central clamp for close bends",
@@ -176,6 +182,7 @@ export const machines: Machine[] = [
       "The Robomac R4xx pushes wire forming cycle times to their limit with parallel processing architecture. Two benches work simultaneously while four bending heads execute folds in concert, making this the production choice for high-volume symmetrical parts. The narrow central clamp maintains the ability to form tight central geometries while the programmable work height adapts to different part profiles.",
     wireDiameter: ".07–.16″",
     wireDiameterMetric: "1.8–4 mm",
+    priceUsd: 215_000,
     features: [
       "2 parallel working benches",
       "4 simultaneous bending heads",
@@ -214,6 +221,7 @@ export const machines: Machine[] = [
       "The FRX bridges traditional spring coiling and modern 3D wire forming in a compact, flexible package. The robotized bending arm rotates infinitely around the wire without inducing torsion stress, enabling both tight spring coils and open 3D geometries from the same machine. Optional laser coil detection adds process control for spring-wound sections.",
     wireDiameter: ".03–.25″",
     wireDiameterMetric: "0.8–6 mm",
+    priceUsd: 165_000,
     features: [
       "Robotized bending arm with infinite rotation",
       "No torsion stress on wire during forming",
@@ -252,6 +260,7 @@ export const machines: Machine[] = [
       "The FTX represents the most advanced CNC wire bending technology in the NumAlliance lineup. The bending head moves freely around the material rather than pulling wire through tooling, enabling slip-free bends and true double-bend capability in a single station. Seven digital axes provide the motion complexity needed for parts that would otherwise require multiple setups or secondary operations.",
     wireDiameter: ".12–.625″",
     wireDiameterMetric: "3–16 mm",
+    priceUsd: 285_000,
     features: [
       "Bending head moves around material",
       "Slip-free bending process",
@@ -290,6 +299,7 @@ export const machines: Machine[] = [
       "The F2D is purpose-built for 2D wire forms and welded frames where in-plane geometry is the primary requirement. The support table maintains wire position during large frame production, while optional integrated welding allows closed-loop frames to exit the machine ready for finishing. Pick-and-place ejection keeps completed frames organized for downstream operations.",
     wireDiameter: ".12–.47″",
     wireDiameterMetric: "3–12 mm",
+    priceUsd: 175_000,
     features: [
       "2D bending from coil",
       "Frames up to 800 × 800 mm",
@@ -326,4 +336,12 @@ export function getMachine(slug: string): Machine | undefined {
 
 export function getMachinesByCategory(category: "3d" | "2d"): Machine[] {
   return machines.filter((m) => m.category === category);
+}
+
+export function formatMachinePrice(usd: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(usd);
 }

@@ -6,7 +6,7 @@ import { MachineVideoSection } from "@/components/MachineVideoSection";
 import { MachineProductSchema } from "@/components/SeoSchemas";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { ButtonLink, Page, PageHero, Section, Kicker, SpecList } from "@/components/ui";
-import { machines, getMachine } from "@/lib/machines";
+import { machines, getMachine, formatMachinePrice } from "@/lib/machines";
 import { getVideosForMachine } from "@/lib/machine-videos";
 import { pageMeta } from "@/lib/seo";
 
@@ -57,6 +57,7 @@ export default async function MachinePage({ params }: Props) {
         imagePath={`/images/machines/${slug}.png`}
         mpn={machine.shortName}
         category={machine.category}
+        priceUsd={machine.priceUsd}
       />
       <BreadcrumbJsonLd
         items={[
@@ -103,6 +104,13 @@ export default async function MachinePage({ params }: Props) {
             <div className="mt-8 flex items-center gap-6">
               <div>
                 <p className="font-mono text-2xl text-copper">
+                  {formatMachinePrice(machine.priceUsd)}
+                </p>
+                <p className="text-xs text-muted">Starting price</p>
+              </div>
+              <div className="h-10 w-px bg-line" />
+              <div>
+                <p className="font-mono text-2xl text-copper">
                   {machine.wireDiameter}
                 </p>
                 <p className="text-xs text-muted">Wire Diameter</p>
@@ -115,6 +123,10 @@ export default async function MachinePage({ params }: Props) {
                 <p className="text-xs text-muted">Metric</p>
               </div>
             </div>
+            <p className="mt-4 max-w-md text-xs leading-5 text-muted">
+              Base machine in USD. Heads, options, tooling, and installation
+              are quoted.
+            </p>
           </div>
           <div className="relative aspect-[4/3] bg-inset overflow-hidden">
             <Image
@@ -129,7 +141,15 @@ export default async function MachinePage({ params }: Props) {
         </div>
 
         <Section title="Specifications">
-          <SpecList rows={machine.specs} />
+          <SpecList
+            rows={[
+              {
+                label: "Price",
+                value: `${formatMachinePrice(machine.priceUsd)} starting`,
+              },
+              ...machine.specs,
+            ]}
+          />
         </Section>
 
         <Section title="Key Features">
