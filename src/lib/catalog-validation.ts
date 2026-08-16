@@ -3,6 +3,8 @@
  * Run with: npx tsx src/lib/catalog-validation.ts
  */
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { catalog } from "./catalog";
 
 type ValidationError = {
@@ -97,6 +99,24 @@ export function validateCatalog(): ValidationError[] {
   return errors;
 }
 
+/** Site-wide JSON-LD must not emit Product nodes; Google flags them as product snippets. */
+export function validateSiteJsonLd(): ValidationError[] {
+  const errors: ValidationError[] = [];
+  const source = readFileSync(
+    join(process.cwd(), "src/components/JsonLd.tsx"),
+    "utf8",
+  );
+  if (/"@type": "Product"/.test(source)) {
+    errors.push({
+      slug: "site-jsonld",
+      field: "@type",
+      message:
+        'JsonLd.tsx must not emit @type "Product". Google Search Console treats those as product snippets and requires price, review, or aggregateRating. Use Service for quote-to-order catalog items.',
+    });
+  }
+  return errors;
+}
+
 // Extract all valid slugs as a type (for development reference)
 export type CatalogSlug = (typeof catalog)[number]["slug"];
 
@@ -107,7 +127,7 @@ export function getAllCatalogSlugs(): string[] {
 
 // Run validation if this file is executed directly
 if (require.main === module || process.argv[1]?.includes("catalog-validation")) {
-  const errors = validateCatalog();
+  const errors = [...validateCatalog(), ...validateSiteJsonLd()];
   
   if (errors.length === 0) {
     console.log("✓ Catalog validation passed");

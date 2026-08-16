@@ -1,5 +1,23 @@
 import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 
+/**
+ * Quote-to-order catalog entries are Services, not Products.
+ * Bare Product nodes (name only, no price/review) fail Google Search
+ * Console product snippets on every page that includes this layout JSON-LD.
+ */
+function catalogService(name: string, path: string) {
+  return {
+    "@type": "Offer",
+    url: `${SITE_URL}${path}`,
+    itemOffered: {
+      "@type": "Service",
+      name,
+      url: `${SITE_URL}${path}`,
+      provider: { "@type": "Organization", name: COMPANY },
+    },
+  };
+}
+
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -34,18 +52,18 @@ const organizationJsonLd = {
         "@type": "OfferCatalog",
         name: "Hooks and Rings",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "S-hooks" } },
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "D-rings" } },
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "J-hooks" } },
+          catalogService("S-hooks", "/products/s-hooks"),
+          catalogService("D-rings", "/products/d-rings"),
+          catalogService("J-hooks", "/products/j-hooks"),
         ],
       },
       {
         "@type": "OfferCatalog",
         name: "Frames and Guards",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Wire Frames" } },
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Machine Guards" } },
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Fan Guards" } },
+          catalogService("Wire Frames", "/products/wire-frames"),
+          catalogService("Machine Guards", "/products/machine-guards"),
+          catalogService("Fan Guards", "/products/fan-guards"),
         ],
       },
     ],
@@ -120,33 +138,21 @@ export function ProductJsonLd({
 }) {
   const data = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Service",
     name,
     description,
     url: `${SITE_URL}${url}`,
     image: image ?? `${SITE_URL}/shop/hero-forms.jpg`,
-    brand: {
-      "@type": "Brand",
-      name: COMPANY,
-    },
-    manufacturer: {
+    provider: {
       "@type": "Organization",
       name: COMPANY,
+      url: SITE_URL,
     },
-    offers: {
-      "@type": "Offer",
-      availability: "https://schema.org/InStock",
-      priceCurrency: "USD",
-      priceSpecification: {
-        "@type": "PriceSpecification",
-        priceCurrency: "USD",
-        eligibleQuantity: {
-          "@type": "QuantitativeValue",
-          minValue: 100,
-          unitText: "pieces",
-        },
-      },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
     },
+    serviceType: "CNC wire forming",
   };
 
   return (
