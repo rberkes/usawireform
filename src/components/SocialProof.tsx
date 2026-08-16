@@ -1,4 +1,5 @@
 import { cx } from "@/lib/cx";
+import { COMPANY } from "@/lib/company";
 import { Container } from "./ui";
 import { ReviewSchema } from "./SeoSchemas";
 
@@ -48,7 +49,7 @@ export function SocialProof({ className }: { className?: string }) {
 
   return (
     <>
-      <ReviewSchema itemName="USA Wire Form CNC Wire Forming Services" reviews={reviews} />
+      <ReviewSchema itemName={COMPANY} reviews={reviews} />
       <section className={cx("border-y border-line bg-inset", className)}> 
         <Container className="py-16 sm:py-24">
         <div className="text-center">

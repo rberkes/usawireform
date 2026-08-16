@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/JsonLd";
+import { BreadcrumbJsonLd } from "@/components/JsonLd";
+import { ServiceSchema } from "@/components/SeoSchemas";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import {
@@ -53,10 +54,11 @@ export default async function CatalogProductPage({ params }: Props) {
 
   return (
     <Page>
-      <ProductJsonLd
+      <ServiceSchema
         name={item.title}
         description={`${item.title} in ${STOCK} wire. ${item.summary}`}
         url={`/products/${slug}`}
+        serviceType="CNC wire forming"
       />
       <BreadcrumbJsonLd
         items={[

@@ -108,8 +108,9 @@ export function ReviewSchema({
   
   const data = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Organization",
     name: itemName,
+    url: SITE_URL,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: avgRating.toFixed(1),
@@ -202,6 +203,70 @@ export function ServiceSchema({
       name: areaServed,
     },
     serviceType: serviceType ?? name,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+/**
+ * Product schema for NumAlliance machines sold from this site.
+ * Custom wire forms are Services, not Products — do not reuse this on catalog pages.
+ * Google product snippets also need a visible USD `price` on the page; omit it until one exists.
+ */
+export function MachineProductSchema({
+  name,
+  description,
+  path,
+  imagePath,
+  mpn,
+  category,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  imagePath: string;
+  mpn?: string;
+  category: "3d" | "2d";
+}) {
+  const pageUrl = `${SITE_URL}${path}`;
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name,
+    description,
+    image: `${SITE_URL}${imagePath}`,
+    url: pageUrl,
+    sku: mpn,
+    mpn,
+    category:
+      category === "3d"
+        ? "3D CNC Wire Bending Machine"
+        : "2D CNC Wire Bending Machine",
+    brand: {
+      "@type": "Brand",
+      name: "NumAlliance",
+    },
+    manufacturer: {
+      "@type": "Organization",
+      name: "NumAlliance",
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${SITE_URL}/contact`,
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+      priceCurrency: "USD",
+      seller: {
+        "@type": "Organization",
+        name: COMPANY,
+        url: SITE_URL,
+      },
+    },
   };
 
   return (
@@ -314,8 +379,9 @@ export function AggregateRatingSchema({
 }) {
   const data = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Organization",
     name: itemName,
+    url: SITE_URL,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue,

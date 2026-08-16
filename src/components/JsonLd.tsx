@@ -125,44 +125,6 @@ export function JsonLd({ data }: { data?: object }) {
   );
 }
 
-export function ProductJsonLd({
-  name,
-  description,
-  url,
-  image,
-}: {
-  name: string;
-  description: string;
-  url: string;
-  image?: string;
-}) {
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name,
-    description,
-    url: `${SITE_URL}${url}`,
-    image: image ?? `${SITE_URL}/shop/hero-forms.jpg`,
-    provider: {
-      "@type": "Organization",
-      name: COMPANY,
-      url: SITE_URL,
-    },
-    areaServed: {
-      "@type": "Country",
-      name: "United States",
-    },
-    serviceType: "CNC wire forming",
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
-}
-
 export function FAQJsonLd({
   questions,
 }: {

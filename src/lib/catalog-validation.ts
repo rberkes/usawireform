@@ -111,7 +111,7 @@ export function validateSiteJsonLd(): ValidationError[] {
       slug: "site-jsonld",
       field: "@type",
       message:
-        'JsonLd.tsx must not emit @type "Product". Google Search Console treats those as product snippets and requires price, review, or aggregateRating. Use Service for quote-to-order catalog items.',
+        'JsonLd.tsx must not emit @type "Product". Site-wide Product nodes are flagged on every URL, including Instant Quote. Wire forms are Services. NumAlliance machines use Product schema only on /equipment/machines/[slug].',
     });
   }
   return errors;

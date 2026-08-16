@@ -3,9 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { MachineVideoSection } from "@/components/MachineVideoSection";
-import { ServiceSchema } from "@/components/SeoSchemas";
+import { MachineProductSchema } from "@/components/SeoSchemas";
 import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, Kicker, SpecList } from "@/components/ui";
+import { ButtonLink, Page, PageHero, Section, Kicker, SpecList } from "@/components/ui";
 import { machines, getMachine } from "@/lib/machines";
 import { getVideosForMachine } from "@/lib/machine-videos";
 import { pageMeta } from "@/lib/seo";
@@ -50,11 +50,13 @@ export default async function MachinePage({ params }: Props) {
 
   return (
     <>
-      <ServiceSchema
+      <MachineProductSchema
         name={`${machine.name} CNC Wire Bending Machine`}
         description={machine.description}
-        url={`/equipment/machines/${slug}`}
-        serviceType="Industrial Wire Forming Equipment"
+        path={`/equipment/machines/${slug}`}
+        imagePath={`/images/machines/${slug}.png`}
+        mpn={machine.shortName}
+        category={machine.category}
       />
       <BreadcrumbJsonLd
         items={[
@@ -92,6 +94,12 @@ export default async function MachinePage({ params }: Props) {
             <p className="mt-8 text-sm leading-7 text-muted">
               {machine.description}
             </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <ButtonLink href="/contact">Request a machine quote</ButtonLink>
+              <ButtonLink href="/instant-quote" variant="ghost">
+                Quote a wire form
+              </ButtonLink>
+            </div>
             <div className="mt-8 flex items-center gap-6">
               <div>
                 <p className="font-mono text-2xl text-copper">
