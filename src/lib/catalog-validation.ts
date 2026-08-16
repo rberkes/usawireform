@@ -6,7 +6,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { catalog } from "./catalog";
-import { machines } from "./machines";
 
 type ValidationError = {
   slug: string;
@@ -100,34 +99,19 @@ export function validateCatalog(): ValidationError[] {
   return errors;
 }
 
-export function validateMachines(): ValidationError[] {
-  const errors: ValidationError[] = [];
-  for (const machine of machines) {
-    if (!Number.isFinite(machine.priceUsd) || machine.priceUsd <= 0) {
-      errors.push({
-        slug: machine.slug,
-        field: "priceUsd",
-        message: "Machine Product snippets require a positive USD list price that matches the page.",
-      });
-    }
-  }
-  return errors;
-}
-
-/** Site-wide JSON-LD must not emit Product nodes; Google flags them as product snippets. */
+/** JSON-LD must not emit Product nodes; Google treats those as product snippets. */
 export function validateSiteJsonLd(): ValidationError[] {
   const errors: ValidationError[] = [];
-  const source = readFileSync(
-    join(process.cwd(), "src/components/JsonLd.tsx"),
-    "utf8",
-  );
-  if (/"@type": "Product"/.test(source)) {
-    errors.push({
-      slug: "site-jsonld",
-      field: "@type",
-      message:
-        'JsonLd.tsx must not emit @type "Product". Site-wide Product nodes are flagged on every URL, including Instant Quote. Wire forms are Services. NumAlliance machines use Product schema only on /equipment/machines/[slug].',
-    });
+  const files = ["src/components/JsonLd.tsx", "src/components/SeoSchemas.tsx"];
+  for (const relative of files) {
+    const source = readFileSync(join(process.cwd(), relative), "utf8");
+    if (/"@type": "Product"/.test(source)) {
+      errors.push({
+        slug: "site-jsonld",
+        field: "@type",
+        message: `${relative} must not emit @type "Product". Product snippets are disabled until we opt in. Use Service for forming work and equipment pages.`,
+      });
+    }
   }
   return errors;
 }
@@ -142,7 +126,7 @@ export function getAllCatalogSlugs(): string[] {
 
 // Run validation if this file is executed directly
 if (require.main === module || process.argv[1]?.includes("catalog-validation")) {
-  const errors = [...validateCatalog(), ...validateMachines(), ...validateSiteJsonLd()];
+  const errors = [...validateCatalog(), ...validateSiteJsonLd()];
   
   if (errors.length === 0) {
     console.log("✓ Catalog validation passed");

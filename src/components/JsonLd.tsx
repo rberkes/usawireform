@@ -1,9 +1,8 @@
 import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 
 /**
- * Quote-to-order catalog entries are Services, not Products.
- * Bare Product nodes (name only, no price/review) fail Google Search
- * Console product snippets on every page that includes this layout JSON-LD.
+ * Catalog entries are Services, not Products.
+ * Product nodes trigger Google product snippets; we are not using those yet.
  */
 function catalogService(name: string, path: string) {
   return {

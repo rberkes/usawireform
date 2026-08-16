@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Page, PageHero, Section, Kicker } from "@/components/ui";
-import { machines, getMachinesByCategory, formatMachinePrice } from "@/lib/machines";
+import { machines, getMachinesByCategory } from "@/lib/machines";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -44,7 +44,7 @@ function MachineCard({ machine }: { machine: (typeof machines)[number] }) {
           {machine.name}
         </h3>
         <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
-          {machine.wireDiameterMetric} · {formatMachinePrice(machine.priceUsd)}
+          {machine.wireDiameterMetric}
         </p>
         <p className="mt-3 text-sm leading-6 text-muted">{machine.tagline}</p>
       </div>
