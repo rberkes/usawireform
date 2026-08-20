@@ -3,23 +3,28 @@
  * Each company gets its own SEO page with lead capture.
  */
 
-export interface DirectoryCompany {
-  slug: string;
-  name: string;
-  location: string;
-  state: string;
-  country: "USA" | "Canada";
-  region: "Northeast" | "Southeast" | "Midwest" | "Southwest" | "West" | "Canada";
-  website?: string;
-  description: string;
-  capabilities: string[];
-  industries?: string[];
-  certifications?: string[];
-  wireDiameters?: string;
-  established?: string;
-}
+import type { DirectoryCompany } from "./directory-types";
+import { extraDirectoryCompanies } from "./directory-extra";
+import { STATE_SHOPS } from "./state-shops";
 
-export const directoryCompanies: DirectoryCompany[] = [
+export type { DirectoryCompany } from "./directory-types";
+
+const REGION_BY_STATE: Record<string, DirectoryCompany["region"]> = {
+  CT: "Northeast", ME: "Northeast", MA: "Northeast", NH: "Northeast",
+  NJ: "Northeast", NY: "Northeast", PA: "Northeast", RI: "Northeast",
+  VT: "Northeast", DE: "Northeast", MD: "Northeast", DC: "Northeast",
+  AL: "Southeast", AR: "Southeast", FL: "Southeast", GA: "Southeast",
+  KY: "Southeast", LA: "Southeast", MS: "Southeast", NC: "Southeast",
+  SC: "Southeast", TN: "Southeast", VA: "Southeast", WV: "Southeast",
+  IL: "Midwest", IN: "Midwest", IA: "Midwest", KS: "Midwest",
+  MI: "Midwest", MN: "Midwest", MO: "Midwest", NE: "Midwest",
+  ND: "Midwest", OH: "Midwest", SD: "Midwest", WI: "Midwest",
+  AZ: "Southwest", NM: "Southwest", OK: "Southwest", TX: "Southwest",
+  CA: "West", CO: "West", ID: "West", MT: "West", NV: "West",
+  OR: "West", UT: "West", WA: "West", WY: "West", HI: "West", AK: "West",
+};
+
+const CORE_DIRECTORY_COMPANIES: DirectoryCompany[] = [
   // ═══════════════════════════════════════════════════════════════════════════
   // MIDWEST - Ohio, Michigan, Indiana, Illinois, Wisconsin, Minnesota, Missouri
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1180,12 +1185,87 @@ const DIRECTORY_SITES: Record<string, string> = {
   "southern-spring-manufacturing": "https://southernspring.net",
 };
 
-for (const company of directoryCompanies) {
+for (const company of CORE_DIRECTORY_COMPANIES) {
   if (!company.website) {
     const site = DIRECTORY_SITES[company.slug];
     if (site) company.website = site;
   }
 }
+
+function normName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+function hostOf(url?: string) {
+  if (!url) return "";
+  try {
+    return new URL(url).hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+function slugify(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function fromStateShops(): DirectoryCompany[] {
+  const skip =
+    /mill|drawer|service center|not a coil|not 4–14|fence|buy formed wire|they draw/i;
+  const out: DirectoryCompany[] = [];
+  const seenHost = new Set<string>();
+  for (const shop of STATE_SHOPS) {
+    if (skip.test(shop.capacity)) continue;
+    if (/^serves /i.test(shop.city)) continue;
+    const host = hostOf(shop.website);
+    if (host && seenHost.has(host)) continue;
+    if (host) seenHost.add(host);
+    const region = REGION_BY_STATE[shop.state];
+    if (!region) continue;
+    out.push({
+      slug: slugify(shop.name),
+      name: shop.name,
+      location: `${shop.city}, ${shop.state}`,
+      state: shop.state,
+      country: "USA",
+      region,
+      website: shop.website,
+      description: `${shop.name} in ${shop.city}, ${shop.state}. ${shop.capacity}`,
+      capabilities: shop.capacity.split(/,|;/).slice(0, 4).map((s) => s.trim()).filter(Boolean),
+    });
+  }
+  return out;
+}
+
+function mergeDirectory(groups: DirectoryCompany[][]) {
+  const seenSlug = new Set<string>();
+  const seenName = new Set<string>();
+  const seenHost = new Set<string>();
+  const merged: DirectoryCompany[] = [];
+  for (const group of groups) {
+    for (const company of group) {
+      const nameKey = normName(company.name);
+      const host = hostOf(company.website);
+      if (seenSlug.has(company.slug) || seenName.has(nameKey)) continue;
+      if (host && seenHost.has(host)) continue;
+      seenSlug.add(company.slug);
+      seenName.add(nameKey);
+      if (host) seenHost.add(host);
+      merged.push(company);
+    }
+  }
+  return merged;
+}
+
+export const directoryCompanies = mergeDirectory([
+  CORE_DIRECTORY_COMPANIES,
+  extraDirectoryCompanies,
+  fromStateShops(),
+]);
 
 export function publicHost(url: string): string {
   try {

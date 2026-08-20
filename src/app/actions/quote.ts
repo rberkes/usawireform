@@ -3,6 +3,7 @@
 import { Resend } from "resend";
 import { put } from "@vercel/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
+import { LEADS_NOTIFY_EMAIL } from "@/lib/leads";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -128,7 +129,7 @@ export async function submitContactForm(
     try {
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL,
-        to: QUOTE_EMAIL,
+        to: LEADS_NOTIFY_EMAIL,
         replyTo: data.email,
         subject: `Quote Request: ${data.company} - ${data.material} ${data.diameter}`,
         html: `
@@ -238,7 +239,7 @@ export async function submitQuickQuote(
     try {
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL,
-        to: QUOTE_EMAIL,
+        to: LEADS_NOTIFY_EMAIL,
         replyTo: data.email,
         subject: `Quick Quote: ${data.timeline} - ${data.quality}`,
         html: `
@@ -329,7 +330,7 @@ export async function submitMachineLead(
     try {
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL,
-        to: QUOTE_EMAIL,
+        to: LEADS_NOTIFY_EMAIL,
         replyTo: data.email,
         subject: `Machine lead: ${data.oem} ${data.model} — ${data.company}`,
         html: `

@@ -1,60 +1,71 @@
 import { NextRequest } from "next/server";
-import { QUOTE_EMAIL } from "@/lib/company";
+import {
+  emailDirectoryLead,
+  storeDirectoryLead,
+  type DirectoryLeadRecord,
+} from "@/lib/leads";
 
-interface DirectoryLead {
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  message?: string;
-  referredCompany: string;
-  referredCompanySlug: string;
-  source: string;
-  timestamp: string;
+function isEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const data: DirectoryLead = await request.json();
+    const body = (await request.json()) as Partial<DirectoryLeadRecord>;
+    const lead: DirectoryLeadRecord = {
+      name: String(body.name ?? "").trim(),
+      title: String(body.title ?? "").trim(),
+      email: String(body.email ?? "").trim(),
+      phone: String(body.phone ?? "").trim(),
+      company: String(body.company ?? "").trim(),
+      linkedin: String(body.linkedin ?? "").trim(),
+      message: String(body.message ?? "").trim(),
+      referredCompany: String(body.referredCompany ?? "").trim(),
+      referredCompanySlug: String(body.referredCompanySlug ?? "").trim(),
+      source: String(body.source ?? "directory").trim(),
+      timestamp: new Date().toISOString(),
+    };
 
-    if (!data.name || !data.email || !data.referredCompany) {
+    if (!lead.name || !lead.email || !lead.referredCompany) {
+      return Response.json({ error: "Missing required fields" }, { status: 400 });
+    }
+    if (!isEmail(lead.email)) {
+      return Response.json({ error: "Invalid email format" }, { status: 400 });
+    }
+
+    let stored = false;
+    let emailed = false;
+    try {
+      stored = await storeDirectoryLead(lead);
+    } catch (error) {
+      console.error("[Directory lead store]", error);
+    }
+    try {
+      emailed = await emailDirectoryLead(lead);
+    } catch (error) {
+      console.error("[Directory lead email]", error);
+    }
+
+    console.log("[Directory lead]", {
+      referredCompany: lead.referredCompany,
+      email: lead.email,
+      stored,
+      emailed,
+    });
+
+    if (!stored && !emailed) {
       return Response.json(
-        { error: "Missing required fields" },
-        { status: 400 }
+        {
+          error:
+            "Lead did not store. Set BLOB_READ_WRITE_TOKEN and Resend, or email rberkes@gmail.com.",
+        },
+        { status: 503 },
       );
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-      return Response.json(
-        { error: "Invalid email format" },
-        { status: 400 }
-      );
-    }
-
-    // Log the lead for tracking (in production, save to database or send email)
-    console.log("Directory Lead Received:", {
-      ...data,
-      receivedAt: new Date().toISOString(),
-      ip: request.headers.get("x-forwarded-for") || "unknown",
-      userAgent: request.headers.get("user-agent") || "unknown",
-    });
-
-    // In production, you would:
-    // 1. Save to database (e.g., leads table)
-    // 2. Send notification email to QUOTE_EMAIL
-    // 3. Potentially notify the referred company
-
-    // For now, return success
-    return Response.json({
-      success: true,
-      message: `Lead for ${data.referredCompany} received. Contact: ${QUOTE_EMAIL}`,
-    });
+    return Response.json({ success: true });
   } catch (error) {
     console.error("Directory lead error:", error);
-    return Response.json(
-      { error: "Failed to process lead" },
-      { status: 500 }
-    );
+    return Response.json({ error: "Failed to process lead" }, { status: 500 });
   }
 }

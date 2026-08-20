@@ -120,6 +120,18 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                 </a>
               </p>
             )}
+            {company.linkedin && (
+              <p className="mt-2">
+                <a
+                  href={company.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-copper hover:underline"
+                >
+                  Company LinkedIn →
+                </a>
+              </p>
+            )}
 
             <Section title="Specifications">
               <SpecList rows={specs} />
