@@ -1,7 +1,7 @@
 import { InstantQuote } from "@/components/InstantQuote";
 import { PricePromise } from "@/components/PricePromise";
 import { Page, PageHero, TextLink } from "@/components/ui";
-import { PRICE_LINE } from "@/lib/price";
+import { PRICE_LINE, QUOTE_REVIEW } from "@/lib/price";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -25,7 +25,7 @@ export default function InstantQuotePage() {
       <PageHero
         kicker="Quote"
         title="Instant estimate"
-        lede="Fill diameter, bends, length, material, and quantity. Not a production quote."
+        lede={`Fill diameter, bends, length, material, and quantity. ${QUOTE_REVIEW}`}
       />
       <PricePromise titled={false} className="mt-10" />
       <div className="mt-10">

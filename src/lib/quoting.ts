@@ -34,6 +34,7 @@ export const ESTIMATE_MATERIALS = [
   { id: "304", label: "304 / 304L stainless", stainless: true },
   { id: "316", label: "316 / 316L stainless", stainless: true },
   { id: "330", label: "330 high-temp", stainless: true },
+  { id: "6061", label: "6061-T6 aluminum", stainless: false },
   { id: "brass", label: "Brass", stainless: false },
   { id: "copper", label: "Copper", stainless: false },
 ] as const;

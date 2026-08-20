@@ -1,6 +1,9 @@
 export const PRICE_LINE =
   "Lowest prices guaranteed. We will not be beat. 100-piece minimum.";
 
+export const QUOTE_REVIEW =
+  "All instant quotes are subject to quote department review.";
+
 /** Shop rate card for Ask estimates. Customer supplies the coil. */
 export const FORMING_RATES = {
   cutUsd: 1,
@@ -12,7 +15,14 @@ export const FORMING_RATES = {
   material:
     "Customer buys the material and brings it to the shop. We form it. We do not sell coil.",
   coil:
-    "We work with all steels processed by coil. If it comes in a coil, we process it — carbon, spring steel, 300-series including 330, and any other steel on coil in band.",
+    "We work with all steels processed by coil, and all aluminum alloys in coil including 6061-T6. If it comes in a coil, we process it.",
+} as const;
+
+export const TOOLING = {
+  stock: '3/8", 7/16", and 1/2"',
+  newLead: "7–10 business days",
+  newCostUsd: 3500,
+  newCostLabel: "about $3,500 per wire size",
 } as const;
 
 export const PRICE_ITEMS = [

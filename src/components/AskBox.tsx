@@ -84,8 +84,9 @@ export function AskBox() {
         Type a question. Get an answer.
       </h2>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted sm:text-lg">
-        4–14 mm CNC, 100-piece minimum, Northeast Ohio. All steels from
-        coil — if it comes in a coil, we process it.
+        4–14 mm CNC, 100-piece minimum, Northeast Ohio. Stock tooling in
+        3/8, 7/16, and 1/2 in. Steels and aluminum from coil, including
+        6061-T6. Instant quotes go to quote-department review.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8">

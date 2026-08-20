@@ -9,6 +9,7 @@ import {
   usd2,
   type EstimateMaterialId,
 } from "@/lib/quoting";
+import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
 import { fieldClass, Panel } from "./ui";
 import { VolumeComparison } from "./VolumeComparison";
 
@@ -90,8 +91,8 @@ export function InstantQuote() {
             </label>
             {stock ? (
               <p className="self-end text-sm leading-6 text-muted">
-                Stock coil. Other sizes in {WIRE.short} still form — they need
-                tooling on the production quote.
+                Stock tooling: {TOOLING.stock}. Other sizes in {WIRE.short} —
+                new tooling in {TOOLING.newLead}, {TOOLING.newCostLabel}.
               </p>
             ) : (
               <label className="block text-sm">
@@ -217,6 +218,7 @@ export function InstantQuote() {
               >
                 {showComparison ? "Hide" : "Show"} volume pricing comparison
               </button>
+              <p className="mt-4 text-sm leading-6 text-muted">{QUOTE_REVIEW}</p>
             </>
           )}
         </Panel>
