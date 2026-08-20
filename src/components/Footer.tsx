@@ -3,6 +3,7 @@ import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
 import { PRICE_LINE } from "@/lib/price";
 import { BrandLockup } from "./WireMark";
 import { Container } from "./ui";
+import { StateGrid } from "./StateGrid";
 
 const library = [
   { href: "/wire-forming", label: "Wire forming" },
@@ -31,6 +32,7 @@ const shop = [
   { href: "/equipment", label: "Equipment" },
   { href: "/directory", label: "Company Directory" },
   { href: "/videos", label: "Videos" },
+  { href: "/blog", label: "Blog" },
   { href: "/instant-quote", label: "Instant quote" },
   { href: "/quoting", label: "Tooling & coil" },
   { href: "/about", label: "About" },
@@ -69,7 +71,7 @@ const wireSuppliers = [
 const equipmentMfrs = [
   { href: "https://www.numalliance.com", label: "Numalliance" },
   { href: "https://www.wafios.com", label: "Wafios" },
-  { href: "https://www.sleeveco.com", label: "Sleeveco (Straighteners)" },
+  { href: "https://www.witels-albert-usa.com", label: "witels-albert" },
 ];
 
 export function Footer() {
@@ -120,6 +122,25 @@ export function Footer() {
           </div>
         </div>
       </Container>
+      <div className="border-t border-line">
+        <Container className="py-8">
+          <span className="font-mono text-[11px] tracking-widest text-muted uppercase">
+            Wire forming by state
+          </span>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+            Every U.S. state plus D.C. Production is Northeast Ohio. The
+            state page is the landing —{" "}
+            <Link
+              href="/wire-forming-companies-near-me"
+              className="text-foreground/90 hover:text-copper"
+            >
+              ZIP lookup
+            </Link>
+            .
+          </p>
+          <StateGrid />
+        </Container>
+      </div>
       <div className="border-t border-line">
         <p className="mx-auto max-w-6xl px-5 py-4 font-mono text-[11px] tracking-wide text-muted">
           © {new Date().getFullYear()} {COMPANY}

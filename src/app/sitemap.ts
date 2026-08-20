@@ -23,6 +23,7 @@ const highPriorityPaths = new Set([
   "/wire-forming-companies-near-me",
   "/custom-wire-forming",
   "/wire-mesh",
+  "/blog",
   "/ohio",
 ]);
 

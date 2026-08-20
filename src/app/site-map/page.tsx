@@ -76,6 +76,16 @@ export default function SiteMapPage() {
               body: "Shop channel — CNC on camera.",
             },
             {
+              href: "/blog",
+              title: "Blog",
+              body: "Wire forming articles and a daily briefing.",
+            },
+            {
+              href: "/blog/daily",
+              title: "Daily briefing",
+              body: "Rotates automatically from a curated pool.",
+            },
+            {
               href: "/careers",
               title: "Careers",
               body: "CNC operator and manufacturing jobs in Northeast Ohio.",

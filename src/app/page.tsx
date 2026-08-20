@@ -4,6 +4,8 @@ import { StepQuoteBlock } from "@/components/StepUpload";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
 import { PricePromise } from "@/components/PricePromise";
 import { SocialProof } from "@/components/SocialProof";
+import { StateGrid } from "@/components/StateGrid";
+import { ZipLookup } from "@/components/ZipLookup";
 import {
   ButtonLink,
   LinkList,
@@ -175,12 +177,35 @@ export default function Home() {
                 body: "Resistance, MIG, and TIG for welded mesh, guards, and trays.",
               },
               {
+                href: "/blog",
+                title: "Blog",
+                body: "Wire forming articles, structures, and a daily briefing.",
+              },
+              {
                 href: "/videos",
                 title: "Shop video",
                 body: "Numalliance CNC on the floor — Robomac 214TF and the named machines.",
               },
             ]}
           />
+        </Section>
+
+        <Section
+          kicker="Locations"
+          title="Wire forming in every U.S. state."
+        >
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
+            One CNC cell in Northeast Ohio. Each state page is the landing
+            for that ZIP — we quote nationwide from that floor.{" "}
+            <Link href="/wire-forming-companies-near-me" className="text-copper hover:underline">
+              Companies near me
+            </Link>
+            .
+          </p>
+          <div className="mt-6">
+            <ZipLookup />
+          </div>
+          <StateGrid />
         </Section>
 
         <StepQuoteBlock className="mt-16" title="Drop a STEP" />

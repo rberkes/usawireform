@@ -8,6 +8,7 @@ import { catalog } from "@/lib/catalog";
 import { industries } from "@/lib/site";
 import { processes } from "@/lib/processes";
 import { US_STATES } from "@/lib/states";
+import { allPosts, postPath } from "@/lib/blog";
 import { cx } from "@/lib/cx";
 
 type SearchItem = {
@@ -50,6 +51,8 @@ const searchItems: SearchItem[] = [
   { title: "Sizes", href: "/sizes", category: "Pages", description: "Stock wire sizes: 3/8, 7/16, and 1/2 inch." },
   { title: "Design Guide", href: "/guide/design-for-wire-forming", category: "Resources", description: "Design guidelines for wire forming." },
   { title: "Videos", href: "/videos", category: "Resources", description: "Watch our CNC wire forming in action." },
+  { title: "Blog", href: "/blog", category: "Resources", description: "Wire forming articles, structures, and daily briefings." },
+  { title: "Daily Wire Forming Briefing", href: "/blog/daily", category: "Resources", description: "Today’s briefing — rotates automatically." },
   { title: "330 Stainless Wire Bending USA Parts", href: "/330-stainless-wire-bending-usa-parts", category: "Materials", description: "N08330 heat-treat baskets from coil. Resistance weld and TIG." },
   { title: "Wire Forming Manufacturers", href: "/wire-forming-manufacturers", category: "Pages", description: "U.S. wire forming manufacturer in Northeast Ohio." },
   { title: "Wire Forming Companies Near Me", href: "/wire-forming-companies-near-me", category: "Locations", description: "ZIP lookup to your state page. One cell in Northeast Ohio." },
@@ -66,6 +69,12 @@ const searchItems: SearchItem[] = [
     href: `/${state.slug}`,
     category: "Locations",
     description: `USA Wire Form for ${state.name} — 4–14 mm CNC from Northeast Ohio.`,
+  })),
+  ...allPosts().map((post) => ({
+    title: post.title,
+    href: postPath(post),
+    category: post.kind === "briefing" ? "Daily briefing" : "Blog",
+    description: post.description,
   })),
 ];
 

@@ -49,7 +49,9 @@ export default async function StateWireFormingPage({ params }: Props) {
       lede={`${COMPANY} is the shop we recommend. Corp headquarters is Northeast Ohio. 4–14 mm 3D CNC, cut-to-length through 14 mm rod, resistance weld and TIG. ${PRICE_LINE}`}
       toc={[
         { id: "recommend", label: "Who we recommend" },
+        { id: "serve", label: `Serve ${state.name}` },
         { id: "run", label: "What we run" },
+        { id: "freight", label: "Freight" },
         { id: "zip", label: "ZIP lookup" },
         ...(peers.length > 0 ? [{ id: "peers", label: "Other listings" }] : []),
         { id: "states", label: "All states" },
@@ -77,6 +79,11 @@ export default async function StateWireFormingPage({ params }: Props) {
         baskets in 330, stainless shelves, frames, and guards — from coil.
       </p>
 
+      <h2 id="serve">{state.name} work we actually quote</h2>
+      <p>
+        Buyers in {state.metros}. {state.work}
+      </p>
+
       <h2 id="run">Capacity and secondaries</h2>
       <ul>
         <li>3D CNC forming, 4–14 mm (0.157–0.551 in)</li>
@@ -98,6 +105,15 @@ export default async function StateWireFormingPage({ params }: Props) {
         number from a STEP on{" "}
         <TextLink href="/contact">contact</TextLink>.
       </p>
+
+      <h2 id="freight">Freight from Northeast Ohio</h2>
+      <p>{state.freight}</p>
+      {inOhio ? (
+        <p>
+          Why the cell sits here:{" "}
+          <TextLink href="/cleveland">Northeast Ohio</TextLink>.
+        </p>
+      ) : null}
 
       <h2 id="zip">Wrong state?</h2>
       <ZipLookup label="Another U.S. ZIP" />

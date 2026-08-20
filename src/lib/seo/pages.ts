@@ -6,6 +6,7 @@ import { PRICE_LINE } from "@/lib/price";
 import { publishedProcesses } from "@/lib/processes";
 import { industries, shopLines } from "@/lib/site";
 import { US_STATES } from "@/lib/states";
+import { allPosts, postPath } from "@/lib/blog";
 
 export type SeoSection =
   | "home"
@@ -290,6 +291,25 @@ export const staticSeoPages: SeoRecord[] = [
     keywords: ["CNC wire forming video", "Robomac 214TF"],
   }),
   record({
+    path: "/blog",
+    title: "Blog — Wire Forming News and Structures",
+    description: `${COMPANY} blog: wire forming, wire form structures, and a daily briefing that rotates automatically.`,
+    section: "company",
+    keywords: ["wire forming blog", "wire form structures", "daily wire forming"],
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }),
+  record({
+    path: "/blog/daily",
+    title: "Daily Wire Forming Briefing",
+    description:
+      "A daily wire forming briefing that rotates automatically from a curated pool. Design, weld, mesh, 330, and structures in 4–14 mm.",
+    section: "company",
+    keywords: ["daily wire forming", "wire forming blog"],
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }),
+  record({
     path: "/about",
     title: "About",
     description:
@@ -465,6 +485,20 @@ function directoryListingPages(): SeoRecord[] {
   );
 }
 
+function blogPages(): SeoRecord[] {
+  return allPosts().map((post) =>
+    record({
+      path: postPath(post),
+      title: post.title,
+      description: post.description,
+      section: "company",
+      keywords: [...post.tags, "wire forming blog"],
+      changeFrequency: post.kind === "briefing" ? "monthly" : "monthly",
+      priority: post.kind === "article" ? 0.7 : 0.5,
+    }),
+  );
+}
+
 function productPages(): SeoRecord[] {
   const catalogPages = catalog.map((item) =>
     record({
@@ -521,6 +555,7 @@ export function allSeoPages(): SeoRecord[] {
     ...statePages(),
     ...machinePages(),
     ...directoryListingPages(),
+    ...blogPages(),
   ]) {
     if (seen.has(page.path)) continue;
     seen.add(page.path);
