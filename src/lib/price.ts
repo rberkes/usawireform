@@ -1,6 +1,17 @@
 export const PRICE_LINE =
   "Lowest prices guaranteed. We will not be beat. 100-piece minimum.";
 
+/** Shop rate card for Ask estimates. Customer supplies the coil. */
+export const FORMING_RATES = {
+  cutUsd: 1,
+  bendUsd: 0.5,
+  inchUsd: 0.05,
+  cutLabel: "$1.00 per cut",
+  bendLabel: "$0.50 per bend",
+  inchLabel: "$0.05 per inch",
+  material: "Customer buys the material and brings it to the shop. We form it. We do not sell coil.",
+} as const;
+
 export const PRICE_ITEMS = [
   {
     label: "Lowest prices",

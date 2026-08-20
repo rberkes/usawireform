@@ -4,14 +4,17 @@ import { FormEvent, useRef, useState } from "react";
 import { btn } from "./ui";
 import { cx } from "@/lib/cx";
 
+const DEFAULT_QUESTION =
+  "I have a part with 4 bends and its 14 inches long whats is the cost?";
+
 const EXAMPLES = [
   "Can you form 3/8 in S-hooks?",
   "What's the minimum order?",
-  "Do you run fourslide?",
+  "How do you price a form?",
 ] as const;
 
 export function AskBox() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(DEFAULT_QUESTION);
   const [answer, setAnswer] = useState("");
   const [asking, setAsking] = useState(false);
   const [askError, setAskError] = useState("");
@@ -95,7 +98,7 @@ export function AskBox() {
             type="text"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Can you form 3/8 in S-hooks?"
+            placeholder={DEFAULT_QUESTION}
             autoComplete="off"
             className="h-16 w-full flex-1 rounded-sm border border-line bg-background px-4 text-lg outline-none placeholder:text-muted/60 focus:border-copper sm:text-xl"
           />
