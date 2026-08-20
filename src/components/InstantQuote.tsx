@@ -22,6 +22,7 @@ const stockOptions = COMMON_SIZES.map((size) => ({
 export function InstantQuote() {
   const [stockId, setStockId] = useState<string>(stockOptions[0].id);
   const [customMm, setCustomMm] = useState("");
+  const [cuts, setCuts] = useState("1");
   const [bends, setBends] = useState("4");
   const [lengthIn, setLengthIn] = useState("24");
   const [materialId, setMaterialId] = useState<EstimateMaterialId>("1018");
@@ -35,6 +36,7 @@ export function InstantQuote() {
     : Number.isFinite(customMmValue)
       ? customMmValue / 25.4
       : 0;
+  const cutCount = Number(cuts);
   const bendCount = Number(bends);
   const length = Number(lengthIn);
   const quantity = Number(qty);
@@ -46,6 +48,8 @@ export function InstantQuote() {
   const ready =
     Boolean(material) &&
     inBand &&
+    Number.isFinite(cutCount) &&
+    cutCount >= 0 &&
     Number.isFinite(bendCount) &&
     bendCount >= 0 &&
     Number.isFinite(length) &&
@@ -55,13 +59,12 @@ export function InstantQuote() {
   const result = useMemo(() => {
     if (!ready || !material) return null;
     return estimatePiece({
-      diameterIn,
       bends: bendCount,
       lengthIn: length,
-      stainless: material.stainless,
       quantity,
+      cuts: cutCount,
     });
-  }, [ready, material, diameterIn, bendCount, length, quantity]);
+  }, [ready, bendCount, length, quantity, cutCount]);
 
   const lotReady = Boolean(result && qtyOk);
 
@@ -70,8 +73,9 @@ export function InstantQuote() {
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <Panel>
           <p className="mb-5 text-sm font-medium text-copper">
-            Fill diameter, bends, length, and material. The estimate updates as
-            you type.
+            $1.00 per cut, $0.50 per bend, $0.05 per inch. Material is not
+            in the price — you buy coil and bring it in. The estimate
+            updates as you type.
           </p>
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block text-sm">
@@ -110,6 +114,17 @@ export function InstantQuote() {
               </label>
             )}
             <label className="block text-sm">
+              Number of cuts
+              <input
+                className={`mt-1.5 ${fieldClass}`}
+                type="number"
+                min="0"
+                step="1"
+                value={cuts}
+                onChange={(event) => setCuts(event.target.value)}
+              />
+            </label>
+            <label className="block text-sm">
               Number of bends
               <input
                 className={`mt-1.5 ${fieldClass}`}
@@ -146,6 +161,9 @@ export function InstantQuote() {
                   </option>
                 ))}
               </select>
+              <span className="mt-1.5 block text-sm leading-6 text-muted">
+                You buy the coil and bring it in. Alloy is not in this number.
+              </span>
             </label>
             <label className="block text-sm">
               Quantity ({ESTIMATE.qtyMin} min)
@@ -168,7 +186,7 @@ export function InstantQuote() {
                 Estimate
               </p>
               <p className="mt-3 text-sm leading-6 text-muted">
-                Enter a diameter in {WIRE.short}, bends, length, material, and
+                Enter a diameter in {WIRE.short}, cuts, bends, length, and
                 at least {ESTIMATE.qtyMin} pcs.
                 {stockId === "other" && customMm && !inBand
                   ? ` ${WIRE.short} only.`
@@ -190,7 +208,6 @@ export function InstantQuote() {
               {lotReady ? (
                 <p className="mt-2 text-lg text-foreground">
                   {usd2(result.lot)} for {quantity.toLocaleString("en-US")} pcs
-                  including setup
                 </p>
               ) : null}
               <dl className="mt-8 space-y-3 border-t border-line pt-6 text-sm">
@@ -198,9 +215,12 @@ export function InstantQuote() {
                   label={`Forming · ${length} in · ${usd2(result.inchRate)}/in`}
                   value={usd2(result.forming)}
                 />
-                <Row label="Cut" value={usd2(result.cut)} />
                 <Row
-                  label={`${bendCount} bend${bendCount === 1 ? "" : "s"}`}
+                  label={`${result.cutCount} cut${result.cutCount === 1 ? "" : "s"} · ${usd2(ESTIMATE.cut)} each`}
+                  value={usd2(result.cut)}
+                />
+                <Row
+                  label={`${bendCount} bend${bendCount === 1 ? "" : "s"} · ${usd2(ESTIMATE.bend)} each`}
                   value={usd2(result.bendCost)}
                 />
                 {result.discountRate > 0 ? (
@@ -209,7 +229,6 @@ export function InstantQuote() {
                     value={`−${usd2(result.gross - result.piece)}`}
                   />
                 ) : null}
-                <Row label="Setup · once" value={usd2(result.setup)} />
               </dl>
               <button
                 type="button"
@@ -219,6 +238,12 @@ export function InstantQuote() {
                 {showComparison ? "Hide" : "Show"} volume pricing comparison
               </button>
               <p className="mt-4 text-sm leading-6 text-muted">{QUOTE_REVIEW}</p>
+              {stock ? null : (
+                <p className="mt-2 text-sm leading-6 text-muted">
+                  Non-stock diameter: new tooling in {TOOLING.newLead},{" "}
+                  {TOOLING.newCostLabel}. Not in the piece price.
+                </p>
+              )}
             </>
           )}
         </Panel>
@@ -228,10 +253,9 @@ export function InstantQuote() {
       {ready && result && showComparison && material && (
         <Panel>
           <VolumeComparison
-            diameterIn={diameterIn}
+            cuts={cutCount}
             bends={bendCount}
             lengthIn={length}
-            stainless={material.stainless}
           />
         </Panel>
       )}

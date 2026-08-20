@@ -1,3 +1,5 @@
+import { FORMING_RATES } from "@/lib/price";
+
 export const QUOTE = {
   year: 2026,
   toolingMin: 2500,
@@ -8,24 +10,18 @@ export const QUOTE = {
   exampleNonStockMm: 5.5,
 } as const;
 
-/** Instant estimate: cut + forming by the inch. Job fees are once per lot. */
+/** Instant estimate: same card as Ask — $1/cut, $0.50/bend, $0.05/in. */
 export const ESTIMATE = {
-  cut: 2,
-  bend: 1,
-  setup: 175,
+  cut: FORMING_RATES.cutUsd,
+  bend: FORMING_RATES.bendUsd,
+  inch: FORMING_RATES.inchUsd,
+  setup: 0,
   qtyMin: 100,
   qtyBreaks: [
     { qty: 1000, rate: 0.05 },
     { qty: 10000, rate: 0.1 },
   ],
 } as const;
-
-/** Carbon forming rate by stock diameter. Stainless is 2×. */
-export const INCH_RATES = [
-  { diameterIn: 0.375, label: "3/8 in", carbon: 0.09 },
-  { diameterIn: 0.4375, label: "7/16 in", carbon: 0.1 },
-  { diameterIn: 0.5, label: "1/2 in", carbon: 0.11 },
-] as const;
 
 export const ESTIMATE_MATERIALS = [
   { id: "1018", label: "1010 carbon", stainless: false },
@@ -58,20 +54,6 @@ export function usd2(amount: number) {
   });
 }
 
-export function carbonPerInch(diameterIn: number) {
-  const exact = INCH_RATES.find(
-    (row) => Math.abs(row.diameterIn - diameterIn) < 1e-6,
-  );
-  if (exact) return exact.carbon;
-  const rate = 0.09 + (diameterIn - 0.375) * (0.01 / 0.0625);
-  return Math.round(Math.max(rate, 0.01) * 100) / 100;
-}
-
-export function formingPerInch(diameterIn: number, stainless: boolean) {
-  const carbon = carbonPerInch(diameterIn);
-  return stainless ? Math.round(carbon * 2 * 100) / 100 : carbon;
-}
-
 export function quantityDiscount(qty: number) {
   if (!Number.isFinite(qty)) return 0;
   let rate = 0;
@@ -82,41 +64,43 @@ export function quantityDiscount(qty: number) {
 }
 
 export function estimatePiece({
-  diameterIn,
   bends,
   lengthIn,
-  stainless,
   quantity,
+  cuts = 1,
 }: {
-  diameterIn: number;
+  diameterIn?: number;
   bends: number;
   lengthIn: number;
-  stainless: boolean;
+  stainless?: boolean;
   quantity: number;
+  cuts?: number;
 }) {
-  const inchRate = formingPerInch(diameterIn, stainless);
+  const inchRate = FORMING_RATES.inchUsd;
+  const cutCount = Number.isFinite(cuts) && cuts >= 0 ? cuts : 1;
   const forming = lengthIn * inchRate;
-  const cut = ESTIMATE.cut;
-  const bendCost = bends * ESTIMATE.bend;
+  const cut = cutCount * FORMING_RATES.cutUsd;
+  const bendCost = bends * FORMING_RATES.bendUsd;
   const gross = forming + cut + bendCost;
   const discountRate = quantityDiscount(quantity);
   const piece = gross * (1 - discountRate);
   const qty = Number.isFinite(quantity) && quantity >= ESTIMATE.qtyMin ? quantity : 0;
-  const setup = ESTIMATE.setup;
+  const setup = 0;
   return {
     inchRate,
     forming,
     cut,
+    cutCount,
     bendCost,
     gross,
     discountRate,
     piece,
     setup,
-    lot: piece * qty + setup,
+    lot: piece * qty,
   };
 }
 
 export const toolingRange = `${usd(QUOTE.toolingMin)}–${usd(QUOTE.toolingMax)}`;
-export const programmingFee = usd(ESTIMATE.setup);
+export const programmingFee = usd(QUOTE.programming);
 export const coilMinRange = `${QUOTE.coilMinLbs.toLocaleString("en-US")}–${QUOTE.coilMaxLbs.toLocaleString("en-US")} lb`;
 export const qtyBreakCopy = `${ESTIMATE.qtyMin} pc min. −5% at 1,000. −10% at 10,000.`;

@@ -2,32 +2,30 @@
 
 import { useMemo } from "react";
 import { estimatePiece, usd2, ESTIMATE } from "@/lib/quoting";
+import { FORMING_RATES } from "@/lib/price";
 import { cx } from "@/lib/cx";
 
 type VolumeComparisonProps = {
-  diameterIn: number;
+  cuts: number;
   bends: number;
   lengthIn: number;
-  stainless: boolean;
   className?: string;
 };
 
 const VOLUME_TIERS = [100, 500, 1000, 5000, 10000];
 
 export function VolumeComparison({
-  diameterIn,
+  cuts,
   bends,
   lengthIn,
-  stainless,
   className,
 }: VolumeComparisonProps) {
   const comparisons = useMemo(() => {
     return VOLUME_TIERS.map((qty) => {
       const result = estimatePiece({
-        diameterIn,
+        cuts,
         bends,
         lengthIn,
-        stainless,
         quantity: qty,
       });
       return {
@@ -37,9 +35,7 @@ export function VolumeComparison({
         savings: result.discountRate,
       };
     });
-  }, [diameterIn, bends, lengthIn, stainless]);
-
-  const basePrice = comparisons[0].piece;
+  }, [cuts, bends, lengthIn]);
 
   return (
     <div className={cx("mt-8", className)}>
@@ -77,9 +73,9 @@ export function VolumeComparison({
                   <span className="font-medium">
                     {row.qty.toLocaleString("en-US")}
                   </span>
-                  {row.qty === ESTIMATE.qtyMin && (
+                  {row.qty === ESTIMATE.qtyMin ? (
                     <span className="ml-2 text-xs text-muted">(minimum)</span>
-                  )}
+                  ) : null}
                 </td>
                 <td className="py-3 pr-4 text-right font-mono">
                   {usd2(row.piece)}
@@ -102,8 +98,11 @@ export function VolumeComparison({
         </table>
       </div>
       <p className="mt-3 text-xs text-muted">
-        All prices include ${ESTIMATE.setup} setup fee (once per lot).{" "}
-        {ESTIMATE.qtyBreaks.map((b) => `−${Math.round(b.rate * 100)}% at ${b.qty.toLocaleString()}`).join(". ")}
+        {FORMING_RATES.cutLabel}, {FORMING_RATES.bendLabel},{" "}
+        {FORMING_RATES.inchLabel}. Material not included.{" "}
+        {ESTIMATE.qtyBreaks
+          .map((b) => `−${Math.round(b.rate * 100)}% at ${b.qty.toLocaleString()}`)
+          .join(". ")}
         .
       </p>
     </div>
