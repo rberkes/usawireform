@@ -30,6 +30,7 @@ const shop = [
   { href: "/capabilities", label: "Capabilities" },
   { href: "/secondary-operations", label: "Secondaries" },
   { href: "/equipment", label: "Equipment" },
+  { href: "/equipment/cnc-manufacturers", label: "CNC machine catalog" },
   { href: "/directory", label: "Company Directory" },
   { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/videos", label: "Videos" },
@@ -43,6 +44,7 @@ const shop = [
 ];
 
 const industryAssociations = [
+  { href: "https://www.wireformingtech.com", label: "Wire Forming Technology International" },
   { href: "https://smihq.org", label: "Spring Manufacturers Institute" },
   { href: "https://wirenet.org", label: "Wire Association International" },
   { href: "https://pma.org", label: "Precision Metalforming Assoc." },

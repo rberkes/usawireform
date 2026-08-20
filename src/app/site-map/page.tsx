@@ -4,6 +4,7 @@ import { catalogByGroup } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
 import { directoryCompanies, DIRECTORY_REGIONS, getCompaniesByRegion } from "@/lib/directory";
 import { machines } from "@/lib/machines";
+import { CNC_HUB, CNC_OEMS, oemPath } from "@/lib/cnc-oems";
 import { METRO_HUB_PATH, WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
 import { publishedProcesses } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
@@ -337,6 +338,25 @@ export default function SiteMapPage() {
             title: machine.name,
             body: machine.tagline,
           }))}
+        />
+      </Section>
+
+      <Section title="CNC manufacturers (10 OEMs × 6 models)">
+        <LinkList
+          className="mt-5"
+          items={[
+            {
+              href: CNC_HUB,
+              title: "CNC machine catalog",
+              body: "Ten manufacturers, sixty model pages, dealer lead form.",
+            },
+            ...CNC_OEMS.map((oem) => ({
+              href: oemPath(oem),
+              title: oem.name,
+              note: oem.country,
+              body: oem.summary,
+            })),
+          ]}
         />
       </Section>
 

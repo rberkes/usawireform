@@ -34,6 +34,9 @@ export default function EquipmentPage() {
         <Link href="/equipment/machines" className={btn.ghost}>
           View NumAlliance Machines
         </Link>
+        <Link href="/equipment/cnc-manufacturers" className={`${btn.ghost} ml-3`}>
+          10 OEM catalog
+        </Link>
       </PageHero>
 
       <Section title="NumAlliance Wire Forming Machines">

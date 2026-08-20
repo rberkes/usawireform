@@ -46,6 +46,7 @@ const searchItems: SearchItem[] = [
   // Static pages
   { title: "Contact", href: "/contact", category: "Pages", description: "Request a quote for custom CNC wire forms." },
   { title: "Instant Quote", href: "/instant-quote", category: "Pages", description: "Get an instant estimate for wire forming." },
+  { title: "CNC Machine Catalog", href: "/equipment/cnc-manufacturers", category: "Equipment", description: "Ten OEMs, sixty 2D/3D CNC models. Dealer leads — we run a Robomac 214TF." },
   { title: "Equipment", href: "/equipment", category: "Pages", description: "Our CNC wire forming equipment and machines." },
   { title: "Materials", href: "/materials", category: "Pages", description: "Wire materials: carbon, stainless, brass, copper." },
   { title: "About", href: "/about", category: "Pages", description: "About USA Wire Form and our capabilities." },
@@ -64,6 +65,7 @@ const searchItems: SearchItem[] = [
   { title: "Stainless Steel Wire Shelf", href: "/stainless-steel-wire-shelf", category: "Products", description: "Industrial 4–14 mm stainless shelves from coil." },
   { title: "Wire Mesh", href: "/wire-mesh", category: "Pages", description: "Weave types, crimp, mesh count, openings, and welded wire cloth." },
   { title: "Careers", href: "/careers", category: "Pages", description: "CNC operator and manufacturing jobs in Northeast Ohio." },
+  { title: "Wire Forming Technology International", href: "https://www.wireformingtech.com", category: "Industry", description: "Trade magazine for spring makers, wire formers, mesh welders, and rebar processors." },
   { title: "Company Directory", href: "/directory", category: "Resources", description: "Wire forming shops across the USA and Canada." },
   { title: "Wire Forming Cities", href: "/directory/areas", category: "Locations", description: "Top 20 U.S. forming cities. Cleveland is the cheap coil — mills and drawers." },
   { title: "Northeast Ohio", href: "/cleveland", category: "Locations", description: "Mills, wire drawers, and short-haul 4–14 mm coil." },

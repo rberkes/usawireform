@@ -137,6 +137,11 @@ export default function Home() {
           <LinkList
             items={[
               {
+                href: "https://www.wireformingtech.com",
+                title: "Wire Forming Technology International",
+                body: "The trade magazine for spring makers, wire formers, mesh welders, and rebar processors. First industry link.",
+              },
+              {
                 href: "/directory/areas",
                 title: "Wire forming cities",
                 body: "Twenty U.S. forming clusters. Cleveland is the cheap coil — mills and drawers on a local truck.",

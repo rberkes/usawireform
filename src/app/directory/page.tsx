@@ -58,8 +58,17 @@ export default function DirectoryPage() {
       <p className="mt-8 max-w-2xl text-sm leading-7 text-muted">
         This directory lists wire forming shops across North America. Different capabilities,
         different diameters, different regions. If we cannot run a job, one of these shops might.
-        Click any company for details and to request a connection. For the ranked
-        city list — and why Cleveland is the cheap-coil cell — see{" "}
+        Click any company for details and to request a connection. The industry
+        magazine is{" "}
+        <a
+          href="https://www.wireformingtech.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-copper hover:underline"
+        >
+          Wire Forming Technology International
+        </a>
+        . For the ranked city list — and why Cleveland is the cheap-coil cell — see{" "}
         <Link href="/directory/areas" className="text-copper hover:underline">
           wire forming cities
         </Link>

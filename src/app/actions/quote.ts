@@ -276,3 +276,91 @@ export async function submitQuickQuote(
     message: `Quote request received. We'll review ${data.fileName} and follow up at ${data.email}.`,
   };
 }
+
+export async function submitMachineLead(
+  _prevState: QuoteFormState,
+  formData: FormData,
+): Promise<QuoteFormState> {
+  const data = {
+    name: String(formData.get("name") ?? "").trim(),
+    company: String(formData.get("company") ?? "").trim(),
+    email: String(formData.get("email") ?? "").trim(),
+    phone: String(formData.get("phone") ?? "").trim(),
+    role: String(formData.get("role") ?? "").trim(),
+    notes: String(formData.get("notes") ?? "").trim(),
+    oem: String(formData.get("oem") ?? "").trim(),
+    model: String(formData.get("model") ?? "").trim(),
+    source: String(formData.get("source") ?? "").trim(),
+  };
+
+  const errors: Record<string, string> = {};
+  if (!data.name) errors.name = "Name is required";
+  if (!data.company) errors.company = "Company is required";
+  if (!data.email) errors.email = "Email is required";
+  else if (!isValidEmail(data.email)) errors.email = "Invalid email address";
+  if (!data.role) errors.role = "Role is required";
+  if (!data.oem || !data.model) errors.model = "Machine is required";
+
+  if (Object.keys(errors).length > 0) {
+    return {
+      success: false,
+      message: "Please complete name, company, email, and role.",
+      errors,
+    };
+  }
+
+  let stored = false;
+  let emailed = false;
+
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      await put(
+        `leads/machines/${Date.now()}.json`,
+        JSON.stringify({ kind: "machine", ...data, timestamp: new Date().toISOString() }),
+        { access: "public", addRandomSuffix: true, contentType: "application/json" },
+      );
+      stored = true;
+    } catch (error) {
+      console.error("[Machine Lead Store Error]", error);
+    }
+  }
+
+  if (resend && process.env.RESEND_FROM_EMAIL) {
+    try {
+      await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL,
+        to: QUOTE_EMAIL,
+        replyTo: data.email,
+        subject: `Machine lead: ${data.oem} ${data.model} — ${data.company}`,
+        html: `
+          <h2>CNC machine inquiry</h2>
+          <p><strong>OEM / model:</strong> ${data.oem} / ${data.model}</p>
+          <p><strong>Page:</strong> ${data.source}</p>
+          <p><strong>Role:</strong> ${data.role}</p>
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Company:</strong> ${data.company}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Phone:</strong> ${data.phone || "—"}</p>
+          <p><strong>Notes:</strong> ${data.notes.replace(/\n/g, "<br />") || "—"}</p>
+        `,
+      });
+      emailed = true;
+    } catch (error) {
+      console.error("[Machine Lead Email Error]", error);
+    }
+  }
+
+  console.log("[Machine Lead]", { ...data, stored, emailed });
+
+  if (!stored && !emailed) {
+    return {
+      success: false,
+      message: `Inquiry did not store. Email ${QUOTE_EMAIL} with the machine name.`,
+    };
+  }
+
+  return {
+    success: true,
+    message: `${COMPANY} received the ${data.model} inquiry. We route dealer and OEM leads from this form.`,
+  };
+}

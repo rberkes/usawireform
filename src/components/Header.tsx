@@ -56,6 +56,7 @@ const navSections = [
     label: "Resources",
     href: "/guide/design-for-wire-forming",
     items: [
+      { href: "https://www.wireformingtech.com", label: "Wire Forming Tech" },
       { href: "/guide/design-for-wire-forming", label: "Design Guide" },
       { href: "/materials", label: "Materials" },
       { href: "/330-stainless-wire-bending-usa-parts", label: "330 Stainless" },
@@ -63,6 +64,7 @@ const navSections = [
       { href: "/wire-forming-companies-near-me", label: "Companies Near Me" },
       { href: "/sizes", label: "Wire Sizes" },
       { href: "/equipment", label: "Equipment" },
+      { href: "/equipment/cnc-manufacturers", label: "CNC Machine Catalog" },
       { href: "/directory", label: "Company Directory" },
       { href: "/directory/areas", label: "Wire Forming Cities" },
       { href: "/videos", label: "Videos" },

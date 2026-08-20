@@ -2,6 +2,7 @@ import { catalog, STOCK } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
 import { machines } from "@/lib/machines";
+import { CNC_HUB, CNC_OEMS, allCncModels, modelPath, oemPath } from "@/lib/cnc-oems";
 import { WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
 import { PRICE_LINE } from "@/lib/price";
 import { publishedProcesses } from "@/lib/processes";
@@ -488,6 +489,39 @@ function machinePages(): SeoRecord[] {
   );
 }
 
+function cncCatalogPages(): SeoRecord[] {
+  const hub = record({
+    path: CNC_HUB,
+    title: "Top 10 CNC Wire Forming Machine Manufacturers",
+    description:
+      "Numalliance, WAFIOS, AIM, Itaya, Bihler, BLM, Simplex Rapid, Pave, Fortuna, Whitelegg — 60 model pages with dealer leads.",
+    section: "company" as const,
+    keywords: ["CNC wire forming machines", "3D CNC wire bender"],
+    priority: 0.8,
+  });
+  const oems = CNC_OEMS.map((oem) =>
+    record({
+      path: oemPath(oem),
+      title: `${oem.name} CNC Wire Forming Machines`,
+      description: oem.summary,
+      section: "company" as const,
+      keywords: [oem.name, "CNC wire forming machine"],
+      priority: 0.7,
+    }),
+  );
+  const models = allCncModels().map(({ oem, model }) =>
+    record({
+      path: modelPath(oem, model),
+      title: `${model.name} — ${oem.name}`,
+      description: `${model.tagline} ${model.wire}.`,
+      section: "company" as const,
+      keywords: [model.name, oem.name, "CNC wire forming machine"],
+      priority: 0.65,
+    }),
+  );
+  return [hub, ...oems, ...models];
+}
+
 function metroPages(): SeoRecord[] {
   return WIRE_FORMING_METROS.map((metro) =>
     record({
@@ -590,6 +624,7 @@ export function allSeoPages(): SeoRecord[] {
     ...statePages(),
     ...metroPages(),
     ...machinePages(),
+    ...cncCatalogPages(),
     ...directoryListingPages(),
     ...blogPages(),
   ]) {
