@@ -8,6 +8,7 @@ import { catalog } from "@/lib/catalog";
 import { industries } from "@/lib/site";
 import { processes } from "@/lib/processes";
 import { US_STATES } from "@/lib/states";
+import { WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
 import { allPosts, postPath } from "@/lib/blog";
 import { cx } from "@/lib/cx";
 
@@ -64,11 +65,21 @@ const searchItems: SearchItem[] = [
   { title: "Wire Mesh", href: "/wire-mesh", category: "Pages", description: "Weave types, crimp, mesh count, openings, and welded wire cloth." },
   { title: "Careers", href: "/careers", category: "Pages", description: "CNC operator and manufacturing jobs in Northeast Ohio." },
   { title: "Company Directory", href: "/directory", category: "Resources", description: "Wire forming shops across the USA and Canada." },
+  { title: "Wire Forming Cities", href: "/directory/areas", category: "Locations", description: "Top 20 U.S. forming cities. Cleveland is the cheap coil — mills and drawers." },
+  { title: "Northeast Ohio", href: "/cleveland", category: "Locations", description: "Mills, wire drawers, and short-haul 4–14 mm coil." },
   ...US_STATES.map((state) => ({
     title: `Wire forming in ${state.name}`,
     href: `/${state.slug}`,
     category: "Locations",
     description: `USA Wire Form for ${state.name} — 4–14 mm CNC from Northeast Ohio.`,
+  })),
+  ...WIRE_FORMING_METROS.map((metro) => ({
+    title: `Wire forming in ${metro.city}`,
+    href: metroPath(metro),
+    category: "Locations",
+    description: metro.hq
+      ? "Mills, drawers, short-haul coil. USA Wire Form cell."
+      : metro.why,
   })),
   ...allPosts().map((post) => ({
     title: post.title,

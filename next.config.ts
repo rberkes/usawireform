@@ -57,6 +57,11 @@ const nextConfig: NextConfig = {
       { source: "/wire-part", destination: "/wire-parts", permanent: true },
       { source: "/wire-product", destination: "/products", permanent: true },
       { source: "/sitemap", destination: "/site-map", permanent: true },
+      {
+        source: "/wire-forming-cities",
+        destination: "/directory/areas",
+        permanent: true,
+      },
     ];
   },
 };

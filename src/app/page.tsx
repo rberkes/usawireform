@@ -137,6 +137,11 @@ export default function Home() {
           <LinkList
             items={[
               {
+                href: "/directory/areas",
+                title: "Wire forming cities",
+                body: "Twenty U.S. forming clusters. Cleveland is the cheap coil — mills and drawers on a local truck.",
+              },
+              {
                 href: "/cleveland",
                 title: "Northeast Ohio",
                 body: "Mills, wire drawers, and short-haul coil — the low-cost location for 4–14 mm forming and secondaries.",

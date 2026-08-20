@@ -31,6 +31,7 @@ const shop = [
   { href: "/secondary-operations", label: "Secondaries" },
   { href: "/equipment", label: "Equipment" },
   { href: "/directory", label: "Company Directory" },
+  { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/videos", label: "Videos" },
   { href: "/blog", label: "Blog" },
   { href: "/instant-quote", label: "Instant quote" },

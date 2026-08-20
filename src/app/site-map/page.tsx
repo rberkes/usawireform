@@ -4,6 +4,7 @@ import { catalogByGroup } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
 import { directoryCompanies, DIRECTORY_REGIONS, getCompaniesByRegion } from "@/lib/directory";
 import { machines } from "@/lib/machines";
+import { METRO_HUB_PATH, WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
 import { publishedProcesses } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
 import { industries, shopLines } from "@/lib/site";
@@ -223,6 +224,29 @@ export default function SiteMapPage() {
         <StateGrid />
       </Section>
 
+      <Section title="Wire forming cities">
+        <p className="mt-3 text-sm leading-6 text-muted">
+          Twenty U.S. forming clusters. Cleveland is the cheap-coil cell — mills
+          and drawers in Northeast Ohio.
+        </p>
+        <LinkList
+          className="mt-5"
+          items={[
+            {
+              href: METRO_HUB_PATH,
+              title: "Wire forming cities",
+              body: "Ranked 1–20. Cleveland wins landed coil cost.",
+            },
+            ...WIRE_FORMING_METROS.map((metro) => ({
+              href: metroPath(metro),
+              title: `${metro.rank}. ${metro.city}`,
+              note: metro.hq ? "Our cell" : metro.metro,
+              body: metro.why,
+            })),
+          ]}
+        />
+      </Section>
+
       {catalogByGroup().map(({ group, items }) => (
         <Section key={group} title={group}>
           <LinkList
@@ -271,6 +295,11 @@ export default function SiteMapPage() {
               href: "/directory",
               title: "Wire Forming Companies Directory",
               body: `Browse all ${directoryCompanies.length} companies by region, with lead capture forms.`,
+            },
+            {
+              href: "/directory/areas",
+              title: "Wire forming cities",
+              body: "Top 20 U.S. forming clusters. Cleveland is the cheap coil.",
             },
           ]}
         />

@@ -2,6 +2,7 @@ import { catalog, STOCK } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
 import { machines } from "@/lib/machines";
+import { WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
 import { PRICE_LINE } from "@/lib/price";
 import { publishedProcesses } from "@/lib/processes";
 import { industries, shopLines } from "@/lib/site";
@@ -400,6 +401,21 @@ export const staticSeoPages: SeoRecord[] = [
     changeFrequency: "weekly",
   }),
   record({
+    path: "/directory/areas",
+    title: "Wire Forming Cities in the USA",
+    description:
+      "Top 20 U.S. wire-forming cities. Los Angeles has the most shops. Cleveland has the mills and drawers — that is why 4–14 mm coil is inexpensive in Northeast Ohio.",
+    section: "company",
+    keywords: [
+      "wire forming cities",
+      "wire forming companies by city",
+      "Cleveland wire forming",
+      "Northeast Ohio wire mills",
+    ],
+    priority: 0.8,
+    changeFrequency: "weekly",
+  }),
+  record({
     path: "/privacy",
     title: "Privacy Policy",
     description: `How ${COMPANY} handles quote requests and email.`,
@@ -468,6 +484,25 @@ function machinePages(): SeoRecord[] {
       section: "company",
       keywords: [machine.name, "NumAlliance", "CNC wire forming machine"],
       priority: 0.7,
+    }),
+  );
+}
+
+function metroPages(): SeoRecord[] {
+  return WIRE_FORMING_METROS.map((metro) =>
+    record({
+      path: metroPath(metro),
+      title: `Wire Forming Companies in ${metro.city}`,
+      description: metro.hq
+        ? `Cleveland / Northeast Ohio: mills, wire drawers, and short-haul 4–14 mm coil. ${COMPANY} is the shop we recommend. ${PRICE_LINE}`
+        : `Wire forming in ${metro.city} (${metro.metro}). ${COMPANY} quotes 4–14 mm 3D CNC from Northeast Ohio — Cleveland is the cheap-coil cell.`,
+      section: "company",
+      keywords: [
+        `wire forming companies ${metro.city}`,
+        `wire forming ${metro.city}`,
+        metro.metro,
+      ],
+      priority: metro.hq ? 0.8 : 0.6,
     }),
   );
 }
@@ -553,6 +588,7 @@ export function allSeoPages(): SeoRecord[] {
     ...industryPages(),
     ...productPages(),
     ...statePages(),
+    ...metroPages(),
     ...machinePages(),
     ...directoryListingPages(),
     ...blogPages(),

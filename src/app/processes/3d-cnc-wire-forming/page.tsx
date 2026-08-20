@@ -204,29 +204,11 @@ export default function ThreeDCNCPage() {
 
         <h2 id="vs-fourslide">3D CNC vs fourslide / multislide</h2>
         <p>
-          Fourslide (and multislide) is cam-driven stamping-and-forming with
-          dedicated tooling. At high volume, cycle time wins. Changeover and
-          tool cost lose. CNC wire forming is the opposite: program and setup
-          instead of a tool room, better for revisions, mixed diameters, and
-          geometries that would need a new cam set.
-        </p>
-        <ul>
-          <li>
-            <strong>Prototype and early production:</strong> CNC. You will change
-            the print.
-          </li>
-          <li>
-            <strong>Stable, high-volume, mostly 2D or simple 3D:</strong> fourslide
-            may be cheaper per piece once the tool is paid for.
-          </li>
-          <li>
-            <strong>Complex 3D with many planes:</strong> CNC is often the only
-            practical method without an assembly of several formed pieces.
-          </li>
-        </ul>
-        <p>
-          USA shops still run both. Pick the process from volume, revision
-          risk, and geometry — not from whichever machine is free.
+          Fourslide is a dedicated cam tool. CNC is a program and standard
+          pins. Tooling and cost — not cycle time — are why a{" "}
+          <Link href="/equipment">Robomac 214TF</Link> wins the 4–14 mm
+          jobs on this floor. Full argument:{" "}
+          <Link href="/processes/fourslide">fourslide vs 3D CNC</Link>.
         </p>
 
         <h2 id="design-rules">Design rules that actually matter</h2>

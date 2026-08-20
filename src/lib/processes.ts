@@ -55,9 +55,9 @@ export const processes: Process[] = [
   },
   {
     slug: "fourslide",
-    title: "Fourslide / multislide",
+    title: "Fourslide vs 3D CNC",
     summary:
-      "Cam tooling for frozen high-volume 2D forms. Explained here so CNC is not sold for the wrong job.",
+      "Cam tooling, NRE, and geometry limits versus a Robomac 214TF. Why 3D CNC wins on tooling and cost for 4–14 mm — cycle time is a later page.",
     category: "forming",
     weRun: false,
     published: true,

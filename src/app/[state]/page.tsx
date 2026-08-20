@@ -66,7 +66,10 @@ export default async function StateWireFormingPage({ params }: Props) {
           <>
             The cell is in {state.name}. That is the low-cost location: mills,
             wire drawers, and short-haul coil — detail on{" "}
-            <TextLink href="/cleveland">Northeast Ohio</TextLink>.
+            <TextLink href="/cleveland">Northeast Ohio</TextLink>. Ranked
+            among{" "}
+            <TextLink href="/directory/areas">U.S. forming cities</TextLink>
+            {" "}because the mills are here.
           </>
         ) : (
           <>

@@ -139,6 +139,10 @@ export default function ClevelandPage() {
       <h2 id="next">Related</h2>
       <ul>
         <li>
+          <Link href="/directory/areas">Wire forming cities</Link> — 20 U.S.
+          clusters, Cleveland as the cheap coil
+        </li>
+        <li>
           <Link href="/ohio">Ohio wire forming</Link> — state landing
         </li>
         <li>

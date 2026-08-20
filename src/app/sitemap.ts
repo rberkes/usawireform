@@ -25,6 +25,7 @@ const highPriorityPaths = new Set([
   "/wire-mesh",
   "/blog",
   "/ohio",
+  "/directory/areas",
 ]);
 
 export default function sitemap(): MetadataRoute.Sitemap {

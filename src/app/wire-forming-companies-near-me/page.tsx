@@ -44,7 +44,9 @@ export default function NearMePage() {
       <p>
         If you need a different diameter band, the{" "}
         <Link href="/directory">company directory</Link> lists other U.S. and
-        Canadian shops by region.
+        Canadian shops by region. The ranked city map starts at{" "}
+        <Link href="/directory/areas">wire forming cities</Link> — Cleveland
+        is the mill-and-drawer cell.
       </p>
 
       <h2 id="states">State directory</h2>
