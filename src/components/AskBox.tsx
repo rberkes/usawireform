@@ -84,8 +84,8 @@ export function AskBox() {
         Type a question. Get an answer.
       </h2>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted sm:text-lg">
-        4–14 mm CNC, 100-piece minimum, Northeast Ohio. Ask about sizes,
-        materials, or whether we form the part.
+        4–14 mm CNC, 100-piece minimum, Northeast Ohio. All steels from
+        coil — if it comes in a coil, we process it.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8">

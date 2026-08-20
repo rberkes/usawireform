@@ -9,7 +9,10 @@ export const FORMING_RATES = {
   cutLabel: "$1.00 per cut",
   bendLabel: "$0.50 per bend",
   inchLabel: "$0.05 per inch",
-  material: "Customer buys the material and brings it to the shop. We form it. We do not sell coil.",
+  material:
+    "Customer buys the material and brings it to the shop. We form it. We do not sell coil.",
+  coil:
+    "We work with all steels processed by coil. If it comes in a coil, we process it — carbon, spring steel, 300-series including 330, and any other steel on coil in band.",
 } as const;
 
 export const PRICE_ITEMS = [
