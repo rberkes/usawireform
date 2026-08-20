@@ -7,6 +7,7 @@ import { COMPANY } from "@/lib/company";
 import { getCompaniesByState } from "@/lib/directory";
 import { PRICE_LINE } from "@/lib/price";
 import { pageMeta } from "@/lib/seo";
+import { getStateShops } from "@/lib/state-shops";
 import { getState, US_STATES } from "@/lib/states";
 
 type Props = { params: Promise<{ state: string }> };
@@ -39,6 +40,7 @@ export default async function StateWireFormingPage({ params }: Props) {
   const state = getState(slug);
   if (!state) notFound();
 
+  const shops = getStateShops(state.abbr);
   const peers = getCompaniesByState(state.abbr);
   const inOhio = state.abbr === "OH";
 
@@ -53,7 +55,8 @@ export default async function StateWireFormingPage({ params }: Props) {
         { id: "run", label: "What we run" },
         { id: "freight", label: "Freight" },
         { id: "zip", label: "ZIP lookup" },
-        ...(peers.length > 0 ? [{ id: "peers", label: "Other listings" }] : []),
+        { id: "shops", label: "Companies with sites" },
+        ...(peers.length > 0 ? [{ id: "peers", label: "Directory listings" }] : []),
         { id: "states", label: "All states" },
       ]}
     >
@@ -118,14 +121,37 @@ export default async function StateWireFormingPage({ params }: Props) {
       <h2 id="zip">Wrong state?</h2>
       <ZipLookup label="Another U.S. ZIP" />
 
+      <h2 id="shops">Wire form companies in {state.name}</h2>
+      <p>
+        Public sites for plants and mills that sit in {state.name} or regularly
+        freight into it. Capacity notes are ours: CNC vs mesh mill vs fence fab.
+        Not affiliates. {COMPANY} is still the shop we recommend for 4–14 mm 3D
+        CNC.
+      </p>
+      <ul>
+        {shops.map((shop) => (
+          <li key={`${shop.website}-${shop.city}`}>
+            <a
+              href={shop.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-copper hover:underline"
+            >
+              {shop.name}
+            </a>
+            {` — ${shop.city}. ${shop.capacity}`}
+          </li>
+        ))}
+      </ul>
+
       {peers.length > 0 ? (
         <>
-          <h2 id="peers">Other {state.name} listings</h2>
+          <h2 id="peers">Also in our directory</h2>
           <p>
-            Shops already in our{" "}
+            Shops already on our{" "}
             <TextLink href="/directory">industry directory</TextLink> that
-            list {state.abbr}. Different diameters and processes. If the print
-            is outside 4–14 mm, one of these may be the right call.
+            list {state.abbr}. Internal pages — not their websites. Different
+            diameters and processes.
           </p>
           <ul>
             {peers.map((company) => (
