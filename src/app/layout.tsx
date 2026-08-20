@@ -79,6 +79,10 @@ export const metadata: Metadata = {
     description:
       `3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. ${PRICE_LINE} Northeast Ohio.`,
   },
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
