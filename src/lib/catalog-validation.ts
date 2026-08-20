@@ -3,6 +3,8 @@
  * Run with: npx tsx src/lib/catalog-validation.ts
  */
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { catalog } from "./catalog";
 
 type ValidationError = {
@@ -97,6 +99,23 @@ export function validateCatalog(): ValidationError[] {
   return errors;
 }
 
+/** JSON-LD must not emit Product nodes; Google treats those as product snippets. */
+export function validateSiteJsonLd(): ValidationError[] {
+  const errors: ValidationError[] = [];
+  const files = ["src/components/JsonLd.tsx", "src/components/SeoSchemas.tsx"];
+  for (const relative of files) {
+    const source = readFileSync(join(process.cwd(), relative), "utf8");
+    if (/"@type": "Product"/.test(source)) {
+      errors.push({
+        slug: "site-jsonld",
+        field: "@type",
+        message: `${relative} must not emit @type "Product". Product snippets are disabled until we opt in. Use Service for forming work and equipment pages.`,
+      });
+    }
+  }
+  return errors;
+}
+
 // Extract all valid slugs as a type (for development reference)
 export type CatalogSlug = (typeof catalog)[number]["slug"];
 
@@ -107,7 +126,7 @@ export function getAllCatalogSlugs(): string[] {
 
 // Run validation if this file is executed directly
 if (require.main === module || process.argv[1]?.includes("catalog-validation")) {
-  const errors = validateCatalog();
+  const errors = [...validateCatalog(), ...validateSiteJsonLd()];
   
   if (errors.length === 0) {
     console.log("✓ Catalog validation passed");

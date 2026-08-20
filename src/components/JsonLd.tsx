@@ -1,5 +1,22 @@
 import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 
+/**
+ * Catalog entries are Services, not Products.
+ * Product nodes trigger Google product snippets; we are not using those yet.
+ */
+function catalogService(name: string, path: string) {
+  return {
+    "@type": "Offer",
+    url: `${SITE_URL}${path}`,
+    itemOffered: {
+      "@type": "Service",
+      name,
+      url: `${SITE_URL}${path}`,
+      provider: { "@type": "Organization", name: COMPANY },
+    },
+  };
+}
+
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -34,18 +51,18 @@ const organizationJsonLd = {
         "@type": "OfferCatalog",
         name: "Hooks and Rings",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "S-hooks" } },
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "D-rings" } },
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "J-hooks" } },
+          catalogService("S-hooks", "/products/s-hooks"),
+          catalogService("D-rings", "/products/d-rings"),
+          catalogService("J-hooks", "/products/j-hooks"),
         ],
       },
       {
         "@type": "OfferCatalog",
         name: "Frames and Guards",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Wire Frames" } },
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Machine Guards" } },
-          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Fan Guards" } },
+          catalogService("Wire Frames", "/products/wire-frames"),
+          catalogService("Machine Guards", "/products/machine-guards"),
+          catalogService("Fan Guards", "/products/fan-guards"),
         ],
       },
     ],
@@ -103,56 +120,6 @@ export function JsonLd({ data }: { data?: object }) {
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
-}
-
-export function ProductJsonLd({
-  name,
-  description,
-  url,
-  image,
-}: {
-  name: string;
-  description: string;
-  url: string;
-  image?: string;
-}) {
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name,
-    description,
-    url: `${SITE_URL}${url}`,
-    image: image ?? `${SITE_URL}/shop/hero-forms.jpg`,
-    brand: {
-      "@type": "Brand",
-      name: COMPANY,
-    },
-    manufacturer: {
-      "@type": "Organization",
-      name: COMPANY,
-    },
-    offers: {
-      "@type": "Offer",
-      availability: "https://schema.org/InStock",
-      priceCurrency: "USD",
-      priceSpecification: {
-        "@type": "PriceSpecification",
-        priceCurrency: "USD",
-        eligibleQuantity: {
-          "@type": "QuantitativeValue",
-          minValue: 100,
-          unitText: "pieces",
-        },
-      },
-    },
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );
 }

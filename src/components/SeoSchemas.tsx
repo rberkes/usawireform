@@ -108,8 +108,9 @@ export function ReviewSchema({
   
   const data = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Organization",
     name: itemName,
+    url: SITE_URL,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: avgRating.toFixed(1),
@@ -314,8 +315,9 @@ export function AggregateRatingSchema({
 }) {
   const data = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Organization",
     name: itemName,
+    url: SITE_URL,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue,
