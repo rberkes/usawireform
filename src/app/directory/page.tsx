@@ -6,6 +6,7 @@ import {
   directoryCompanies,
   DIRECTORY_REGIONS,
   getCompaniesByRegion,
+  publicHost,
 } from "@/lib/directory";
 import { pageMeta } from "@/lib/seo";
 
@@ -79,15 +80,27 @@ export default function DirectoryPage() {
           <Section key={region} title={`${region} (${companies.length})`}>
             <div className="mt-4 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
               {companies.map((company) => (
-                <Link
+                <div
                   key={company.slug}
-                  href={`/directory/${company.slug}`}
-                  className="group flex flex-col bg-background p-4 hover:bg-inset transition-colors"
+                  className="flex flex-col bg-background p-4 hover:bg-inset transition-colors"
                 >
-                  <h3 className="font-medium group-hover:text-copper transition-colors line-clamp-1">
+                  <Link
+                    href={`/directory/${company.slug}`}
+                    className="font-medium hover:text-copper transition-colors line-clamp-1"
+                  >
                     {company.name}
-                  </h3>
+                  </Link>
                   <p className="mt-1 text-xs text-muted">{company.location}</p>
+                  {company.website ? (
+                    <a
+                      href={company.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 text-xs text-copper hover:underline"
+                    >
+                      {publicHost(company.website)}
+                    </a>
+                  ) : null}
                   <p className="mt-2 text-sm text-muted line-clamp-2">
                     {company.description.slice(0, 100)}...
                   </p>
@@ -103,7 +116,7 @@ export default function DirectoryPage() {
                       ))}
                     </div>
                   )}
-                </Link>
+                </div>
               ))}
             </div>
           </Section>

@@ -15,6 +15,7 @@ import {
   directoryCompanies,
   getDirectoryCompany,
   getCompaniesByRegion,
+  publicHost,
 } from "@/lib/directory";
 import { pageMeta } from "@/lib/seo";
 
@@ -69,6 +70,9 @@ export default async function DirectoryCompanyPage({ params }: Props) {
   if (company.certifications && company.certifications.length > 0) {
     specs.push({ label: "Certifications", value: company.certifications.join(", ") });
   }
+  if (company.website) {
+    specs.push({ label: "Website", value: publicHost(company.website) });
+  }
 
   return (
     <>
@@ -112,7 +116,7 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                   rel="noopener noreferrer"
                   className="text-copper hover:underline"
                 >
-                  Visit website →
+                  {publicHost(company.website)} →
                 </a>
               </p>
             )}

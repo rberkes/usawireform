@@ -4,7 +4,7 @@ import { StateGrid } from "@/components/StateGrid";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { TextLink } from "@/components/ui";
 import { COMPANY } from "@/lib/company";
-import { getCompaniesByState } from "@/lib/directory";
+import { getCompaniesByState, publicHost } from "@/lib/directory";
 import { PRICE_LINE } from "@/lib/price";
 import { pageMeta } from "@/lib/seo";
 import { getStateShops } from "@/lib/state-shops";
@@ -135,11 +135,18 @@ export default async function StateWireFormingPage({ params }: Props) {
               href={shop.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-copper hover:underline"
             >
               {shop.name}
             </a>
-            {` — ${shop.city}. ${shop.capacity}`}
+            {" — "}
+            <a
+              href={shop.website}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {publicHost(shop.website)}
+            </a>
+            {` · ${shop.city}. ${shop.capacity}`}
           </li>
         ))}
       </ul>
@@ -150,8 +157,8 @@ export default async function StateWireFormingPage({ params }: Props) {
           <p>
             Shops already on our{" "}
             <TextLink href="/directory">industry directory</TextLink> that
-            list {state.abbr}. Internal pages — not their websites. Different
-            diameters and processes.
+            list {state.abbr}. Our listing page plus their site when we have it.
+            Different diameters and processes.
           </p>
           <ul>
             {peers.map((company) => (
@@ -159,7 +166,19 @@ export default async function StateWireFormingPage({ params }: Props) {
                 <TextLink href={`/directory/${company.slug}`}>
                   {company.name}
                 </TextLink>
-                {` — ${company.location}`}
+                {company.website ? (
+                  <>
+                    {" — "}
+                    <a
+                      href={company.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {publicHost(company.website)}
+                    </a>
+                  </>
+                ) : null}
+                {` · ${company.location}`}
               </li>
             ))}
           </ul>

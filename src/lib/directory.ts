@@ -1104,6 +1104,77 @@ export const directoryCompanies: DirectoryCompany[] = [
   },
 ];
 
+/** Official sites for directory listings that were missing a `website` field. */
+const DIRECTORY_SITES: Record<string, string> = {
+  "active-wireworks": "https://www.activewireworks.com",
+  "american-precision-spring": "https://americanprecspring.com",
+  "angola-wire": "https://www.angolawire.com",
+  "argo-spring-manufacturing": "https://argospringmfg.com",
+  "c-j-spring": "https://www.candjspring.com",
+  "california-wire-products": "https://cawire.com",
+  "century-spring-corp": "https://www.centuryspring.com",
+  "draco-spring": "https://www.dracospring.com",
+  "elyria-spring-stamping": "https://www.elyriaspring.com",
+  "gemco-manufacturing": "https://gemcomfg.com",
+  "houston-wire-works": "https://houstonwirework.com/home",
+  "insteel-wire-products": "https://insteel.com",
+  "katy-spring": "https://katyspring.com",
+  "leeco-spring": "https://leecospring.com",
+  "lockrey-manufacturing": "https://www.lockreymanufacturing.com",
+  "master-spring-wire-form": "https://www.masterspring.com",
+  "motion-dynamics": "https://motiondc.com",
+  "mw-components": "https://www.mwcomponents.com",
+  "national-wire": "https://nationalwirellc.com",
+  "oregon-wire": "https://www.oregonwire.co",
+  "precision-coil-spring": "https://pcspring.com",
+  "precision-wire-products-pa": "https://www.precisionwire.net",
+  "pr-fasteners": "https://prfast.com",
+  "progress-wire-products": "https://progresswire.com",
+  "rives-manufacturing": "https://rivesmfg.com",
+  "rl-spring": "https://rlspring.com",
+  "salco-engineering": "https://salcoeng.com",
+  "spiros-industries": "https://spirosind.com",
+  "springfield-spring-stamping": "https://www.springfieldspring.com",
+  "stanley-spring-stamping": "https://stanleyspring.com",
+  "suhm-spring-works": "https://suhm.net",
+  "superior-spring": "https://superiorspring.com",
+  "tj-wire-forming": "https://tjwireforming.com",
+  "tomlinson-manufacturing": "https://tomlinsonmfg.com",
+  "wermke-spring": "https://wermkespring.com",
+  "western-spring-manufacturing": "https://www.westernspring.com",
+  "wisconsin-stamping-manufacturing": "https://www.wisconsinstamping.com",
+  "wytech": "https://www.wytech.com",
+  "betts-spring-manufacturing": "https://bettsspring.com",
+  "coiling-technologies": "https://www.coilingtech.com",
+  "diamond-wire-spring": "https://diamondwire.com",
+  "illini-wire-works": "https://illiniwire.com",
+  "novo-precision": "https://novoprecision.com",
+  "peninsula-spring": "https://peninsulaspring.com",
+  "rfc-wire-forms": "https://www.rfcwireforms.com",
+  "rockford-specialties": "https://rswire.com",
+  "wald-wire-manufacturing": "https://waldwire.com",
+  "midwest-wire-products": "https://wireforming.com",
+  "west-michigan-tube-wire": "https://wmtubewire.com",
+  "rowley-spring-stamping": "https://rowleyspring.com",
+  "seisa-medical": "https://www.seisamedical.com",
+  "vulcan-wire": "https://www.vulcanwire.com",
+};
+
+for (const company of directoryCompanies) {
+  if (!company.website) {
+    const site = DIRECTORY_SITES[company.slug];
+    if (site) company.website = site;
+  }
+}
+
+export function publicHost(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
 export function getDirectoryCompany(slug: string): DirectoryCompany | undefined {
   return directoryCompanies.find((c) => c.slug === slug);
 }
