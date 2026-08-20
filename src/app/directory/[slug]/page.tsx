@@ -73,6 +73,9 @@ export default async function DirectoryCompanyPage({ params }: Props) {
   if (company.website) {
     specs.push({ label: "Website", value: publicHost(company.website) });
   }
+  if (company.machines && company.machines.length > 0) {
+    specs.push({ label: "Public equipment notes", value: company.machines.join(", ") });
+  }
 
   return (
     <>
@@ -151,6 +154,39 @@ export default async function DirectoryCompanyPage({ params }: Props) {
               </ul>
             </Section>
 
+            {company.machines && company.machines.length > 0 ? (
+              <Section title="What the shop published">
+                <p className="mt-3 text-sm leading-6 text-muted">
+                  Named iron from a public page. Not a floor audit. Confirm before you
+                  send a print.
+                </p>
+                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {company.machines.map((machine) => (
+                    <li
+                      key={machine}
+                      className="flex items-start gap-2 text-sm leading-6"
+                    >
+                      <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-copper" />
+                      {machine}
+                    </li>
+                  ))}
+                </ul>
+                {company.equipmentSource ? (
+                  <p className="mt-4 text-sm text-muted">
+                    Source:{" "}
+                    <a
+                      href={company.equipmentSource}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-copper hover:underline"
+                    >
+                      {publicHost(company.equipmentSource)}
+                    </a>
+                  </p>
+                ) : null}
+              </Section>
+            ) : null}
+
             {company.industries && company.industries.length > 0 && (
               <Section title="Industries Served">
                 <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -179,7 +215,7 @@ export default async function DirectoryCompanyPage({ params }: Props) {
 
         <div className="mt-12 border border-line bg-inset/30 p-4 text-xs leading-5 text-muted">
           <p>
-            <strong className="text-foreground">Disclaimer:</strong> {company.name} is not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. This listing is provided for informational purposes only. Contact {company.name} directly to verify their capabilities, credentials, and current business status.
+            <strong className="text-foreground">Disclaimer:</strong> {company.name} is not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. This listing is provided for informational purposes only. Contact {company.name} directly to verify their capabilities, credentials, current equipment, and current business status.
           </p>
         </div>
 

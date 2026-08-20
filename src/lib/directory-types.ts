@@ -9,6 +9,10 @@ export interface DirectoryCompany {
   linkedin?: string;
   description: string;
   capabilities: string[];
+  /** Named iron from a public page — not a floor audit. */
+  machines?: string[];
+  /** Public page that named the iron. */
+  equipmentSource?: string;
   industries?: string[];
   certifications?: string[];
   wireDiameters?: string;

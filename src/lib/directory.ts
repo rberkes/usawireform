@@ -5,6 +5,7 @@
 
 import type { DirectoryCompany } from "./directory-types";
 import { extraDirectoryCompanies } from "./directory-extra";
+import { applyDirectoryIron } from "./directory-iron";
 import { STATE_SHOPS } from "./state-shops";
 
 export type { DirectoryCompany } from "./directory-types";
@@ -1265,7 +1266,7 @@ export const directoryCompanies = mergeDirectory([
   CORE_DIRECTORY_COMPANIES,
   extraDirectoryCompanies,
   fromStateShops(),
-]);
+]).map(applyDirectoryIron);
 
 export function publicHost(url: string): string {
   try {

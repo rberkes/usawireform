@@ -60,12 +60,16 @@ export default function MachineComparisonPage() {
               Best for
             </p>
             <p className="mt-2 text-lg tracking-tight">{job.label}</p>
+            <p className="mt-1 font-mono text-xs text-muted">{job.maxSize}</p>
             <ul className="mt-3 space-y-1.5 text-sm text-muted">
               {bestFor(job.id).map((row) => (
                 <li key={row.id}>
                   <Link href={row.href} className="hover:text-copper">
                     {row.name}
                   </Link>
+                  <span className="ml-1 font-mono text-[11px] text-muted">
+                    {row.maxSize}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -74,17 +78,20 @@ export default function MachineComparisonPage() {
       </div>
 
       <p className="mt-8 max-w-2xl text-sm leading-6 text-muted">
-        Best = the class of machine shops buy for that work. Good = it will run it. Fair = possible, usually the wrong first buy. Wrong tool = you can force a part on it and you will pay for it. Confirm diameter, tensile, and 2D vs 3D with the OEM or dealer. Model pages:{" "}
+        Best = the class of machine shops buy for that work. Good = it will run it. Fair = possible, usually the wrong first buy. Wrong tool = you can force a part on it and you will pay for it. Max size is typical published family max at mild tensile — confirm diameter, tensile, and 2D vs 3D with the OEM or dealer. Model pages:{" "}
         <TextLink href={CNC_HUB}>CNC catalog</TextLink>. Fourslide vs CNC:{" "}
         <TextLink href="/processes/fourslide">fourslide</TextLink>.
       </p>
 
       <div className="mt-10 overflow-x-auto border border-line">
-        <table className="w-full min-w-[720px] text-sm">
+        <table className="w-full min-w-[820px] text-sm">
           <thead>
             <tr className="border-b border-line bg-inset text-left">
               <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-muted">
                 Machine class
+              </th>
+              <th className="px-3 py-3 font-mono text-[10px] uppercase tracking-widest text-muted">
+                Max size
               </th>
               {COMPARE_JOBS.map((job) => (
                 <th
@@ -92,6 +99,9 @@ export default function MachineComparisonPage() {
                   className="px-3 py-3 font-mono text-[10px] uppercase tracking-widest text-muted"
                 >
                   {job.short}
+                  <span className="mt-1 block font-normal normal-case tracking-normal text-muted/80">
+                    {job.maxSize}
+                  </span>
                 </th>
               ))}
             </tr>
@@ -104,6 +114,9 @@ export default function MachineComparisonPage() {
                     {row.name}
                   </Link>
                   <p className="mt-1 text-xs leading-5 text-muted">{row.note}</p>
+                </td>
+                <td className="whitespace-nowrap px-3 py-3 align-top font-mono text-xs">
+                  {row.maxSize}
                 </td>
                 {COMPARE_JOBS.map((job) => {
                   const fit = row.fits[job.id];
@@ -127,7 +140,7 @@ export default function MachineComparisonPage() {
       </div>
 
       {COMPARE_JOBS.map((job) => (
-        <Section key={job.id} title={job.label}>
+        <Section key={job.id} title={`${job.label} · ${job.maxSize}`}>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">{job.lede}</p>
           <ul className="mt-5 divide-y divide-line border-y border-line">
             {bestFor(job.id).map((row) => (
@@ -135,7 +148,11 @@ export default function MachineComparisonPage() {
                 <Link href={row.href} className="font-medium hover:text-copper">
                   {row.name}
                 </Link>
-                <p className="mt-1 text-sm text-muted">{row.note}</p>
+                <p className="mt-1 text-sm text-muted">
+                  {row.maxSize}
+                  {" — "}
+                  {row.note}
+                </p>
               </li>
             ))}
           </ul>

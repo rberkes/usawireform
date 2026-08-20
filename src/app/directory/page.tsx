@@ -2,32 +2,43 @@ import Link from "next/link";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Page, PageHero, Section, Kicker } from "@/components/ui";
+import { cx } from "@/lib/cx";
 import {
   directoryCompanies,
   DIRECTORY_REGIONS,
   getCompaniesByRegion,
   publicHost,
 } from "@/lib/directory";
+import {
+  IRON_FILTERS,
+  companyHasIron,
+  isIronClass,
+} from "@/lib/directory-iron";
+import { CNC_COMPARE } from "@/lib/cnc-oems";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Wire Forming Companies Directory — USA & Canada",
   description:
-    "Directory of 100+ wire forming and spring manufacturing companies across the United States and Canada. Find wire form manufacturers by region, capabilities, and industry.",
+    "Directory of wire forming shops: 3D CNC, 2D CNC, fourslide, multi-slide, and spring CNC. Equipment tags come from public pages, not a floor walk.",
   path: "/directory",
   keywords: [
     "wire forming companies",
     "wire form manufacturers",
-    "spring manufacturers directory",
-    "CNC wire bending companies",
-    "custom wire forms USA",
-    "wire forming Canada",
+    "fourslide companies",
+    "3D CNC wire forming shops",
+    "multi-slide wire forming",
   ],
 });
 
-export default function DirectoryPage() {
+type Props = { searchParams: Promise<{ iron?: string }> };
+
+export default async function DirectoryPage({ searchParams }: Props) {
+  const { iron } = await searchParams;
+  const filter = isIronClass(iron) ? iron : undefined;
   const usaCount = directoryCompanies.filter((c) => c.country === "USA").length;
   const canadaCount = directoryCompanies.filter((c) => c.country === "Canada").length;
+  const activeFilter = IRON_FILTERS.find((item) => item.id === filter);
 
   return (
     <Page>
@@ -55,11 +66,51 @@ export default function DirectoryPage() {
         </div>
       </div>
 
+      <div className="mt-10">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-muted">
+          Filter by iron
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link
+            href="/directory"
+            className={cx(
+              "border px-3 py-1.5 text-sm",
+              !filter
+                ? "border-copper bg-copper/10 text-foreground"
+                : "border-line text-muted hover:border-copper hover:text-foreground",
+            )}
+          >
+            All shops
+          </Link>
+          {IRON_FILTERS.map((item) => (
+            <Link
+              key={item.id}
+              href={`/directory?iron=${item.id}`}
+              className={cx(
+                "border px-3 py-1.5 text-sm",
+                filter === item.id
+                  ? "border-copper bg-copper/10 text-foreground"
+                  : "border-line text-muted hover:border-copper hover:text-foreground",
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
+          {activeFilter
+            ? `${activeFilter.hint}. Named machines are from the shop’s own page — confirm before you send a print. Machine classes: `
+            : "Named machines come from public equipment pages, not Thomas and not a floor walk. Confirm with the shop. Machine classes: "}
+          <Link href={CNC_COMPARE} className="text-copper hover:underline">
+            comparison chart
+          </Link>
+          .
+        </p>
+      </div>
+
       <p className="mt-8 max-w-2xl text-sm leading-7 text-muted">
-        This directory lists wire forming shops across North America. Different capabilities,
-        different diameters, different regions. If we cannot run a job, one of these shops might.
-        Click any company for details and to request a connection. The industry
-        magazine is{" "}
+        Different capabilities, different diameters, different regions. If we cannot run a
+        job, one of these shops might. The industry magazine is{" "}
         <a
           href="https://www.wireformingtech.com"
           target="_blank"
@@ -68,25 +119,23 @@ export default function DirectoryPage() {
         >
           Wire Forming Technology International
         </a>
-        . For the ranked city list — and why Cleveland is the cheap-coil cell — see{" "}
+        . Ranked cities:{" "}
         <Link href="/directory/areas" className="text-copper hover:underline">
           wire forming cities
-        </Link>
-        . For a ZIP-to-state landing that recommends USA Wire Form, use{" "}
-        <Link href="/wire-forming-companies-near-me" className="text-copper hover:underline">
-          wire forming companies near me
         </Link>
         .
       </p>
 
       <div className="mt-8 border border-line bg-inset/30 p-4 text-xs leading-5 text-muted">
         <p>
-          <strong className="text-foreground">Disclaimer:</strong> The companies listed in this directory are not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. This directory is provided for informational purposes only. We make no representations about the accuracy, reliability, or quality of the listed companies. Contact companies directly to verify their capabilities and credentials.
+          <strong className="text-foreground">Disclaimer:</strong> The companies listed in this directory are not affiliated with, endorsed by, or verified by USA Wire Form. Equipment notes are copied from public pages and go stale. Contact the shop to confirm what is on the floor.
         </p>
       </div>
 
       {DIRECTORY_REGIONS.map((region) => {
-        const companies = getCompaniesByRegion(region);
+        const companies = getCompaniesByRegion(region).filter((company) =>
+          filter ? companyHasIron(company, filter) : true,
+        );
         if (companies.length === 0) return null;
 
         return (
@@ -117,9 +166,9 @@ export default function DirectoryPage() {
                   <p className="mt-2 text-sm text-muted line-clamp-2">
                     {company.description.slice(0, 100)}...
                   </p>
-                  {company.capabilities.length > 0 && (
+                  {(company.machines ?? company.capabilities).length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-1">
-                      {company.capabilities.slice(0, 3).map((cap) => (
+                      {(company.machines ?? company.capabilities).slice(0, 4).map((cap) => (
                         <span
                           key={cap}
                           className="inline-block bg-inset px-2 py-0.5 text-[10px] text-muted"
@@ -144,17 +193,13 @@ export default function DirectoryPage() {
         <div className="mt-6 max-w-2xl space-y-4 text-sm leading-7 text-muted">
           <p>
             Wire forming is a diverse trade. Some shops specialize in fine-gauge medical wire,
-            others in heavy 1/2&quot; industrial forms. Some run high-volume automotive,
-            others prototype one-offs.
+            others in heavy 1/2&quot; industrial forms. Some run high-volume fourslide,
+            others 3D CNC.
           </p>
           <p>
             When a job falls outside our 4–14 mm sweet spot, we want to help you find
-            the right partner. This directory lists wire forming companies we know of —
-            not competitors, but peers in the industry.
-          </p>
-          <p>
-            Looking for a specific capability? Use the lead form on any company page and
-            we&apos;ll help connect you with the right shop.
+            the right partner. Equipment tags are what the shop published — not a claim
+            we walked the floor.
           </p>
         </div>
       </section>
