@@ -4,6 +4,7 @@ import { MachineIso } from "@/components/MachineIso";
 import { MachineLeadForm } from "@/components/MachineLeadForm";
 import { Page, PageHero, Section, SpecList } from "@/components/ui";
 import {
+  CNC_COMPARE,
   CNC_HUB,
   CNC_OEMS,
   getModel,
@@ -102,6 +103,11 @@ export default async function CncModelPage({ params }: Props) {
             {oem.name}
           </a>{" "}
           or a dealer. USA Wire Form production is 4–14 mm on a Robomac 214TF.
+          Job fit vs other cells:{" "}
+          <Link href={CNC_COMPARE} className="text-copper hover:underline">
+            machine comparison
+          </Link>
+          .
         </p>
       </Section>
       {others.length > 0 ? (

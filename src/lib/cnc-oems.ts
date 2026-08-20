@@ -33,6 +33,7 @@ export type CncOem = {
 };
 
 export const CNC_HUB = "/equipment/cnc-manufacturers";
+export const CNC_COMPARE = "/equipment/machine-comparison";
 
 /** Ten OEMs × six catalog models. Specs are typical published ranges — confirm with the dealer. */
 export const CNC_OEMS: CncOem[] = [

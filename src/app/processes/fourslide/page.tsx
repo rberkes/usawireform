@@ -36,7 +36,7 @@ const faqs = [
   {
     question: "Does fourslide beat CNC on cycle time?",
     answer:
-      "At a frozen, mostly 2D, light-wire clip, sometimes. That comparison is a separate page. Tooling and cost are the argument here: production can already be on the CNC before a fourslide tool exists.",
+      "At a frozen, mostly 2D, light-wire clip, sometimes. Machine classes sit on /equipment/machine-comparison. Tooling and cost are the argument here: production can already be on the CNC before a fourslide tool exists.",
   },
   {
     question: "Do you run fourslide?",
@@ -332,6 +332,8 @@ export default function FourslidePage() {
           Named list: <Link href="/equipment">equipment</Link>. Process
           theory for the 3D cell:{" "}
           <Link href="/processes/3d-cnc-wire-forming">3D CNC wire forming</Link>.
+          Which cell vs which job:{" "}
+          <Link href="/equipment/machine-comparison">machine comparison</Link>.
         </p>
 
         <h2 id="band">How it sits next to 4–14 mm</h2>
@@ -389,6 +391,9 @@ export default function FourslidePage() {
           </li>
           <li>
             <Link href="/equipment">Numalliance Robomac 214TF</Link>
+          </li>
+          <li>
+            <Link href="/equipment/machine-comparison">Machine comparison</Link>
           </li>
           <li>
             <Link href="/wire-forming">Wire forming in the USA</Link>

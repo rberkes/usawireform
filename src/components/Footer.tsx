@@ -31,6 +31,7 @@ const shop = [
   { href: "/secondary-operations", label: "Secondaries" },
   { href: "/equipment", label: "Equipment" },
   { href: "/equipment/cnc-manufacturers", label: "CNC machine catalog" },
+  { href: "/equipment/machine-comparison", label: "Machine comparison" },
   { href: "/directory", label: "Company Directory" },
   { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/videos", label: "Videos" },

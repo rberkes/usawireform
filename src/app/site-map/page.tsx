@@ -4,7 +4,7 @@ import { catalogByGroup } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
 import { directoryCompanies, DIRECTORY_REGIONS, getCompaniesByRegion } from "@/lib/directory";
 import { machines } from "@/lib/machines";
-import { CNC_HUB, CNC_OEMS, oemPath } from "@/lib/cnc-oems";
+import { CNC_COMPARE, CNC_HUB, CNC_OEMS, oemPath } from "@/lib/cnc-oems";
 import { METRO_HUB_PATH, WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
 import { publishedProcesses } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
@@ -349,6 +349,11 @@ export default function SiteMapPage() {
               href: CNC_HUB,
               title: "CNC machine catalog",
               body: "Ten manufacturers, sixty model pages, dealer lead form.",
+            },
+            {
+              href: CNC_COMPARE,
+              title: "Machine comparison",
+              body: "Small springs, heavy 3D, cut-to-length, and 5–8 mm — which cell wins.",
             },
             ...CNC_OEMS.map((oem) => ({
               href: oemPath(oem),

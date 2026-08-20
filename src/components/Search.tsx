@@ -47,6 +47,7 @@ const searchItems: SearchItem[] = [
   { title: "Contact", href: "/contact", category: "Pages", description: "Request a quote for custom CNC wire forms." },
   { title: "Instant Quote", href: "/instant-quote", category: "Pages", description: "Get an instant estimate for wire forming." },
   { title: "CNC Machine Catalog", href: "/equipment/cnc-manufacturers", category: "Equipment", description: "Ten OEMs, sixty 2D/3D CNC models. Dealer leads — we run a Robomac 214TF." },
+  { title: "Machine Comparison", href: "/equipment/machine-comparison", category: "Equipment", description: "Which cells win small springs, heavy 3D, cut-to-length, and 5–8 mm parts." },
   { title: "Equipment", href: "/equipment", category: "Pages", description: "Our CNC wire forming equipment and machines." },
   { title: "Materials", href: "/materials", category: "Pages", description: "Wire materials: carbon, stainless, brass, copper." },
   { title: "About", href: "/about", category: "Pages", description: "About USA Wire Form and our capabilities." },

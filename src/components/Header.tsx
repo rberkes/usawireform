@@ -65,6 +65,7 @@ const navSections = [
       { href: "/sizes", label: "Wire Sizes" },
       { href: "/equipment", label: "Equipment" },
       { href: "/equipment/cnc-manufacturers", label: "CNC Machine Catalog" },
+      { href: "/equipment/machine-comparison", label: "Machine Comparison" },
       { href: "/directory", label: "Company Directory" },
       { href: "/directory/areas", label: "Wire Forming Cities" },
       { href: "/videos", label: "Videos" },

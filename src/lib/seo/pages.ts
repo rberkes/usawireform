@@ -2,7 +2,7 @@ import { catalog, STOCK } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
 import { machines } from "@/lib/machines";
-import { CNC_HUB, CNC_OEMS, allCncModels, modelPath, oemPath } from "@/lib/cnc-oems";
+import { CNC_COMPARE, CNC_HUB, CNC_OEMS, allCncModels, modelPath, oemPath } from "@/lib/cnc-oems";
 import { WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
 import { PRICE_LINE } from "@/lib/price";
 import { publishedProcesses } from "@/lib/processes";
@@ -499,6 +499,19 @@ function cncCatalogPages(): SeoRecord[] {
     keywords: ["CNC wire forming machines", "3D CNC wire bender"],
     priority: 0.8,
   });
+  const compare = record({
+    path: CNC_COMPARE,
+    title: "CNC Wire Forming Machine Comparison",
+    description:
+      "Which machines win small springs, heavy 3D forming, cut-to-length, and 5–8 mm parts. Coilers, 3D CNC, 2D tables, and fourslide.",
+    section: "company" as const,
+    keywords: [
+      "CNC wire forming machine comparison",
+      "spring coiler vs 3D CNC",
+      "cut to length wire machine",
+    ],
+    priority: 0.8,
+  });
   const oems = CNC_OEMS.map((oem) =>
     record({
       path: oemPath(oem),
@@ -519,7 +532,7 @@ function cncCatalogPages(): SeoRecord[] {
       priority: 0.65,
     }),
   );
-  return [hub, ...oems, ...models];
+  return [hub, compare, ...oems, ...models];
 }
 
 function metroPages(): SeoRecord[] {

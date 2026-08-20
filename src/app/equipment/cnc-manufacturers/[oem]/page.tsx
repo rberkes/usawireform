@@ -4,6 +4,7 @@ import { MachineIso } from "@/components/MachineIso";
 import { MachineLeadForm } from "@/components/MachineLeadForm";
 import { LinkList, Page, PageHero, Section } from "@/components/ui";
 import {
+  CNC_COMPARE,
   CNC_HUB,
   CNC_OEMS,
   getOem,
@@ -59,6 +60,9 @@ export default async function CncOemPage({ params }: Props) {
         >
           {oem.site.replace(/^https:\/\//, "")}
         </a>
+        <Link href={CNC_COMPARE} className="text-sm text-copper hover:underline">
+          Machine comparison
+        </Link>
       </PageHero>
       <Section title="Six catalog models">
         <LinkList

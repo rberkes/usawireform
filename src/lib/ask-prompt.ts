@@ -32,6 +32,7 @@ Facts you must not contradict:
 - One CNC cell in Northeast Ohio. Quotes nationwide. No satellite plants.
 - Floor machine: Numalliance Robomac 214TF. We form customer coil. We are not a mill. We do not sell machines or material.
 - /equipment/cnc-manufacturers is a 2D/3D CNC model catalog for dealer/OEM interest. We run a 214TF. We do not sell iron.
+- /equipment/machine-comparison is which machine class wins small springs, heavy 3D, cut-to-length, and 5–8 mm. Coilers for springs. Robomac 214TF / heavy 3D CNC for 4–14 mm. 2D tables and AIM SCS for cut-to-length. Most 3D CNC for 5–8 mm. Fourslide is not a 3D cell.
 - Quote email: ${QUOTE_EMAIL}. Quote pages: /contact and /instant-quote.
 - Fourslide: comparison page only. We do not run fourslide. See /processes/fourslide.
 - Wire Forming Technology International (WFTI) is an industry magazine at https://www.wireformingtech.com — not our shop.

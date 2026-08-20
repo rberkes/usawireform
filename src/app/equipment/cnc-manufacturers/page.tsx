@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MachineLeadForm } from "@/components/MachineLeadForm";
 import { LinkList, Page, PageHero, Section } from "@/components/ui";
-import { CNC_HUB, CNC_OEMS, oemPath } from "@/lib/cnc-oems";
+import { CNC_COMPARE, CNC_HUB, CNC_OEMS, oemPath } from "@/lib/cnc-oems";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -25,7 +25,11 @@ export default function CncManufacturersHub() {
         kicker="Machine directory"
         title="Ten CNC wire-form OEMs, sixty models."
         lede="Catalog pages for dealers and shops buying iron. USA Wire Form runs a Numalliance Robomac 214TF in 4–14 mm. We do not sell these machines. Each model page takes a dealer / OEM lead."
-      />
+      >
+        <Link href={CNC_COMPARE} className="text-sm text-copper hover:underline">
+          Which machine for which job
+        </Link>
+      </PageHero>
       <Section title="Manufacturers">
         <LinkList
           className="mt-5"
@@ -46,6 +50,10 @@ export default function CncManufacturersHub() {
           . Numalliance family pages with photos:{" "}
           <Link href="/equipment/machines" className="text-copper hover:underline">
             /equipment/machines
+          </Link>
+          . Job-by-job chart:{" "}
+          <Link href={CNC_COMPARE} className="text-copper hover:underline">
+            machine comparison
           </Link>
           .
         </p>
