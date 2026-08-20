@@ -1,14 +1,16 @@
+import { StateGrid } from "@/components/StateGrid";
 import { LinkList, Page, PageHero, Section } from "@/components/ui";
 import { catalogByGroup } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
 import { directoryCompanies, DIRECTORY_REGIONS, getCompaniesByRegion } from "@/lib/directory";
+import { machines } from "@/lib/machines";
 import { publishedProcesses } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
 import { industries, shopLines } from "@/lib/site";
 
 export const metadata = pageMeta({
   title: "Sitemap",
-  description: `${COMPANY} site map: processes, 4–14 mm products, industries, headquarters, and directory of ${directoryCompanies.length}+ wire forming companies across the USA and Canada.`,
+  description: `${COMPANY} site map: keyword landers, 50-state directory, processes, 4–14 mm products, industries, headquarters, and ${directoryCompanies.length}+ wire forming companies.`,
   path: "/site-map",
   keywords: ["sitemap", "wire forming companies", "wire form manufacturers", "wire forming directory"],
 });
@@ -64,9 +66,19 @@ export default function SiteMapPage() {
               body: "Estimate from diameter, bends, length, and material.",
             },
             {
+              href: "/equipment/machines",
+              title: "NumAlliance machines",
+              body: "Robomac TF, e-Motion, TFE, FTX — the catalog we run and sell against.",
+            },
+            {
               href: "/videos",
               title: "Videos",
               body: "Shop channel — CNC on camera.",
+            },
+            {
+              href: "/careers",
+              title: "Careers",
+              body: "CNC operator and manufacturing jobs in Northeast Ohio.",
             },
             {
               href: "/quoting",
@@ -134,6 +146,71 @@ export default function SiteMapPage() {
             ...processLinks,
           ]}
         />
+      </Section>
+
+      <Section title="Keyword pages">
+        <LinkList
+          className="mt-5"
+          items={[
+            {
+              href: "/330-stainless-wire-bending-usa-parts",
+              title: "330 stainless wire bending USA parts",
+              body: "N08330 heat-treat baskets, from coil, TIG and resistance weld.",
+            },
+            {
+              href: "/wire-forming-manufacturers",
+              title: "Wire forming manufacturers",
+              body: "U.S. manufacturer — not a broker.",
+            },
+            {
+              href: "/wire-forming-companies-near-me",
+              title: "Wire forming companies near me",
+              body: "ZIP lookup to your state page.",
+            },
+            {
+              href: "/custom-wire-forming",
+              title: "Custom wire forming",
+              body: "Your print, 4–14 mm from coil.",
+            },
+            {
+              href: "/wire-forming-process",
+              title: "Wire forming process",
+              body: "Straighten, CNC, cut, weld, inspect.",
+            },
+            {
+              href: "/steel-wire-manufacturers-in-usa",
+              title: "Steel wire manufacturers in the USA",
+              body: "We form U.S. coil. We are not a mill.",
+            },
+            {
+              href: "/stainless-steel-wire-basket",
+              title: "Stainless steel wire basket",
+              body: "304 / 316 wet service. 330 for the furnace.",
+            },
+            {
+              href: "/stainless-steel-wire-shelf",
+              title: "Stainless steel wire shelf",
+              body: "Industrial 4–14 mm frames and grids.",
+            },
+            {
+              href: "/wire-mesh",
+              title: "Wire mesh",
+              body: "Weaves, crimp, mesh count, welded cloth.",
+            },
+          ]}
+        />
+      </Section>
+
+      <Section title="State directory">
+        <p className="mt-3 text-sm leading-6 text-muted">
+          Every U.S. state plus D.C. ZIP lookup on{" "}
+          <a href="/wire-forming-companies-near-me" className="text-copper hover:underline">
+            wire forming companies near me
+          </a>
+          . Production is one cell in Northeast Ohio — the state page is the
+          landing, not a satellite plant.
+        </p>
+        <StateGrid />
       </Section>
 
       {catalogByGroup().map(({ group, items }) => (
@@ -211,6 +288,17 @@ export default function SiteMapPage() {
             </div>
           );
         })}
+      </Section>
+
+      <Section title="NumAlliance machines">
+        <LinkList
+          className="mt-5"
+          items={machines.map((machine) => ({
+            href: `/equipment/machines/${machine.slug}`,
+            title: machine.name,
+            body: machine.tagline,
+          }))}
+        />
       </Section>
 
       <Section title="This site">

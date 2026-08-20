@@ -57,7 +57,12 @@ export default function DirectoryPage() {
       <p className="mt-8 max-w-2xl text-sm leading-7 text-muted">
         This directory lists wire forming shops across North America. Different capabilities,
         different diameters, different regions. If we cannot run a job, one of these shops might.
-        Click any company for details and to request a connection.
+        Click any company for details and to request a connection. For a ZIP-to-state landing
+        that recommends USA Wire Form, use{" "}
+        <Link href="/wire-forming-companies-near-me" className="text-copper hover:underline">
+          wire forming companies near me
+        </Link>
+        .
       </p>
 
       <div className="mt-8 border border-line bg-inset/30 p-4 text-xs leading-5 text-muted">

@@ -6,15 +6,21 @@ import { Container } from "./ui";
 
 const library = [
   { href: "/wire-forming", label: "Wire forming" },
+  { href: "/custom-wire-forming", label: "Custom wire forming" },
+  { href: "/wire-forming-process", label: "Wire forming process" },
+  { href: "/wire-forming-manufacturers", label: "Manufacturers" },
+  { href: "/wire-forming-companies-near-me", label: "Companies near me" },
+  { href: "/330-stainless-wire-bending-usa-parts", label: "330 stainless" },
+  { href: "/stainless-steel-wire-basket", label: "Stainless baskets" },
+  { href: "/stainless-steel-wire-shelf", label: "Stainless shelves" },
+  { href: "/wire-mesh", label: "Wire mesh" },
+  { href: "/steel-wire-manufacturers-in-usa", label: "U.S. steel wire" },
   { href: "/wire-fabrication", label: "Wire fabrication" },
   { href: "/sizes", label: "3/8 · 7/16 · 1/2" },
   { href: "/materials", label: "Materials" },
   { href: "/processes/heavy-wire-forming", label: "4–14 mm" },
-  { href: "/processes/3d-cnc-wire-forming", label: "3D CNC" },
-  { href: "/processes/mesh-grids-and-cable-trays", label: "Grids & trays" },
   { href: "/processes", label: "All processes" },
   { href: "/guide/design-for-wire-forming", label: "Design guide" },
-  { href: "/processes/wire-form-shapes", label: "Shapes" },
 ];
 
 const shop = [

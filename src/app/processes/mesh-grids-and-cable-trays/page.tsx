@@ -84,7 +84,8 @@ export default function MeshGridsCableTraysPage() {
       <p>
         A drawing that says “welded wire mesh” without pitch, rim
         diameter, and weld type is not a grid print. It is a request to
-        invent one.
+        invent one. Weave names, crimp, and mesh count:{" "}
+        <Link href="/wire-mesh">wire mesh</Link>.
       </p>
 
       <h2 id="trays">Cable trays</h2>
@@ -197,6 +198,10 @@ export default function MeshGridsCableTraysPage() {
 
       <h2 id="next">Related</h2>
       <ul>
+        <li>
+          <Link href="/wire-mesh">Wire mesh</Link> — weaves, crimp, mesh
+          count, welded vs woven
+        </li>
         <li>
           <Link href="/products/cable-trays">Cable trays</Link> ·{" "}
           <Link href="/products/heavy-duty-wire-baskets">

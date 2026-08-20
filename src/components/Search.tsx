@@ -7,6 +7,7 @@ import Fuse from "fuse.js";
 import { catalog } from "@/lib/catalog";
 import { industries } from "@/lib/site";
 import { processes } from "@/lib/processes";
+import { US_STATES } from "@/lib/states";
 import { cx } from "@/lib/cx";
 
 type SearchItem = {
@@ -49,6 +50,23 @@ const searchItems: SearchItem[] = [
   { title: "Sizes", href: "/sizes", category: "Pages", description: "Stock wire sizes: 3/8, 7/16, and 1/2 inch." },
   { title: "Design Guide", href: "/guide/design-for-wire-forming", category: "Resources", description: "Design guidelines for wire forming." },
   { title: "Videos", href: "/videos", category: "Resources", description: "Watch our CNC wire forming in action." },
+  { title: "330 Stainless Wire Bending USA Parts", href: "/330-stainless-wire-bending-usa-parts", category: "Materials", description: "N08330 heat-treat baskets from coil. Resistance weld and TIG." },
+  { title: "Wire Forming Manufacturers", href: "/wire-forming-manufacturers", category: "Pages", description: "U.S. wire forming manufacturer in Northeast Ohio." },
+  { title: "Wire Forming Companies Near Me", href: "/wire-forming-companies-near-me", category: "Locations", description: "ZIP lookup to your state page. One cell in Northeast Ohio." },
+  { title: "Custom Wire Forming", href: "/custom-wire-forming", category: "Pages", description: "Custom 4–14 mm CNC from coil. 100-piece minimum." },
+  { title: "Wire Forming Process", href: "/wire-forming-process", category: "Processes", description: "Straighten, CNC bend, cut-to-length, weld, inspect." },
+  { title: "Steel Wire Manufacturers in the USA", href: "/steel-wire-manufacturers-in-usa", category: "Pages", description: "We form U.S. coil. We are not a mill." },
+  { title: "Stainless Steel Wire Basket", href: "/stainless-steel-wire-basket", category: "Products", description: "304 / 316 wet service. 330 for heat-treat baskets." },
+  { title: "Stainless Steel Wire Shelf", href: "/stainless-steel-wire-shelf", category: "Products", description: "Industrial 4–14 mm stainless shelves from coil." },
+  { title: "Wire Mesh", href: "/wire-mesh", category: "Pages", description: "Weave types, crimp, mesh count, openings, and welded wire cloth." },
+  { title: "Careers", href: "/careers", category: "Pages", description: "CNC operator and manufacturing jobs in Northeast Ohio." },
+  { title: "Company Directory", href: "/directory", category: "Resources", description: "Wire forming shops across the USA and Canada." },
+  ...US_STATES.map((state) => ({
+    title: `Wire forming in ${state.name}`,
+    href: `/${state.slug}`,
+    category: "Locations",
+    description: `USA Wire Form for ${state.name} — 4–14 mm CNC from Northeast Ohio.`,
+  })),
 ];
 
 const fuse = new Fuse(searchItems, {

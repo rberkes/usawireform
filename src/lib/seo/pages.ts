@@ -1,8 +1,11 @@
 import { catalog, STOCK } from "@/lib/catalog";
 import { COMPANY } from "@/lib/company";
+import { directoryCompanies } from "@/lib/directory";
+import { machines } from "@/lib/machines";
 import { PRICE_LINE } from "@/lib/price";
 import { publishedProcesses } from "@/lib/processes";
 import { industries, shopLines } from "@/lib/site";
+import { US_STATES } from "@/lib/states";
 
 export type SeoSection =
   | "home"
@@ -106,6 +109,115 @@ export const staticSeoPages: SeoRecord[] = [
     keywords: ["wire parts", "wire form parts", "custom wire hardware"],
   }),
   record({
+    path: "/330-stainless-wire-bending-usa-parts",
+    title: "330 Stainless Wire Bending USA Parts",
+    description:
+      "330 stainless (N08330) wire forming in the USA: heat-treat baskets and furnace fixtures from coil, 4–14 mm, cut-to-length, resistance weld and TIG.",
+    section: "forming",
+    keywords: [
+      "330 stainless wire bending",
+      "330 stainless USA",
+      "heat treat wire baskets",
+      "N08330 wire forming",
+    ],
+    priority: 0.9,
+  }),
+  record({
+    path: "/wire-forming-manufacturers",
+    title: "Wire Forming Manufacturers",
+    description: `${COMPANY} is a U.S. wire forming manufacturer: 4–14 mm 3D CNC from coil, weld, and finish. Northeast Ohio headquarters.`,
+    section: "forming",
+    keywords: [
+      "wire forming manufacturers",
+      "USA wire forming manufacturer",
+      "CNC wire form manufacturer",
+    ],
+    priority: 0.8,
+  }),
+  record({
+    path: "/wire-forming-companies-near-me",
+    title: "Wire Forming Companies Near Me",
+    description:
+      "Find a 4–14 mm CNC wire forming shop by ZIP. USA Wire Form quotes nationwide from Northeast Ohio. Enter a ZIP to open your state page.",
+    section: "forming",
+    keywords: [
+      "wire forming companies near me",
+      "wire forming shop near me",
+      "CNC wire forming ZIP",
+    ],
+    priority: 0.9,
+  }),
+  record({
+    path: "/custom-wire-forming",
+    title: "Custom Wire Forming",
+    description:
+      "Custom CNC wire forming in 4–14 mm: your print, our coil. 3D CNC, cut-to-length, resistance weld and TIG. 100-piece minimum. Northeast Ohio.",
+    section: "forming",
+    keywords: ["custom wire forming", "custom CNC wire forms", "custom wire baskets"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/wire-forming-process",
+    title: "Wire Forming Process",
+    description:
+      "The wire forming process in 4–14 mm: straighten, CNC bend, cut-to-length, end work, resistance weld or TIG, inspect. From coil, not from bar leftovers.",
+    section: "forming",
+    keywords: ["wire forming process", "how wire forming works", "CNC wire forming steps"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/steel-wire-manufacturers-in-usa",
+    title: "Steel Wire Manufacturers in the USA",
+    description:
+      "USA Wire Form is a U.S. wire former, not a mill. We buy American coil — carbon, stainless including 330 — and CNC-form 4–14 mm parts in Northeast Ohio.",
+    section: "forming",
+    keywords: [
+      "steel wire manufacturers in USA",
+      "American steel wire",
+      "USA wire coil",
+    ],
+    priority: 0.8,
+  }),
+  record({
+    path: "/stainless-steel-wire-basket",
+    title: "Stainless Steel Wire Basket",
+    description:
+      "Stainless steel wire baskets from coil: 304 / 316 for wet service, 330 for heat-treat. 4–14 mm CNC, resistance weld or TIG. USA production.",
+    section: "products",
+    keywords: [
+      "stainless steel wire basket",
+      "330 wire basket",
+      "304 wire basket",
+      "heat treat wire basket",
+    ],
+    priority: 0.8,
+  }),
+  record({
+    path: "/stainless-steel-wire-shelf",
+    title: "Stainless Steel Wire Shelf",
+    description:
+      "Stainless steel wire shelves from 4–14 mm coil: 304 / 316 frames and infill, CNC form, resistance weld or TIG. Not a 9-gauge closet rack.",
+    section: "products",
+    keywords: ["stainless steel wire shelf", "stainless wire shelving", "304 wire shelf"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/wire-mesh",
+    title: "Wire Mesh",
+    description:
+      "Wire mesh glossary and production: weave types, crimp, mesh count, openings, and welded wire cloth. 4–14 mm resistance-welded grids from coil.",
+    section: "forming",
+    keywords: [
+      "wire mesh",
+      "welded wire cloth",
+      "plain weave",
+      "dutch weave",
+      "mesh count",
+      "welded wire mesh",
+    ],
+    priority: 0.8,
+  }),
+  record({
     path: "/processes",
     title: "Wire Form Processes",
     description:
@@ -159,6 +271,15 @@ export const staticSeoPages: SeoRecord[] = [
       "Named machines: Numalliance Robomac 214TF, Lubow manual benders, 40-ton Clearing press, 75 kVA resistance weld, Miller MIG, granite inspection.",
     section: "company",
     keywords: ["Numalliance Robomac 214TF", "Robomac 214TF", "Lubow", "resistance welder"],
+  }),
+  record({
+    path: "/equipment/machines",
+    title: "NumAlliance Wire Forming Machines",
+    description:
+      "CNC wire bending machines from NumAlliance: Robomac TF, e-Motion, TFE, FTX, and more. 3D and 2D wire forming equipment for industrial production.",
+    section: "company",
+    keywords: ["NumAlliance wire bending machines", "Robomac TF", "CNC wire forming equipment"],
+    priority: 0.7,
   }),
   record({
     path: "/videos",
@@ -232,6 +353,33 @@ export const staticSeoPages: SeoRecord[] = [
     keywords: ["request a quote", "STEP file upload", "wire forming quote"],
   }),
   record({
+    path: "/careers",
+    title: "Careers",
+    description: `Join ${COMPANY} — careers in CNC wire forming, machine operation, and manufacturing in Northeast Ohio.`,
+    section: "company",
+    keywords: [
+      "wire forming jobs",
+      "CNC operator jobs",
+      "manufacturing careers Ohio",
+    ],
+    priority: 0.7,
+    changeFrequency: "weekly",
+  }),
+  record({
+    path: "/directory",
+    title: "Wire Forming Companies Directory — USA & Canada",
+    description:
+      "Directory of 100+ wire forming and spring manufacturing companies across the United States and Canada.",
+    section: "company",
+    keywords: [
+      "wire forming companies",
+      "wire form manufacturers",
+      "spring manufacturers directory",
+    ],
+    priority: 0.8,
+    changeFrequency: "weekly",
+  }),
+  record({
     path: "/privacy",
     title: "Privacy Policy",
     description: `How ${COMPANY} handles quote requests and email.`,
@@ -269,6 +417,50 @@ function industryPages(): SeoRecord[] {
       description: `${item.summary} 4–14 mm CNC at ${COMPANY}.`,
       section: "industries",
       keywords: [item.title, `${item.title} wire forming`, "4-14 mm wire", "CNC wire forms"],
+    }),
+  );
+}
+
+function statePages(): SeoRecord[] {
+  return US_STATES.map((state) =>
+    record({
+      path: `/${state.slug}`,
+      title: `Wire Forming Companies in ${state.name}`,
+      description: `${COMPANY} is the wire forming shop we recommend for ${state.name}: 4–14 mm 3D CNC from Northeast Ohio. ${PRICE_LINE}`,
+      section: "company",
+      keywords: [
+        `wire forming companies ${state.name}`,
+        `wire forming ${state.name}`,
+        `CNC wire forming ${state.abbr}`,
+        "wire forming companies near me",
+      ],
+      priority: state.abbr === "OH" ? 0.8 : 0.5,
+    }),
+  );
+}
+
+function machinePages(): SeoRecord[] {
+  return machines.map((machine) =>
+    record({
+      path: `/equipment/machines/${machine.slug}`,
+      title: machine.name,
+      description: machine.tagline,
+      section: "company",
+      keywords: [machine.name, "NumAlliance", "CNC wire forming machine"],
+      priority: 0.7,
+    }),
+  );
+}
+
+function directoryListingPages(): SeoRecord[] {
+  return directoryCompanies.map((company) =>
+    record({
+      path: `/directory/${company.slug}`,
+      title: `${company.name} — Wire Forming Company | ${company.location}`,
+      description: `${company.name} in ${company.location}. ${company.description}`,
+      section: "company",
+      keywords: [company.name, "wire forming", company.location],
+      priority: 0.6,
     }),
   );
 }
@@ -321,7 +513,15 @@ export function seoDirectory(): Record<SeoSection, SeoRecord[]> {
 export function allSeoPages(): SeoRecord[] {
   const seen = new Set<string>();
   const out: SeoRecord[] = [];
-  for (const page of [...staticSeoPages, ...processPages(), ...industryPages(), ...productPages()]) {
+  for (const page of [
+    ...staticSeoPages,
+    ...processPages(),
+    ...industryPages(),
+    ...productPages(),
+    ...statePages(),
+    ...machinePages(),
+    ...directoryListingPages(),
+  ]) {
     if (seen.has(page.path)) continue;
     seen.add(page.path);
     out.push(page);

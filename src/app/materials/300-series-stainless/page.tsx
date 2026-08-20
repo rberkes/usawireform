@@ -254,6 +254,12 @@ export default function Stainless300Page() {
       <h2 id="next">Related</h2>
       <ul>
         <li>
+          <Link href="/330-stainless-wire-bending-usa-parts">
+            330 stainless wire bending USA parts
+          </Link>{" "}
+          — heat-treat baskets, capacity, TIG vs resistance weld
+        </li>
+        <li>
           <Link href="/materials">All coil materials</Link>
         </li>
         <li>

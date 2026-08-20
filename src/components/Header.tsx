@@ -46,6 +46,7 @@ const navSections = [
       { href: "/processes/3d-cnc-wire-forming", label: "3D CNC Wire Forming" },
       { href: "/processes/2d-cnc-wire-forming", label: "2D CNC Wire Forming" },
       { href: "/processes/resistance-welding", label: "Resistance Welding" },
+      { href: "/wire-mesh", label: "Wire Mesh" },
       { href: "/processes/mesh-grids-and-cable-trays", label: "Mesh Grids & Trays" },
       { href: "/processes/plating-and-coating", label: "Plating & Coating" },
       { href: "/processes/heat-treating", label: "Heat Treating" },
@@ -57,6 +58,9 @@ const navSections = [
     items: [
       { href: "/guide/design-for-wire-forming", label: "Design Guide" },
       { href: "/materials", label: "Materials" },
+      { href: "/330-stainless-wire-bending-usa-parts", label: "330 Stainless" },
+      { href: "/custom-wire-forming", label: "Custom Wire Forming" },
+      { href: "/wire-forming-companies-near-me", label: "Companies Near Me" },
       { href: "/sizes", label: "Wire Sizes" },
       { href: "/equipment", label: "Equipment" },
       { href: "/directory", label: "Company Directory" },

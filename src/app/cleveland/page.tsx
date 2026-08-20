@@ -139,6 +139,12 @@ export default function ClevelandPage() {
       <h2 id="next">Related</h2>
       <ul>
         <li>
+          <Link href="/ohio">Ohio wire forming</Link> — state landing
+        </li>
+        <li>
+          <Link href="/wire-forming-companies-near-me">Companies near me</Link> — ZIP lookup
+        </li>
+        <li>
           <Link href="/about">About</Link> — headquarters
         </li>
         <li>
