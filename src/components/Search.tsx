@@ -127,13 +127,21 @@ export function SearchDialog({
 }) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const [asking, setAsking] = useState(false);
+  const [askError, setAskError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
+  const askingRef = useRef(false);
   const router = useRouter();
 
   const results = useMemo(() => {
     if (!query.trim()) return [];
     return fuse.search(query).slice(0, 8);
   }, [query]);
+
+  const hasAskRow = query.trim().length > 0;
+  const itemCount = hasAskRow ? 1 + results.length : 0;
 
   const navigate = useCallback(
     (href: string) => {
@@ -144,15 +152,72 @@ export function SearchDialog({
     [router, onClose]
   );
 
+  const ask = useCallback(async () => {
+    const question = query.trim();
+    if (!question || askingRef.current) return;
+
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+    askingRef.current = true;
+
+    setAsking(true);
+    setAskError("");
+    setAnswer("");
+
+    try {
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+        signal: controller.signal,
+      });
+
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error || "Could not get an answer.");
+      }
+
+      if (!res.body) throw new Error("Could not get an answer.");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let text = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        text += decoder.decode(value, { stream: true });
+        setAnswer(text);
+      }
+      text += decoder.decode();
+      setAnswer(text.trim());
+    } catch (err) {
+      if (controller.signal.aborted) return;
+      setAskError(err instanceof Error ? err.message : "Could not get an answer.");
+    } finally {
+      askingRef.current = false;
+      if (!controller.signal.aborted) setAsking(false);
+    }
+  }, [query]);
+
   useEffect(() => {
     if (open) {
       inputRef.current?.focus();
       setSelectedIndex(0);
+    } else {
+      abortRef.current?.abort();
+      askingRef.current = false;
+      setAsking(false);
     }
   }, [open]);
 
   useEffect(() => {
     setSelectedIndex(0);
+    setAnswer("");
+    setAskError("");
+    abortRef.current?.abort();
+    askingRef.current = false;
+    setAsking(false);
   }, [query]);
 
   useEffect(() => {
@@ -161,8 +226,6 @@ export function SearchDialog({
         e.preventDefault();
         if (open) {
           onClose();
-        } else {
-          // This is handled by the parent
         }
       }
 
@@ -172,19 +235,24 @@ export function SearchDialog({
         onClose();
       } else if (e.key === "ArrowDown") {
         e.preventDefault();
-        setSelectedIndex((i) => Math.min(i + 1, results.length - 1));
+        setSelectedIndex((i) => Math.min(i + 1, Math.max(itemCount - 1, 0)));
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setSelectedIndex((i) => Math.max(i - 1, 0));
-      } else if (e.key === "Enter" && results[selectedIndex]) {
+      } else if (e.key === "Enter") {
+        if (!hasAskRow) return;
         e.preventDefault();
-        navigate(results[selectedIndex].item.href);
+        if (selectedIndex === 0) {
+          void ask();
+        } else if (results[selectedIndex - 1]) {
+          navigate(results[selectedIndex - 1].item.href);
+        }
       }
     }
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose, results, selectedIndex, navigate]);
+  }, [open, onClose, results, selectedIndex, navigate, ask, hasAskRow, itemCount]);
 
   if (!open) return null;
 
@@ -207,9 +275,19 @@ export function SearchDialog({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products, industries, processes..."
+              placeholder="Search pages or ask a question…"
               className="h-14 flex-1 bg-transparent px-3 text-base outline-none placeholder:text-muted/60"
             />
+            {hasAskRow ? (
+              <button
+                type="button"
+                onClick={() => void ask()}
+                disabled={asking}
+                className="mr-2 rounded-sm border border-copper/40 bg-copper/10 px-2 py-1 text-xs font-medium text-copper disabled:opacity-50"
+              >
+                {asking ? "Asking…" : "Ask"}
+              </button>
+            ) : null}
             <button
               type="button"
               onClick={onClose}
@@ -218,9 +296,45 @@ export function SearchDialog({
               ESC
             </button>
           </div>
+          {(answer || askError || asking) && (
+            <div className="border-b border-line px-4 py-3">
+              {askError ? (
+                <p className="text-sm text-muted">{askError}</p>
+              ) : (
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+                  {answer || (asking ? "Reading the shop facts…" : "")}
+                </p>
+              )}
+            </div>
+          )}
           {/* Results */}
-          {results.length > 0 ? (
+          {hasAskRow ? (
             <ul className="max-h-80 overflow-y-auto p-2">
+              <li>
+                <button
+                  type="button"
+                  onClick={() => void ask()}
+                  disabled={asking}
+                  className={cx(
+                    "flex w-full flex-col gap-1 rounded-md px-4 py-3 text-left transition-colors",
+                    selectedIndex === 0
+                      ? "bg-copper/10 text-foreground"
+                      : "text-muted hover:bg-inset"
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="font-medium text-foreground">
+                      Ask USA Wire Form
+                    </span>
+                    <span className="rounded bg-line px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider">
+                      Question
+                    </span>
+                  </span>
+                  <span className="line-clamp-1 text-sm">
+                    {asking ? "Answering…" : `Can we form that? Enter or click Ask.`}
+                  </span>
+                </button>
+              </li>
               {results.map((result, index) => (
                 <li key={result.item.href}>
                   <Link
@@ -231,7 +345,7 @@ export function SearchDialog({
                     }}
                     className={cx(
                       "flex flex-col gap-1 rounded-md px-4 py-3 transition-colors",
-                      index === selectedIndex
+                      index + 1 === selectedIndex
                         ? "bg-copper/10 text-foreground"
                         : "text-muted hover:bg-inset"
                     )}
@@ -251,13 +365,9 @@ export function SearchDialog({
                 </li>
               ))}
             </ul>
-          ) : query.trim() ? (
-            <div className="px-4 py-8 text-center text-sm text-muted">
-              No results for "{query}"
-            </div>
           ) : (
             <div className="px-4 py-8 text-center text-sm text-muted">
-              Start typing to search...
+              Search products, or ask: can you form 3/8 in S-hooks?
             </div>
           )}
         </div>

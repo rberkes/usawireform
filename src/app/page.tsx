@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AskBox } from "@/components/AskBox";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
 import { PricePromise } from "@/components/PricePromise";
@@ -66,6 +67,8 @@ export default function Home() {
             />
           </div>
         </div>
+
+        <AskBox />
 
         <StatRow
           className="mt-16"
