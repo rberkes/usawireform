@@ -8,6 +8,8 @@ export const metadata = pageMeta({
     "330 stainless (N08330) wire forming in the USA: heat-treat baskets and furnace fixtures from coil, 4–14 mm, cut-to-length, resistance weld and TIG. Not 304 with a bigger number.",
   path: "/330-stainless-wire-bending-usa-parts",
   keywords: [
+    "USA made heat treat baskets",
+    "USA made wire baskets",
     "330 stainless wire bending",
     "330 stainless USA",
     "heat treat wire baskets",
@@ -29,7 +31,7 @@ export default function Stainless330Page() {
     <DocPage
       kicker="330 · N08330"
       title="330 stainless wire bending, USA parts"
-      lede="Heat-treat wire baskets and furnace fixtures in 330 (N08330). Formed from coil in 4–14 mm — cut-to-length through 14 mm rod — then resistance weld or TIG. 304 is the wrong alloy for a furnace."
+      lede="USA made heat treat baskets and furnace fixtures in 330 (N08330). Formed from coil in 4–14 mm — cut-to-length through 14 mm rod — then resistance weld or TIG. 304 is the wrong alloy for a furnace."
       toc={toc}
     >
       <h2 id="why">Why we run 330</h2>
@@ -53,11 +55,11 @@ export default function Stainless330Page() {
         name inside radius, not “make it like the carbon version in stainless.”
       </p>
 
-      <h2 id="baskets">Heat-treat wire baskets</h2>
+      <h2 id="baskets">USA made heat treat baskets</h2>
       <p>
-        Two jobs share the words heat treat. We quote the product: the basket
-        that goes into someone else’s furnace. Stress-relieving a carbon form
-        after bend is a different line — see{" "}
+        Two jobs share the words heat treat. We quote the product: USA made
+        heat treat baskets that go into someone else’s furnace. Stress-relieving
+        a carbon form after bend is a different line — see{" "}
         <Link href="/processes/heat-treating">heat treating</Link>.
       </p>
       <p>
@@ -66,7 +68,7 @@ export default function Stainless330Page() {
         in. Infill can be lighter if the print allows. We form the members on
         the Robomac, then join. Typical product family:{" "}
         <Link href="/products/heavy-duty-wire-baskets">
-          heavy-duty wire baskets
+          USA made heat treat baskets
         </Link>
         .
       </p>

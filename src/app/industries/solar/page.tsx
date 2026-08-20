@@ -4,9 +4,12 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Solar Wire Forming",
-  description: "Wire forms for solar: tracker and rack parts, cable hangers, grounding, cable trays, and outdoor 304 or galvanized coil in 4–14 mm.",
+  description: "Solar wire forms: USA made cable trays, USA made ground staples, hangers, and outdoor 304 or galvanized coil in 4–14 mm.",
   path: '/industries/solar',
   keywords: [
+    "USA made cable trays",
+    "USA made ground staples",
+    "USA made ground samples",
     "solar",
     "solar wire forming",
     "4-14 mm wire",
@@ -20,7 +23,7 @@ export default function SolarPage() {
       <PageHero
         kicker="Industries"
         title="Solar"
-        lede="Array fields need outdoor coil: galvanized carbon or 300-series, formed and welded so cable and structure stay put for twenty years."
+        lede="USA made cable trays and USA made ground staples for array fields. Galvanized carbon or 300-series, formed and welded so cable and fabric stay put."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -44,14 +47,19 @@ export default function SolarPage() {
             on messenger or structure
           </li>
           <li>
-            <TextLink href="/products/cable-trays">Cable trays</TextLink>{" "}
+            <TextLink href="/products/cable-trays">USA made cable trays</TextLink>{" "}
             and management grids along the row
           </li>
           <li>
-            <TextLink href="/products/ground-staples">Ground staples</TextLink>{" "}
-            for fabric, cable, and erosion
+            <TextLink href="/products/ground-staples">USA made ground staples</TextLink>{" "}
+            (also searched as USA made ground samples) for fabric, cable, and erosion
           </li>
-          <li>Fence and equipment guards at the inverter pad</li>
+          <li>
+            <TextLink href="/products/security-mesh-fencing">
+              USA made security fencing
+            </TextLink>{" "}
+            and equipment guards at the inverter pad
+          </li>
         </ul>
       </Section>
       <StepQuoteBlock className="mt-16" title="Have a solar hanger, form, or staple?" />

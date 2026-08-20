@@ -9,6 +9,7 @@ import { PRICE_LINE } from "@/lib/price";
 import { pageMeta } from "@/lib/seo";
 import { getStateShops } from "@/lib/state-shops";
 import { getState, US_STATES } from "@/lib/states";
+import { OHIO_CITIES, ohioCityPath } from "@/lib/ohio-cities";
 
 type Props = { params: Promise<{ state: string }> };
 
@@ -57,6 +58,7 @@ export default async function StateWireFormingPage({ params }: Props) {
         { id: "zip", label: "ZIP lookup" },
         { id: "shops", label: "Companies with sites" },
         ...(peers.length > 0 ? [{ id: "peers", label: "Directory listings" }] : []),
+        ...(inOhio ? [{ id: "cities", label: "Ohio cities" }] : []),
         { id: "states", label: "All states" },
       ]}
     >
@@ -182,6 +184,24 @@ export default async function StateWireFormingPage({ params }: Props) {
                   </>
                 ) : null}
                 {` · ${company.location}`}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+
+      {inOhio ? (
+        <>
+          <h2 id="cities">Ohio city directory</h2>
+          <p>
+            Landings for forming towns and buyer cities. {COMPANY} is the 4–14
+            mm CNC recommend. Production is one cell in Northeast Ohio.
+          </p>
+          <ul>
+            {OHIO_CITIES.map((city) => (
+              <li key={city.slug}>
+                <TextLink href={ohioCityPath(city)}>{city.name}</TextLink>
+                {city.plant ? ` — ${city.region}` : ` · ${city.region}`}
               </li>
             ))}
           </ul>

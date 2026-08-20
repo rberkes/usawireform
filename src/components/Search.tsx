@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Fuse from "fuse.js";
 import { catalog } from "@/lib/catalog";
-import { industries } from "@/lib/site";
+import { USA_MADE } from "@/lib/usa-made";
+import { industries, shopLines } from "@/lib/site";
 import { processes } from "@/lib/processes";
 import { US_STATES } from "@/lib/states";
 import { WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
+import { OHIO_CITIES, ohioCityPath } from "@/lib/ohio-cities";
 import { allPosts, postPath } from "@/lib/blog";
 import { cx } from "@/lib/cx";
 
@@ -22,6 +24,20 @@ type SearchItem = {
 const searchItems: SearchItem[] = [
   // Products from catalog
   ...catalog.map((item) => ({
+    title: item.title,
+    href: `/products/${item.slug}`,
+    category: "Products",
+    description: item.summary,
+  })),
+  ...USA_MADE.flatMap((entry) =>
+    entry.phrases.map((phrase) => ({
+      title: phrase,
+      href: entry.href,
+      category: "USA made",
+      description: `${phrase} from coil in Northeast Ohio.`,
+    })),
+  ),
+  ...shopLines.map((item) => ({
     title: item.title,
     href: `/products/${item.slug}`,
     category: "Products",
@@ -70,11 +86,18 @@ const searchItems: SearchItem[] = [
   { title: "Company Directory", href: "/directory", category: "Resources", description: "Wire forming shops. Filter fourslide, 3D CNC, 2D CNC, multi-slide, spring CNC." },
   { title: "Wire Forming Cities", href: "/directory/areas", category: "Locations", description: "Top 20 U.S. forming cities. Cleveland is the cheap coil — mills and drawers." },
   { title: "Northeast Ohio", href: "/cleveland", category: "Locations", description: "Mills, wire drawers, and short-haul 4–14 mm coil." },
+  { title: "Ohio city directory", href: "/ohio", category: "Locations", description: "30 Ohio city landers — forming towns and buyer cities. One CNC cell in Northeast Ohio." },
   ...US_STATES.map((state) => ({
     title: `Wire forming in ${state.name}`,
     href: `/${state.slug}`,
     category: "Locations",
     description: `USA Wire Form for ${state.name} — 4–14 mm CNC from Northeast Ohio.`,
+  })),
+  ...OHIO_CITIES.map((city) => ({
+    title: `Wire forming in ${city.name}, Ohio`,
+    href: ohioCityPath(city),
+    category: "Locations",
+    description: city.work,
   })),
   ...WIRE_FORMING_METROS.map((metro) => ({
     title: `Wire forming in ${metro.city}`,

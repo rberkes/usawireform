@@ -4,9 +4,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Marine Wire Forming",
-  description: "Marine wire forming in 3/8, 7/16, and 1/2 in: 304 and 316 frames, baskets, and guards for wet service — not a marine-cert catalog.",
+  description: "Marine wire: 304 and 316 frames, USA made wire baskets, USA made D-rings, and guards for wet service — not a marine-cert catalog.",
   path: '/industries/marine',
   keywords: [
+    "USA made wire baskets",
+    "USA made D-rings",
     "marine",
     "marine wire forming",
     "4-14 mm wire",
@@ -20,7 +22,7 @@ export default function MarinePage() {
       <PageHero
         kicker="Industries"
         title="Marine"
-        lede="Wet service in 4–14 mm. 304 and 316 frames, baskets, and guards. Coil and finish named — we do not invent a class certificate."
+        lede="Wet service in 4–14 mm. 304 and 316 frames, USA made wire baskets, USA made D-rings, and guards. Coil and finish named — we do not invent a class certificate."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -45,17 +47,17 @@ export default function MarinePage() {
           </li>
           <li>
             <TextLink href="/products/heavy-duty-wire-baskets">
-              Washdown wire baskets
+              USA made wire baskets
             </TextLink>{" "}
             and{" "}
-            <TextLink href="/products/wire-racks">racks</TextLink>
+            <TextLink href="/products/wire-racks">USA made wire racks</TextLink>
           </li>
           <li>
             <TextLink href="/products/machine-guards">Guards</TextLink> and{" "}
             <TextLink href="/products/mesh-grids">mesh grids</TextLink>
           </li>
           <li>
-            <TextLink href="/products/d-rings">D-rings</TextLink>,{" "}
+            <TextLink href="/products/d-rings">USA made D-rings</TextLink>,{" "}
             <TextLink href="/products/s-hooks">S-hooks</TextLink>, and{" "}
             <TextLink href="/products/connecting-links">
               connecting links

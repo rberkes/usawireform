@@ -4,9 +4,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Architectural Wire Forming",
-  description: "Architectural wire forming in 3/8, 7/16, and 1/2 in: screens, security mesh, trellis, and frames — not ornamental 9-gauge.",
+  description: "USA made security fencing, USA made wire stakes, screens, and frames in 3/8, 7/16, and 1/2 in — not ornamental 9-gauge.",
   path: '/industries/architectural',
   keywords: [
+    "USA made security fencing",
+    "USA made wire stakes",
     "architectural",
     "architectural wire forming",
     "4-14 mm wire",
@@ -20,7 +22,7 @@ export default function ArchitecturalPage() {
       <PageHero
         kicker="Industries"
         title="Architectural"
-        lede="Building infill and outdoor structure in 4–14 mm. Screens, mesh, trellis, and frames — not a 9-gauge railing catalog."
+        lede="USA made security fencing, USA made wire stakes, screens, and frames in 4–14 mm — not a 9-gauge railing catalog."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -40,7 +42,7 @@ export default function ArchitecturalPage() {
         <ul className="mt-6 max-w-2xl list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
           <li>
             <TextLink href="/products/security-mesh-fencing">
-              Security mesh
+              USA made security fencing
             </TextLink>{" "}
             and{" "}
             <TextLink href="/products/partition-grids">
@@ -50,8 +52,9 @@ export default function ArchitecturalPage() {
           </li>
           <li>
             <TextLink href="/products/trellis-systems">
-              Trellis and growing structures
-            </TextLink>
+              USA made wire stakes
+            </TextLink>{" "}
+            and trellis frames
           </li>
           <li>
             <TextLink href="/products/wire-frames">Frames</TextLink>,{" "}

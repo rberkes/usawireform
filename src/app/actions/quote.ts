@@ -35,9 +35,40 @@ export type QuickQuoteFormData = {
   targetPrice: string;
   timeline: string;
   quality: string;
+  source?: string;
   fileName?: string;
   fileSize?: number;
 };
+
+function blobConfigured() {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+}
+
+function emailConfigured() {
+  return Boolean(resend && process.env.RESEND_FROM_EMAIL);
+}
+
+async function storeDrawing(prefix: string, file: File) {
+  const ext = file.name.split(".").pop() || "bin";
+  const blob = await put(`${prefix}/${Date.now()}.${ext}`, file, {
+    access: "public",
+    addRandomSuffix: true,
+  });
+  return blob.url;
+}
+
+async function storeLeadRecord(prefix: string, payload: Record<string, unknown>) {
+  const blob = await put(
+    `${prefix}/${Date.now()}.json`,
+    JSON.stringify(payload),
+    {
+      access: "private",
+      addRandomSuffix: true,
+      contentType: "application/json",
+    },
+  );
+  return blob.url;
+}
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -104,28 +135,36 @@ export async function submitContactForm(
     };
   }
 
-  // Upload drawing to Vercel Blob if configured
   let drawingUrl: string | undefined;
-  if (file && file.size > 0 && process.env.BLOB_READ_WRITE_TOKEN) {
+  let recordUrl: string | undefined;
+  let stored = false;
+  let emailed = false;
+
+  if (file && file.size > 0 && blobConfigured()) {
     try {
-      const timestamp = Date.now();
       const safeCompany = data.company.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
-      const ext = file.name.split(".").pop();
-      const blobFilename = `quotes/${safeCompany}_${timestamp}.${ext}`;
-      
-      const blob = await put(blobFilename, file, {
-        access: "public",
-        addRandomSuffix: false,
-      });
-      
-      drawingUrl = blob.url;
+      drawingUrl = await storeDrawing(`quotes/${safeCompany}`, file);
+      stored = true;
     } catch (error) {
       console.error("[Drawing Upload Error]", error);
     }
   }
 
-  // Send notification email if Resend configured
-  if (resend && process.env.RESEND_FROM_EMAIL) {
+  if (blobConfigured()) {
+    try {
+      recordUrl = await storeLeadRecord("leads/contact", {
+        kind: "contact",
+        ...data,
+        drawingUrl,
+        timestamp: new Date().toISOString(),
+      });
+      stored = true;
+    } catch (error) {
+      console.error("[Lead Store Error]", error);
+    }
+  }
+
+  if (emailConfigured() && resend && process.env.RESEND_FROM_EMAIL) {
     try {
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL,
@@ -158,18 +197,28 @@ export async function submitContactForm(
           <p><small>Submitted at ${new Date().toISOString()}</small></p>
         `,
       });
+      emailed = true;
     } catch (error) {
       console.error("[Email Send Error]", error);
     }
   }
 
-  // Always log for debugging
   console.log("[Quote Request]", {
     ...data,
     drawingUrl,
+    recordUrl,
+    stored,
+    emailed,
     timestamp: new Date().toISOString(),
     recipient: QUOTE_EMAIL,
   });
+
+  if (!stored && !emailed) {
+    return {
+      success: false,
+      message: `The drawing did not store. Email ${data.fileName} to ${QUOTE_EMAIL}.`,
+    };
+  }
 
   return {
     success: true,
@@ -187,6 +236,7 @@ export async function submitQuickQuote(
     targetPrice: String(formData.get("targetPrice") ?? "").trim(),
     timeline: String(formData.get("timeline") ?? "").trim(),
     quality: String(formData.get("quality") ?? "").trim(),
+    source: String(formData.get("source") ?? "").trim() || undefined,
   };
 
   const file = formData.get("drawing") as File | null;
@@ -215,35 +265,44 @@ export async function submitQuickQuote(
     };
   }
 
-  // Upload drawing to Vercel Blob if configured
   let drawingUrl: string | undefined;
-  if (file && file.size > 0 && process.env.BLOB_READ_WRITE_TOKEN) {
+  let recordUrl: string | undefined;
+  let stored = false;
+  let emailed = false;
+
+  if (file && file.size > 0 && blobConfigured()) {
     try {
-      const timestamp = Date.now();
-      const ext = file.name.split(".").pop();
-      const blobFilename = `quick-quotes/${timestamp}.${ext}`;
-      
-      const blob = await put(blobFilename, file, {
-        access: "public",
-        addRandomSuffix: false,
-      });
-      
-      drawingUrl = blob.url;
+      drawingUrl = await storeDrawing("quick-quotes", file);
+      stored = true;
     } catch (error) {
       console.error("[Drawing Upload Error]", error);
     }
   }
 
-  // Send notification email if Resend configured
-  if (resend && process.env.RESEND_FROM_EMAIL) {
+  if (blobConfigured()) {
+    try {
+      recordUrl = await storeLeadRecord("leads/quick", {
+        kind: "quick",
+        ...data,
+        drawingUrl,
+        timestamp: new Date().toISOString(),
+      });
+      stored = true;
+    } catch (error) {
+      console.error("[Lead Store Error]", error);
+    }
+  }
+
+  if (emailConfigured() && resend && process.env.RESEND_FROM_EMAIL) {
     try {
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL,
         to: LEADS_NOTIFY_EMAIL,
         replyTo: data.email,
-        subject: `Quick Quote: ${data.timeline} - ${data.quality}`,
+        subject: `Quick Quote${data.source ? ` (${data.source})` : ""}: ${data.timeline} - ${data.quality}`,
         html: `
           <h2>Quick Quote Request</h2>
+          <p><strong>Page:</strong> ${data.source || "unknown"}</p>
           <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
           <p><strong>LinkedIn:</strong> <a href="${data.linkedin}">${data.linkedin}</a></p>
           <hr />
@@ -260,6 +319,7 @@ export async function submitQuickQuote(
           <p><small>Submitted at ${new Date().toISOString()}</small></p>
         `,
       });
+      emailed = true;
     } catch (error) {
       console.error("[Email Send Error]", error);
     }
@@ -268,9 +328,19 @@ export async function submitQuickQuote(
   console.log("[Quick Quote]", {
     ...data,
     drawingUrl,
+    recordUrl,
+    stored,
+    emailed,
     timestamp: new Date().toISOString(),
     recipient: QUOTE_EMAIL,
   });
+
+  if (!stored && !emailed) {
+    return {
+      success: false,
+      message: `The drawing did not store. Email ${data.fileName} to ${QUOTE_EMAIL}.`,
+    };
+  }
 
   return {
     success: true,

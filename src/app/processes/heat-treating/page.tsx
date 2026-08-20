@@ -5,9 +5,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Heat Treating Wire Forms",
-  description: "Heat treating of 4–14 mm wire forms: stress relief after bend and weld, vs heat-treat wire baskets as a product made from high-temp wire.",
+  description: "Heat treating of 4–14 mm wire forms, vs USA made heat treat baskets as a product from 330 coil.",
   path: '/processes/heat-treating',
   keywords: [
+    "USA made heat treat baskets",
+    "USA made wire baskets",
     "heat treating",
     "wire forming process",
     "4-14 mm",
@@ -28,7 +30,7 @@ export default function HeatTreatingPage() {
     <DocPage
       kicker="Process"
       title="Heat treating"
-      lede="Two jobs share this name: stress-relieving a bent wire, and building the wire baskets that go into someone else’s furnace. This site quotes the second as a product. The first is specified when the alloy and the weld demand it."
+      lede="Two jobs share this name: stress-relieving a bent wire, and USA made heat treat baskets that go into someone else’s furnace. This site quotes the second as a product. The first is specified when the alloy and the weld demand it."
       toc={toc}
     >
       <h2 id="two">Two different things</h2>
@@ -39,7 +41,7 @@ export default function HeatTreatingPage() {
         does not walk in service or crack at a cold-worked radius.
       </p>
       <p>
-        <strong>Heat-treat wire baskets and rod frames</strong> — wire products
+        <strong>USA made heat treat baskets and rod frames</strong> — wire products
         that live in a furnace. Material is the process: 330 stainless,
         Inconel, and other high-temp alloys, usually in the upper half of{" "}
         <Link href="/processes/heavy-wire-forming">4–14 mm</Link>, often
@@ -69,16 +71,16 @@ export default function HeatTreatingPage() {
         work unless the spec is explicit.
       </p>
 
-      <h2 id="baskets">Wire baskets, fixtures, and furnace wire</h2>
+      <h2 id="baskets">USA made heat treat baskets</h2>
       <p>
-        Heat-treat wire baskets are a product of their own: diameter, alloy,
+        USA made heat treat baskets are a product of their own: diameter, alloy,
         weld, and whether the grid has to survive 1800 °F without sagging.
         Carbon steel is the wrong answer. 330 and nickel alloys are the
         usual right ones. Design rules still apply —{" "}
         <Link href="/guide/design-for-wire-forming">radii and legs</Link>{" "}
         — but the material cert is the first page of the quote. See{" "}
         <Link href="/products/heavy-duty-wire-baskets">
-          heavy-duty wire baskets
+          USA made heat treat baskets
         </Link>
         .
       </p>
@@ -113,7 +115,14 @@ export default function HeatTreatingPage() {
           <Link href="/processes/mig-tig-assembly">MIG / TIG assembly</Link>
         </li>
         <li>
-          <Link href="/processes/heavy-wire-forming">Heavy wire, 4–14 mm</Link>
+          <Link href="/products/heavy-duty-wire-baskets">
+            USA made heat treat baskets
+          </Link>
+        </li>
+        <li>
+          <Link href="/330-stainless-wire-bending-usa-parts">
+            330 stainless USA parts
+          </Link>
         </li>
       </ul>
 

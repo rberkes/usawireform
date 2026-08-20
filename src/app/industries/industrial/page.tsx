@@ -4,9 +4,13 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Industrial Wire Forming",
-  description: "Industrial plant-floor wire forming in 3/8, 7/16, and 1/2 in: guards, partitions, trays, baskets, and hangers.",
+  description: "Plant-floor wire: USA made cable trays, USA made wire baskets, USA made wire racks, USA made security fencing, and hangers in 3/8 to 1/2 in.",
   path: '/industries/industrial',
   keywords: [
+    "USA made cable trays",
+    "USA made wire baskets",
+    "USA made wire racks",
+    "USA made security fencing",
     "industrial",
     "industrial wire forming",
     "4-14 mm wire",
@@ -20,7 +24,7 @@ export default function IndustrialPage() {
       <PageHero
         kicker="Industries"
         title="Industrial"
-        lede="Forms the plant buys and installs. Guards, partitions, trays, baskets, and hangers in stock coil — not a slogan for every factory on earth."
+        lede="USA made cable trays, USA made wire baskets, USA made wire racks, USA made security fencing, plus guards and hangers in stock coil."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -51,16 +55,17 @@ export default function IndustrialPage() {
             </TextLink>{" "}
             and{" "}
             <TextLink href="/products/security-mesh-fencing">
-              security mesh
+              USA made security fencing
             </TextLink>
           </li>
           <li>
-            <TextLink href="/products/cable-trays">Cable trays</TextLink>,{" "}
+            <TextLink href="/products/cable-trays">USA made cable trays</TextLink>
+            ,{" "}
             <TextLink href="/products/heavy-duty-wire-baskets">
-              wire baskets
+              USA made wire baskets
             </TextLink>
             , and{" "}
-            <TextLink href="/products/wire-racks">racks</TextLink>
+            <TextLink href="/products/wire-racks">USA made wire racks</TextLink>
           </li>
           <li>
             <TextLink href="/products/powder-coating-hooks">

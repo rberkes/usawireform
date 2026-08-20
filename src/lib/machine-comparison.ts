@@ -30,7 +30,7 @@ export const COMPARE_JOBS: {
     id: "heavy3d",
     label: "Heavy 3D forming",
     short: "Heavy 3D",
-    maxSize: "to 14–16 mm",
+    maxSize: "to 12–14 mm",
     lede:
       "Spatial bends in 8–14 mm (and the 4–14 mm production band). Frames, basket rims, guards. Head orbits the wire.",
   },

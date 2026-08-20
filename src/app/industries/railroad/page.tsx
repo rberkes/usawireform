@@ -4,9 +4,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Railroad Wire Forming",
-  description: "Railroad yard and shop wire forming in 7/16 and 1/2 in: guards, hangers, partitions, and baskets — not a light clip cell.",
+  description: "Railroad yard and shop wire: 7/16 and 1/2 in guards, USA made security fencing, USA made wire baskets — not a light clip cell.",
   path: '/industries/railroad',
   keywords: [
+    "USA made security fencing",
+    "USA made wire baskets",
     "railroad",
     "railroad wire forming",
     "4-14 mm wire",
@@ -20,7 +22,7 @@ export default function RailroadPage() {
       <PageHero
         kicker="Industries"
         title="Railroad"
-        lede="Yards and shops in 7/16 and 1/2 in. Guards, hangers, partitions, and baskets. We form the geometry — not an AAR stamp."
+        lede="Yards and shops in 7/16 and 1/2 in. Guards, hangers, USA made security fencing, USA made wire baskets. We form the geometry — not an AAR stamp."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -48,7 +50,7 @@ export default function RailroadPage() {
             </TextLink>{" "}
             and{" "}
             <TextLink href="/products/security-mesh-fencing">
-              security mesh
+              USA made security fencing
             </TextLink>
           </li>
           <li>
@@ -57,7 +59,7 @@ export default function RailroadPage() {
           </li>
           <li>
             <TextLink href="/products/heavy-duty-wire-baskets">
-              Heavy-duty wire baskets
+              USA made wire baskets
             </TextLink>
           </li>
         </ul>

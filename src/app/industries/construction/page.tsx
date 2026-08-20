@@ -4,9 +4,12 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Construction Wire Forming",
-  description: "Construction wire forming in 3/8, 7/16, and 1/2 in: rebar supports, lifting U-anchors, brackets, hooks, and jobsite grids — not 9-gauge masonry clips.",
+  description: "Construction wire forming: USA made D-rings, USA made ground staples, USA made security fencing, rebar supports, and jobsite grids in 3/8, 7/16, and 1/2 in.",
   path: '/industries/construction',
   keywords: [
+    "USA made D-rings",
+    "USA made ground staples",
+    "USA made security fencing",
     "construction",
     "construction wire forming",
     "4-14 mm wire",
@@ -20,7 +23,7 @@ export default function ConstructionPage() {
       <PageHero
         kicker="Industries"
         title="Construction"
-        lede="Jobsite forms in 4–14 mm: supports, brackets, hooks, hangers, and grids that take load. Not a light masonry-clip cell."
+        lede="USA made D-rings, USA made ground staples, USA made security fencing, plus supports and hangers in 4–14 mm. Not a light masonry-clip cell."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -52,7 +55,7 @@ export default function ConstructionPage() {
           </li>
           <li>
             <TextLink href="/products/s-hooks">S-hooks</TextLink>,{" "}
-            <TextLink href="/products/d-rings">D-rings</TextLink>, and{" "}
+            <TextLink href="/products/d-rings">USA made D-rings</TextLink>, and{" "}
             <TextLink href="/products/connecting-links">
               connecting links
             </TextLink>
@@ -63,8 +66,8 @@ export default function ConstructionPage() {
             <TextLink href="/products/cable-hangers">cable hangers</TextLink>
           </li>
           <li>
-            <TextLink href="/products/ground-staples">Ground staples</TextLink>{" "}
-            for fabric, cable, and site erosion
+            <TextLink href="/products/ground-staples">USA made ground staples</TextLink>{" "}
+            (also searched as USA made ground samples) for fabric, cable, and site erosion
           </li>
           <li>
             <TextLink href="/products/machine-guards">Guards</TextLink>,{" "}
@@ -73,7 +76,7 @@ export default function ConstructionPage() {
             </TextLink>
             , and{" "}
             <TextLink href="/products/security-mesh-fencing">
-              security mesh fencing
+              USA made security fencing
             </TextLink>
           </li>
         </ul>

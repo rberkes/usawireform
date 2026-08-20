@@ -5,9 +5,12 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Mesh Wire Grids and Cable Trays",
-  description: "Secondary operations for 4–14 mm mesh wire grids and cable trays: resistance welding, MIG, and TIG — rims, intersections, mounts, and splices.",
+  description: "USA made cable trays and welded mesh grids in 4–14 mm: resistance welding, MIG, and TIG — rims, intersections, mounts, and splices.",
   path: '/processes/mesh-grids-and-cable-trays',
   keywords: [
+    "USA made cable trays",
+    "USA made security fencing",
+    "USA made wire baskets",
     "mesh grids and cable trays",
     "wire forming process",
     "4-14 mm",
@@ -30,7 +33,7 @@ export default function MeshGridsCableTraysPage() {
     <DocPage
       kicker="Secondary"
       title="Mesh grids and cable trays"
-      lede="Welded wire mesh, machine-guard grids, and cable trays. The form is cut and bent first. The job is the joint: resistance weld on the intersections, MIG or TIG on rims, mounts, and splices."
+      lede="USA made cable trays, USA made wire baskets, USA made security fencing, and welded mesh grids. The form is cut and bent first. The job is the joint: resistance weld on the intersections, MIG or TIG on rims, mounts, and splices."
       toc={toc}
     >
       <h2 id="what">What this page is</h2>
@@ -88,9 +91,9 @@ export default function MeshGridsCableTraysPage() {
         <Link href="/wire-mesh">wire mesh</Link>.
       </p>
 
-      <h2 id="trays">Cable trays</h2>
+      <h2 id="trays">USA made cable trays</h2>
       <p>
-        Wire cable trays are a U-shaped grid: bottom mesh, two sidewalls,
+        USA made cable trays are a U-shaped grid: bottom mesh, two sidewalls,
         often a folded lip, plus splices and hangers. The industry
         pattern is resistance-welded intersections along the length,
         then formed into the channel. Mounts, dropouts, and covers are
@@ -203,17 +206,17 @@ export default function MeshGridsCableTraysPage() {
           count, welded vs woven
         </li>
         <li>
-          <Link href="/products/cable-trays">Cable trays</Link> ·{" "}
+          <Link href="/products/cable-trays">USA made cable trays</Link> ·{" "}
           <Link href="/products/heavy-duty-wire-baskets">
-            Heavy-duty wire baskets
+            USA made wire baskets
           </Link>{" "}
           ·{" "}
           <Link href="/products/security-mesh-fencing">
-            Security mesh fencing
+            USA made security fencing
           </Link>{" "}
           ·{" "}
           <Link href="/products/trellis-systems">
-            Trellis and growing structures
+            USA made wire stakes
           </Link>
         </li>
         <li>

@@ -4,9 +4,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Interior Design Wire Forming",
-  description: "Interior design wire forming in 3/8, 7/16, and 1/2 in: furniture frames, racks, and display wire — not a decorator catalog.",
+  description: "Interior wire: USA made wire racks, USA made wire baskets, furniture frames, and display wire in 3/8, 7/16, and 1/2 in — not a decorator catalog.",
   path: '/industries/interior-design',
   keywords: [
+    "USA made wire racks",
+    "USA made wire baskets",
     "interior design",
     "interior design wire forming",
     "4-14 mm wire",
@@ -20,7 +22,7 @@ export default function InteriorDesignPage() {
       <PageHero
         kicker="Industries"
         title="Interior design"
-        lede="Furniture frames, racks, and display wire in stock coil. The furniture line and contract interiors — not a 9-gauge decorator catalog."
+        lede="Furniture frames, USA made wire racks, USA made wire baskets, and display wire in stock coil. The furniture line and contract interiors — not a 9-gauge decorator catalog."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -43,7 +45,7 @@ export default function InteriorDesignPage() {
             frames, chairs, and tables
           </li>
           <li>
-            <TextLink href="/products/wire-racks">Racks</TextLink>,{" "}
+            <TextLink href="/products/wire-racks">USA made wire racks</TextLink>,{" "}
             <TextLink href="/products/wire-shelves">shelves</TextLink>, and{" "}
             <TextLink href="/products/display-hooks">display hooks</TextLink>
           </li>
@@ -54,7 +56,7 @@ export default function InteriorDesignPage() {
           <li>
             <TextLink href="/products/wire-carts">Carts</TextLink> and{" "}
             <TextLink href="/products/heavy-duty-wire-baskets">
-              wire baskets
+              USA made wire baskets
             </TextLink>
           </li>
         </ul>

@@ -3,11 +3,13 @@ import { DocPage, QuoteBand } from "@/components/DocPage";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Stainless Steel Wire Basket",
+  title: "USA made wire baskets — Stainless Steel",
   description:
-    "Stainless steel wire baskets from coil: 304 / 316 for wet service, 330 for heat-treat. 4–14 mm CNC, resistance weld or TIG. USA production.",
+    "USA made wire baskets in stainless: 304 / 316 for wet service. USA made heat treat baskets in 330. 4–14 mm CNC, resistance weld or TIG. Northeast Ohio.",
   path: "/stainless-steel-wire-basket",
   keywords: [
+    "USA made wire baskets",
+    "USA made heat treat baskets",
     "stainless steel wire basket",
     "330 wire basket",
     "304 wire basket",
@@ -19,8 +21,8 @@ export default function StainlessBasketPage() {
   return (
     <DocPage
       kicker="Baskets"
-      title="Stainless steel wire basket"
-      lede="A stainless basket is the alloy plus the weld. 304/316 for washdown. 330 for the furnace. Formed from coil in 4–14 mm, then resistance weld or TIG — not a chrome-plated carbon grid."
+      title="USA made wire baskets, stainless"
+      lede="USA made wire baskets are the alloy plus the weld. 304/316 for washdown. USA made heat treat baskets in 330 for the furnace. Formed from coil in 4–14 mm, then resistance weld or TIG — not a chrome-plated carbon grid."
       toc={[
         { id: "grade", label: "Pick the grade" },
         { id: "make", label: "How it is made" },
@@ -41,13 +43,13 @@ export default function StainlessBasketPage() {
 
       <h2 id="make">From coil, then weld</h2>
       <p>
-        Members are CNC-formed. Intersections are{" "}
+        USA made wire baskets start as CNC-formed members. Intersections are{" "}
         <Link href="/processes/resistance-welding">resistance welded</Link>{" "}
         when the alloy allows. 330 and some 300-series joints go to{" "}
         <Link href="/processes/mig-tig-assembly">TIG</Link>. Rims, handles,
         stacking frames — same cell. Product family:{" "}
         <Link href="/products/heavy-duty-wire-baskets">
-          heavy-duty wire baskets
+          USA made wire baskets
         </Link>
         .
       </p>

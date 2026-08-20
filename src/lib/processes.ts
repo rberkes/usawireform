@@ -93,7 +93,7 @@ export const processes: Process[] = [
     slug: "heat-treating",
     title: "Heat treating",
     summary:
-      "Stress relief of the form, and why heat-treat wire baskets are a product — not the same as running a furnace on every job.",
+      "Stress relief of the form, vs USA made heat treat baskets as a product — not the same as running a furnace on every job.",
     category: "secondary",
     weRun: false,
     published: true,
@@ -138,7 +138,7 @@ export const processes: Process[] = [
     slug: "mesh-grids-and-cable-trays",
     title: "Mesh grids and cable trays",
     summary:
-      "Welded wire mesh, guard grids, and cable trays — resistance, MIG, and TIG after the form.",
+      "USA made cable trays, USA made wire baskets, USA made security fencing, and welded mesh — resistance, MIG, and TIG after the form.",
     category: "joining",
     weRun: true,
     published: true,

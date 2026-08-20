@@ -1,9 +1,16 @@
 "use client";
 
-import { FormEvent, useId, useRef, useState } from "react";
+import { useActionState, useId, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { submitQuickQuote, type QuoteFormState } from "@/app/actions/quote";
 import { WIRE } from "@/lib/range";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
+
+const quoteInitialState: QuoteFormState = {
+  success: false,
+  message: "",
+};
 
 const ACCEPT_EXT = [
   "step",
@@ -265,56 +272,28 @@ export function StepQuoteBlock({
   title?: string;
   className?: string;
 }) {
+  const pathname = usePathname();
+  const [state, formAction, isPending] = useActionState(
+    submitQuickQuote,
+    quoteInitialState,
+  );
   const [file, setFile] = useState<File | null>(null);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const email = String(data.get("email") ?? "");
-    const linkedin = String(data.get("linkedin") ?? "");
-    const needs = ["targetPrice", "timeline", "quality"].every((name) =>
-      String(data.get(name) ?? "").trim(),
-    );
-    if (!file || !email || !isLinkedInUrl(linkedin) || !needs) {
-      setError(
-        "All fields are required — drawing, email, LinkedIn, target price, timeline, and quality standard.",
-      );
-      return;
-    }
-    setError(null);
-    setSent(true);
-  }
-
-  if (sent) {
+  if (state.success) {
     return (
       <Panel className={`quote-block ${className}`}>
         <Kicker>Received</Kicker>
         <h2 className="mt-3 text-xl tracking-tight">We’ll open the file.</h2>
         <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-          {file ? (
-            <>
-              {file.name} is on the request. A quote follows if the diameter is
-              in {WIRE.short}.
-            </>
-          ) : (
-            <>
-              If you still have a drawing, email it to{" "}
-              <a className="text-copper" href={`mailto:${QUOTE_EMAIL}`}>
-                {QUOTE_EMAIL}
-              </a>
-              .
-            </>
-          )}
+          {state.message}
         </p>
       </Panel>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className={className}>
+    <form action={formAction} className={className}>
+      <input type="hidden" name="source" value={pathname} />
       <Panel className="quote-block">
         <h2 className="text-xl tracking-tight">{title}</h2>
         <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
@@ -325,8 +304,14 @@ export function StepQuoteBlock({
           All fields required — drawing, email, LinkedIn, target price,
           timeline, and quality standard.
         </p>
+        {state.message && !state.success ? (
+          <p className="mt-3 text-sm text-copper">{state.message}</p>
+        ) : null}
         <div className="mt-5">
           <StepUpload file={file} onChange={setFile} required />
+          {state.errors?.drawing ? (
+            <p className="mt-2 text-xs text-copper">{state.errors.drawing}</p>
+          ) : null}
         </div>
         <div className="mt-4">
           <QuoteNeedFields />
@@ -341,15 +326,13 @@ export function StepQuoteBlock({
               required
               autoComplete="email"
               placeholder="Email (required)"
+              aria-invalid={!!state.errors?.email}
             />
           </label>
           <LinkedInField />
         </div>
-        {error ? (
-          <p className="mt-2 text-xs text-copper">{error}</p>
-        ) : null}
-        <Button type="submit" className="mt-4">
-          Send drawing
+        <Button type="submit" className="mt-4" disabled={isPending}>
+          {isPending ? "Sending..." : "Send drawing"}
         </Button>
       </Panel>
     </form>

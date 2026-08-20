@@ -62,6 +62,11 @@ const nextConfig: NextConfig = {
         destination: "/directory/areas",
         permanent: true,
       },
+      {
+        source: "/products/duggage-inserts",
+        destination: "/products/dunnage-inserts",
+        permanent: true,
+      },
     ];
   },
 };

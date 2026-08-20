@@ -137,16 +137,63 @@ export const DIRECTORY_IRON: Record<string, IronNote> = {
     machines: ["Bihler GRM-NC", "RM-NC", "4Slide-NC", "GRM 80"],
     source: "https://bihler.com/",
   },
+  "apex-wire-products": {
+    classes: ["2d-cnc", "3d-cnc"],
+    machines: ["2D CNC wire forming", "3D CNC wire forming"],
+    source: "https://www.apexwireproducts.com/cnc-wire-forming-services/",
+  },
+  "progress-wire-products": {
+    classes: ["2d-cnc", "3d-cnc"],
+    machines: [
+      "Two-dimensional CNC wire forming",
+      "Three-dimensional CNC wire forming",
+    ],
+    source: "http://www.progresswire.com/capabilities.html",
+  },
+  "tusco-manufacturing": {
+    classes: ["3d-cnc"],
+    machines: ["AIM AFM3D1-TUF 3D CNC wire former"],
+    source: "https://www.tuscomfg.com/capabilities/wire-forming/",
+  },
+  "oregon-wire": {
+    classes: ["3d-cnc"],
+    machines: ["3D CNC wire forming"],
+    source: "https://www.oregonwire.co/what-is-wire-forming/",
+  },
 };
 
 const CLASS_RE: Record<IronClass, RegExp> = {
-  "3d-cnc": /\b3[\s-]?d\s*cnc|\brobomac\b|\bnumalliance\b/i,
-  "2d-cnc": /\b2[\s-]?d\s*cnc/i,
+  "3d-cnc":
+    /\b3[\s-]?d\s*cnc|\bthree[\s-]?dimensional(?:\s+and\s+two[\s-]?dimensional)?\s+cnc|\brobomac\b|\bnumalliance\b|\bafm[\s-]?3d|\bftx\d/i,
+  "2d-cnc":
+    /\b2[\s-]?d\s*cnc|\btwo[\s-]?dimensional(?:\s+and\s+three[\s-]?dimensional)?\s+cnc/i,
   cnc: /\bcnc\b/,
   fourslide: /four[\s-]?slide|4[\s-]?slide/i,
   "multi-slide": /multi[\s-]?slide|verti[\s-]?slide|\bbihler\b/i,
   "spring-cnc": /\bwafios\b|\bitaya\b|simplex rapid|spring cnc|\bcoiler\b|cnc coil/i,
 };
+
+/** Shops that say CNC and 3D forming, without the exact “3D CNC” phrase. */
+function infers3dCnc(text: string) {
+  if (!/\bcnc\b/i.test(text)) return false;
+  if (
+    /\b3[\s-]?d\s+(?:wire\s+)?(?:forming|bending|former|bender|forms|parts)\b/i.test(
+      text,
+    )
+  ) {
+    return true;
+  }
+  if (/\b2[\s-]?d\s+and\s+3[\s-]?d\b/i.test(text)) return true;
+  return /\bthree[\s-]?dimensional\b/i.test(text);
+}
+
+function infers2dCnc(text: string) {
+  if (!/\bcnc\b/i.test(text)) return false;
+  if (/\b2[\s-]?d\s+(?:wire\s+)?(?:forming|bending|former|bender|forms|parts)\b/i.test(text)) {
+    return true;
+  }
+  return /\b2[\s-]?d\s+and\s+3[\s-]?d\b/i.test(text);
+}
 
 export function applyDirectoryIron(
   company: DirectoryCompany,
@@ -175,9 +222,12 @@ export function companyIronClasses(company: DirectoryCompany): IronClass[] {
     company.description,
     ...(company.machines ?? []),
   ].join(" ");
-  return IRON_FILTERS.map((filter) => filter.id).filter((id) =>
+  const classes = IRON_FILTERS.map((filter) => filter.id).filter((id) =>
     CLASS_RE[id].test(text),
   );
+  if (!classes.includes("3d-cnc") && infers3dCnc(text)) classes.push("3d-cnc");
+  if (!classes.includes("2d-cnc") && infers2dCnc(text)) classes.push("2d-cnc");
+  return classes;
 }
 
 export function companyHasIron(company: DirectoryCompany, id: IronClass) {

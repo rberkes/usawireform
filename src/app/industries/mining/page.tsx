@@ -4,9 +4,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Mining Wire Forming",
-  description: "Heavy wire forming for mining: 7/16 and 1/2 in guards, grids, cable trays, J-hooks, and wire baskets for harsh service.",
+  description: "Heavy mining wire: 7/16 and 1/2 in guards, USA made cable trays, USA made wire baskets, and J-hooks for harsh service.",
   path: '/industries/mining',
   keywords: [
+    "USA made cable trays",
+    "USA made wire baskets",
     "mining",
     "mining wire forming",
     "4-14 mm wire",
@@ -20,7 +22,7 @@ export default function MiningPage() {
       <PageHero
         kicker="Industries"
         title="Mining"
-        lede="Impact, abrasion, and long spans. This is 7/16 and 1/2 in wire — guards, grids, trays, hangers, and wire baskets — not a light clip cell."
+        lede="Impact, abrasion, and long spans. 7/16 and 1/2 in: guards, USA made cable trays, USA made wire baskets, hangers — not a light clip cell."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -56,14 +58,12 @@ export default function MiningPage() {
             for roof, rib, and plant cable
           </li>
           <li>
-            <TextLink href="/processes/mesh-grids-and-cable-trays">
-              Grids and cable trays
-            </TextLink>{" "}
-            for plant and underground service
+            <TextLink href="/products/cable-trays">USA made cable trays</TextLink>{" "}
+            and grids for plant and underground service
           </li>
           <li>
             <TextLink href="/products/heavy-duty-wire-baskets">
-              Heavy-duty wire baskets
+              USA made wire baskets
             </TextLink>
           </li>
           <li>Screens and welded mesh panels with a real rim</li>

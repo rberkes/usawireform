@@ -4,9 +4,10 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Electrical Wire Forming",
-  description: "Electrical wire forming in 3/8, 7/16, and 1/2 in: cable trays, J-hooks, hangers, and routing forms — not 9-gauge clip wire.",
+  description: "USA made cable trays, J-hooks, hangers, and routing forms in 3/8, 7/16, and 1/2 in — not 9-gauge clip wire.",
   path: '/industries/electrical',
   keywords: [
+    "USA made cable trays",
     "electrical",
     "electrical wire forming",
     "4-14 mm wire",
@@ -20,7 +21,7 @@ export default function ElectricalPage() {
       <PageHero
         kicker="Industries"
         title="Electrical"
-        lede="Plant and utility cable support in 4–14 mm. Trays, J-hooks, and hangers — not a light clip cell, and not a data-hall slogan."
+        lede="USA made cable trays, J-hooks, and hangers in 4–14 mm — not a light clip cell, and not a data-hall slogan."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -38,7 +39,7 @@ export default function ElectricalPage() {
       <Section title="What we form">
         <ul className="mt-6 max-w-2xl list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
           <li>
-            <TextLink href="/products/cable-trays">Cable trays</TextLink>{" "}
+            <TextLink href="/products/cable-trays">USA made cable trays</TextLink>{" "}
             and{" "}
             <TextLink href="/products/mesh-grids">mesh grids</TextLink>
           </li>

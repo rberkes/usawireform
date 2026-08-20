@@ -10,6 +10,8 @@ export const metadata = pageMeta({
   keywords: [
     "custom wire forming",
     "custom CNC wire forms",
+    "USA made wire baskets",
+    "USA made heat treat baskets",
     "custom wire baskets",
   ],
 });
@@ -37,7 +39,7 @@ export default function CustomWireFormingPage() {
       </p>
       <p>
         Catalog families (hooks, grids,{" "}
-        <Link href="/stainless-steel-wire-basket">baskets</Link>,{" "}
+        <Link href="/stainless-steel-wire-basket">USA made wire baskets</Link>,{" "}
         <Link href="/stainless-steel-wire-shelf">shelves</Link>) are still
         custom when you change a dimension, a weld, or a grade. The{" "}
         <Link href="/products">product directory</Link> is the shape language.
@@ -47,7 +49,7 @@ export default function CustomWireFormingPage() {
       <h2 id="band">4–14 mm, including 330</h2>
       <p>
         Production is 4–14 mm from coil, cut-to-length through 14 mm rod. Stock
-        diameters 3/8, 7/16, 1/2 in. 330 heat-treat fixtures:{" "}
+        diameters 3/8, 7/16, 1/2 in. USA made heat treat baskets in 330:{" "}
         <Link href="/330-stainless-wire-bending-usa-parts">330 stainless USA parts</Link>
         . Carbon and 304 for everything that is not a furnace.
       </p>

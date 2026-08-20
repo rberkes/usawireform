@@ -1,9 +1,11 @@
 import { catalog, STOCK } from "@/lib/catalog";
+import { usaMadeForSlug } from "@/lib/usa-made";
 import { COMPANY } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
 import { machines } from "@/lib/machines";
 import { CNC_COMPARE, CNC_HUB, CNC_OEMS, allCncModels, modelPath, oemPath } from "@/lib/cnc-oems";
 import { WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
+import { OHIO_CITIES, ohioCityPath } from "@/lib/ohio-cities";
 import { PRICE_LINE } from "@/lib/price";
 import { publishedProcesses } from "@/lib/processes";
 import { industries, shopLines } from "@/lib/site";
@@ -107,17 +109,27 @@ export const staticSeoPages: SeoRecord[] = [
     path: "/wire-parts",
     title: "Wire Parts",
     description:
-      "Wire parts and wire form parts in 4–14 mm: hooks, hangers, baskets, grids, guards, racks, handles — CNC from coil.",
+      "Wire parts in 4–14 mm: USA made D-rings, USA made wire baskets, USA made wire racks, USA made cable trays, hooks, grids, guards — CNC from coil.",
     section: "products",
-    keywords: ["wire parts", "wire form parts", "custom wire hardware"],
+    keywords: [
+      "USA made D-rings",
+      "USA made wire baskets",
+      "USA made wire racks",
+      "USA made cable trays",
+      "wire parts",
+      "wire form parts",
+      "custom wire hardware",
+    ],
   }),
   record({
     path: "/330-stainless-wire-bending-usa-parts",
     title: "330 Stainless Wire Bending USA Parts",
     description:
-      "330 stainless (N08330) wire forming in the USA: heat-treat baskets and furnace fixtures from coil, 4–14 mm, cut-to-length, resistance weld and TIG.",
+      "330 stainless (N08330) wire forming in the USA: USA made heat treat baskets and furnace fixtures from coil, 4–14 mm, cut-to-length, resistance weld and TIG.",
     section: "forming",
     keywords: [
+      "USA made heat treat baskets",
+      "USA made wire baskets",
       "330 stainless wire bending",
       "330 stainless USA",
       "heat treat wire baskets",
@@ -156,7 +168,13 @@ export const staticSeoPages: SeoRecord[] = [
     description:
       "Custom CNC wire forming in 4–14 mm: your print, our coil. 3D CNC, cut-to-length, resistance weld and TIG. 100-piece minimum. Northeast Ohio.",
     section: "forming",
-    keywords: ["custom wire forming", "custom CNC wire forms", "custom wire baskets"],
+    keywords: [
+      "custom wire forming",
+      "custom CNC wire forms",
+      "USA made wire baskets",
+      "USA made heat treat baskets",
+      "custom wire baskets",
+    ],
     priority: 0.8,
   }),
   record({
@@ -185,9 +203,11 @@ export const staticSeoPages: SeoRecord[] = [
     path: "/stainless-steel-wire-basket",
     title: "Stainless Steel Wire Basket",
     description:
-      "Stainless steel wire baskets from coil: 304 / 316 for wet service, 330 for heat-treat. 4–14 mm CNC, resistance weld or TIG. USA production.",
+      "USA made wire baskets in stainless: 304 / 316 for wet service. USA made heat treat baskets in 330. 4–14 mm CNC, resistance weld or TIG. USA production.",
     section: "products",
     keywords: [
+      "USA made wire baskets",
+      "USA made heat treat baskets",
       "stainless steel wire basket",
       "330 wire basket",
       "304 wire basket",
@@ -337,7 +357,7 @@ export const staticSeoPages: SeoRecord[] = [
   record({
     path: "/products",
     title: "Product directory",
-    description: `SKU directory of wire forms in ${STOCK}: hooks, hangers, grids, trays, frames, and hardware.`,
+    description: `USA made wire baskets, USA made D-rings, USA made cable trays, USA made wire racks, USA made security fencing, USA made ground staples, and 100+ forms in ${STOCK}.`,
     section: "products",
   }),
   record({
@@ -489,6 +509,23 @@ function machinePages(): SeoRecord[] {
   );
 }
 
+function ohioCityPages(): SeoRecord[] {
+  return OHIO_CITIES.map((city) =>
+    record({
+      path: ohioCityPath(city),
+      title: `Wire Forming in ${city.name}, Ohio`,
+      description: `${COMPANY} quotes 4–14 mm 3D CNC wire forming for ${city.name}, OH from Northeast Ohio. ${PRICE_LINE}`,
+      section: "company",
+      keywords: [
+        `wire forming ${city.name} Ohio`,
+        `CNC wire forming ${city.name}`,
+        `wire forms ${city.name} OH`,
+      ],
+      priority: city.slug === "cleveland" ? 0.7 : 0.55,
+    }),
+  );
+}
+
 function cncCatalogPages(): SeoRecord[] {
   const hub = record({
     path: CNC_HUB,
@@ -582,16 +619,25 @@ function blogPages(): SeoRecord[] {
 }
 
 function productPages(): SeoRecord[] {
-  const catalogPages = catalog.map((item) =>
-    record({
+  const catalogPages = catalog.map((item) => {
+    const made = usaMadeForSlug(item.slug);
+    return record({
       path: `/products/${item.slug}`,
-      title: item.title,
-      description: `${item.title} in ${STOCK} wire. ${item.summary}`,
+      title: made?.phrases[0] ?? item.title,
+      description: made
+        ? `${made.phrases[0]} in ${STOCK} wire. ${item.summary}`
+        : `${item.title} in ${STOCK} wire. ${item.summary}`,
       section: "products" as const,
-      keywords: [item.title, item.group, "custom wire form", STOCK],
+      keywords: [
+        ...(made?.phrases ?? []),
+        item.title,
+        item.group,
+        "custom wire form",
+        STOCK,
+      ],
       priority: 0.7,
-    }),
-  );
+    });
+  });
   const linePages = shopLines.map((item) =>
     record({
       path: `/products/${item.slug}`,
@@ -635,6 +681,7 @@ export function allSeoPages(): SeoRecord[] {
     ...industryPages(),
     ...productPages(),
     ...statePages(),
+    ...ohioCityPages(),
     ...metroPages(),
     ...machinePages(),
     ...cncCatalogPages(),

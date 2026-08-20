@@ -5,9 +5,13 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Wire Parts",
-  description: "Wire parts and wire form parts in 4–14 mm: hooks, hangers, baskets, grids, guards, racks, handles — CNC from coil.",
+  description: "Wire parts in 4–14 mm: USA made D-rings, USA made wire baskets, USA made wire racks, USA made cable trays, hooks, grids, guards — CNC from coil.",
   path: '/wire-parts',
   keywords: [
+    "USA made D-rings",
+    "USA made wire baskets",
+    "USA made wire racks",
+    "USA made cable trays",
     "wire parts",
     "wire form parts",
     "custom wire hardware",
@@ -21,19 +25,24 @@ const families = [
     body: `The ${STOCK} directory — every family we quote as production coil.`,
   },
   {
+    href: "/products/d-rings",
+    title: "USA made D-rings",
+    body: "Closed D-rings in stock coil for strap, frame, and construction hardware.",
+  },
+  {
     href: "/products/s-hooks",
     title: "Wire hooks",
     body: "S, J, lift, gate, display, and powder-line hooks in stock coil.",
   },
   {
     href: "/products/heavy-duty-wire-baskets",
-    title: "Wire baskets",
-    body: "Welded baskets and rims in 3/8, 7/16, and 1/2 in.",
+    title: "USA made wire baskets",
+    body: "USA made wire baskets and USA made heat treat baskets — welded rims in 3/8, 7/16, and 1/2 in.",
   },
   {
     href: "/products/mesh-grids",
     title: "Wire grids",
-    body: "Welded mesh, partitions, and security panels.",
+    body: "Welded mesh, partitions, and USA made security fencing panels.",
   },
   {
     href: "/products/machine-guards",
@@ -47,8 +56,13 @@ const families = [
   },
   {
     href: "/products/wire-racks",
-    title: "Wire racks",
-    body: "Frames, shelves, magazine and newspaper racks.",
+    title: "USA made wire racks",
+    body: "Frames, shelves, magazine and newspaper racks from coil.",
+  },
+  {
+    href: "/products/cable-trays",
+    title: "USA made cable trays",
+    body: "Welded wire channel for plant, solar, and data-center runs.",
   },
   {
     href: "/products/wire-shelves",
@@ -75,9 +89,10 @@ export default function WirePartsPage() {
         title="Wire parts, from coil."
         lede={
           <>
-            A wire part is a specified centerline in 4–14 mm. Hooks,
-            hangers, baskets, grids, guards, racks, handles — CNC, then
-            weld and finish. The SKU list is the{" "}
+            A wire part is a specified centerline in 4–14 mm. USA made
+            D-rings, USA made wire baskets, USA made wire racks, USA made
+            cable trays, hooks, grids, guards — CNC, then weld and finish.
+            The SKU list is the{" "}
             <TextLink href="/products">directory</TextLink>. Process is{" "}
             <TextLink href="/wire-forming">wire forming</TextLink>.
           </>

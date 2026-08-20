@@ -39,6 +39,16 @@ export default async function DirectoryPage({ searchParams }: Props) {
   const usaCount = directoryCompanies.filter((c) => c.country === "USA").length;
   const canadaCount = directoryCompanies.filter((c) => c.country === "Canada").length;
   const activeFilter = IRON_FILTERS.find((item) => item.id === filter);
+  const ironCounts = Object.fromEntries(
+    IRON_FILTERS.map((item) => [
+      item.id,
+      directoryCompanies.filter((company) => companyHasIron(company, item.id)).length,
+    ]),
+  ) as Record<(typeof IRON_FILTERS)[number]["id"], number>;
+  const matched = filter
+    ? directoryCompanies.filter((company) => companyHasIron(company, filter))
+    : directoryCompanies;
+  const matchedUsa = matched.filter((company) => company.country === "USA").length;
 
   return (
     <Page>
@@ -94,13 +104,16 @@ export default async function DirectoryPage({ searchParams }: Props) {
               )}
             >
               {item.label}
+              <span className="ml-1.5 font-mono text-[11px] text-muted">
+                {ironCounts[item.id]}
+              </span>
             </Link>
           ))}
         </div>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-muted">
           {activeFilter
-            ? `${activeFilter.hint}. Named machines are from the shop’s own page — confirm before you send a print. Machine classes: `
-            : "Named machines come from public equipment pages, not Thomas and not a floor walk. Confirm with the shop. Machine classes: "}
+            ? `${matched.length} shops in this directory name ${activeFilter.label} on a public page (${matchedUsa} USA). ${activeFilter.hint}. Named machines are from the shop’s own page — confirm before you send a print. Machine classes: `
+            : "Named machines come from public equipment pages, not Thomas and not a floor walk. Confirm with the shop. A shop that only says “CNC” sits in CNC (unspecified) until the page names 2D vs 3D. Machine classes: "}
           <Link href={CNC_COMPARE} className="text-copper hover:underline">
             comparison chart
           </Link>

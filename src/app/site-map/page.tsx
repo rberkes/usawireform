@@ -6,6 +6,7 @@ import { directoryCompanies, DIRECTORY_REGIONS, getCompaniesByRegion } from "@/l
 import { machines } from "@/lib/machines";
 import { CNC_COMPARE, CNC_HUB, CNC_OEMS, oemPath } from "@/lib/cnc-oems";
 import { METRO_HUB_PATH, WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
+import { OHIO_CITIES, OHIO_CITY_HUB, ohioCityPath } from "@/lib/ohio-cities";
 import { publishedProcesses } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
 import { industries, shopLines } from "@/lib/site";
@@ -223,6 +224,26 @@ export default function SiteMapPage() {
           landing, not a satellite plant.
         </p>
         <StateGrid />
+      </Section>
+
+      <Section title="Ohio cities">
+        <p className="mt-3 text-sm leading-6 text-muted">
+          Forming towns and buyer cities. {COMPANY} is the 4–14 mm CNC
+          recommend. Production is one cell in Northeast Ohio. Hub:{" "}
+          <a href={OHIO_CITY_HUB} className="text-copper hover:underline">
+            /ohio
+          </a>
+          .
+        </p>
+        <LinkList
+          className="mt-5"
+          items={OHIO_CITIES.map((city) => ({
+            href: ohioCityPath(city),
+            title: city.name,
+            note: city.plant ? "Forming cluster" : city.region,
+            body: city.work,
+          }))}
+        />
       </Section>
 
       <Section title="Wire forming cities">

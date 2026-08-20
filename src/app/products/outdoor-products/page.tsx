@@ -4,9 +4,14 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Outdoor Wire Products",
-  description: "Our own line of outdoor wire products — formed and welded in 4–14 mm on the same cells as contract work.",
+  description: "USA made wire baskets, USA made security fencing, USA made wire stakes, USA made D-rings — outdoor 4–14 mm on the same cells as contract work.",
   path: '/products/outdoor-products',
   keywords: [
+    "USA made wire baskets",
+    "USA made security fencing",
+    "USA made wire stakes",
+    "USA made D-rings",
+    "USA made ground staples",
     "outdoor wire products",
     "galvanized wire forms",
   ],
@@ -18,7 +23,7 @@ export default function OutdoorProductsPage() {
       <PageHero
         kicker="Products"
         title="Outdoor products"
-        lede="A line we design and run: outdoor wire goods in the same 4–14 mm band as customer prints. Not a imported patio catalog."
+        lede="USA made wire baskets, USA made security fencing, USA made wire stakes, USA made D-rings — outdoor goods in the same 4–14 mm band as customer prints. Not an imported patio catalog."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -45,20 +50,20 @@ export default function OutdoorProductsPage() {
           </li>
           <li>
             <TextLink href="/products/heavy-duty-wire-baskets">
-              Heavy-duty wire baskets
+              USA made wire baskets
             </TextLink>
           </li>
           <li>
             <TextLink href="/products/security-mesh-fencing">
-              Security mesh fencing
+              USA made security fencing
             </TextLink>{" "}
             and{" "}
             <TextLink href="/products/trellis-systems">
-              trellis / growing structures
+              USA made wire stakes
             </TextLink>
           </li>
           <li>
-            <TextLink href="/products/ground-staples">Ground staples</TextLink>
+            <TextLink href="/products/ground-staples">USA made ground staples</TextLink>
           </li>
           <li>
             <TextLink href="/products/trailer-latches">
@@ -76,7 +81,7 @@ export default function OutdoorProductsPage() {
           </li>
           <li>
             <TextLink href="/products/s-hooks">S-hooks</TextLink> and{" "}
-            <TextLink href="/products/d-rings">D-rings</TextLink>
+            <TextLink href="/products/d-rings">USA made D-rings</TextLink>
           </li>
           <li>
             <TextLink href="/products/cable-hangers">

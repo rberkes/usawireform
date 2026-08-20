@@ -6,9 +6,10 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Automotive Wire Forming",
-  description: "Automotive wire forming in 3/8, 7/16, and 1/2 in: seat frames, trailer latches, handles, L-pins, plant guards — not music-wire clips.",
+  description: "Automotive wire forming in 3/8, 7/16, and 1/2 in: seat frames, USA made D-rings, trailer latches, handles, L-pins, plant guards — not music-wire clips.",
   path: '/industries/automotive',
   keywords: [
+    "USA made D-rings",
     "automotive",
     "automotive wire forming",
     "4-14 mm wire",
@@ -78,7 +79,7 @@ export default function AutomotivePage() {
             and screens
           </li>
           <li>
-            <TextLink href="/products/d-rings">D-rings</TextLink>,{" "}
+            <TextLink href="/products/d-rings">USA made D-rings</TextLink>,{" "}
             <TextLink href="/products/s-hooks">S-hooks</TextLink>, and{" "}
             <TextLink href="/products/connecting-links">
               connecting links

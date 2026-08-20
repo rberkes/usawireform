@@ -7,9 +7,13 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Industries",
-  description: "Wire forming by sector: named industries we actually run in 4–14 mm — frames, trays, hangers, wire baskets, and guards. Not every SIC code.",
+  description: "Wire forming by sector: USA made cable trays, USA made wire baskets, USA made D-rings, USA made security fencing — named industries in 4–14 mm. Not every SIC code.",
   path: '/industries',
   keywords: [
+    "USA made cable trays",
+    "USA made wire baskets",
+    "USA made D-rings",
+    "USA made security fencing",
     "wire forming industries",
     "OEM wire forms",
   ],
@@ -25,7 +29,7 @@ export default function IndustriesPage() {
       <PageHero
         kicker="Industries"
         title="Where the forms go."
-        lede="50+ years of industry experience, applied to the sectors we actually run — not a list of every SIC code in the country."
+        lede="Named sectors we actually run — USA made cable trays, USA made wire baskets, USA made D-rings, USA made security fencing — not a list of every SIC code in the country."
       />
       <CardGrid
         items={industries.map((item) => ({

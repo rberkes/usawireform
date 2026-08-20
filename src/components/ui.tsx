@@ -284,7 +284,12 @@ export function CardGrid({
   items,
   columns = 2,
 }: {
-  items: { href: string; title: string; body: string }[];
+  items: {
+    href: string;
+    title: string;
+    body: string;
+    visual?: ReactNode;
+  }[];
   columns?: 2 | 3;
 }) {
   return (
@@ -300,6 +305,9 @@ export function CardGrid({
           href={item.href}
           className="bg-background p-7 hover:bg-inset"
         >
+          {item.visual ? (
+            <div className="mb-4 aspect-[5/3] bg-inset">{item.visual}</div>
+          ) : null}
           <h3 className="font-medium">{item.title}</h3>
           <p className="mt-3 text-sm leading-6 text-muted">{item.body}</p>
         </Link>

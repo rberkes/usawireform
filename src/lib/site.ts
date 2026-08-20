@@ -3,31 +3,31 @@ export const industries = [
     slug: "agriculture",
     title: "Agriculture",
     summary:
-      "Ground staples, equipment guards, harvest wire baskets, S-hooks, and galvanized forms that live outside.",
+      "USA made ground staples, equipment guards, USA made wire baskets, S-hooks, and galvanized forms that live outside.",
   },
   {
     slug: "data-centers",
     title: "AI and data centers",
     summary:
-      "Cable trays, wire baskets, and guards for high-density power and network builds.",
+      "USA made cable trays, USA made wire baskets, and guards for high-density power and network builds.",
   },
   {
     slug: "solar",
     title: "Solar",
     summary:
-      "Tracker and rack forms, cable hangers, grounding, and outdoor stainless or galv.",
+      "Tracker and rack forms, cable hangers, USA made cable trays, and USA made ground staples in outdoor stainless or galv.",
   },
   {
     slug: "mining",
     title: "Mining",
     summary:
-      "Heavy 7/16 and 1/2 in guards, grids, trays, wire baskets, and cable hangers for harsh service.",
+      "Heavy 7/16 and 1/2 in guards, USA made cable trays, USA made wire baskets, and cable hangers for harsh service.",
   },
   {
     slug: "construction",
     title: "Construction",
     summary:
-      "Rebar supports, brackets, S-hooks, D-rings, hangers, and heavy 4–14 mm forms for the jobsite — not light masonry clips.",
+      "Rebar supports, brackets, USA made D-rings, USA made ground staples, and USA made security fencing for the jobsite — not light masonry clips.",
   },
   {
     slug: "automotive",
@@ -39,19 +39,19 @@ export const industries = [
     slug: "architectural",
     title: "Architectural",
     summary:
-      "Screens, security mesh, trellis, and frames in 3/8 to 1/2 in — building infill, not ornamental 9-gauge.",
+      "Screens, USA made security fencing, USA made wire stakes, and frames in 3/8 to 1/2 in — building infill, not ornamental 9-gauge.",
   },
   {
     slug: "marine",
     title: "Marine",
     summary:
-      "304 and 316 frames, baskets, and guards for wet service. Coil and finish named — not a marine-cert catalog.",
+      "304 and 316 frames, USA made wire baskets, and guards for wet service. Coil and finish named — not a marine-cert catalog.",
   },
   {
     slug: "industrial",
     title: "Industrial",
     summary:
-      "Plant-floor guards, partitions, trays, baskets, and hangers in stock 3/8, 7/16, and 1/2 in coil.",
+      "Plant-floor guards, USA made cable trays, USA made wire baskets, USA made wire racks, and hangers in stock 3/8, 7/16, and 1/2 in coil.",
   },
   {
     slug: "manufacturing-oem",
@@ -63,31 +63,31 @@ export const industries = [
     slug: "electrical",
     title: "Electrical",
     summary:
-      "Cable trays, J-hooks, hangers, and routing forms for plant and utility electrical — not 9-gauge clip wire.",
+      "USA made cable trays, J-hooks, hangers, and routing forms for plant and utility electrical — not 9-gauge clip wire.",
   },
   {
     slug: "interior-design",
     title: "Interior design",
     summary:
-      "Furniture frames, racks, and display wire in 3/8 to 1/2 in. The furniture line, not a decorator catalog.",
+      "Furniture frames, USA made wire racks, and display wire in 3/8 to 1/2 in. The furniture line, not a decorator catalog.",
   },
   {
     slug: "chemical",
     title: "Chemical",
     summary:
-      "304 / 316 washdown baskets, racks, and guards. Finish named. Not a coatings lab.",
+      "304 / 316 USA made wire baskets, USA made wire racks, and guards. Finish named. Not a coatings lab.",
   },
   {
     slug: "petroleum",
     title: "Petroleum",
     summary:
-      "Outdoor hangers, guards, and trays at the pad. Galvanized, 304, or 330 when heat is the spec.",
+      "Outdoor hangers, guards, and USA made cable trays at the pad. Galvanized, 304, or 330 when heat is the spec.",
   },
   {
     slug: "railroad",
     title: "Railroad",
     summary:
-      "Heavy guards, hangers, partitions, and baskets for yards and shops in 7/16 and 1/2 in.",
+      "Heavy guards, hangers, USA made security fencing, and USA made wire baskets for yards and shops in 7/16 and 1/2 in.",
   },
   {
     slug: "ventilation",
@@ -108,6 +108,12 @@ export const shopLines = [
     slug: "outdoor-products",
     title: "Outdoor products",
     summary:
-      "Our own line of outdoor wire goods, run on the same cells as contract forms.",
+      "Our own line of outdoor wire goods: USA made wire baskets, USA made security fencing, USA made wire stakes, USA made D-rings.",
+  },
+  {
+    slug: "design-and-prototyping",
+    title: "Design and prototyping",
+    summary:
+      "STEP in, CNC program out. First 4–14 mm parts on the Robomac — not a fourslide cam.",
   },
 ] as const;

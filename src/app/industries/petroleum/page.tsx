@@ -4,9 +4,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Petroleum Wire Forming",
-  description: "Petroleum and pad wire forming in 3/8, 7/16, and 1/2 in: outdoor hangers, guards, and trays. Galvanized, 304, or 330.",
+  description: "Petroleum pad wire: outdoor hangers, guards, USA made cable trays, USA made heat treat baskets in 330 when heat is the spec.",
   path: '/industries/petroleum',
   keywords: [
+    "USA made cable trays",
+    "USA made heat treat baskets",
     "petroleum",
     "petroleum wire forming",
     "4-14 mm wire",
@@ -20,7 +22,7 @@ export default function PetroleumPage() {
       <PageHero
         kicker="Industries"
         title="Petroleum"
-        lede="Outdoor pad hardware in 4–14 mm. Hangers, guards, and trays. Galvanized, 304, or 330 when heat is the spec — not a wellhead catalog."
+        lede="Outdoor pad hardware in 4–14 mm. Hangers, guards, USA made cable trays. Galvanized, 304, or USA made heat treat baskets in 330 when heat is the spec — not a wellhead catalog."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -48,12 +50,15 @@ export default function PetroleumPage() {
             </TextLink>
           </li>
           <li>
-            <TextLink href="/products/cable-trays">Cable trays</TextLink>{" "}
+            <TextLink href="/products/cable-trays">USA made cable trays</TextLink>{" "}
             and{" "}
             <TextLink href="/products/mesh-grids">grids</TextLink>
           </li>
           <li>
-            Heat-adjacent frames in 330 when the print names it
+            <TextLink href="/330-stainless-wire-bending-usa-parts">
+              USA made heat treat baskets
+            </TextLink>{" "}
+            in 330 when the print names it
           </li>
         </ul>
       </Section>

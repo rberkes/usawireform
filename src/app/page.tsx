@@ -22,13 +22,21 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
-  description: `${COMPANY}: 50+ years of industry experience. Lowest prices guaranteed — we will not be beat. 100-piece minimum. 3D CNC wire forming in 4–14 mm.`,
+  description: `${COMPANY}: 50+ years of industry experience. USA made wire baskets, USA made D-rings, USA made cable trays. Lowest prices guaranteed. 100-piece minimum. 3D CNC in 4–14 mm.`,
   path: "/",
   absoluteTitle: true,
   keywords: [
     "USA Wire Form",
     "CNC wire forming Northeast Ohio",
-    "3D CNC wire baskets",
+    "USA made wire baskets",
+    "USA made D-rings",
+    "USA made cable trays",
+    "USA made wire racks",
+    "USA made security fencing",
+    "USA made heat treat baskets",
+    "USA made ground staples",
+    "USA made ground samples",
+    "USA made wire stakes",
     "custom wire forms",
     "Numalliance Robomac",
     "lowest price wire forming",
@@ -150,6 +158,11 @@ export default function Home() {
                 body: "Twenty U.S. forming clusters. Cleveland is the cheap coil — mills and drawers on a local truck.",
               },
               {
+                href: "/ohio",
+                title: "Ohio city directory",
+                body: "Thirty Ohio landers — Akron, Canton, Youngstown, and the forming towns. One CNC cell in Northeast Ohio.",
+              },
+              {
                 href: "/cleveland",
                 title: "Northeast Ohio",
                 body: "Mills, wire drawers, and short-haul coil — the low-cost location for 4–14 mm forming and secondaries.",
@@ -185,9 +198,14 @@ export default function Home() {
                 body: "Named sectors we actually form for. Each one is its own directory.",
               },
               {
+                href: "/products",
+                title: "USA made wire forms",
+                body: "USA made D-rings, USA made wire racks, USA made cable trays, USA made security fencing, USA made wire baskets, USA made heat treat baskets, USA made ground staples, USA made ground samples, USA made wire stakes.",
+              },
+              {
                 href: "/processes/mesh-grids-and-cable-trays",
-                title: "Mesh grids and cable trays",
-                body: "Resistance, MIG, and TIG for welded mesh, guards, and trays.",
+                title: "USA made cable trays",
+                body: "USA made cable trays, USA made wire baskets, USA made security fencing — resistance, MIG, and TIG.",
               },
               {
                 href: "/blog",

@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepQuoteBlock } from "@/components/StepUpload";
+import { ProductForm } from "@/components/ProductForm";
+import { SHookDiameters } from "@/components/SHookDiameters";
+import { WIRE } from "@/lib/range";
 import {
   Page,
   PageHero,
@@ -15,6 +18,7 @@ import {
   getCatalogItem,
 } from "@/lib/catalog";
 import { pageMeta } from "@/lib/seo";
+import { usaMadeForSlug } from "@/lib/usa-made";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -28,11 +32,20 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const item = getCatalogItem(slug);
   if (!item) return {};
+  const made = usaMadeForSlug(slug);
   return pageMeta({
-    title: item.title,
-    description: `${item.title} in ${STOCK} wire. ${item.summary}`,
+    title: made?.phrases[0] ?? item.title,
+    description: made
+      ? `${made.phrases[0]} in ${STOCK} wire. ${item.summary}`
+      : `${item.title} in ${STOCK} wire. ${item.summary}`,
     path: `/products/${slug}`,
-    keywords: [item.title, item.group, "custom wire form", STOCK],
+    keywords: [
+      ...(made?.phrases ?? []),
+      item.title,
+      item.group,
+      "custom wire form",
+      STOCK,
+    ],
   });
 }
 
@@ -40,6 +53,7 @@ export default async function CatalogProductPage({ params }: Props) {
   const { slug } = await params;
   const item = getCatalogItem(slug);
   if (!item) notFound();
+  const made = usaMadeForSlug(slug);
 
   const related = item.related
     .map((relatedSlug) => getCatalogItem(relatedSlug))
@@ -54,8 +68,8 @@ export default async function CatalogProductPage({ params }: Props) {
   return (
     <Page>
       <ProductJsonLd
-        name={item.title}
-        description={`${item.title} in ${STOCK} wire. ${item.summary}`}
+        name={made?.phrases[0] ?? item.title}
+        description={`${made?.phrases[0] ?? item.title} in ${STOCK} wire. ${item.summary}`}
         url={`/products/${slug}`}
       />
       <BreadcrumbJsonLd
@@ -65,14 +79,65 @@ export default async function CatalogProductPage({ params }: Props) {
         ]}
       />
       <Breadcrumbs items={breadcrumbItems} />
-      <PageHero kicker={`${STOCK} · ${item.group}`} title={item.title} lede={item.lede} />
+      {slug === "s-hooks" ? (
+        <>
+          <PageHero
+            kicker={`${STOCK} · ${item.group}`}
+            title={made?.phrases[0] ?? item.title}
+            lede={item.lede}
+          />
+          <SHookDiameters className="mt-10" />
+        </>
+      ) : (
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
+          <PageHero
+            kicker={`${STOCK} · ${item.group}`}
+            title={made?.phrases[0] ?? item.title}
+            lede={item.lede}
+          />
+          <div className="bg-inset">
+            <ProductForm slug={item.slug} className="h-auto w-full p-8 sm:p-12" />
+            <p className="border-t border-line px-5 py-3 font-mono text-[11px] tracking-widest text-muted uppercase">
+              Formed from coil · {STOCK}
+            </p>
+          </div>
+        </div>
+      )}
       <SpecList
         rows={[
+          ...(made
+            ? [{ label: "Origin", value: `${made.phrases[0]} · Northeast Ohio` }]
+            : []),
           { label: "Stock coil", value: STOCK },
+          ...(slug === "s-hooks"
+            ? [{ label: "Forming band", value: WIRE.label }]
+            : []),
           { label: "Family", value: item.group },
         ]}
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
+        {slug === "s-hooks" ? (
+          <p>
+            The three drawings above are the same S centerline in 4 mm, 9 mm,
+            and 14 mm wire. Stroke is the diameter. 4 mm is the floor of the
+            band; 9 mm sits next to{" "}
+            <TextLink href="/sizes">3/8 in stock</TextLink> (9.53 mm); 14 mm
+            is the ceiling. Production quotes still land on 3/8, 7/16, and
+            1/2 in unless the print names another size in {WIRE.short}.
+          </p>
+        ) : null}
+        {made && made.phrases.length > 1 ? (
+          <p>
+            Also searched as{" "}
+            {made.phrases.slice(1).map((phrase, index) => (
+              <span key={phrase}>
+                {index > 0 ? ", " : ""}
+                {phrase}
+              </span>
+            ))}
+            .
+          </p>
+        ) : null}
         {item.body.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}
@@ -94,11 +159,16 @@ export default async function CatalogProductPage({ params }: Props) {
       {related.length > 0 ? (
         <Section title="Related">
           <ul className="mt-6 max-w-2xl list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-            {related.map((entry) => (
+            {related.map((entry) => {
+              const relatedMade = usaMadeForSlug(entry.slug);
+              return (
               <li key={entry.slug}>
-                <TextLink href={`/products/${entry.slug}`}>{entry.title}</TextLink>
+                <TextLink href={`/products/${entry.slug}`}>
+                  {relatedMade?.phrases[0] ?? entry.title}
+                </TextLink>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </Section>
       ) : null}

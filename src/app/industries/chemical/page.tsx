@@ -4,9 +4,11 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Chemical Wire Forming",
-  description: "Chemical-plant wire forming in 3/8, 7/16, and 1/2 in: 304 / 316 washdown baskets, racks, and guards. Finish named.",
+  description: "Chemical-plant wire: 304 / 316 USA made wire baskets, USA made wire racks, and guards. Finish named.",
   path: '/industries/chemical',
   keywords: [
+    "USA made wire baskets",
+    "USA made wire racks",
     "chemical",
     "chemical wire forming",
     "4-14 mm wire",
@@ -20,7 +22,7 @@ export default function ChemicalPage() {
       <PageHero
         kicker="Industries"
         title="Chemical"
-        lede="Washdown and corrosion in 4–14 mm. 304 and 316 baskets, racks, and guards. We name the alloy and the finish — not a coatings-lab rating."
+        lede="Washdown and corrosion in 4–14 mm. 304 and 316 USA made wire baskets, USA made wire racks, and guards. We name the alloy and the finish — not a coatings-lab rating."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -41,11 +43,13 @@ export default function ChemicalPage() {
         <ul className="mt-6 max-w-2xl list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
           <li>
             <TextLink href="/products/heavy-duty-wire-baskets">
-              Washdown and immersion wire baskets
-            </TextLink>
+              USA made wire baskets
+            </TextLink>{" "}
+            for washdown and immersion
           </li>
           <li>
-            <TextLink href="/products/wire-racks">Racks</TextLink> and{" "}
+            <TextLink href="/products/wire-racks">USA made wire racks</TextLink>{" "}
+            and{" "}
             <TextLink href="/products/wire-shelves">shelves</TextLink> in
             304
           </li>

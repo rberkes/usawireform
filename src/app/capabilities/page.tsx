@@ -16,7 +16,14 @@ export const metadata = pageMeta({
   title: "Capabilities",
   description: `3D CNC wire forming in ${WIRE.label}: frames, wire baskets, guards, rack plating, and in-line powder.`,
   path: "/capabilities",
-  keywords: ["wire forming capabilities", "rack plating", "powder coat"],
+  keywords: [
+    "USA made cable trays",
+    "USA made wire baskets",
+    "USA made security fencing",
+    "wire forming capabilities",
+    "rack plating",
+    "powder coat",
+  ],
 });
 
 const forming = [
@@ -66,9 +73,9 @@ const forming = [
     body: "Square, chamfered, or coined ends. Threaded or flattened terminals when the print calls for them.",
   },
   {
-    title: "Mesh grids and cable trays",
+    title: "USA made cable trays and mesh",
     href: "/processes/mesh-grids-and-cable-trays",
-    body: "Welded mesh, guard grids, and cable trays. Resistance weld on the intersections; MIG and TIG on rims, mounts, and splices.",
+    body: "USA made cable trays, USA made wire baskets, USA made security fencing. Resistance weld on the intersections; MIG and TIG on rims, mounts, and splices.",
   },
 ];
 

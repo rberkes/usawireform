@@ -4,9 +4,14 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Agriculture Wire Forming",
-  description: "Wire forms for agriculture: ground staples, harvest wire baskets, trellis structures, and galvanized 3/8 to 1/2 in frames.",
+  description: "USA made ground staples, USA made wire stakes, USA made wire baskets, and galvanized 3/8 to 1/2 in frames for agriculture.",
   path: '/industries/agriculture',
   keywords: [
+    "USA made ground staples",
+    "USA made ground samples",
+    "USA made wire stakes",
+    "USA made wire baskets",
+    "USA made D-rings",
     "agriculture",
     "agriculture wire forming",
     "4-14 mm wire",
@@ -20,7 +25,7 @@ export default function AgriculturePage() {
       <PageHero
         kicker="Industries"
         title="Agriculture"
-        lede="Forms that live in dirt, fertilizer, and weather. Ground staples, trellis structures, guards, wire baskets, and galvanized frames in 4–14 mm — not indoor clip wire."
+        lede="USA made ground staples, USA made wire stakes, USA made wire baskets, and galvanized frames in 4–14 mm — not indoor clip wire."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -35,8 +40,10 @@ export default function AgriculturePage() {
       <Section title="What we form">
         <ul className="mt-6 max-w-2xl list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
           <li>
-            <TextLink href="/products/ground-staples">Ground staples</TextLink>{" "}
-            for fabric, erosion, irrigation lines, and fencing underlay
+            <TextLink href="/products/ground-staples">USA made ground staples</TextLink>
+            {" "}
+            (also searched as USA made ground samples) for fabric, erosion,
+            irrigation lines, and fencing underlay
           </li>
           <li>
             Equipment guards,{" "}
@@ -50,23 +57,25 @@ export default function AgriculturePage() {
           </li>
           <li>
             <TextLink href="/products/s-hooks">S-hooks</TextLink>,{" "}
-            <TextLink href="/products/d-rings">D-rings</TextLink>, and
+            <TextLink href="/products/d-rings">USA made D-rings</TextLink>, and
             cage / dairy hardware in 4–14 mm
           </li>
           <li>
             <TextLink href="/products/heavy-duty-wire-baskets">
-              Harvest and parts wire baskets
+              USA made wire baskets
             </TextLink>
+            {" "}
+            for harvest and parts
           </li>
           <li>
             <TextLink href="/products/trellis-systems">
-              Trellis and vertical-garden structures
+              USA made wire stakes
             </TextLink>{" "}
-            in 3/8 to 1/2 in
+            and trellis / vertical-garden structures in 3/8 to 1/2 in
           </li>
           <li>
             <TextLink href="/products/security-mesh-fencing">
-              Security mesh fencing
+              USA made security fencing
             </TextLink>{" "}
             and cage panels
           </li>
