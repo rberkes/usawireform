@@ -20,7 +20,9 @@ import {
 } from "@/lib/catalog";
 import { pageMeta } from "@/lib/seo";
 import { usaMadeForSlug } from "@/lib/usa-made";
+import { autodeskShareForProduct } from "@/lib/autodesk-share";
 import { showcaseForProduct, showcaseHref } from "@/lib/models";
+import { ProductAutodeskViewer } from "@/components/ProductAutodeskViewer";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -57,6 +59,7 @@ export default async function CatalogProductPage({ params }: Props) {
   if (!item) notFound();
   const made = usaMadeForSlug(slug);
   const showcase = showcaseForProduct(slug);
+  const autodeskShare = autodeskShareForProduct(slug);
 
   const related = item.related
     .map((relatedSlug) => getCatalogItem(relatedSlug))
@@ -105,23 +108,30 @@ export default async function CatalogProductPage({ params }: Props) {
             title={made?.phrases[0] ?? item.title}
             lede={item.lede}
           />
-          <div className="bg-inset">
-            <ProductForm slug={item.slug} className="h-auto w-full p-8 sm:p-12" />
-            <p className="border-t border-line px-5 py-3 font-mono text-[11px] tracking-widest text-muted uppercase">
-              Formed from coil · {STOCK}
-              {showcase ? (
-                <>
-                  {" · "}
-                  <TextLink
-                    href={showcaseHref(slug)}
-                    className="font-sans text-[11px] tracking-widest normal-case"
-                  >
-                    3D model
-                  </TextLink>
-                </>
-              ) : null}
-            </p>
-          </div>
+          {autodeskShare ? (
+            <ProductAutodeskViewer
+              part={autodeskShare.id}
+              permalink={autodeskShare.permalink}
+            />
+          ) : (
+            <div className="bg-inset">
+              <ProductForm slug={item.slug} className="h-auto w-full p-8 sm:p-12" />
+              <p className="border-t border-line px-5 py-3 font-mono text-[11px] tracking-widest text-muted uppercase">
+                Formed from coil · {STOCK}
+                {showcase ? (
+                  <>
+                    {" · "}
+                    <TextLink
+                      href={showcaseHref(slug)}
+                      className="font-sans text-[11px] tracking-widest normal-case"
+                    >
+                      3D model
+                    </TextLink>
+                  </>
+                ) : null}
+              </p>
+            </div>
+          )}
         </div>
       )}
       <SpecList

@@ -1,3 +1,5 @@
+import { getAutodeskShare } from "./autodesk-share";
+
 export type PastProject = {
   id: string;
   title: string;
@@ -8,21 +10,19 @@ export type PastProject = {
   shareId: string;
 };
 
-/**
- * Fusion Team / A360 public shares of jobs we formed.
- * Add a share by resolving the a360.co link to hub + shareId.
- */
-export const pastProjects: PastProject[] = [
+const pastProjectCopy: { id: string; title: string; summary: string }[] = [
   {
     id: "rod",
     title: "Rod",
-    summary: "Shop file from a rod we formed. Autodesk streams the latest version.",
-    permalink: "https://a360.co/4gmm18q",
-    host: "https://myhub.autodesk360.com",
-    hub: "ue28e1cdf",
-    shareId: "SH28cd1QT2badd0ea72b2d049b5b1e2f6310",
+    summary:
+      "Shop file from a rod we formed. Autodesk streams the latest version.",
   },
 ];
+
+export const pastProjects: PastProject[] = pastProjectCopy.flatMap((item) => {
+  const share = getAutodeskShare(item.id);
+  return share ? [{ ...item, ...share }] : [];
+});
 
 const pastProjectsById = new Map(
   pastProjects.map((project) => [project.id, project]),
