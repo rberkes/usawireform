@@ -1,5 +1,5 @@
 import { get, list } from "@vercel/blob";
-import { adminFileHref, blobReady } from "@/lib/blob";
+import { adminFileHref, blobAuth, blobReady } from "@/lib/blob";
 
 export type QuoteSubmission = {
   id: string;
@@ -21,11 +21,11 @@ export type QuoteSubmission = {
 };
 
 async function listPrefix(prefix: string) {
-  if (!blobReady()) return [];
+  if (!(await blobReady())) return [];
   const blobs = [];
   let cursor: string | undefined;
   do {
-    const page = await list({ prefix, cursor, limit: 100 });
+    const page = await list({ prefix, cursor, limit: 100, ...(await blobAuth()) });
     blobs.push(...page.blobs);
     cursor = page.hasMore ? page.cursor : undefined;
   } while (cursor);
@@ -33,7 +33,11 @@ async function listPrefix(prefix: string) {
 }
 
 async function readPrivateJson(pathname: string) {
-  const result = await get(pathname, { access: "private", useCache: false });
+  const result = await get(pathname, {
+    access: "private",
+    useCache: false,
+    ...(await blobAuth()),
+  });
   if (!result || result.statusCode !== 200 || !result.stream) return null;
   const text = await new Response(result.stream).text();
   try {
@@ -75,7 +79,7 @@ function fromRecord(
 }
 
 export async function listQuoteSubmissions(): Promise<QuoteSubmission[]> {
-  if (!blobReady()) return [];
+  if (!(await blobReady())) return [];
 
   const [contactRecords, quickRecords, quoteFiles, quickFiles] =
     await Promise.all([

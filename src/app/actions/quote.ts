@@ -2,7 +2,7 @@
 
 import { Resend } from "resend";
 import { put } from "@vercel/blob";
-import { blobReady, BLOB_ACCESS } from "@/lib/blob";
+import { blobAuth, blobErrorMessage, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
 import { LEADS_NOTIFY_EMAIL } from "@/lib/leads";
 
@@ -41,7 +41,7 @@ export type QuickQuoteFormData = {
   fileSize?: number;
 };
 
-function blobConfigured() {
+async function blobConfigured() {
   return blobReady();
 }
 
@@ -51,9 +51,12 @@ function emailConfigured() {
 
 async function storeDrawing(prefix: string, file: File) {
   const ext = file.name.split(".").pop() || "bin";
-  return put(`${prefix}/${Date.now()}.${ext}`, file, {
+  const body = Buffer.from(await file.arrayBuffer());
+  return put(`${prefix}/${Date.now()}.${ext}`, body, {
     access: BLOB_ACCESS,
     addRandomSuffix: true,
+    contentType: file.type || "application/octet-stream",
+    ...(await blobAuth()),
   });
 }
 
@@ -65,6 +68,7 @@ async function storeLeadRecord(prefix: string, payload: Record<string, unknown>)
       access: BLOB_ACCESS,
       addRandomSuffix: true,
       contentType: "application/json",
+      ...(await blobAuth()),
     },
   );
   return blob.url;
@@ -146,8 +150,10 @@ export async function submitContactForm(
   let recordUrl: string | undefined;
   let stored = false;
   let emailed = false;
+  let storeError: string | undefined;
+  const canStore = await blobConfigured();
 
-  if (file && file.size > 0 && blobConfigured()) {
+  if (file && file.size > 0 && canStore) {
     try {
       const safeCompany = data.company.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
       const drawing = await storeDrawing(`quotes/${safeCompany}`, file);
@@ -156,10 +162,11 @@ export async function submitContactForm(
       stored = true;
     } catch (error) {
       console.error("[Drawing Upload Error]", error);
+      storeError = blobErrorMessage(error);
     }
   }
 
-  if (blobConfigured()) {
+  if (canStore) {
     try {
       recordUrl = await storeLeadRecord("leads/contact", {
         kind: "contact",
@@ -171,6 +178,7 @@ export async function submitContactForm(
       stored = true;
     } catch (error) {
       console.error("[Lead Store Error]", error);
+      storeError ??= blobErrorMessage(error);
     }
   }
 
@@ -223,6 +231,8 @@ export async function submitContactForm(
     recordUrl,
     stored,
     emailed,
+    storeError,
+    hasBlobAuth: canStore,
     timestamp: new Date().toISOString(),
     recipient: QUOTE_EMAIL,
   });
@@ -230,7 +240,7 @@ export async function submitContactForm(
   if (!stored && !emailed) {
     return {
       success: false,
-      message: `The drawing did not store. Email ${data.fileName} to ${QUOTE_EMAIL}.`,
+      message: `The drawing did not store${storeError ? ` (${storeError})` : ""}. Email ${data.fileName} to ${QUOTE_EMAIL}.`,
     };
   }
 
@@ -285,8 +295,10 @@ export async function submitQuickQuote(
   let recordUrl: string | undefined;
   let stored = false;
   let emailed = false;
+  let storeError: string | undefined;
+  const canStore = await blobConfigured();
 
-  if (file && file.size > 0 && blobConfigured()) {
+  if (file && file.size > 0 && canStore) {
     try {
       const drawing = await storeDrawing("quick-quotes", file);
       drawingUrl = drawing.url;
@@ -294,10 +306,11 @@ export async function submitQuickQuote(
       stored = true;
     } catch (error) {
       console.error("[Drawing Upload Error]", error);
+      storeError = blobErrorMessage(error);
     }
   }
 
-  if (blobConfigured()) {
+  if (canStore) {
     try {
       recordUrl = await storeLeadRecord("leads/quick", {
         kind: "quick",
@@ -309,6 +322,7 @@ export async function submitQuickQuote(
       stored = true;
     } catch (error) {
       console.error("[Lead Store Error]", error);
+      storeError ??= blobErrorMessage(error);
     }
   }
 
@@ -354,6 +368,8 @@ export async function submitQuickQuote(
     recordUrl,
     stored,
     emailed,
+    storeError,
+    hasBlobAuth: canStore,
     timestamp: new Date().toISOString(),
     recipient: QUOTE_EMAIL,
   });
@@ -361,7 +377,7 @@ export async function submitQuickQuote(
   if (!stored && !emailed) {
     return {
       success: false,
-      message: `The drawing did not store. Email ${data.fileName} to ${QUOTE_EMAIL}.`,
+      message: `The drawing did not store${storeError ? ` (${storeError})` : ""}. Email ${data.fileName} to ${QUOTE_EMAIL}.`,
     };
   }
 
@@ -405,17 +421,24 @@ export async function submitMachineLead(
 
   let stored = false;
   let emailed = false;
+  let storeError: string | undefined;
 
-  if (blobReady()) {
+  if (await blobReady()) {
     try {
       await put(
         `leads/machines/${Date.now()}.json`,
         JSON.stringify({ kind: "machine", ...data, timestamp: new Date().toISOString() }),
-        { access: BLOB_ACCESS, addRandomSuffix: true, contentType: "application/json" },
+        {
+          access: BLOB_ACCESS,
+          addRandomSuffix: true,
+          contentType: "application/json",
+          ...(await blobAuth()),
+        },
       );
       stored = true;
     } catch (error) {
       console.error("[Machine Lead Store Error]", error);
+      storeError = blobErrorMessage(error);
     }
   }
 
@@ -444,12 +467,12 @@ export async function submitMachineLead(
     }
   }
 
-  console.log("[Machine Lead]", { ...data, stored, emailed });
+  console.log("[Machine Lead]", { ...data, stored, emailed, storeError });
 
   if (!stored && !emailed) {
     return {
       success: false,
-      message: `Inquiry did not store. Email ${QUOTE_EMAIL} with the machine name.`,
+      message: `Inquiry did not store${storeError ? ` (${storeError})` : ""}. Email ${QUOTE_EMAIL} with the machine name.`,
     };
   }
 

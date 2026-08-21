@@ -1,6 +1,6 @@
 import { get, list, put } from "@vercel/blob";
 import { Resend } from "resend";
-import { adminFileHref, blobReady, BLOB_ACCESS } from "@/lib/blob";
+import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 
 export const LEADS_NOTIFY_EMAIL =
   process.env.LEADS_NOTIFY_EMAIL?.trim() || "rberkes@gmail.com";
@@ -24,7 +24,7 @@ function resendClient() {
 }
 
 export async function storeDirectoryLead(lead: DirectoryLeadRecord) {
-  if (!blobReady()) return false;
+  if (!(await blobReady())) return false;
   await put(
     `leads/directory/${Date.now()}.json`,
     JSON.stringify(lead),
@@ -32,6 +32,7 @@ export async function storeDirectoryLead(lead: DirectoryLeadRecord) {
       access: BLOB_ACCESS,
       addRandomSuffix: true,
       contentType: "application/json",
+      ...(await blobAuth()),
     },
   );
   return true;
@@ -67,8 +68,8 @@ export async function emailDirectoryLead(lead: DirectoryLeadRecord) {
 }
 
 export async function listDirectoryLeads() {
-  if (!blobReady()) return [];
-  const result = await list({ prefix: "leads/directory/" });
+  if (!(await blobReady())) return [];
+  const result = await list({ prefix: "leads/directory/", ...(await blobAuth()) });
   return result.blobs.sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1));
 }
 
@@ -81,7 +82,11 @@ export async function listDirectoryLeadRows(): Promise<DirectoryLeadRow[]> {
   const blobs = await listDirectoryLeads();
   const rows: DirectoryLeadRow[] = [];
   for (const blob of blobs.slice(0, 80)) {
-    const result = await get(blob.pathname, { access: "private", useCache: false });
+    const result = await get(blob.pathname, {
+      access: "private",
+      useCache: false,
+      ...(await blobAuth()),
+    });
     if (!result?.stream || result.statusCode !== 200) continue;
     try {
       const payload = JSON.parse(

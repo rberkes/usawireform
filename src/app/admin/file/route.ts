@@ -1,6 +1,6 @@
 import { get } from "@vercel/blob";
 import { isAdmin } from "../actions";
-import { isAdminBlobPath } from "@/lib/blob";
+import { blobAuth, isAdminBlobPath } from "@/lib/blob";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +12,11 @@ export async function GET(request: Request) {
   if (!isAdminBlobPath(path)) {
     return new Response("Not found", { status: 404 });
   }
-  const result = await get(path, { access: "private", useCache: false });
+  const result = await get(path, {
+    access: "private",
+    useCache: false,
+    ...(await blobAuth(request)),
+  });
   if (!result?.stream || result.statusCode !== 200) {
     return new Response("Not found", { status: 404 });
   }
