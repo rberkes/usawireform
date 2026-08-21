@@ -11,8 +11,8 @@ function safeNext(value: string) {
 }
 
 export async function loginAdmin(formData: FormData) {
-  const password = String(formData.get("password") ?? "");
-  const expected = process.env.ADMIN_LEADS_PASSWORD ?? "";
+  const password = String(formData.get("password") ?? "").trim();
+  const expected = (process.env.ADMIN_LEADS_PASSWORD ?? "").trim();
   const next = safeNext(String(formData.get("next") ?? "/admin"));
   if (!expected || password !== expected) {
     redirect(`${next}?error=1`);
