@@ -42,12 +42,8 @@ export default async function AdminQuotesPage({
       </p>
       {rows.length === 0 ? (
         <p className="mt-8 max-w-xl text-sm leading-6 text-muted">
-          No stored drawings yet. The form writes under{" "}
-          <span className="font-mono text-xs">quotes/</span>,{" "}
-          <span className="font-mono text-xs">quick-quotes/</span>, and lead
-          JSON under <span className="font-mono text-xs">leads/</span>. That
-          needs <span className="font-mono text-xs">BLOB_READ_WRITE_TOKEN</span>{" "}
-          on Vercel.
+          No stored drawings yet. Send a STEP on a product page or Contact —
+          it writes here after this deploy.
         </p>
       ) : (
         <ul className="mt-8 divide-y divide-line border border-line">

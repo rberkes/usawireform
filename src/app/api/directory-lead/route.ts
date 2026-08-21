@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       return Response.json(
         {
           error:
-            "Lead did not store. Set BLOB_READ_WRITE_TOKEN and Resend, or email rberkes@gmail.com.",
+            "Lead did not store. Email rberkes@gmail.com.",
         },
         { status: 503 },
       );

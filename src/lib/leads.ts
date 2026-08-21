@@ -1,5 +1,6 @@
-import { list, put } from "@vercel/blob";
+import { get, list, put } from "@vercel/blob";
 import { Resend } from "resend";
+import { adminFileHref, blobReady, BLOB_ACCESS } from "@/lib/blob";
 
 export const LEADS_NOTIFY_EMAIL =
   process.env.LEADS_NOTIFY_EMAIL?.trim() || "rberkes@gmail.com";
@@ -23,12 +24,12 @@ function resendClient() {
 }
 
 export async function storeDirectoryLead(lead: DirectoryLeadRecord) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return false;
+  if (!blobReady()) return false;
   await put(
     `leads/directory/${Date.now()}.json`,
     JSON.stringify(lead),
     {
-      access: "private",
+      access: BLOB_ACCESS,
       addRandomSuffix: true,
       contentType: "application/json",
     },
@@ -66,7 +67,65 @@ export async function emailDirectoryLead(lead: DirectoryLeadRecord) {
 }
 
 export async function listDirectoryLeads() {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
+  if (!blobReady()) return [];
   const result = await list({ prefix: "leads/directory/" });
   return result.blobs.sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1));
+}
+
+export type DirectoryLeadRow = DirectoryLeadRecord & {
+  pathname: string;
+  href: string;
+};
+
+export async function listDirectoryLeadRows(): Promise<DirectoryLeadRow[]> {
+  const blobs = await listDirectoryLeads();
+  const rows: DirectoryLeadRow[] = [];
+  for (const blob of blobs.slice(0, 80)) {
+    const result = await get(blob.pathname, { access: "private", useCache: false });
+    if (!result?.stream || result.statusCode !== 200) continue;
+    try {
+      const payload = JSON.parse(
+        await new Response(result.stream).text(),
+      ) as Partial<DirectoryLeadRecord>;
+      rows.push({
+        name: String(payload.name ?? ""),
+        title: String(payload.title ?? ""),
+        email: String(payload.email ?? ""),
+        phone: String(payload.phone ?? ""),
+        company: String(payload.company ?? ""),
+        linkedin: String(payload.linkedin ?? ""),
+        message: String(payload.message ?? ""),
+        referredCompany: String(payload.referredCompany ?? ""),
+        referredCompanySlug: String(payload.referredCompanySlug ?? ""),
+        source: String(payload.source ?? ""),
+        timestamp:
+          String(payload.timestamp ?? "") ||
+          (blob.uploadedAt instanceof Date
+            ? blob.uploadedAt.toISOString()
+            : String(blob.uploadedAt)),
+        pathname: blob.pathname,
+        href: adminFileHref(blob.pathname),
+      });
+    } catch {
+      rows.push({
+        name: blob.pathname,
+        title: "",
+        email: "",
+        phone: "",
+        company: "",
+        linkedin: "",
+        message: "",
+        referredCompany: "",
+        referredCompanySlug: "",
+        source: "",
+        timestamp:
+          blob.uploadedAt instanceof Date
+            ? blob.uploadedAt.toISOString()
+            : String(blob.uploadedAt),
+        pathname: blob.pathname,
+        href: adminFileHref(blob.pathname),
+      });
+    }
+  }
+  return rows;
 }

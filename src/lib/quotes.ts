@@ -1,4 +1,5 @@
 import { get, list } from "@vercel/blob";
+import { adminFileHref, blobReady } from "@/lib/blob";
 
 export type QuoteSubmission = {
   id: string;
@@ -9,6 +10,7 @@ export type QuoteSubmission = {
   company?: string;
   fileName?: string;
   drawingUrl?: string;
+  drawingPath?: string;
   source?: string;
   targetPrice?: string;
   timeline?: string;
@@ -19,7 +21,7 @@ export type QuoteSubmission = {
 };
 
 async function listPrefix(prefix: string) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
+  if (!blobReady()) return [];
   const blobs = [];
   let cursor: string | undefined;
   do {
@@ -58,7 +60,10 @@ function fromRecord(
     name: asString(payload.name),
     company: asString(payload.company),
     fileName: asString(payload.fileName),
-    drawingUrl: asString(payload.drawingUrl),
+    drawingUrl: asString(payload.drawingPath)
+      ? adminFileHref(String(payload.drawingPath))
+      : asString(payload.drawingUrl),
+    drawingPath: asString(payload.drawingPath),
     source: asString(payload.source),
     targetPrice: asString(payload.targetPrice),
     timeline: asString(payload.timeline),
@@ -70,7 +75,7 @@ function fromRecord(
 }
 
 export async function listQuoteSubmissions(): Promise<QuoteSubmission[]> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
+  if (!blobReady()) return [];
 
   const [contactRecords, quickRecords, quoteFiles, quickFiles] =
     await Promise.all([
@@ -98,11 +103,17 @@ export async function listQuoteSubmissions(): Promise<QuoteSubmission[]> {
           : String(blob.uploadedAt);
     }
     if (row.drawingUrl) drawingUrls.add(row.drawingUrl);
+    if (row.drawingPath) drawingUrls.add(row.drawingPath);
     submissions.push(row);
   }
 
   for (const blob of [...quoteFiles, ...quickFiles]) {
-    if (drawingUrls.has(blob.url) || drawingUrls.has(blob.downloadUrl)) continue;
+    if (
+      drawingUrls.has(blob.pathname) ||
+      drawingUrls.has(blob.url) ||
+      drawingUrls.has(blob.downloadUrl)
+    )
+      continue;
     submissions.push({
       id: blob.pathname,
       kind: "drawing",
@@ -111,7 +122,7 @@ export async function listQuoteSubmissions(): Promise<QuoteSubmission[]> {
           ? blob.uploadedAt.toISOString()
           : String(blob.uploadedAt),
       fileName: blob.pathname.split("/").pop(),
-      drawingUrl: blob.downloadUrl || blob.url,
+      drawingUrl: adminFileHref(blob.pathname),
       recordPath: blob.pathname,
     });
   }

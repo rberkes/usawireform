@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { put } from "@vercel/blob";
+import { blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
 import { LEADS_NOTIFY_EMAIL } from "@/lib/leads";
 
@@ -41,7 +42,7 @@ export type QuickQuoteFormData = {
 };
 
 function blobConfigured() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  return blobReady();
 }
 
 function emailConfigured() {
@@ -50,11 +51,10 @@ function emailConfigured() {
 
 async function storeDrawing(prefix: string, file: File) {
   const ext = file.name.split(".").pop() || "bin";
-  const blob = await put(`${prefix}/${Date.now()}.${ext}`, file, {
-    access: "public",
+  return put(`${prefix}/${Date.now()}.${ext}`, file, {
+    access: BLOB_ACCESS,
     addRandomSuffix: true,
   });
-  return blob.url;
 }
 
 async function storeLeadRecord(prefix: string, payload: Record<string, unknown>) {
@@ -62,7 +62,7 @@ async function storeLeadRecord(prefix: string, payload: Record<string, unknown>)
     `${prefix}/${Date.now()}.json`,
     JSON.stringify(payload),
     {
-      access: "private",
+      access: BLOB_ACCESS,
       addRandomSuffix: true,
       contentType: "application/json",
     },
@@ -142,6 +142,7 @@ export async function submitContactForm(
   }
 
   let drawingUrl: string | undefined;
+  let drawingPath: string | undefined;
   let recordUrl: string | undefined;
   let stored = false;
   let emailed = false;
@@ -149,7 +150,9 @@ export async function submitContactForm(
   if (file && file.size > 0 && blobConfigured()) {
     try {
       const safeCompany = data.company.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
-      drawingUrl = await storeDrawing(`quotes/${safeCompany}`, file);
+      const drawing = await storeDrawing(`quotes/${safeCompany}`, file);
+      drawingUrl = drawing.url;
+      drawingPath = drawing.pathname;
       stored = true;
     } catch (error) {
       console.error("[Drawing Upload Error]", error);
@@ -162,6 +165,7 @@ export async function submitContactForm(
         kind: "contact",
         ...data,
         drawingUrl,
+        drawingPath,
         timestamp: new Date().toISOString(),
       });
       stored = true;
@@ -277,13 +281,16 @@ export async function submitQuickQuote(
   }
 
   let drawingUrl: string | undefined;
+  let drawingPath: string | undefined;
   let recordUrl: string | undefined;
   let stored = false;
   let emailed = false;
 
   if (file && file.size > 0 && blobConfigured()) {
     try {
-      drawingUrl = await storeDrawing("quick-quotes", file);
+      const drawing = await storeDrawing("quick-quotes", file);
+      drawingUrl = drawing.url;
+      drawingPath = drawing.pathname;
       stored = true;
     } catch (error) {
       console.error("[Drawing Upload Error]", error);
@@ -296,6 +303,7 @@ export async function submitQuickQuote(
         kind: "quick",
         ...data,
         drawingUrl,
+        drawingPath,
         timestamp: new Date().toISOString(),
       });
       stored = true;
@@ -398,12 +406,12 @@ export async function submitMachineLead(
   let stored = false;
   let emailed = false;
 
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  if (blobReady()) {
     try {
       await put(
         `leads/machines/${Date.now()}.json`,
         JSON.stringify({ kind: "machine", ...data, timestamp: new Date().toISOString() }),
-        { access: "public", addRandomSuffix: true, contentType: "application/json" },
+        { access: BLOB_ACCESS, addRandomSuffix: true, contentType: "application/json" },
       );
       stored = true;
     } catch (error) {

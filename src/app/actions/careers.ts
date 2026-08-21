@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { put } from "@vercel/blob";
+import { blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -75,7 +76,7 @@ export async function submitJobApplication(
   }
 
   // Upload resume to Vercel Blob (if configured)
-  if (resumeFile && process.env.BLOB_READ_WRITE_TOKEN) {
+  if (resumeFile && blobReady()) {
     try {
       const timestamp = Date.now();
       const safeName = data.name.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
@@ -83,7 +84,7 @@ export async function submitJobApplication(
       const filename = `resumes/${safeName}_${timestamp}.${ext}`;
       
       const blob = await put(filename, resumeFile, {
-        access: "public",
+        access: BLOB_ACCESS,
         addRandomSuffix: false,
       });
       
