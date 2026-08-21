@@ -1,9 +1,17 @@
 import { get, list, put } from "@vercel/blob";
 import { Resend } from "resend";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
+import { COMPANY, SITE_URL } from "@/lib/company";
 
 export const LEADS_NOTIFY_EMAIL =
   process.env.LEADS_NOTIFY_EMAIL?.trim() || "rberkes@gmail.com";
+
+export function resendFromEmail() {
+  return (
+    process.env.RESEND_FROM_EMAIL?.trim() ||
+    `${COMPANY} <beth.t@example.com>`
+  );
+}
 
 export type DirectoryLeadRecord = {
   name: string;
@@ -23,6 +31,35 @@ function resendClient() {
   return process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 }
 
+export async function sendLeadEmail({
+  subject,
+  html,
+  replyTo,
+}: {
+  subject: string;
+  html: string;
+  replyTo?: string;
+}) {
+  const resend = resendClient();
+  if (!resend || !process.env.RESEND_API_KEY) return false;
+  const { error } = await resend.emails.send({
+    from: resendFromEmail(),
+    to: LEADS_NOTIFY_EMAIL,
+    replyTo,
+    subject,
+    html: `${html}
+      <hr />
+      <p><a href="${SITE_URL}/admin">Open quote files</a>
+      · <a href="${SITE_URL}/admin/leads">Open directory</a></p>
+    `,
+  });
+  if (error) {
+    console.error("[Lead email]", error);
+    return false;
+  }
+  return true;
+}
+
 export async function storeDirectoryLead(lead: DirectoryLeadRecord) {
   if (!(await blobReady())) return false;
   await put(
@@ -39,14 +76,9 @@ export async function storeDirectoryLead(lead: DirectoryLeadRecord) {
 }
 
 export async function emailDirectoryLead(lead: DirectoryLeadRecord) {
-  const resend = resendClient();
-  const from = process.env.RESEND_FROM_EMAIL;
-  if (!resend || !from) return false;
-  await resend.emails.send({
-    from,
-    to: LEADS_NOTIFY_EMAIL,
-    replyTo: lead.email,
+  return sendLeadEmail({
     subject: `Directory lead: ${lead.referredCompany} — ${lead.name}`,
+    replyTo: lead.email,
     html: `
       <h2>Directory lead</h2>
       <p><strong>About:</strong> ${lead.referredCompany} (/directory/${lead.referredCompanySlug})</p>
@@ -64,7 +96,6 @@ export async function emailDirectoryLead(lead: DirectoryLeadRecord) {
       <p><small>${lead.timestamp}</small></p>
     `,
   });
-  return true;
 }
 
 export async function listDirectoryLeads() {

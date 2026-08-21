@@ -1,12 +1,9 @@
 "use server";
 
-import { Resend } from "resend";
 import { put } from "@vercel/blob";
 import { blobAuth, blobErrorMessage, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
-import { LEADS_NOTIFY_EMAIL } from "@/lib/leads";
-
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+import { sendLeadEmail } from "@/lib/leads";
 
 export type QuoteFormState = {
   success: boolean;
@@ -46,7 +43,7 @@ async function blobConfigured() {
 }
 
 function emailConfigured() {
-  return Boolean(resend && process.env.RESEND_FROM_EMAIL);
+  return Boolean(process.env.RESEND_API_KEY);
 }
 
 async function storeDrawing(prefix: string, file: File) {
@@ -182,11 +179,9 @@ export async function submitContactForm(
     }
   }
 
-  if (emailConfigured() && resend && process.env.RESEND_FROM_EMAIL) {
+  if (emailConfigured()) {
     try {
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL,
-        to: LEADS_NOTIFY_EMAIL,
+      emailed = await sendLeadEmail({
         replyTo: data.email,
         subject: `Quote Request: ${data.company} - ${data.material} ${data.diameter}`,
         html: `
@@ -210,16 +205,9 @@ export async function submitContactForm(
           <h4>Notes:</h4>
           <p>${data.notes.replace(/\n/g, "<br />")}</p>
           <hr />
-          <p><strong>Drawing:</strong> ${
-            drawingUrl 
-              ? `<a href="${drawingUrl}">${data.fileName}</a>` 
-              : data.fileName || "Not uploaded"
-          }</p>
-          <hr />
-          <p><small>Submitted at ${new Date().toISOString()}</small></p>
+          <p><strong>Drawing:</strong> ${data.fileName || "Not uploaded"}</p>
         `,
       });
-      emailed = true;
     } catch (error) {
       console.error("[Email Send Error]", error);
     }
@@ -326,11 +314,9 @@ export async function submitQuickQuote(
     }
   }
 
-  if (emailConfigured() && resend && process.env.RESEND_FROM_EMAIL) {
+  if (emailConfigured()) {
     try {
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL,
-        to: LEADS_NOTIFY_EMAIL,
+      emailed = await sendLeadEmail({
         replyTo: data.email,
         subject: `Quick Quote${data.source ? ` (${data.source})` : ""}: ${data.timeline} - ${data.quality}`,
         html: `
@@ -347,16 +333,9 @@ export async function submitQuickQuote(
           <p><strong>Timeline:</strong> ${data.timeline}</p>
           <p><strong>Quality Standard:</strong> ${data.quality}</p>
           <hr />
-          <p><strong>Drawing:</strong> ${
-            drawingUrl 
-              ? `<a href="${drawingUrl}">${data.fileName}</a>` 
-              : data.fileName || "Not uploaded"
-          }</p>
-          <hr />
-          <p><small>Submitted at ${new Date().toISOString()}</small></p>
+          <p><strong>Drawing:</strong> ${data.fileName || "Not uploaded"}</p>
         `,
       });
-      emailed = true;
     } catch (error) {
       console.error("[Email Send Error]", error);
     }
@@ -442,11 +421,9 @@ export async function submitMachineLead(
     }
   }
 
-  if (resend && process.env.RESEND_FROM_EMAIL) {
+  if (emailConfigured()) {
     try {
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL,
-        to: LEADS_NOTIFY_EMAIL,
+      emailed = await sendLeadEmail({
         replyTo: data.email,
         subject: `Machine lead: ${data.oem} ${data.model} — ${data.company}`,
         html: `
@@ -461,7 +438,6 @@ export async function submitMachineLead(
           <p><strong>Notes:</strong> ${data.notes.replace(/\n/g, "<br />") || "—"}</p>
         `,
       });
-      emailed = true;
     } catch (error) {
       console.error("[Machine Lead Email Error]", error);
     }

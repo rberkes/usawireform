@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { put } from "@vercel/blob";
 import { blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
+import { resendFromEmail } from "@/lib/leads";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -98,10 +99,10 @@ export async function submitJobApplication(
   }
 
   // Send notification email (if Resend configured)
-  if (resend && process.env.RESEND_FROM_EMAIL) {
+  if (resend) {
     try {
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL,
+      const { error } = await resend.emails.send({
+        from: resendFromEmail(),
         to: QUOTE_EMAIL,
         subject: `New Job Application: ${data.position} - ${data.name}`,
         html: `
@@ -124,6 +125,7 @@ export async function submitJobApplication(
           <p><small>Submitted at ${new Date().toISOString()}</small></p>
         `,
       });
+      if (error) console.error("[Email Send Error]", error);
     } catch (error) {
       console.error("[Email Send Error]", error);
       // Continue - still log the application
