@@ -217,7 +217,7 @@ export function polylinesForModel(id: string): Polyline[] {
       return [
         join(
           line([-r, r + leg, 0], [-r, r, 0]),
-          arc(0, r, 0, r, Math.PI, 0, 28),
+          arc(0, r, 0, r, Math.PI, Math.PI * 2, 28),
           line([r, r, 0], [r, r + leg, 0]),
         ),
       ];
