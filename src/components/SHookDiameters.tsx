@@ -1,12 +1,12 @@
 import { cx } from "@/lib/cx";
 import { WIRE } from "@/lib/range";
+import { S_HOOK_SVG } from "@/lib/wire-geometry";
 
 /**
  * Formed S-hook centerline: two opposite ~240° eyes and a short shank.
  * Reads as a letter S — top opening right, bottom opening left.
  */
-export const S_HOOK_PATH =
-  "M101 22A24 24 0 1 0 80 58L80 66A24 24 0 1 1 59 102";
+export const S_HOOK_PATH = S_HOOK_SVG;
 
 const SIZES = [
   {

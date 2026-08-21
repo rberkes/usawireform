@@ -27,8 +27,8 @@ export type ShowcaseModel = {
 };
 
 /**
- * Catalog forms we show as 3D shop models. Drop a real STEP on the viewer
- * to inspect a print; add `/public/models/*.step` later for customer parts.
+ * Catalog forms we show as 3D shop models. Each id has a STEP solid at
+ * `/models/{id}.step` (3/8 in wire swept from the shop centerline).
  */
 export const showcaseModels: ShowcaseModel[] = [
   {
@@ -36,7 +36,7 @@ export const showcaseModels: ShowcaseModel[] = [
     title: "S-hook",
     productSlug: "s-hooks",
     group: "Hooks and rings",
-    summary: "Two opposite eyes and a shank — hang and lift hardware.",
+    summary: "Lifting S-hook from the SolidWorks part — 1/2 in wire, 5-1/4 in overall.",
     kind: "wire",
   },
   {
@@ -161,3 +161,10 @@ export function showcaseForProduct(slug: string) {
 export function showcaseHref(slug: string) {
   return `/models?part=${encodeURIComponent(slug)}`;
 }
+
+export function showcaseStepPath(id: string) {
+  return `/models/${id}.step`;
+}
+
+/** Catalog solids that should not be retubed when the diameter control changes. */
+export const NATIVE_CAD_PARTS = new Set(["s-hooks"]);

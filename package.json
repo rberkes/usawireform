@@ -6,6 +6,7 @@
     "dev": "node scripts/copy-occt.mjs && next dev",
     "build": "node scripts/copy-occt.mjs && npm run validate && next build",
     "postinstall": "node scripts/copy-occt.mjs",
+    "export-step": "npx tsx scripts/dump-wire-paths.ts | python3 scripts/export-wire-step.py",
     "start": "next start",
     "lint": "eslint",
     "validate": "npx tsx src/lib/catalog-validation.ts",

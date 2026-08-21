@@ -17,7 +17,7 @@ export type OcctMesh = {
 
 export type ViewerSource =
   | { type: "wire"; id: string; diameterIn: number; finish: WireFinishId }
-  | { type: "step"; meshes: OcctMesh[]; name: string };
+  | { type: "step"; meshes: OcctMesh[]; name: string; finish: WireFinishId };
 
 export function StepCanvas({
   source,
@@ -217,9 +217,9 @@ export function StepCanvas({
         fit(content);
       }
 
-      function drawStep(meshes: OcctMesh[]) {
+      function drawStep(meshes: OcctMesh[], finish: WireFinishId) {
         clearContent();
-        const fallback = steelMaterial("carbon");
+        const fallback = steelMaterial(finish);
         for (const mesh of meshes) {
           const geometry = new THREE.BufferGeometry();
           geometry.setAttribute(
@@ -238,8 +238,8 @@ export function StepCanvas({
             geometry.computeVertexNormals();
           }
           geometry.setIndex(mesh.index.array);
-          const material = mesh.color
-            ? steelMaterial("carbon", mesh.color)
+            const material = mesh.color
+            ? steelMaterial(finish, mesh.color)
             : fallback;
           const threeMesh = new THREE.Mesh(geometry, material);
           threeMesh.name = mesh.name ?? "step";
@@ -253,7 +253,7 @@ export function StepCanvas({
           if (next.type === "wire") {
             drawWire(next.id, next.diameterIn, next.finish);
           } else {
-            drawStep(next.meshes);
+            drawStep(next.meshes, next.finish);
           }
         } catch (error) {
           console.error("Model viewer failed to draw", error);

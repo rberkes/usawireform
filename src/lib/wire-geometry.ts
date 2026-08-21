@@ -74,36 +74,131 @@ function join(...parts: Polyline[]): Polyline {
   return out;
 }
 
+function angle(ux: number, uy: number, vx: number, vy: number) {
+  const sign = ux * vy - uy * vx < 0 ? -1 : 1;
+  const dot = Math.max(
+    -1,
+    Math.min(1, (ux * vx + uy * vy) / (Math.hypot(ux, uy) * Math.hypot(vx, vy))),
+  );
+  return sign * Math.acos(dot);
+}
+
+/** SVG elliptical arc → polyline in SVG coordinates (Y down). */
+function svgArc(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  rx: number,
+  ry: number,
+  largeArc: boolean,
+  sweep: boolean,
+  segs = 24,
+): Polyline {
+  rx = Math.abs(rx);
+  ry = Math.abs(ry);
+  if (rx < 1e-9 || ry < 1e-9) return [[x1, -y1, 0], [x2, -y2, 0]];
+
+  const dx = (x1 - x2) / 2;
+  const dy = (y1 - y2) / 2;
+  const cr = (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry);
+  if (cr > 1) {
+    const s = Math.sqrt(cr);
+    rx *= s;
+    ry *= s;
+  }
+
+  const sign = largeArc === sweep ? -1 : 1;
+  const n = rx * rx * ry * ry - rx * rx * dy * dy - ry * ry * dx * dx;
+  const d = rx * rx * dy * dy + ry * ry * dx * dx;
+  const coef = sign * Math.sqrt(Math.max(0, n / d));
+  const cxp = (coef * rx * dy) / ry;
+  const cyp = (coef * -ry * dx) / rx;
+  const cx = cxp + (x1 + x2) / 2;
+  const cy = cyp + (y1 + y2) / 2;
+
+  const theta1 = angle(1, 0, (x1 - cx) / rx, (y1 - cy) / ry);
+  let dtheta = angle(
+    (x1 - cx) / rx,
+    (y1 - cy) / ry,
+    (x2 - cx) / rx,
+    (y2 - cy) / ry,
+  );
+  if (!sweep && dtheta > 0) dtheta -= Math.PI * 2;
+  if (sweep && dtheta < 0) dtheta += Math.PI * 2;
+
+  const pts: Polyline = [];
+  for (let i = 0; i <= segs; i++) {
+    const t = theta1 + (dtheta * i) / segs;
+    pts.push([cx + rx * Math.cos(t), -(cy + ry * Math.sin(t)), 0]);
+  }
+  return pts;
+}
+
+function svgLine(x1: number, y1: number, x2: number, y2: number): Polyline {
+  return [
+    [x1, -y1, 0],
+    [x2, -y2, 0],
+  ];
+}
+
+/** Map an SVG-space polyline so its height is `heightIn` inches, Y up, centered. */
+function fitInches(pts: Polyline, heightIn: number): Polyline {
+  let minY = Infinity;
+  let maxY = -Infinity;
+  let minX = Infinity;
+  let maxX = -Infinity;
+  for (const [x, y] of pts) {
+    minX = Math.min(minX, x);
+    maxX = Math.max(maxX, x);
+    minY = Math.min(minY, y);
+    maxY = Math.max(maxY, y);
+  }
+  const span = Math.max(maxY - minY, 1e-6);
+  const scale = heightIn / span;
+  const midX = (minX + maxX) / 2;
+  const midY = (minY + maxY) / 2;
+  return pts.map(([x, y, z]) => [(x - midX) * scale, (y - midY) * scale, z * scale]);
+}
+
+/**
+ * Shop-drawing S-hook: two opposite ~240° eyes, top opening right,
+ * bottom opening left. Same path as the product-page drawing.
+ * Sized as a 3/8 × 3-1/4 in catalog hook (centerline span).
+ */
+export const S_HOOK_SVG =
+  "M101 22A24 24 0 1 0 80 58L80 66A24 24 0 1 1 59 102";
+
+function sHookCenterline(): Polyline {
+  return fitInches(
+    join(
+      svgArc(101, 22, 80, 58, 24, 24, true, false, 32),
+      svgLine(80, 58, 80, 66),
+      svgArc(80, 66, 59, 102, 24, 24, true, true, 32),
+    ),
+    2.875,
+  );
+}
+
+function jHookCenterline(): Polyline {
+  return fitInches(
+    join(svgLine(84, 18, 84, 80), svgArc(84, 80, 36, 80, 24, 24, false, true, 28)),
+    4.5,
+  );
+}
+
 export function polylinesForModel(id: string): Polyline[] {
   switch (id) {
-    case "s-hooks": {
-      const r = 1.45;
-      const gap = 0.55;
-      const top = join(
-        arc(0, 4.2, 0, r, Math.PI * 0.15, Math.PI * 1.55, 28),
-      );
-      const bottom = join(
-        arc(0, r + gap, 0, r, -Math.PI * 0.15, -Math.PI * 1.55, 28),
-      );
-      const shank = line(top[top.length - 1], bottom[0]);
-      return [join(top, shank, bottom)];
-    }
+    case "s-hooks":
+      return [sHookCenterline()];
+    case "j-hooks":
+      return [jHookCenterline()];
     case "d-rings": {
       const r = 2.2;
       return [
         join(
           line([0, -r, 0], [0, r, 0]),
           arc(0, 0, 0, r, Math.PI / 2, -Math.PI / 2, 28),
-        ),
-      ];
-    }
-    case "j-hooks": {
-      const r = 1.6;
-      const leg = 7;
-      return [
-        join(
-          line([0, r + leg, 0], [0, r, 0]),
-          arc(r, r, 0, r, Math.PI, Math.PI * 2.15, 24),
         ),
       ];
     }

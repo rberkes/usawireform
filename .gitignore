@@ -45,3 +45,7 @@ next-env.d.ts
 
 # local costing sheets — never deploy
 Ouxu-PI-price-stack.xlsx
+
+# python
+__pycache__/
+*.py[cod]
