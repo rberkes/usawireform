@@ -68,6 +68,8 @@ export function isAdminBlobPath(path: string) {
   return Boolean(path) && !path.includes("..") && ADMIN_PREFIXES.some((p) => path.startsWith(p));
 }
 
-export function adminFileHref(path: string) {
-  return `/admin/file?path=${encodeURIComponent(path)}`;
+export function adminFileHref(path: string, fileName?: string) {
+  const params = new URLSearchParams({ path });
+  if (fileName) params.set("name", fileName);
+  return `/admin/file?${params.toString()}`;
 }

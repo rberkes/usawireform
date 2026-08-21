@@ -8,6 +8,9 @@ export type QuoteSubmission = {
   email?: string;
   name?: string;
   company?: string;
+  phone?: string;
+  material?: string;
+  diameter?: string;
   fileName?: string;
   drawingUrl?: string;
   drawingPath?: string;
@@ -56,6 +59,8 @@ function fromRecord(
   payload: Record<string, unknown>,
 ): QuoteSubmission {
   const kind = payload.kind === "contact" ? "contact" : "quick";
+  const fileName = asString(payload.fileName);
+  const drawingPath = asString(payload.drawingPath);
   return {
     id: pathname,
     kind,
@@ -63,11 +68,14 @@ function fromRecord(
     email: asString(payload.email),
     name: asString(payload.name),
     company: asString(payload.company),
-    fileName: asString(payload.fileName),
-    drawingUrl: asString(payload.drawingPath)
-      ? adminFileHref(String(payload.drawingPath))
+    phone: asString(payload.phone),
+    material: asString(payload.material),
+    diameter: asString(payload.diameter),
+    fileName,
+    drawingUrl: drawingPath
+      ? adminFileHref(drawingPath, fileName)
       : asString(payload.drawingUrl),
-    drawingPath: asString(payload.drawingPath),
+    drawingPath,
     source: asString(payload.source),
     targetPrice: asString(payload.targetPrice),
     timeline: asString(payload.timeline),
@@ -126,7 +134,7 @@ export async function listQuoteSubmissions(): Promise<QuoteSubmission[]> {
           ? blob.uploadedAt.toISOString()
           : String(blob.uploadedAt),
       fileName: blob.pathname.split("/").pop(),
-      drawingUrl: adminFileHref(blob.pathname),
+      drawingUrl: adminFileHref(blob.pathname, blob.pathname.split("/").pop()),
       recordPath: blob.pathname,
     });
   }

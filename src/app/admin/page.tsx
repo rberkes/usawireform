@@ -2,6 +2,7 @@ import Link from "next/link";
 import { isAdmin } from "./actions";
 import { AdminLogin } from "./login-form";
 import { listQuoteSubmissions } from "@/lib/quotes";
+import { AdminStepPreview } from "@/components/UploadedDrawingPreview";
 import { Page, PageHero, TextLink } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +15,10 @@ function kindLabel(kind: string) {
   if (kind === "contact") return "Contact quote";
   if (kind === "quick") return "Page drawing";
   return "File only";
+}
+
+function line(parts: Array<string | undefined>) {
+  return parts.filter(Boolean).join(" · ");
 }
 
 export default async function AdminQuotesPage({
@@ -63,11 +68,22 @@ export default async function AdminQuotesPage({
                 </p>
               </div>
               <p className="mt-1 text-muted">
-                {row.fileName ?? "No filename"}
-                {row.source ? ` · ${row.source}` : ""}
-                {row.targetPrice ? ` · ${row.targetPrice}` : ""}
-                {row.timeline ? ` · ${row.timeline}` : ""}
+                {line([row.name, row.phone, row.linkedin])}
               </p>
+              <p className="mt-1 text-muted">
+                {line([
+                  row.fileName,
+                  row.material,
+                  row.diameter,
+                  row.targetPrice ? `${row.targetPrice} / pc` : undefined,
+                  row.timeline,
+                  row.quality,
+                  row.source,
+                ]) || "No filename"}
+              </p>
+              {row.notes ? (
+                <p className="mt-2 max-w-2xl text-foreground/90">{row.notes}</p>
+              ) : null}
               <p className="mt-1 font-mono text-[11px] text-muted">
                 {row.timestamp
                   ? new Date(row.timestamp).toLocaleString("en-US", {
@@ -76,16 +92,15 @@ export default async function AdminQuotesPage({
                   : "—"}
               </p>
               {row.drawingUrl ? (
-                <p className="mt-2">
+                <div className="mt-3 flex flex-wrap items-center gap-4">
                   <Link
                     href={row.drawingUrl}
                     className="text-copper hover:underline"
-                    target="_blank"
-                    rel="noreferrer"
                   >
                     Download STEP
                   </Link>
-                </p>
+                  <AdminStepPreview src={row.drawingUrl} name={row.fileName} />
+                </div>
               ) : (
                 <p className="mt-2 text-muted">No file URL on this record.</p>
               )}
