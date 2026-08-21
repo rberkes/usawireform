@@ -331,7 +331,7 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
                 {selected.summary}{" "}
                 {catalogStep && (diameterId === "3-8" || nativeCad)
                   ? nativeCad
-                    ? "SolidWorks STEP — not a customer print."
+                    ? "We form this part. Send a print if the length or wire is different."
                     : "3/8 in STEP solid from the shop drawing — not a customer print."
                   : "Shop centerline in stock coil — not a customer print."}{" "}
                 <Link

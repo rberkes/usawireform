@@ -36,7 +36,7 @@ export const showcaseModels: ShowcaseModel[] = [
     title: "S-hook",
     productSlug: "s-hooks",
     group: "Hooks and rings",
-    summary: "Lifting S-hook from the SolidWorks part — 1/2 in wire, 5-1/4 in overall.",
+    summary: "Lifting S-hook we form — 1/2 in wire, 6-1/2 in overall.",
     kind: "wire",
   },
   {
