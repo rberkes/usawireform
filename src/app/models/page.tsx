@@ -36,8 +36,10 @@ export default async function ModelsPage({ searchParams }: Props) {
         lede={
           <>
             Shop models of catalog parts in {STOCK}. Orbit, change diameter,
-            drop a STEP from the print. Then send it — the viewer does not
-            replace a quote. Design rules live in the{" "}
+            drop a STEP from the print. Jobs we already ran live on{" "}
+            <TextLink href="/past-projects">our past projects</TextLink>. Then
+            send it — the viewer does not replace a quote. Design rules live
+            in the{" "}
             <TextLink href="/guide/design-for-wire-forming">
               design guide
             </TextLink>

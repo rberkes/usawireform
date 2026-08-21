@@ -218,6 +218,11 @@ export default function Home() {
                 body: "Orbit shop models of hooks, baskets, trays, and guards. Drop a STEP from the print.",
               },
               {
+                href: "/past-projects",
+                title: "Our past projects",
+                body: "Shop files from jobs we formed. Autodesk streams the latest version.",
+              },
+              {
                 href: "/videos",
                 title: "Shop video",
                 body: "Numalliance CNC on the floor — Robomac 214TF and the named machines.",

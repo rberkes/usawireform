@@ -79,6 +79,11 @@ export default function SiteMapPage() {
               body: "Orbit shop models. Drop a STEP or IGES to inspect a print.",
             },
             {
+              href: "/past-projects",
+              title: "Our past projects",
+              body: "Shop files from jobs we formed, streamed from Autodesk.",
+            },
+            {
               href: "/videos",
               title: "Videos",
               body: "Shop channel — CNC on camera.",

@@ -74,6 +74,7 @@ const navSections = [
       { href: "/products/bread-racks", label: "Bread Racks" },
       { href: "/products/design-and-prototyping", label: "Design and Prototyping" },
       { href: "/models", label: "3D models" },
+      { href: "/past-projects", label: "Our past projects" },
       { href: "/videos", label: "Videos" },
       { href: "/blog", label: "Blog" },
       { href: "/about", label: "About Us" },

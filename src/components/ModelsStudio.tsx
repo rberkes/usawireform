@@ -86,6 +86,12 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
   const nativeCad = NATIVE_CAD_PARTS.has(selected.id);
 
   useEffect(() => {
+    if (searchParams.get("part") === "rod") {
+      router.replace("/past-projects?project=rod");
+    }
+  }, [router, searchParams]);
+
+  useEffect(() => {
     if (NATIVE_CAD_PARTS.has(selected.id)) setDiameterId("1-2");
   }, [selected.id]);
 

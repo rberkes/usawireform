@@ -314,6 +314,15 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.8,
   }),
   record({
+    path: "/past-projects",
+    title: "Our Past Projects",
+    description:
+      "Orbit shop files from jobs we formed. Autodesk streams the latest version of each share.",
+    section: "company",
+    keywords: ["wire forming projects", "CNC wire form CAD"],
+    priority: 0.7,
+  }),
+  record({
     path: "/videos",
     title: "Videos",
     description:

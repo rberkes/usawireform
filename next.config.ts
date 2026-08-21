@@ -68,6 +68,11 @@ const nextConfig: NextConfig = {
       { source: "/sitemap", destination: "/site-map", permanent: true },
       { source: "/step-viewer", destination: "/models", permanent: true },
       {
+        source: "/our-past-projects",
+        destination: "/past-projects",
+        permanent: true,
+      },
+      {
         source: "/wire-forming-cities",
         destination: "/directory/areas",
         permanent: true,
