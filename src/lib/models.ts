@@ -44,7 +44,7 @@ export const showcaseModels: ShowcaseModel[] = [
     title: "D-ring",
     productSlug: "d-rings",
     group: "Hooks and rings",
-    summary: "Flat span and a round back for strap and tie-down.",
+    summary: "D-ring we form — 1/2 in wire, 3-1/2 in overall.",
     kind: "wire",
   },
   {
@@ -167,4 +167,4 @@ export function showcaseStepPath(id: string) {
 }
 
 /** Catalog solids that should not be retubed when the diameter control changes. */
-export const NATIVE_CAD_PARTS = new Set(["s-hooks"]);
+export const NATIVE_CAD_PARTS = new Set(["s-hooks", "d-rings"]);

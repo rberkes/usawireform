@@ -86,7 +86,7 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
   const nativeCad = NATIVE_CAD_PARTS.has(selected.id);
 
   useEffect(() => {
-    if (selected.id === "s-hooks") setDiameterId("1-2");
+    if (NATIVE_CAD_PARTS.has(selected.id)) setDiameterId("1-2");
   }, [selected.id]);
 
   useEffect(() => {
