@@ -44,7 +44,14 @@ export default function ProductsPage() {
       <PageHero
         kicker="Catalog"
         title="Wire form products"
-        lede={`USA made wire baskets, USA made D-rings, USA made cable trays, USA made wire racks, USA made security fencing, USA made ground staples, USA made wire stakes — plus 100+ forms in ${STOCK}.`}
+        lede={
+          <>
+            USA made wire baskets, USA made D-rings, USA made cable trays,
+            USA made wire racks, USA made security fencing, USA made ground
+            staples, USA made wire stakes — plus 100+ forms in {STOCK}.{" "}
+            <TextLink href="/models">Orbit them in 3D</TextLink>.
+          </>
+        }
       />
 
       <Section kicker="USA made" className="mt-12">

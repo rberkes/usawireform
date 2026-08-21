@@ -74,6 +74,11 @@ export default function SiteMapPage() {
               body: "Robomac TF, e-Motion, TFE, FTX — the catalog we run and sell against.",
             },
             {
+              href: "/models",
+              title: "3D STEP viewer",
+              body: "Orbit shop models. Drop a STEP or IGES to inspect a print.",
+            },
+            {
               href: "/videos",
               title: "Videos",
               body: "Shop channel — CNC on camera.",

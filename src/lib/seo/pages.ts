@@ -305,6 +305,15 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.7,
   }),
   record({
+    path: "/models",
+    title: "3D STEP Viewer",
+    description:
+      "Orbit shop models of S-hooks, D-rings, baskets, trays, and guards. Drop a STEP or IGES to inspect a print.",
+    section: "company",
+    keywords: ["STEP viewer", "wire form 3D", "STP viewer"],
+    priority: 0.8,
+  }),
+  record({
     path: "/videos",
     title: "Videos",
     description:

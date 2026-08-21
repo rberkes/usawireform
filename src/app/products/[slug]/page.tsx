@@ -6,6 +6,7 @@ import { ProductForm } from "@/components/ProductForm";
 import { SHookDiameters } from "@/components/SHookDiameters";
 import { WIRE } from "@/lib/range";
 import {
+  ButtonLink,
   Page,
   PageHero,
   Section,
@@ -19,6 +20,7 @@ import {
 } from "@/lib/catalog";
 import { pageMeta } from "@/lib/seo";
 import { usaMadeForSlug } from "@/lib/usa-made";
+import { showcaseForProduct, showcaseHref } from "@/lib/models";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -54,6 +56,7 @@ export default async function CatalogProductPage({ params }: Props) {
   const item = getCatalogItem(slug);
   if (!item) notFound();
   const made = usaMadeForSlug(slug);
+  const showcase = showcaseForProduct(slug);
 
   const related = item.related
     .map((relatedSlug) => getCatalogItem(relatedSlug))
@@ -87,6 +90,13 @@ export default async function CatalogProductPage({ params }: Props) {
             lede={item.lede}
           />
           <SHookDiameters className="mt-10" />
+          {showcase ? (
+            <p className="mt-4">
+              <ButtonLink href={showcaseHref(slug)} variant="ghost">
+                View 3D model
+              </ButtonLink>
+            </p>
+          ) : null}
         </>
       ) : (
         <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
@@ -99,6 +109,17 @@ export default async function CatalogProductPage({ params }: Props) {
             <ProductForm slug={item.slug} className="h-auto w-full p-8 sm:p-12" />
             <p className="border-t border-line px-5 py-3 font-mono text-[11px] tracking-widest text-muted uppercase">
               Formed from coil · {STOCK}
+              {showcase ? (
+                <>
+                  {" · "}
+                  <TextLink
+                    href={showcaseHref(slug)}
+                    className="font-sans text-[11px] tracking-widest normal-case"
+                  >
+                    3D model
+                  </TextLink>
+                </>
+              ) : null}
             </p>
           </div>
         </div>

@@ -24,6 +24,7 @@ const highPriorityPaths = new Set([
   "/custom-wire-forming",
   "/wire-mesh",
   "/blog",
+  "/models",
   "/ohio",
   "/directory/areas",
 ]);

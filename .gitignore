@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# copied from occt-import-js on install
+/public/vendor/occt-import-js/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

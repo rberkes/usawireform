@@ -47,6 +47,7 @@ const shop = [
   { href: "/products/dunnage-inserts", label: "Dunnage inserts" },
   { href: "/products/bread-racks", label: "Bread racks" },
   { href: "/products/design-and-prototyping", label: "Design and prototyping" },
+  { href: "/models", label: "3D models" },
   { href: "/videos", label: "Videos" },
   { href: "/blog", label: "Blog" },
   { href: "/instant-quote", label: "Instant quote" },

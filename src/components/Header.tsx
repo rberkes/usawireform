@@ -73,6 +73,7 @@ const navSections = [
       { href: "/products/dunnage-inserts", label: "Dunnage Inserts" },
       { href: "/products/bread-racks", label: "Bread Racks" },
       { href: "/products/design-and-prototyping", label: "Design and Prototyping" },
+      { href: "/models", label: "3D models" },
       { href: "/videos", label: "Videos" },
       { href: "/blog", label: "Blog" },
       { href: "/about", label: "About Us" },

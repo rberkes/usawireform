@@ -25,6 +25,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/vendor/occt-import-js/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
   async redirects() {
@@ -57,6 +66,7 @@ const nextConfig: NextConfig = {
       { source: "/wire-part", destination: "/wire-parts", permanent: true },
       { source: "/wire-product", destination: "/products", permanent: true },
       { source: "/sitemap", destination: "/site-map", permanent: true },
+      { source: "/step-viewer", destination: "/models", permanent: true },
       {
         source: "/wire-forming-cities",
         destination: "/directory/areas",

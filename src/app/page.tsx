@@ -213,6 +213,11 @@ export default function Home() {
                 body: "Wire forming articles, structures, and a daily briefing.",
               },
               {
+                href: "/models",
+                title: "3D STEP viewer",
+                body: "Orbit shop models of hooks, baskets, trays, and guards. Drop a STEP from the print.",
+              },
+              {
                 href: "/videos",
                 title: "Shop video",
                 body: "Numalliance CNC on the floor — Robomac 214TF and the named machines.",

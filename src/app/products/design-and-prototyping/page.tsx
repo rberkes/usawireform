@@ -54,6 +54,10 @@ export default function DesignAndPrototypingPage() {
       <Section title="Related">
         <ul className="mt-6 max-w-2xl list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
           <li>
+            <TextLink href="/models">3D STEP viewer</TextLink>
+            {" —"} orbit shop models or drop a print
+          </li>
+          <li>
             <TextLink href="/guide/design-for-wire-forming">
               Design for wire forming
             </TextLink>
