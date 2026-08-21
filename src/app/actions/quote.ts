@@ -70,6 +70,11 @@ async function storeLeadRecord(prefix: string, payload: Record<string, unknown>)
   return blob.url;
 }
 
+function isStepDrawing(name: string) {
+  const ext = name.split(".").pop()?.toLowerCase() ?? "";
+  return ext === "step" || ext === "stp" || ext === "stpz";
+}
+
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -115,8 +120,7 @@ export async function submitContactForm(
   if (!data.company) errors.company = "Company is required";
   if (!data.email) errors.email = "Email is required";
   else if (!isValidEmail(data.email)) errors.email = "Invalid email address";
-  if (!data.linkedin) errors.linkedin = "LinkedIn URL is required";
-  else if (!isValidLinkedIn(data.linkedin))
+  if (data.linkedin && !isValidLinkedIn(data.linkedin))
     errors.linkedin = "Invalid LinkedIn URL";
   if (!data.phone) errors.phone = "Phone is required";
   if (!data.material) errors.material = "Material is required";
@@ -125,7 +129,9 @@ export async function submitContactForm(
   if (!data.timeline) errors.timeline = "Timeline is required";
   if (!data.quality) errors.quality = "Quality standard is required";
   if (!data.notes) errors.notes = "Part notes are required";
-  if (!data.fileName) errors.drawing = "Drawing file is required";
+  if (!data.fileName) errors.drawing = "STEP file is required";
+  else if (!isStepDrawing(data.fileName))
+    errors.drawing = "Use a STEP or STP file.";
 
   if (Object.keys(errors).length > 0) {
     return {
@@ -176,7 +182,11 @@ export async function submitContactForm(
           <p><strong>Contact:</strong> ${data.name}</p>
           <p><strong>Company:</strong> ${data.company}</p>
           <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
-          <p><strong>LinkedIn:</strong> <a href="${data.linkedin}">${data.linkedin}</a></p>
+          <p><strong>LinkedIn:</strong> ${
+            data.linkedin
+              ? `<a href="${data.linkedin}">${data.linkedin}</a>`
+              : "—"
+          }</p>
           <p><strong>Phone:</strong> ${data.phone}</p>
           <hr />
           <h3>Part Details</h3>
@@ -249,13 +259,14 @@ export async function submitQuickQuote(
 
   if (!data.email) errors.email = "Email is required";
   else if (!isValidEmail(data.email)) errors.email = "Invalid email address";
-  if (!data.linkedin) errors.linkedin = "LinkedIn URL is required";
-  else if (!isValidLinkedIn(data.linkedin))
+  if (data.linkedin && !isValidLinkedIn(data.linkedin))
     errors.linkedin = "Invalid LinkedIn URL";
   if (!data.targetPrice) errors.targetPrice = "Target price is required";
   if (!data.timeline) errors.timeline = "Timeline is required";
   if (!data.quality) errors.quality = "Quality standard is required";
-  if (!data.fileName) errors.drawing = "Drawing file is required";
+  if (!data.fileName) errors.drawing = "STEP file is required";
+  else if (!isStepDrawing(data.fileName))
+    errors.drawing = "Use a STEP or STP file.";
 
   if (Object.keys(errors).length > 0) {
     return {
@@ -304,7 +315,11 @@ export async function submitQuickQuote(
           <h2>Quick Quote Request</h2>
           <p><strong>Page:</strong> ${data.source || "unknown"}</p>
           <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
-          <p><strong>LinkedIn:</strong> <a href="${data.linkedin}">${data.linkedin}</a></p>
+          <p><strong>LinkedIn:</strong> ${
+            data.linkedin
+              ? `<a href="${data.linkedin}">${data.linkedin}</a>`
+              : "—"
+          }</p>
           <hr />
           <p><strong>Target Price:</strong> ${data.targetPrice}</p>
           <p><strong>Timeline:</strong> ${data.timeline}</p>

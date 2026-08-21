@@ -3,10 +3,10 @@ import { BreadcrumbJsonLd, ProductJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepQuoteBlock } from "@/components/StepUpload";
 import { ProductForm } from "@/components/ProductForm";
+import { CatalogModelPreview } from "@/components/CatalogModelPreview";
 import { SHookDiameters } from "@/components/SHookDiameters";
 import { WIRE } from "@/lib/range";
 import {
-  ButtonLink,
   Page,
   PageHero,
   Section,
@@ -21,7 +21,7 @@ import {
 import { pageMeta } from "@/lib/seo";
 import { usaMadeForSlug } from "@/lib/usa-made";
 import { autodeskShareForProduct } from "@/lib/autodesk-share";
-import { showcaseForProduct, showcaseHref } from "@/lib/models";
+import { showcaseForProduct } from "@/lib/models";
 import { ProductAutodeskViewer } from "@/components/ProductAutodeskViewer";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -87,19 +87,15 @@ export default async function CatalogProductPage({ params }: Props) {
       <Breadcrumbs items={breadcrumbItems} />
       {slug === "s-hooks" ? (
         <>
-          <PageHero
-            kicker={`${STOCK} · ${item.group}`}
-            title={made?.phrases[0] ?? item.title}
-            lede={item.lede}
-          />
+          <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
+            <PageHero
+              kicker={`${STOCK} · ${item.group}`}
+              title={made?.phrases[0] ?? item.title}
+              lede={item.lede}
+            />
+            {showcase ? <CatalogModelPreview partId={showcase.id} /> : null}
+          </div>
           <SHookDiameters className="mt-10" />
-          {showcase ? (
-            <p className="mt-4">
-              <ButtonLink href={showcaseHref(slug)} variant="ghost">
-                View 3D model
-              </ButtonLink>
-            </p>
-          ) : null}
         </>
       ) : (
         <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
@@ -108,7 +104,9 @@ export default async function CatalogProductPage({ params }: Props) {
             title={made?.phrases[0] ?? item.title}
             lede={item.lede}
           />
-          {autodeskShare ? (
+          {showcase ? (
+            <CatalogModelPreview partId={showcase.id} />
+          ) : autodeskShare ? (
             <ProductAutodeskViewer
               part={autodeskShare.id}
               permalink={autodeskShare.permalink}
@@ -118,17 +116,6 @@ export default async function CatalogProductPage({ params }: Props) {
               <ProductForm slug={item.slug} className="h-auto w-full p-8 sm:p-12" />
               <p className="border-t border-line px-5 py-3 font-mono text-[11px] tracking-widest text-muted uppercase">
                 Formed from coil · {STOCK}
-                {showcase ? (
-                  <>
-                    {" · "}
-                    <TextLink
-                      href={showcaseHref(slug)}
-                      className="font-sans text-[11px] tracking-widest normal-case"
-                    >
-                      3D model
-                    </TextLink>
-                  </>
-                ) : null}
               </p>
             </div>
           )}
@@ -149,9 +136,8 @@ export default async function CatalogProductPage({ params }: Props) {
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         {slug === "s-hooks" ? (
           <p>
-            The three drawings above are the same S centerline in 4 mm, 9 mm,
-            and 14 mm wire. Stroke is the diameter. 4 mm is the floor of the
-            band; 9 mm sits next to{" "}
+            The three drawings are the shop S: same centerline, stroke is
+            the wire. 4 mm is the floor of the band; 9 mm sits next to{" "}
             <TextLink href="/sizes">3/8 in stock</TextLink> (9.53 mm); 14 mm
             is the ceiling. Production quotes still land on 3/8, 7/16, and
             1/2 in unless the print names another size in {WIRE.short}.

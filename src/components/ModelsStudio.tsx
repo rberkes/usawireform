@@ -3,9 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ProductForm } from "./ProductForm";
 import { StepCanvas, type OcctMesh, type ViewerSource } from "./StepCanvas";
 import { Button, btn, fieldClass } from "./ui";
 import { cx } from "@/lib/cx";
+import { isCadFile, readCadFile, readCatalogStep } from "@/lib/occt-read";
 import {
   WIRE_DIAMETERS,
   WIRE_FINISHES,
@@ -17,47 +19,6 @@ import {
   type WireFinishId,
 } from "@/lib/models";
 
-const CAD_EXT = ["step", "stp", "stpz", "iges", "igs"];
-
-function extOf(name: string) {
-  return name.split(".").pop()?.toLowerCase() ?? "";
-}
-
-function readCadBuffer(buffer: ArrayBuffer, name: string): Promise<OcctMesh[]> {
-  return new Promise((resolve, reject) => {
-    const worker = new Worker("/vendor/occt-import-js/occt-import-js-worker.js");
-    const fail = (message: string) => {
-      worker.terminate();
-      reject(new Error(message));
-    };
-    worker.onmessage = (event: MessageEvent<{ success?: boolean; meshes?: OcctMesh[] }>) => {
-      worker.terminate();
-      if (!event.data?.success || !event.data.meshes?.length) {
-        reject(new Error("Could not triangulate that file."));
-        return;
-      }
-      resolve(event.data.meshes);
-    };
-    worker.onerror = () => fail("STEP reader failed to start.");
-    const format =
-      extOf(name) === "igs" || extOf(name) === "iges" ? "iges" : "step";
-    worker.postMessage({
-      format,
-      buffer: new Uint8Array(buffer),
-      params: {
-        linearUnit: "millimeter",
-        linearDeflectionType: "bounding_box_ratio",
-        linearDeflection: 0.001,
-        angularDeflection: 0.12,
-      },
-    });
-  });
-}
-
-function readCadFile(file: File): Promise<OcctMesh[]> {
-  return file.arrayBuffer().then((buffer) => readCadBuffer(buffer, file.name));
-}
-
 export default function ModelsStudio({ initialPart }: { initialPart?: string }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -67,12 +28,16 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
   const partParam = searchParams.get("part") ?? initialPart ?? showcaseModels[0].id;
   const selected = getShowcaseModel(partParam) ?? showcaseModels[0];
 
-  const [diameterId, setDiameterId] = useState<WireDiameterId>("3-8");
+  const [diameterId, setDiameterId] = useState<WireDiameterId>(() =>
+    NATIVE_CAD_PARTS.has(partParam) ? "1-2" : "3-8",
+  );
   const [finishId, setFinishId] = useState<WireFinishId>("carbon");
   const [autoRotate, setAutoRotate] = useState(true);
   const [over, setOver] = useState(false);
   const [reading, setReading] = useState(false);
-  const [catalogLoading, setCatalogLoading] = useState(true);
+  const [catalogLoading, setCatalogLoading] = useState(() =>
+    NATIVE_CAD_PARTS.has(partParam),
+  );
   const [error, setError] = useState<string | null>(null);
   const [dropped, setDropped] = useState<{ name: string; meshes: OcctMesh[] } | null>(
     null,
@@ -96,16 +61,15 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
   }, [selected.id]);
 
   useEffect(() => {
-    const url = showcaseStepPath(selected.id);
+    if (!NATIVE_CAD_PARTS.has(selected.id)) {
+      setCatalogStep(null);
+      setCatalogLoading(false);
+      return;
+    }
     let cancelled = false;
     setCatalogStep(null);
     setCatalogLoading(true);
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) throw new Error("Missing STEP file.");
-        return response.arrayBuffer();
-      })
-      .then((buffer) => readCadBuffer(buffer, url))
+    readCatalogStep(showcaseStepPath(selected.id))
       .then((meshes) => {
         if (!cancelled) {
           setCatalogStep({ name: `${selected.id}.step`, meshes });
@@ -130,7 +94,7 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
         name: dropped.name,
         finish: finishId,
       };
-    if (catalogStep && (diameterId === "3-8" || NATIVE_CAD_PARTS.has(selected.id))) {
+    if (nativeCad && catalogStep) {
       return {
         type: "step",
         meshes: catalogStep.meshes,
@@ -138,6 +102,7 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
         finish: finishId,
       };
     }
+    if (nativeCad) return { type: "empty" };
     return {
       type: "wire",
       id: selected.id,
@@ -147,7 +112,7 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
   }, [
     dropped,
     catalogStep,
-    diameterId,
+    nativeCad,
     selected.id,
     diameter.inches,
     finishId,
@@ -156,6 +121,7 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
   function selectPart(id: string) {
     setDropped(null);
     setError(null);
+    setDiameterId(NATIVE_CAD_PARTS.has(id) ? "1-2" : "3-8");
     const params = new URLSearchParams(searchParams.toString());
     params.set("part", id);
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
@@ -163,7 +129,7 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
 
   async function takeFile(file: File | null) {
     if (!file) return;
-    if (!CAD_EXT.includes(extOf(file.name))) {
+    if (!isCadFile(file.name)) {
       setError("Use STEP, STP, or IGES.");
       return;
     }
@@ -195,14 +161,20 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
                   type="button"
                   onClick={() => selectPart(model.id)}
                   className={cx(
-                    "w-full rounded-sm border px-3 py-2.5 text-left text-sm transition-colors",
+                    "w-full rounded-sm border px-2 py-2 text-left text-sm transition-colors",
                     active
                       ? "border-copper bg-copper/10 text-foreground"
                       : "border-line bg-background text-muted hover:border-copper/40 hover:text-foreground",
                   )}
                 >
-                  <span className="block text-foreground">{model.title}</span>
-                  <span className="mt-0.5 block font-mono text-[10px] tracking-widest uppercase">
+                  {NATIVE_CAD_PARTS.has(model.id) ? null : (
+                    <ProductForm
+                      slug={model.productSlug}
+                      className="h-20 w-full px-1"
+                    />
+                  )}
+                  <span className="mt-1 block px-1 text-foreground">{model.title}</span>
+                  <span className="mt-0.5 block px-1 font-mono text-[10px] tracking-widest uppercase">
                     {model.group}
                   </span>
                 </button>
@@ -340,10 +312,8 @@ export default function ModelsStudio({ initialPart }: { initialPart?: string }) 
             ) : (
               <>
                 {selected.summary}{" "}
-                {catalogStep && (diameterId === "3-8" || nativeCad)
-                  ? nativeCad
-                    ? "We form this part. Send a print if the length or wire is different."
-                    : "3/8 in STEP solid from the shop drawing — not a customer print."
+                {catalogStep && nativeCad
+                  ? "We form this part. Send a print if the length or wire is different."
                   : "Shop centerline in stock coil — not a customer print."}{" "}
                 <Link
                   href={`/products/${selected.productSlug}`}

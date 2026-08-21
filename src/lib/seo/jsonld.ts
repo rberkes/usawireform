@@ -1,4 +1,4 @@
-import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
+import { COMPANY, QUOTE_EMAIL, SITE_PITCH, SITE_URL } from "@/lib/company";
 
 export function organizationJsonLd() {
   return {
@@ -10,8 +10,7 @@ export function organizationJsonLd() {
         name: COMPANY,
         url: SITE_URL,
         email: QUOTE_EMAIL,
-        description:
-          "3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. Lowest prices guaranteed. 100-piece minimum. Corp headquarters in Northeast Ohio.",
+        description: SITE_PITCH,
         logo: `${SITE_URL}/icon.svg`,
         address: {
           "@type": "PostalAddress",
@@ -34,7 +33,9 @@ export function organizationJsonLd() {
           "cut-to-length wire",
           "wire baskets",
           "wire guards",
-          "resistance welding",
+          "wire forming directory",
+          "CNC wire forming machines",
+          "coil steel",
         ],
       },
       {

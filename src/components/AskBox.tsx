@@ -78,15 +78,14 @@ export function AskBox() {
   return (
     <section className="mt-16 border border-line bg-inset p-6 sm:p-10">
       <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-copper">
-        Ask the shop
+        Ask the resource
       </p>
       <h2 className="mt-3 text-3xl tracking-tight sm:text-4xl">
         Type a question. Get an answer.
       </h2>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted sm:text-lg">
-        4–14 mm CNC, 100-piece minimum, Northeast Ohio. Stock tooling in
-        3/8, 7/16, and 1/2 in. Steels and aluminum from coil, including
-        6061-T6. Instant quotes go to quote-department review.
+        Learning, machines, factories, coil — United States and beyond.
+        Production is 4–14 mm CNC, 100-piece minimum, Northeast Ohio.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8">

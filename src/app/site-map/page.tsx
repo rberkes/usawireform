@@ -37,11 +37,11 @@ export default function SiteMapPage() {
         <LinkList
           className="mt-5"
           items={[
-            { href: "/", title: "Home", body: `${COMPANY}.` },
+            { href: "/", title: "Home", body: "The resource for wire forming in the United States and beyond." },
             {
               href: "/about",
               title: "About",
-              body: "50+ years of industry experience.",
+              body: "The map and a shop — learning, machines, factories, coil, and this floor.",
             },
             {
               href: "/cleveland",

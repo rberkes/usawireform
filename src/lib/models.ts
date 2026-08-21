@@ -27,8 +27,8 @@ export type ShowcaseModel = {
 };
 
 /**
- * Catalog forms we show as 3D shop models. Each id has a STEP solid at
- * `/models/{id}.step` (3/8 in wire swept from the shop centerline).
+ * Catalog forms we show as 3D shop models. Native CAD parts load
+ * `/models/{id}.step`. The rest are shop centerlines tubed in the viewer.
  */
 export const showcaseModels: ShowcaseModel[] = [
   {
@@ -36,7 +36,7 @@ export const showcaseModels: ShowcaseModel[] = [
     title: "S-hook",
     productSlug: "s-hooks",
     group: "Hooks and rings",
-    summary: "Lifting S-hook we form — 1/2 in wire, 6-1/2 in overall.",
+    summary: "Two opposite eyes and a shank — hang and lift hardware.",
     kind: "wire",
   },
   {
@@ -44,7 +44,7 @@ export const showcaseModels: ShowcaseModel[] = [
     title: "D-ring",
     productSlug: "d-rings",
     group: "Hooks and rings",
-    summary: "D-ring we form — 1/2 in wire, 3-1/2 in overall.",
+    summary: "Flat span and a round back — strap and hook hardware.",
     kind: "wire",
   },
   {
@@ -167,4 +167,4 @@ export function showcaseStepPath(id: string) {
 }
 
 /** Catalog solids that should not be retubed when the diameter control changes. */
-export const NATIVE_CAD_PARTS = new Set(["s-hooks", "d-rings"]);
+export const NATIVE_CAD_PARTS = new Set<string>();

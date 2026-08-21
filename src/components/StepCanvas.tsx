@@ -16,6 +16,7 @@ export type OcctMesh = {
 };
 
 export type ViewerSource =
+  | { type: "empty" }
   | { type: "wire"; id: string; diameterIn: number; finish: WireFinishId }
   | { type: "step"; meshes: OcctMesh[]; name: string; finish: WireFinishId };
 
@@ -95,9 +96,11 @@ function refineLongEdges(
 export function StepCanvas({
   source,
   autoRotate,
+  className,
 }: {
   source: ViewerSource;
   autoRotate: boolean;
+  className?: string;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const applyRef = useRef<(next: ViewerSource) => void>(() => {});
@@ -235,12 +238,9 @@ export function StepCanvas({
           return;
         }
         const path = pts.map((p) => new THREE.Vector3(...p));
-        const first = path[0];
-        const last = path[path.length - 1];
-        const closed = path.length > 3 && first.distanceTo(last) < radius * 1.5;
-        const curve = new THREE.CatmullRomCurve3(path, closed, "centripetal");
+        const curve = new THREE.CatmullRomCurve3(path, false, "centripetal");
         const tubular = Math.min(180, Math.max(24, pts.length * 3));
-        const geo = new THREE.TubeGeometry(curve, tubular, radius, 12, closed);
+        const geo = new THREE.TubeGeometry(curve, tubular, radius, 12, false);
         group.add(new THREE.Mesh(geo, material));
       }
 
@@ -336,7 +336,9 @@ export function StepCanvas({
 
       applyRef.current = (next: ViewerSource) => {
         try {
-          if (next.type === "wire") {
+          if (next.type === "empty") {
+            clearContent();
+          } else if (next.type === "wire") {
             drawWire(next.id, next.diameterIn, next.finish);
           } else {
             drawStep(next.meshes, next.finish);
@@ -379,7 +381,10 @@ export function StepCanvas({
   return (
     <div
       ref={hostRef}
-      className="relative h-[min(70vh,36rem)] min-h-[22rem] w-full overflow-hidden bg-inset"
+      className={
+        className ??
+        "relative h-[min(70vh,36rem)] min-h-[22rem] w-full overflow-hidden bg-inset"
+      }
       role="img"
       aria-label="3D model of a wire form"
     />

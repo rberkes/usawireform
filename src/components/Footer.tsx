@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
-import { PRICE_LINE } from "@/lib/price";
+import { COMPANY, QUOTE_EMAIL, SITE_LINE } from "@/lib/company";
 import { BrandLockup } from "./WireMark";
 import { Container } from "./ui";
 import { StateGrid } from "./StateGrid";
@@ -102,8 +101,7 @@ export function Footer() {
             <BrandLockup />
           </Link>
           <p className="mt-3 max-w-xs text-sm leading-6 text-muted">
-            4–14 mm wire forming — 3D CNC, frames, wire baskets, hangers, and
-            guards. {PRICE_LINE}
+            {SITE_LINE}
           </p>
           <p className="mt-4 flex gap-4 text-sm">
             <Link
@@ -147,7 +145,8 @@ export function Footer() {
             Wire forming by state
           </span>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            Every U.S. state plus D.C. Production is Northeast Ohio. The
+            Every U.S. state plus D.C. The resource covers the United
+            States and beyond. Production is Northeast Ohio. The
             state page is the landing —{" "}
             <Link
               href="/wire-forming-companies-near-me"
@@ -183,7 +182,7 @@ function NavCol({
       </span>
       {links.map((link) => (
         <Link
-          key={link.href}
+          key={`${link.href}-${link.label}`}
           href={link.href}
           className="text-foreground/90 hover:text-copper"
         >

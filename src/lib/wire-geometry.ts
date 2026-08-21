@@ -26,8 +26,18 @@ function arc(
   return pts;
 }
 
-function line(a: Vec3, b: Vec3): Polyline {
-  return [a, b];
+function line(a: Vec3, b: Vec3, segs = 1): Polyline {
+  if (segs <= 1) return [a, b];
+  const pts: Polyline = [];
+  for (let i = 0; i <= segs; i++) {
+    const t = i / segs;
+    pts.push([
+      a[0] + (b[0] - a[0]) * t,
+      a[1] + (b[1] - a[1]) * t,
+      a[2] + (b[2] - a[2]) * t,
+    ]);
+  }
+  return pts;
 }
 
 function circle(
@@ -163,20 +173,19 @@ function fitInches(pts: Polyline, heightIn: number): Polyline {
 
 /**
  * Shop-drawing S-hook: two opposite ~240° eyes, top opening right,
- * bottom opening left. Same path as the product-page drawing.
- * Sized as a 3/8 × 3-1/4 in catalog hook (centerline span).
+ * bottom opening left. Same path as the product-page drawings.
  */
 export const S_HOOK_SVG =
   "M101 22A24 24 0 1 0 80 58L80 66A24 24 0 1 1 59 102";
 
 function sHookCenterline(): Polyline {
-  return fitInches(
-    join(
-      svgArc(101, 22, 80, 58, 24, 24, true, false, 32),
-      svgLine(80, 58, 80, 66),
-      svgArc(80, 66, 59, 102, 24, 24, true, true, 32),
-    ),
-    2.875,
+  const r = 0.7;
+  const span = 1.5;
+  const opening = (60 * Math.PI) / 180;
+  return join(
+    arc(r, span, 0, r, -opening, Math.PI, 32),
+    line([0, span, 0], [0, -span, 0], 16),
+    arc(-r, -span, 0, r, 0, Math.PI + (Math.PI - opening), 32),
   );
 }
 
@@ -194,11 +203,14 @@ export function polylinesForModel(id: string): Polyline[] {
     case "j-hooks":
       return [jHookCenterline()];
     case "d-rings": {
-      const r = 2.2;
+      const f = 0.45;
+      const half = 1.2;
       return [
         join(
-          line([0, -r, 0], [0, r, 0]),
-          arc(0, 0, 0, r, Math.PI / 2, -Math.PI / 2, 28),
+          line([0, -half, 0], [0, half, 0], 12),
+          arc(f, half, 0, f, Math.PI, Math.PI / 2, 12),
+          arc(f, 0, 0, half + f, Math.PI / 2, -Math.PI / 2, 28),
+          arc(f, -half, 0, f, -Math.PI / 2, -Math.PI, 12),
         ),
       ];
     }

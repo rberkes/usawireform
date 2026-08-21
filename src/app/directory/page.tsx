@@ -58,7 +58,7 @@ export default async function DirectoryPage({ searchParams }: Props) {
       <PageHero
         kicker="Industry Directory"
         title="Wire Forming Companies"
-        lede={`${directoryCompanies.length} wire forming and spring manufacturing companies across the United States and Canada. Not competitors — peers in the trade.`}
+        lede={`${directoryCompanies.length} wire forming factories across the United States and Canada — part of the resource for the trade. Equipment tags come from public pages, not a floor walk.`}
       />
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">

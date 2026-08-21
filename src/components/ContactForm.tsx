@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { useState } from "react";
 import { submitContactForm, type QuoteFormState } from "@/app/actions/quote";
-import { isLinkedInUrl, LinkedInField, QuoteNeedFields, StepUpload } from "./StepUpload";
+import { LinkedInField, QuoteNeedFields, StepUpload } from "./StepUpload";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
 
@@ -39,7 +39,7 @@ export function ContactForm() {
     <form action={formAction}>
       <Panel>
         <p className="mb-5 text-sm font-medium text-copper">
-          All fields required.
+          Email and a STEP file are required. LinkedIn is optional.
         </p>
         {state.message && !state.success && (
           <div className="mb-5 rounded border border-copper/30 bg-copper/5 p-3 text-sm text-copper">

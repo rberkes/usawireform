@@ -16,13 +16,13 @@ import {
   StatRow,
 } from "@/components/ui";
 import { BrandLockup } from "@/components/WireMark";
-import { COMPANY } from "@/lib/company";
+import { COMPANY, SITE_PITCH } from "@/lib/company";
 import { WIRE } from "@/lib/range";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
-  description: `${COMPANY}: 50+ years of industry experience. USA made wire baskets, USA made D-rings, USA made cable trays. Lowest prices guaranteed. 100-piece minimum. 3D CNC in 4–14 mm.`,
+  title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+  description: `${COMPANY}: ${SITE_PITCH} 3D CNC in 4–14 mm from Northeast Ohio. Lowest prices guaranteed. 100-piece minimum.`,
   path: "/",
   absoluteTitle: true,
   keywords: [
@@ -37,7 +37,10 @@ export const metadata = pageMeta({
     "USA made ground staples",
     "USA made ground samples",
     "USA made wire stakes",
-    "custom wire forms",
+    "wire forming resource",
+    "wire forming directory",
+    "CNC wire forming machines",
+    "coil steel suppliers",
     "Numalliance Robomac",
     "lowest price wire forming",
   ],
@@ -50,9 +53,9 @@ export default function Home() {
         <div className="grid items-start gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
           <PageHero
             large
-            kicker={WIRE.metric}
+            kicker="United States and beyond"
             title={<BrandLockup size="hero" />}
-            lede="50+ years of industry experience. Lowest prices guaranteed — we will not be beat. 100-piece minimum. 3D CNC for frames, wire baskets, and guards."
+            lede={SITE_PITCH}
           >
             <ButtonLink href="/instant-quote" variant="quote">
               Get instant quote
@@ -78,12 +81,52 @@ export default function Home() {
 
         <AskBox />
 
+        <Section
+          kicker="The map"
+          title="Learning, machines, factories, coil."
+        >
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
+            This site is the resource. Production still leaves the Northeast
+            Ohio floor when you send a print.
+          </p>
+          <LinkList
+            className="mt-8"
+            items={[
+              {
+                href: "/guide/design-for-wire-forming",
+                title: "Learn wire forming",
+                body: "Design rules, process pages, and the blog — how a print becomes a form.",
+              },
+              {
+                href: "/equipment/cnc-manufacturers",
+                title: "Machines",
+                body: "Ten CNC OEMs and sixty models. We run a Robomac 214TF. We do not sell the iron.",
+              },
+              {
+                href: "/directory",
+                title: "Wire form factories",
+                body: "Shops in the United States and Canada, tagged by machine class.",
+              },
+              {
+                href: "/materials",
+                title: "Coil steel",
+                body: "Grades from coil, mill and drawer links, and what this cell actually runs.",
+              },
+              {
+                href: "/contact",
+                title: "Form the print",
+                body: "4–14 mm 3D CNC on this floor. 100-piece minimum. Send a STEP.",
+              },
+            ]}
+          />
+        </Section>
+
         <StatRow
           className="mt-16"
           items={[
-            { value: WIRE.metric, label: "Diameter band" },
-            { value: "3D CNC", label: "Primary process" },
-            { value: "50+ yrs", label: "Industry experience" },
+            { value: "U.S. + beyond", label: "The resource" },
+            { value: WIRE.metric, label: "Shop diameter band" },
+            { value: "3D CNC", label: "What we form" },
             { value: "Northeast Ohio", label: "Headquarters + production" },
           ]}
         />
@@ -233,11 +276,12 @@ export default function Home() {
 
         <Section
           kicker="Locations"
-          title="Wire forming in every U.S. state."
+          title="United States and beyond."
         >
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-            One CNC cell in Northeast Ohio. Each state page is the landing
-            for that ZIP — we quote nationwide from that floor.{" "}
+            The directory, machine catalog, and library cover the trade here
+            and abroad. Production quotes still leave Northeast Ohio. Each
+            U.S. state page is the landing for that ZIP.{" "}
             <Link href="/wire-forming-companies-near-me" className="text-copper hover:underline">
               Companies near me
             </Link>

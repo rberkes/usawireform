@@ -3,7 +3,6 @@
 import { useActionState, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { submitQuickQuote, type QuoteFormState } from "@/app/actions/quote";
-import { WIRE } from "@/lib/range";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
 
@@ -12,21 +11,10 @@ const quoteInitialState: QuoteFormState = {
   message: "",
 };
 
-const ACCEPT_EXT = [
-  "step",
-  "stp",
-  "stpz",
-  "iges",
-  "igs",
-  "pdf",
-  "dxf",
-  "dwg",
-  "sldprt",
-  "sldasm",
-];
+const ACCEPT_EXT = ["step", "stp", "stpz"];
 const ACCEPT = ACCEPT_EXT.map((ext) => `.${ext}`).join(",");
 const MAX_BYTES = 50 * 1024 * 1024;
-const FILE_HINT = "STEP, STP, IGES, PDF, DXF, SLDPRT";
+const FILE_HINT = "STEP or STP";
 
 function extOf(name: string) {
   return name.split(".").pop()?.toLowerCase() ?? "";
@@ -112,6 +100,7 @@ export function StepUpload({
         type="file"
         name={name}
         accept={ACCEPT}
+        required={required}
         onChange={(event) => take(event.target.files?.[0] ?? null)}
       />
       <label
@@ -166,7 +155,7 @@ export function StepUpload({
                 {required ? " (required)" : ""}
               </span>
               <span className="mt-0.5 block text-xs text-muted">
-                {FILE_HINT} · {WIRE.short}
+                {FILE_HINT} · drop the 3D solid
               </span>
             </>
           )}
@@ -195,22 +184,24 @@ export function StepUpload({
 export function LinkedInField({
   className = "",
   labeled = false,
+  required = false,
 }: {
   className?: string;
   labeled?: boolean;
+  required?: boolean;
 }) {
   const input = (
     <input
       className={`${fieldClass} ${labeled ? "mt-1.5" : ""}`}
       name="linkedin"
       type="url"
-      required
+      required={required}
       inputMode="url"
       autoComplete="url"
       placeholder={
         labeled
           ? "https://www.linkedin.com/in/you"
-          : "LinkedIn URL (required)"
+          : "LinkedIn URL (optional)"
       }
       pattern="https?://([A-Za-z0-9-]+\.)?linkedin\.com/.*"
       title="Use a full LinkedIn URL, e.g. https://www.linkedin.com/in/you"
@@ -219,7 +210,13 @@ export function LinkedInField({
 
   return (
     <label className={`block min-w-0 text-sm ${labeled ? "" : "flex-1"} ${className}`}>
-      {labeled ? "LinkedIn" : <span className="sr-only">LinkedIn (required)</span>}
+      {labeled ? (
+        required ? "LinkedIn" : "LinkedIn (optional)"
+      ) : (
+        <span className="sr-only">
+          {required ? "LinkedIn (required)" : "LinkedIn (optional)"}
+        </span>
+      )}
       {input}
     </label>
   );
@@ -301,8 +298,7 @@ export function StepQuoteBlock({
           program.
         </p>
         <p className="mt-3 text-sm font-medium text-copper">
-          All fields required — drawing, email, LinkedIn, target price,
-          timeline, and quality standard.
+          Drawing and email are required. LinkedIn is optional.
         </p>
         {state.message && !state.success ? (
           <p className="mt-3 text-sm text-copper">{state.message}</p>

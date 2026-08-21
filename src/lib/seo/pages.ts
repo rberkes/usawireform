@@ -1,6 +1,6 @@
 import { catalog, STOCK } from "@/lib/catalog";
 import { usaMadeForSlug } from "@/lib/usa-made";
-import { COMPANY } from "@/lib/company";
+import { COMPANY, SITE_PITCH } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
 import { machines } from "@/lib/machines";
 import { CNC_COMPARE, CNC_HUB, CNC_OEMS, allCncModels, modelPath, oemPath } from "@/lib/cnc-oems";
@@ -52,8 +52,8 @@ function record(
 export const staticSeoPages: SeoRecord[] = [
   record({
     path: "/",
-    title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
-    description: `${COMPANY}: 50+ years of industry experience. Lowest prices guaranteed — we will not be beat. 100-piece minimum. 3D CNC wire forming in 4–14 mm.`,
+    title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+    description: SITE_PITCH,
     section: "home",
     absoluteTitle: true,
     changeFrequency: "weekly",
@@ -62,15 +62,17 @@ export const staticSeoPages: SeoRecord[] = [
       "USA Wire Form",
       "CNC wire forming Northeast Ohio",
       "3D CNC wire baskets",
-      "custom wire forms",
+      "wire forming resource",
+      "wire forming directory",
+      "CNC wire forming machines",
       "Numalliance Robomac",
     ],
   }),
   record({
     path: "/wire-forming",
-    title: "Wire Forming in the USA",
+    title: "Wire Forming in the USA and Beyond",
     description:
-      "Wire forming in the 4–14 mm band: 3D CNC, heavy frames, wire baskets, guards, and how the USA process map fits together.",
+      "The resource for wire forming: learning, machines, factories, coil steel, and 3D CNC in 4–14 mm — United States and beyond.",
     section: "forming",
     keywords: ["wire forming USA", "heavy wire forming", "3D CNC"],
   }),
@@ -352,10 +354,9 @@ export const staticSeoPages: SeoRecord[] = [
   record({
     path: "/about",
     title: "About",
-    description:
-      "50+ years of industry experience: 4–14 mm wire forms for named industries. Corp headquarters in Northeast Ohio.",
+    description: SITE_PITCH,
     section: "company",
-    keywords: ["USA Wire Form about", "50 years wire forming", "Northeast Ohio headquarters"],
+    keywords: ["USA Wire Form about", "wire forming resource", "Northeast Ohio headquarters"],
   }),
   record({
     path: "/cleveland",

@@ -21,8 +21,8 @@ export default function PrivacyPage() {
         <p>
           {COMPANY} collects what you send on the{" "}
           <TextLink href="/contact">quote form</TextLink>: name, company,
-          email, LinkedIn profile URL, diameter, material, notes, and the
-          drawing you attach (STEP, STP, IGES, PDF, DXF, or SLDPRT). That packet is for quoting and production. It is not a
+          email, optional LinkedIn profile URL, diameter, material, notes, and
+          the STEP file you attach. That packet is for quoting and production. It is not a
           marketing list we sell.
         </p>
         <p>

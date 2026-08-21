@@ -1,4 +1,4 @@
-import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
+import { COMPANY, QUOTE_EMAIL, SITE_PITCH, SITE_URL } from "@/lib/company";
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -7,8 +7,7 @@ const organizationJsonLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/icon.svg`,
   email: QUOTE_EMAIL,
-  description:
-    "4–14 mm 3D CNC wire forming manufacturer in Northeast Ohio. Custom wire forms, frames, baskets, and guards.",
+  description: SITE_PITCH,
   address: {
     "@type": "PostalAddress",
     addressRegion: "OH",
@@ -59,8 +58,7 @@ const localBusinessJsonLd = {
   name: COMPANY,
   url: SITE_URL,
   email: QUOTE_EMAIL,
-  description:
-    "Custom CNC wire forming manufacturer specializing in 4–14 mm wire. 50+ years of industry experience.",
+  description: SITE_PITCH,
   address: {
     "@type": "PostalAddress",
     addressRegion: "OH",

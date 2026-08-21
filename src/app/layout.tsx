@@ -6,8 +6,7 @@ import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BackToTop } from "@/components/BackToTop";
-import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
-import { PRICE_LINE } from "@/lib/price";
+import { COMPANY, QUOTE_EMAIL, SITE_PITCH, SITE_URL } from "@/lib/company";
 import { CORE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
 
@@ -28,11 +27,10 @@ const ibmMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
+    default: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
     template: `%s — ${COMPANY}`,
   },
-  description:
-    `${COMPANY}: 4–14 mm 3D CNC wire forming in Northeast Ohio. ${PRICE_LINE} Frames, wire baskets, guards, design rules, and process selection.`,
+  description: SITE_PITCH,
   keywords: CORE_KEYWORDS,
   authors: [{ name: COMPANY, url: SITE_URL }],
   creator: COMPANY,
@@ -69,15 +67,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: COMPANY,
-    title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
-    description:
-      `3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. ${PRICE_LINE} Northeast Ohio.`,
+    title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+    description: SITE_PITCH,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${COMPANY} — 4–14 mm 3D CNC Wire Forming`,
-    description:
-      `3D CNC wire forming in 4–14 mm: frames, wire baskets, and guards. ${PRICE_LINE} Northeast Ohio.`,
+    title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+    description: SITE_PITCH,
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],

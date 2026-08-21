@@ -66,7 +66,7 @@ const searchItems: SearchItem[] = [
   { title: "Machine Comparison", href: "/equipment/machine-comparison", category: "Equipment", description: "Which cells win small springs, heavy 3D, cut-to-length, and 5–8 mm parts." },
   { title: "Equipment", href: "/equipment", category: "Pages", description: "Our CNC wire forming equipment and machines." },
   { title: "Materials", href: "/materials", category: "Pages", description: "Wire materials: carbon, stainless, brass, copper." },
-  { title: "About", href: "/about", category: "Pages", description: "About USA Wire Form and our capabilities." },
+  { title: "About", href: "/about", category: "Pages", description: "The resource for wire forming in the United States and beyond." },
   { title: "Sizes", href: "/sizes", category: "Pages", description: "Stock wire sizes: 3/8, 7/16, and 1/2 inch." },
   { title: "Design Guide", href: "/guide/design-for-wire-forming", category: "Resources", description: "Design guidelines for wire forming." },
   { title: "3D STEP Viewer", href: "/models", category: "Resources", description: "Orbit shop models and drop a STEP or IGES to inspect a print." },

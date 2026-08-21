@@ -22,7 +22,7 @@ const ContactForm = dynamic(() => import("@/components/ContactForm").then(mod =>
 
 export const metadata = pageMeta({
   title: "Contact",
-  description: `Request a production quote for custom CNC wire forms. ${PRICE_LINE} Upload STEP, DXF or PDF files. Response within 24 hours from our Northeast Ohio facility.`,
+  description: `Request a production quote for custom CNC wire forms. ${PRICE_LINE} Upload a STEP file. Response within 24 hours from our Northeast Ohio facility.`,
   path: '/contact',
   keywords: [
     "request a quote",
@@ -84,7 +84,7 @@ export default function ContactPage() {
               Files
             </dt>
             <dd className="mt-1 text-foreground/90">
-              STEP, STP, IGES, PDF, DXF, SLDPRT
+              STEP or STP
             </dd>
           </div>
         </dl>

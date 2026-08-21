@@ -3,8 +3,8 @@ import { DocPage, QuoteBand } from "@/components/DocPage";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Wire Forming in the USA",
-  description: "Wire forming in the 4–14 mm band: 3D CNC, heavy frames, wire baskets, guards, and how the USA process map fits together.",
+  title: "Wire Forming in the USA and Beyond",
+  description: "The resource for wire forming: 3D CNC, factories, machines, coil steel, and how the process map fits together — United States and beyond.",
   path: '/wire-forming',
   keywords: [
     "wire forming USA",
@@ -26,8 +26,8 @@ export default function WireFormingPillarPage() {
   return (
     <DocPage
       kicker="Reference"
-      title="Wire forming in the USA"
-      lede="Wire forming takes round wire from coil and turns it into a specified 2D or 3D shape. Our corp headquarters runs 4–14 mm — frames, wire baskets, guards, trays, and routing forms — not music-wire clips."
+      title="Wire forming in the USA and beyond"
+      lede="The map for the trade: how a form is designed, which machines run it, who forms it, who draws the coil — and a 4–14 mm cell in Northeast Ohio that will form the print. Not music-wire clips."
       toc={toc}
     >
       <h2 id="definition">A working definition</h2>
