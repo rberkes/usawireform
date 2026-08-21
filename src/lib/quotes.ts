@@ -86,6 +86,15 @@ function fromRecord(
   };
 }
 
+export async function countQuoteSubmissions() {
+  if (!(await blobReady())) return 0;
+  const [contactRecords, quickRecords] = await Promise.all([
+    listPrefix("leads/contact/"),
+    listPrefix("leads/quick/"),
+  ]);
+  return contactRecords.length + quickRecords.length;
+}
+
 export async function listQuoteSubmissions(): Promise<QuoteSubmission[]> {
   if (!(await blobReady())) return [];
 

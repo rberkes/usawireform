@@ -1,7 +1,9 @@
 import { isAdmin } from "../actions";
 import { AdminLogin } from "../login-form";
 import { listDirectoryLeadRows } from "@/lib/leads";
-import { Page, PageHero, TextLink } from "@/components/ui";
+import { countQuoteSubmissions } from "@/lib/quotes";
+import { AdminInboxNav } from "@/components/AdminInboxNav";
+import { Page, PageHero } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -23,22 +25,27 @@ export default async function AdminLeadsPage({
     );
   }
 
-  const rows = await listDirectoryLeadRows();
+  const [rows, quoteCount] = await Promise.all([
+    listDirectoryLeadRows(),
+    countQuoteSubmissions(),
+  ]);
 
   return (
     <Page>
       <PageHero
         kicker="Admin"
-        title="Directory leads"
-        lede={`${rows.length} stored files under leads/directory/.`}
+        title="Directory"
+        lede="People who filled the form on a company directory page. Name and email. No STEP, not a quote."
       />
-      <p className="mt-6 text-sm text-muted">
-        <TextLink href="/admin">Quote files</TextLink>
-      </p>
+      <AdminInboxNav
+        current="directory"
+        quoteCount={quoteCount}
+        directoryCount={rows.length}
+      />
       {rows.length === 0 ? (
-        <p className="mt-8 text-sm text-muted">
-          No directory leads yet. The directory form writes here after this
-          deploy. Quote STEP files are on Quote files.
+        <p className="mt-8 max-w-xl text-sm leading-6 text-muted">
+          Nobody has used a directory company form yet. Drawings from Contact
+          and product pages are in Quote files.
         </p>
       ) : (
         <ul className="mt-8 divide-y divide-line border border-line">

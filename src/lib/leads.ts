@@ -78,6 +78,11 @@ export type DirectoryLeadRow = DirectoryLeadRecord & {
   href: string;
 };
 
+export async function countDirectoryLeads() {
+  const blobs = await listDirectoryLeads();
+  return blobs.length;
+}
+
 export async function listDirectoryLeadRows(): Promise<DirectoryLeadRow[]> {
   const blobs = await listDirectoryLeads();
   const rows: DirectoryLeadRow[] = [];

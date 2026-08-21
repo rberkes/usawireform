@@ -2,8 +2,10 @@ import Link from "next/link";
 import { isAdmin } from "./actions";
 import { AdminLogin } from "./login-form";
 import { listQuoteSubmissions } from "@/lib/quotes";
+import { countDirectoryLeads } from "@/lib/leads";
 import { AdminStepPreview } from "@/components/UploadedDrawingPreview";
-import { Page, PageHero, TextLink } from "@/components/ui";
+import { AdminInboxNav } from "@/components/AdminInboxNav";
+import { Page, PageHero } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -33,22 +35,27 @@ export default async function AdminQuotesPage({
     return <AdminLogin next="/admin" error={error} title="Quote files" />;
   }
 
-  const rows = await listQuoteSubmissions();
+  const [rows, directoryCount] = await Promise.all([
+    listQuoteSubmissions(),
+    countDirectoryLeads(),
+  ]);
 
   return (
     <Page>
       <PageHero
         kicker="Admin"
         title="Quote files"
-        lede="STEP uploads land in Vercel Blob. This list is the shop copy — email is still the notify."
+        lede="RFQs with a STEP. Contact and product-page drawings. This is the shop copy for a part to run."
       />
-      <p className="mt-6 text-sm text-muted">
-        <TextLink href="/admin/leads">Directory leads</TextLink>
-      </p>
+      <AdminInboxNav
+        current="quotes"
+        quoteCount={rows.length}
+        directoryCount={directoryCount}
+      />
       {rows.length === 0 ? (
         <p className="mt-8 max-w-xl text-sm leading-6 text-muted">
-          No stored drawings yet. Send a STEP on a product page or Contact —
-          it writes here after this deploy.
+          No quote drawings yet. Contact and product-page STEP uploads land
+          here.
         </p>
       ) : (
         <ul className="mt-8 divide-y divide-line border border-line">
