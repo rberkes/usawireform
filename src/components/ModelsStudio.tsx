@@ -44,7 +44,12 @@ function readCadBuffer(buffer: ArrayBuffer, name: string): Promise<OcctMesh[]> {
     worker.postMessage({
       format,
       buffer: new Uint8Array(buffer),
-      params: { linearUnit: "millimeter" },
+      params: {
+        linearUnit: "millimeter",
+        linearDeflectionType: "bounding_box_ratio",
+        linearDeflection: 0.001,
+        angularDeflection: 0.12,
+      },
     });
   });
 }

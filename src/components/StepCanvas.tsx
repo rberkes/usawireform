@@ -19,6 +19,79 @@ export type ViewerSource =
   | { type: "wire"; id: string; diameterIn: number; finish: WireFinishId }
   | { type: "step"; meshes: OcctMesh[]; name: string; finish: WireFinishId };
 
+function flatNumbers(input: ArrayLike<number>): number[] {
+  const out: number[] = [];
+  for (let i = 0; i < input.length; i++) {
+    const value = Number(input[i]);
+    if (Number.isFinite(value)) out.push(value);
+  }
+  return out;
+}
+
+/** OCCT leaves cylinder generators as one long triangle. Split them so the tube does not draw as a sail. */
+function refineLongEdges(
+  positions: number[],
+  indices: number[],
+  maxEdge: number,
+): { positions: number[]; indices: number[] } {
+  const verts = positions.slice();
+  let tris = indices.slice();
+  const mids = new Map<string, number>();
+
+  function dist(i: number, j: number) {
+    const dx = verts[i * 3] - verts[j * 3];
+    const dy = verts[i * 3 + 1] - verts[j * 3 + 1];
+    const dz = verts[i * 3 + 2] - verts[j * 3 + 2];
+    return Math.hypot(dx, dy, dz);
+  }
+
+  function midpoint(i: number, j: number) {
+    const key = i < j ? `${i}_${j}` : `${j}_${i}`;
+    const hit = mids.get(key);
+    if (hit !== undefined) return hit;
+    const n = verts.length / 3;
+    verts.push(
+      (verts[i * 3] + verts[j * 3]) / 2,
+      (verts[i * 3 + 1] + verts[j * 3 + 1]) / 2,
+      (verts[i * 3 + 2] + verts[j * 3 + 2]) / 2,
+    );
+    mids.set(key, n);
+    return n;
+  }
+
+  for (let pass = 0; pass < 14; pass++) {
+    const next: number[] = [];
+    let split = false;
+    for (let t = 0; t < tris.length; t += 3) {
+      const a = tris[t];
+      const b = tris[t + 1];
+      const c = tris[t + 2];
+      const ab = dist(a, b);
+      const bc = dist(b, c);
+      const ca = dist(c, a);
+      const longest = Math.max(ab, bc, ca);
+      if (longest <= maxEdge) {
+        next.push(a, b, c);
+        continue;
+      }
+      split = true;
+      if (ab >= bc && ab >= ca) {
+        const m = midpoint(a, b);
+        next.push(a, m, c, m, b, c);
+      } else if (bc >= ca) {
+        const m = midpoint(b, c);
+        next.push(a, b, m, a, m, c);
+      } else {
+        const m = midpoint(c, a);
+        next.push(a, b, m, b, c, m);
+      }
+    }
+    tris = next;
+    if (!split) break;
+  }
+  return { positions: verts, indices: tris };
+}
+
 export function StepCanvas({
   source,
   autoRotate,
@@ -221,24 +294,37 @@ export function StepCanvas({
         clearContent();
         const fallback = steelMaterial(finish);
         for (const mesh of meshes) {
+          const rawPos = flatNumbers(mesh.attributes.position.array);
+          const rawIdx = flatNumbers(mesh.index.array);
+          if (rawPos.length < 9 || rawIdx.length < 3) continue;
+
+          let minX = Infinity;
+          let minY = Infinity;
+          let minZ = Infinity;
+          let maxX = -Infinity;
+          let maxY = -Infinity;
+          let maxZ = -Infinity;
+          for (let i = 0; i < rawPos.length; i += 3) {
+            minX = Math.min(minX, rawPos[i]);
+            maxX = Math.max(maxX, rawPos[i]);
+            minY = Math.min(minY, rawPos[i + 1]);
+            maxY = Math.max(maxY, rawPos[i + 1]);
+            minZ = Math.min(minZ, rawPos[i + 2]);
+            maxZ = Math.max(maxZ, rawPos[i + 2]);
+          }
+          const span = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1);
+          const refined = refineLongEdges(rawPos, rawIdx, span * 0.05);
+
           const geometry = new THREE.BufferGeometry();
           geometry.setAttribute(
             "position",
-            new THREE.Float32BufferAttribute(
-              mesh.attributes.position.array,
-              3,
-            ),
+            new THREE.Float32BufferAttribute(refined.positions, 3),
           );
-          if (mesh.attributes.normal) {
-            geometry.setAttribute(
-              "normal",
-              new THREE.Float32BufferAttribute(mesh.attributes.normal.array, 3),
-            );
-          } else {
-            geometry.computeVertexNormals();
-          }
-          geometry.setIndex(mesh.index.array);
-            const material = mesh.color
+          geometry.setIndex(
+            new THREE.BufferAttribute(Uint32Array.from(refined.indices), 1),
+          );
+          geometry.computeVertexNormals();
+          const material = mesh.color
             ? steelMaterial(finish, mesh.color)
             : fallback;
           const threeMesh = new THREE.Mesh(geometry, material);
