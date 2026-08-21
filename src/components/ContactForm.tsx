@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useState } from "react";
 import { submitContactForm, type QuoteFormState } from "@/app/actions/quote";
 import { LinkedInField, QuoteNeedFields, StepUpload } from "./StepUpload";
+import { UploadedDrawingPreview } from "./UploadedDrawingPreview";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
 
@@ -31,6 +32,7 @@ export function ContactForm() {
           </a>
           .
         </p>
+        {file ? <UploadedDrawingPreview file={file} /> : null}
       </Panel>
     );
   }

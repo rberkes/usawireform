@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { submitQuickQuote, type QuoteFormState } from "@/app/actions/quote";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
+import { UploadedDrawingPreview } from "./UploadedDrawingPreview";
 
 const quoteInitialState: QuoteFormState = {
   success: false,
@@ -284,6 +285,7 @@ export function StepQuoteBlock({
         <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
           {state.message}
         </p>
+        {file ? <UploadedDrawingPreview file={file} /> : null}
       </Panel>
     );
   }
