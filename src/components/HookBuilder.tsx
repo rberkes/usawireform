@@ -26,7 +26,7 @@ export function HookBuilder({
   defaultType = "v",
   defaultWire = "3/8 in",
   defaultOverall = 12,
-  defaultLeg = 4,
+  defaultLeg = 1.5,
   defaultQty = 100,
   defaultMaterial = "1018",
 }: {

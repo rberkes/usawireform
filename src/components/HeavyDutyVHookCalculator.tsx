@@ -23,7 +23,7 @@ export function HeavyDutyVHookCalculator() {
     initialState,
   );
   const [overall, setOverall] = useState("12");
-  const [legId, setLegId] = useState("4");
+  const [legId, setLegId] = useState("1.5");
   const [qty, setQty] = useState("100");
   const [sizeId, setSizeId] = useState<HeavyDutyVSizeId>("3-8");
   const [notes, setNotes] = useState("");
@@ -76,7 +76,7 @@ export function HeavyDutyVHookCalculator() {
           <HookFigure
             type="v"
             overall={Number.isFinite(overallN) ? overallN : 12}
-            legId={Number.isFinite(legN) ? legN : 4}
+            legId={Number.isFinite(legN) ? legN : 1.5}
             label="USA made V-hook"
           />
           <Panel className="p-4 sm:p-5">

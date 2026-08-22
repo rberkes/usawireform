@@ -1,34 +1,53 @@
 export type Vec2 = { x: number; y: number };
 
-/** 45° V-arms — powder-coating V-hook crotches are sharp, not radiused. */
-const ARM_K = Math.SQRT1_2;
-
+/**
+ * Dual-V powder-coating hook: rack Λ on top, part V on the bottom,
+ * both openings on the same side of a long shank. Each V is two equal
+ * 45° arms (90° included). `legId` is the inside opening (tip to tip).
+ * Catalog 12 in × 0.375 in hooks use ~1.5 in legs.
+ *
+ * Same-side, not 180° opposite — opposite Vs read as a Z.
+ */
 export function vExtents(legId: number) {
-  const tip = Math.min(Math.max(legId * 0.2, 0.35), 1);
+  const run = legId / 2;
+  const rise = legId / 2;
   return {
-    run: legId * ARM_K,
-    rise: legId * ARM_K,
-    tip,
-    tipRun: tip * ARM_K,
-    tipRise: tip * ARM_K,
-    minOverall: 2 * legId * ARM_K + 0.35,
+    run,
+    rise,
+    minOverall: 2 * rise + 0.5,
   };
 }
 
-/** Dual-V centerline. Origin at the bottom of the overall envelope. Y up. */
+function vEnds(overall: number, legId: number, x0 = 0) {
+  const { run, rise } = vExtents(legId);
+  return {
+    top: [
+      { x: x0 + 2 * run, y: overall - rise },
+      { x: x0 + run, y: overall },
+      { x: x0, y: overall - rise },
+    ] satisfies Vec2[],
+    bottom: [
+      { x: x0, y: rise },
+      { x: x0 + run, y: 0 },
+      { x: x0 + 2 * run, y: rise },
+    ] satisfies Vec2[],
+  };
+}
+
+/** Centerline. Origin at the bottom of the overall envelope. Y up. */
 export function vHookPoints(overall: number, legId: number, jog = 0): Vec2[] {
-  const { run, rise, tipRun, tipRise } = vExtents(legId);
-  const topJoin = overall - rise;
-  const top: Vec2[] = [
-    { x: run + tipRun, y: overall - tipRise },
-    { x: run, y: overall },
-    { x: 0, y: topJoin },
+  if (!jog) {
+    const { top, bottom } = vEnds(overall, legId);
+    return [...top, ...bottom];
+  }
+  const { top } = vEnds(overall, legId);
+  const { bottom } = vEnds(overall, legId, jog);
+  const mid = overall / 2;
+  return [
+    ...top,
+    { x: 0, y: mid + 0.35 },
+    { x: jog, y: mid + 0.35 },
+    { x: jog, y: mid - 0.35 },
+    ...bottom,
   ];
-  const bottom: Vec2[] = [
-    { x: jog, y: rise },
-    { x: jog - run, y: 0 },
-    { x: jog - run - tipRun, y: tipRise },
-  ];
-  if (!jog) return [...top, ...bottom];
-  return [...top, { x: jog, y: topJoin }, ...bottom];
 }

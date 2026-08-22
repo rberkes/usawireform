@@ -138,63 +138,89 @@ export function hookTypeMeta(id: HookTypeId) {
   return HOOK_TYPES.find((row) => row.id === id) ?? HOOK_TYPES[0];
 }
 
+function eyeRadius(overall: number, legId: number) {
+  return Math.min(Math.max(legId * 0.55, overall * 0.18), overall * 0.26);
+}
+
+function shiftX(pts: Vec2[], dx: number): Vec2[] {
+  return dx ? pts.map((p) => ({ x: p.x + dx, y: p.y })) : pts;
+}
+
+/** 90° crank in the shank so the lower hang sits off the bar. */
+function cranked(top: Vec2[], bottom: Vec2[], overall: number): Vec2[] {
+  const mid = overall / 2;
+  return [
+    ...top,
+    { x: top[top.length - 1].x, y: mid + 0.35 },
+    { x: bottom[0].x, y: mid + 0.35 },
+    { x: bottom[0].x, y: mid - 0.35 },
+    ...bottom,
+  ];
+}
+
+/**
+ * Round C-eye, ~210° , opening to +X.
+ * Top: n-shape that drops onto a bar. Bottom: u-shape that holds a part.
+ */
+function cEyes(overall: number, r: number, x0 = 0) {
+  const opening = (50 * Math.PI) / 180;
+  return {
+    top: shiftX(arcPts(r, overall - r, r, -opening, Math.PI, 24), x0),
+    bottom: shiftX(arcPts(r, r, r, Math.PI, Math.PI * 2 + opening, 24), x0),
+  };
+}
+
 /** Centerline in inches. Origin at the bottom of the overall envelope. Y up. */
 export function hookCenterline(
   type: HookTypeId,
   overall: number,
   legId: number,
 ): { points: Vec2[]; bends: number } {
+  const H = overall;
+  const r = eyeRadius(H, legId);
+  const jog = Math.max(legId, 1.5);
+
   if (type === "v") {
-    return { bends: 4, points: vHookPoints(overall, legId) };
+    return { bends: 4, points: vHookPoints(H, legId) };
   }
 
   if (type === "90v") {
-    const jog = Math.max(vExtents(legId).run, 0.75);
-    return { bends: 5, points: vHookPoints(overall, legId, jog) };
-  }
-
-  if (type === "c" || type === "90c") {
-    const r = Math.max(overall / 2, 0.75);
-    const pts = arcPts(0, r, r, Math.PI * 0.15, Math.PI * 1.85, 28);
-    if (type === "90c") {
-      const last = pts[pts.length - 1];
-      pts.push({ x: last.x + r * 0.6, y: last.y });
-      return { bends: 3, points: pts };
-    }
-    return { bends: 2, points: pts };
+    return { bends: 6, points: vHookPoints(H, legId, jog) };
   }
 
   if (type === "s") {
-    const r = Math.max(legId * 0.45, overall * 0.12, 0.6);
+    const opening = (50 * Math.PI) / 180;
     return {
       bends: 2,
       points: [
-        ...arcPts(-r, overall - r, r, -0.4, Math.PI, 20),
-        ...arcPts(r, r, r, Math.PI, Math.PI * 2 + 0.4, 20),
+        ...arcPts(r, H - r, r, -opening, Math.PI, 24),
+        ...arcPts(-r, r, r, 0, -(Math.PI + opening), 24),
       ],
     };
   }
 
-  // CV and 90° CV: C opening on top, part V on the bottom.
-  const r = Math.max(legId * 0.55, 0.8);
-  const { run, rise, tipRun, tipRise } = vExtents(legId);
-  const shank = Math.max(0.25, overall - 2 * rise);
-  const top = arcPts(0, overall - r, r, Math.PI * 0.2, Math.PI * 1.15, 18);
-  const vBottom: Vec2[] = [
-    { x: 0, y: Math.max(rise, overall - 2 * r) },
-    { x: 0, y: rise },
-    { x: -run, y: 0 },
-    { x: -run - tipRun, y: tipRise },
-  ];
-  const pts = [...top, ...vBottom];
-  if (type === "90cv") {
-    pts.splice(top.length, 0, {
-      x: r * 0.7,
-      y: overall - 2 * r - shank * 0.25,
-    });
-    return { bends: 5, points: pts };
+  if (type === "c" || type === "90c") {
+    const { top, bottom } = cEyes(H, r);
+    if (type === "90c") {
+      return { bends: 4, points: cranked(top, cEyes(H, r, jog).bottom, H) };
+    }
+    return { bends: 2, points: [...top, ...bottom] };
   }
-  return { bends: 4, points: pts };
+
+  const { run, rise } = vExtents(legId);
+  const { top } = cEyes(H, r);
+  const vBottom: Vec2[] = [
+    { x: 0, y: rise },
+    { x: run, y: 0 },
+    { x: 2 * run, y: rise },
+  ];
+  if (type === "90cv") {
+    return {
+      bends: 6,
+      points: cranked(top, shiftX(vBottom, jog), H),
+    };
+  }
+  return { bends: 4, points: [...top, ...vBottom] };
 }
 
 export function buildHookQuote(input: HookBuildInput): HookBuildOk | HookBuildErr {

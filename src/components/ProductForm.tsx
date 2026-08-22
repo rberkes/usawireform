@@ -69,7 +69,7 @@ function fittedHookPath(
   height = 120,
   pad = 16,
 ) {
-  const { points } = hookCenterline(type, 12, 4);
+  const { points } = hookCenterline(type, 8, 2.5);
   let minX = Infinity;
   let maxX = -Infinity;
   let minY = Infinity;

@@ -68,7 +68,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
       "Parts that need a settled, centered hang through wash, coat, and cure.",
     hang: "The crotch locates. Legs spread load. Opening and included angle are the print.",
     body: [
-      "V-hooks are 2D CNC: feed, two sharp 45° Vs, a shank, cutoff. Rack V on top, part V on the bottom, 180° rotational symmetry. Length, opening, and point or blunt ends belong on the drawing. Carbon for everyday powder coating hooks. 304 or 316 when the washer or the chemistry eats bright basic.",
+      "V-hooks are 2D CNC: feed, two sharp 45° Vs, a shank, cutoff. Rack Λ on top, part V on the bottom, same side of the shank. Length, opening, and point or blunt ends belong on the drawing. Carbon for everyday powder coating hooks. 304 or 316 when the washer or the chemistry eats bright basic.",
       `This shop forms V-hooks in ${WIRE.label}. Stock tooling is ${STOCK}. Light catalog V-hooks at 0.080–0.250 in are a different cell — the quote says no under ${WIRE.minMm} mm.`,
     ],
     jobs: [

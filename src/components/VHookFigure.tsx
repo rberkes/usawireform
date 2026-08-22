@@ -19,8 +19,8 @@ const CAPTION: Record<HookTypeId, string> = {
 export function HookFigure({
   className,
   type = "v",
-  overall = 12,
-  legId = 4,
+  overall = 8,
+  legId = 2.5,
   label,
 }: {
   className?: string;
@@ -58,7 +58,7 @@ export function HookFigure({
           d={d}
           fill="none"
           stroke="currentColor"
-          strokeWidth="0.42"
+          strokeWidth="0.22"
           strokeLinecap={sharp ? "butt" : "round"}
           strokeLinejoin={sharp ? "miter" : "round"}
           strokeMiterlimit={3}

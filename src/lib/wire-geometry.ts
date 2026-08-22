@@ -208,8 +208,8 @@ export function polylinesForModel(id: string): Polyline[] {
     case "s-hooks":
       return [sHookCenterline()];
     case "powder-coating-hooks": {
-      const pts = vHookPoints(12, 4);
-      const midY = 6;
+      const pts = vHookPoints(8, 2.5);
+      const midY = 4;
       return [pts.map((p) => [p.x, p.y - midY, 0] as Vec3)];
     }
     case "j-hooks":

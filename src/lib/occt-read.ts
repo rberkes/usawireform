@@ -34,8 +34,8 @@ export function readCadBuffer(buffer: ArrayBuffer, name: string): Promise<OcctMe
       params: {
         linearUnit: "millimeter",
         linearDeflectionType: "bounding_box_ratio",
-        linearDeflection: 0.001,
-        angularDeflection: 0.12,
+        linearDeflection: 0.0004,
+        angularDeflection: 0.08,
       },
     });
   });

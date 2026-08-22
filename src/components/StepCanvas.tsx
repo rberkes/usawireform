@@ -131,6 +131,7 @@ export function StepCanvas({
     let stillWait = 0;
     let renderer: { dispose: () => void; domElement: HTMLCanvasElement } | null =
       null;
+    let envDispose: (() => void) | null = null;
 
     const start = async () => {
       const THREE = await import("three");
@@ -140,6 +141,9 @@ export function StepCanvas({
       if (disposed || !hostRef.current) return;
       const canvasHost = hostRef.current;
 
+      const { RoomEnvironment } = await import(
+        "three/addons/environments/RoomEnvironment.js"
+      );
       const gl = new THREE.WebGLRenderer({
         antialias: true,
         preserveDrawingBuffer: true,
@@ -148,10 +152,20 @@ export function StepCanvas({
       gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       gl.setClearColor(0xf4f4f2, 1);
       gl.outputColorSpace = THREE.SRGBColorSpace;
+      gl.toneMapping = THREE.ACESFilmicToneMapping;
+      gl.toneMappingExposure = 1.05;
       canvasHost.appendChild(gl.domElement);
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0xf4f4f2);
+      const pmrem = new THREE.PMREMGenerator(gl);
+      const env = pmrem.fromScene(new RoomEnvironment(), 0.04);
+      scene.environment = env.texture;
+      scene.environmentIntensity = 0.9;
+      envDispose = () => {
+        env.dispose();
+        pmrem.dispose();
+      };
 
       const camera = new THREE.PerspectiveCamera(42, 1, 0.05, 4000);
       camera.position.set(12, 10, 16);
@@ -162,15 +176,15 @@ export function StepCanvas({
       controls.autoRotateSpeed = 0.6;
       controls.target.set(0, 3, 0);
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-      scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8580, 1.1));
-      const key = new THREE.DirectionalLight(0xffffff, 1.35);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+      scene.add(new THREE.HemisphereLight(0xf7f4ee, 0x7a7670, 0.55));
+      const key = new THREE.DirectionalLight(0xffffff, 1.55);
       key.position.set(8, 14, 10);
       scene.add(key);
-      const fill = new THREE.DirectionalLight(0xe8e4dc, 0.7);
+      const fill = new THREE.DirectionalLight(0xe8e4dc, 0.45);
       fill.position.set(-10, 6, -8);
       scene.add(fill);
-      const rim = new THREE.DirectionalLight(0xffffff, 0.45);
+      const rim = new THREE.DirectionalLight(0xffffff, 0.7);
       rim.position.set(0, 8, -12);
       scene.add(rim);
 
@@ -191,16 +205,35 @@ export function StepCanvas({
         camera.updateProjectionMatrix();
       }
 
+      const RADIAL = 64;
+
       function steelMaterial(finish: WireFinishId, color?: number[]) {
         const swatch =
           WIRE_FINISHES.find((item) => item.id === finish)?.color ?? "#8d939a";
+        const metal =
+          finish === "stainless" ? 0.92 : finish === "copper" ? 0.88 : 0.78;
+        const rough =
+          finish === "stainless" ? 0.16 : finish === "copper" ? 0.26 : 0.3;
         return new THREE.MeshStandardMaterial({
           color: color
             ? new THREE.Color(color[0], color[1], color[2])
             : swatch,
-          metalness: finish === "copper" ? 0.35 : 0.28,
-          roughness: finish === "stainless" ? 0.32 : 0.42,
+          metalness: metal,
+          roughness: rough,
+          envMapIntensity: 1.2,
         });
+      }
+
+      function addSphere(
+        group: InstanceType<typeof THREE.Group>,
+        p: Vec3,
+        radius: number,
+        material: InstanceType<typeof THREE.MeshStandardMaterial>,
+      ) {
+        const geo = new THREE.SphereGeometry(radius, RADIAL, RADIAL / 2);
+        const mesh = new THREE.Mesh(geo, material);
+        mesh.position.set(p[0], p[1], p[2]);
+        group.add(mesh);
       }
 
       function addCylinder(
@@ -219,9 +252,9 @@ export function StepCanvas({
           radius,
           radius,
           length,
-          12,
+          RADIAL,
           1,
-          false,
+          true,
         );
         const mesh = new THREE.Mesh(geo, material);
         mesh.position.copy(start).add(end).multiplyScalar(0.5);
@@ -239,14 +272,32 @@ export function StepCanvas({
         material: InstanceType<typeof THREE.MeshStandardMaterial>,
       ) {
         if (pts.length < 2) return;
-        if (pts.length === 2) {
-          addCylinder(group, pts[0], pts[1], radius, material);
+        const first = pts[0];
+        const last = pts[pts.length - 1];
+        const closed =
+          pts.length > 8 &&
+          Math.hypot(first[0] - last[0], first[1] - last[1], first[2] - last[2]) <
+            radius * 0.4;
+
+        if (pts.length <= 12 && !closed) {
+          addSphere(group, pts[0], radius, material);
+          for (let i = 1; i < pts.length; i++) {
+            addCylinder(group, pts[i - 1], pts[i], radius, material);
+            addSphere(group, pts[i], radius, material);
+          }
           return;
         }
+
         const path = pts.map((p) => new THREE.Vector3(...p));
-        const curve = new THREE.CatmullRomCurve3(path, false, "centripetal");
-        const tubular = Math.min(180, Math.max(24, pts.length * 3));
-        const geo = new THREE.TubeGeometry(curve, tubular, radius, 12, false);
+        const curve = new THREE.CatmullRomCurve3(path, closed, "centripetal");
+        const tubular = Math.min(320, Math.max(64, pts.length * 5));
+        const geo = new THREE.TubeGeometry(
+          curve,
+          tubular,
+          radius,
+          RADIAL,
+          closed,
+        );
         group.add(new THREE.Mesh(geo, material));
       }
 
@@ -405,6 +456,7 @@ export function StepCanvas({
       applyRef.current = () => {};
       renderer?.dispose();
       renderer?.domElement.remove();
+      envDispose?.();
     };
   }, []);
 
