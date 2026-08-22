@@ -8,6 +8,8 @@ const privatePaths = [
   "/source/dashboard/",
   "/source/account",
   "/source/account/",
+  "/source/claim",
+  "/source/claim/",
   "/sign-in",
   "/sign-in/",
   "/sign-up",

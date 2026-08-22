@@ -7,10 +7,18 @@ import {
   checkoutUrls,
   ensureBillingPortal,
   ensurePaidPriceId,
-  getSourcePlanForUser,
+  ensureSecondaryPriceId,
+  getLiveSourceSubscription,
+  getSourceSecondaryQtyForUser,
   getStripeCustomerId,
+  setSubscriptionSecondaryQuantity,
 } from "@/lib/source-billing";
 import { isSourcePlanId, planById } from "@/lib/source-plans";
+import {
+  formatSecondaryPrice,
+  parseSourceSecondaries,
+} from "@/lib/source-secondaries";
+import { getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
 
 async function requireUser() {
@@ -41,22 +49,36 @@ export async function startSourceCheckout(formData: FormData) {
   const priceId = await ensurePaidPriceId(plan);
   const urls = checkoutUrls();
   const customerId = await getStripeCustomerId(userId);
-  const current = await getSourcePlanForUser(userId);
 
-  if (customerId && current.id !== "free") {
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customerId,
-      status: "active",
-      limit: 1,
-    });
-    const live = subscriptions.data[0];
-    const item = live?.items.data[0];
-    if (live && item) {
-      await stripe.subscriptions.update(live.id, {
-        items: [{ id: item.id, price: priceId }],
-        proration_behavior: "create_prorations",
-        metadata: { userId, source_plan: plan.id },
+  if (customerId) {
+    const live = await getLiveSourceSubscription(customerId);
+    if (live) {
+      const cell = live.items.data.find((item) => {
+        const price = item.price;
+        if (!price || typeof price === "string") return true;
+        return (
+          price.lookup_key !== "source_secondary" &&
+          price.metadata?.source_addon !== "secondary"
+        );
       });
+      const metadata = {
+        ...live.metadata,
+        userId,
+        source_plan: plan.id,
+      };
+      if (cell) {
+        await stripe.subscriptions.update(live.id, {
+          items: [{ id: cell.id, price: priceId }],
+          proration_behavior: "create_prorations",
+          metadata,
+        });
+      } else {
+        await stripe.subscriptions.update(live.id, {
+          items: [{ price: priceId, quantity: 1 }],
+          proration_behavior: "create_prorations",
+          metadata,
+        });
+      }
       redirect("/source/dashboard");
     }
   }
@@ -109,4 +131,83 @@ export async function syncCheckoutSession(sessionId: string) {
     return;
   }
   await applyCheckoutSession(session);
+}
+
+export async function saveSourceSecondaries(
+  _prev: { success: boolean; message: string },
+  formData: FormData,
+): Promise<{ success: boolean; message: string }> {
+  const { userId, email } = await requireUser();
+  const ids = parseSourceSecondaries(formData.getAll("secondary"));
+  const profile = await getSourceProfile(userId);
+  if (!profile?.company) {
+    return { success: false, message: "Save the shop first." };
+  }
+
+  if (!stripeConfigured()) {
+    await setSourceProfileSecondaries(userId, ids);
+    return {
+      success: true,
+      message:
+        ids.length === 0
+          ? "Secondaries cleared."
+          : `Listed ${ids.length} ${ids.length === 1 ? "secondary" : "secondaries"}.`,
+    };
+  }
+
+  const billed = await getSourceSecondaryQtyForUser(userId);
+  const customerId = await getStripeCustomerId(userId);
+
+  if (ids.length <= billed) {
+    if (customerId && ids.length !== billed) {
+      await setSubscriptionSecondaryQuantity({
+        customerId,
+        quantity: ids.length,
+      });
+    }
+    await setSourceProfileSecondaries(userId, ids);
+    return {
+      success: true,
+      message:
+        ids.length === 0
+          ? "Secondaries cleared."
+          : `Listed ${ids.length} ${ids.length === 1 ? "secondary" : "secondaries"}. ${formatSecondaryPrice(ids.length)}.`,
+    };
+  }
+
+  if (customerId) {
+    const result = await setSubscriptionSecondaryQuantity({
+      customerId,
+      quantity: ids.length,
+    });
+    if (result.ok && !result.needsCheckout) {
+      await setSourceProfileSecondaries(userId, ids);
+      return {
+        success: true,
+        message: `Listed ${ids.length} secondaries. ${formatSecondaryPrice(ids.length)}.`,
+      };
+    }
+  }
+
+  const stripe = getStripe();
+  const priceId = await ensureSecondaryPriceId();
+  const urls = checkoutUrls();
+  const joined = ids.join(",");
+  const session = await stripe.checkout.sessions.create({
+    mode: "subscription",
+    client_reference_id: userId,
+    ...(customerId ? { customer: customerId } : { customer_email: email }),
+    line_items: [{ price: priceId, quantity: ids.length }],
+    success_url: urls.success,
+    cancel_url: urls.cancelDashboard,
+    allow_promotion_codes: true,
+    metadata: { userId, source_secondaries: joined },
+    subscription_data: {
+      metadata: { userId, source_secondaries: joined },
+    },
+  });
+  if (!session.url) {
+    return { success: false, message: "Could not start checkout." };
+  }
+  redirect(session.url);
 }

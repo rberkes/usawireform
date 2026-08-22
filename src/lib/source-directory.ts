@@ -1,5 +1,6 @@
 import { directoryRegionForState } from "@/lib/directory";
 import type { DirectoryCompany } from "@/lib/directory-types";
+import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import type { SourceMachine, SourceProfile } from "@/lib/source-types";
 
 export function slugifyShopName(name: string) {
@@ -30,6 +31,65 @@ export function sourceCellsToMachineNotes(cells: SourceMachine[]) {
       row.minMm || row.maxMm ? `${row.minMm || "?"}–${row.maxMm || "?"} mm` : "";
     return [row.oem, row.model, row.kind, band].filter(Boolean).join(" · ");
   });
+}
+
+export function directoryCity(
+  company: Pick<DirectoryCompany, "location" | "state">,
+) {
+  const suffix = `, ${company.state}`;
+  if (company.location.toUpperCase().endsWith(suffix.toUpperCase())) {
+    return company.location.slice(0, -suffix.length).trim();
+  }
+  return company.location;
+}
+
+export function sourceClaimPath(slug: string) {
+  return `/source/claim?slug=${encodeURIComponent(slug)}`;
+}
+
+/** Source is a USA shop floor. Canada stays in the directory. Europe later, separate platform. */
+export function sourceClaimable(
+  company: Pick<DirectoryCompany, "country" | "filedOnSource">,
+) {
+  return company.country === "USA" && !company.filedOnSource;
+}
+
+export function overlaySourceOnDirectory(
+  listed: DirectoryCompany,
+  sourced?: DirectoryCompany | null,
+): DirectoryCompany {
+  if (!sourced) return listed;
+  return {
+    ...listed,
+    name: sourced.name || listed.name,
+    phone: sourced.phone || listed.phone,
+    website: sourced.website || listed.website,
+    description: sourced.description || listed.description,
+    machines:
+      sourced.machines && sourced.machines.length > 0
+        ? sourced.machines
+        : listed.machines,
+    wireDiameters: sourced.wireDiameters || listed.wireDiameters,
+    filedOnSource: true,
+    listedAt: sourced.listedAt,
+    secondaries: sourced.secondaries?.length
+      ? sourced.secondaries
+      : listed.secondaries,
+  };
+}
+
+export function mergeDirectoryList(
+  listed: DirectoryCompany[],
+  sourced: DirectoryCompany[],
+): DirectoryCompany[] {
+  const listedSlugs = new Set(listed.map((row) => row.slug));
+  const sourcedBySlug = new Map(sourced.map((row) => [row.slug, row]));
+  return [
+    ...listed.map((row) =>
+      overlaySourceOnDirectory(row, sourcedBySlug.get(row.slug)),
+    ),
+    ...sourced.filter((row) => !listedSlugs.has(row.slug)),
+  ];
 }
 
 export function sourceProfileToDirectoryCompany(
@@ -63,5 +123,6 @@ export function sourceProfileToDirectoryCompany(
     wireDiameters: bands[0] && bands.length === 1 ? bands[0] : bands.join(", ") || undefined,
     filedOnSource: true,
     listedAt: profile.listedAt || profile.updatedAt,
+    secondaries: parseSourceSecondaries(profile.secondaries),
   };
 }

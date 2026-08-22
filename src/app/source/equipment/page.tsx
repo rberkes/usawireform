@@ -48,7 +48,7 @@ export default async function SourceEquipmentPage({ searchParams }: Props) {
       <PageHero
         kicker="Source"
         title="Register and upload equipment"
-        lede="Name the shop. One row per cell. Jobs match these bands so you only see work your iron can run."
+        lede="Name the US shop. One row per cell. Jobs match these bands so you only see work your iron can run. Source is USA for now."
       />
       {invite ? (
         <p className="mt-6 max-w-2xl text-sm leading-6 text-muted">

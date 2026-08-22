@@ -102,30 +102,22 @@ export function mailRowsHtml(rows: MailRow[]) {
   </tr>`;
 }
 
-function ctaButtonRow(href: string, label: string, hint: string) {
+function ctaBannerRow(href: string, label: string, hint?: string) {
+  const hintHtml = hint
+    ? `<p style="margin:14px 0 0;font-family:${FONT};font-size:13px;line-height:1.5;color:#5c5c5c;text-align:center">${escapeHtml(hint)}</p>`
+    : "";
   return `<tr>
-    <td style="padding:24px 32px 0">
-      <a href="${escapeHtml(href)}" style="display:inline-block;background:#0b6bcb;color:#ffffff;font-family:${FONT};font-size:14px;font-weight:500;text-decoration:none;padding:12px 20px;border-radius:2px">
-        ${escapeHtml(label)}
-      </a>
-      <p style="margin:10px 0 0;font-family:${FONT};font-size:13px;line-height:1.5;color:#5c5c5c">${escapeHtml(hint)}</p>
-    </td>
-  </tr>`;
-}
-
-function ctaBannerRow(href: string, label: string, hint: string) {
-  return `<tr>
-    <td style="padding:28px 32px 0">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+    <td style="padding:28px 32px 8px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%">
         <tr>
-          <td align="center" style="background:#0b6bcb">
-            <a href="${escapeHtml(href)}" style="display:block;padding:18px 24px;font-family:${FONT};font-size:18px;font-weight:600;line-height:1.3;color:#ffffff;text-decoration:none;text-align:center">
+          <td align="center" bgcolor="#0b6bcb" style="background-color:#0b6bcb;border-radius:2px">
+            <a href="${escapeHtml(href)}" style="display:block;padding:22px 28px;font-family:${FONT};font-size:18px;font-weight:600;line-height:1.25;color:#ffffff;text-decoration:none;text-align:center">
               ${escapeHtml(label)}
             </a>
           </td>
         </tr>
       </table>
-      <p style="margin:12px 0 0;font-family:${FONT};font-size:13px;line-height:1.5;color:#5c5c5c;text-align:center">${escapeHtml(hint)}</p>
+      ${hintHtml}
     </td>
   </tr>`;
 }
@@ -167,6 +159,24 @@ export function customerThanksHtml({
   const follow = drawing
     ? `If this isn't the part, reply with the right STEP. We'll look at the form and write back.`
     : `Reply to this email if you need to add a note.`;
+  const cta =
+    kind === "directory"
+      ? ctaBannerRow(
+          `${SITE_URL}/source/job`,
+          "Match a job on Source",
+          "Wire size, 2D or 3D, locale. We introduce shops that filed that iron.",
+        )
+      : kind === "machine"
+        ? ctaBannerRow(
+            `${SITE_URL}/source/equipment`,
+            "File your cells on Source",
+            "One cell free. Jobs match the iron on the floor.",
+          )
+        : ctaBannerRow(
+            `${SITE_URL}/contact`,
+            "Send another drawing",
+            "STEP, IGES, or a print. We'll look at the form.",
+          );
 
   return shell(
     drawing
@@ -176,6 +186,7 @@ export function customerThanksHtml({
      ${headingRow(heading)}
      ${copyRow(intro)}
      ${drawing ? drawingRow(fileName, hasPreview) : ""}
+     ${cta}
      ${copyRow(`<span style="color:#5c5c5c">${follow}</span>`)}`,
   );
 }
@@ -310,12 +321,12 @@ export function estimateReceiptHtml(estimate: EstimateMailCopy) {
      ${headingRow("Your estimate receipt")}
      ${copyRow("Keep this email. It is not a production quote. Reply if you want the shop to look at a STEP.")}
      ${mailRowsHtml(estimateFactRows(estimate))}
-     ${ctaButtonRow(
-       estimateForwardMailto(estimate),
-       "Forward to a coworker",
-       "Opens a new message with this estimate. Add their address and send.",
+     ${ctaBannerRow(
+       `${SITE_URL}/contact`,
+       "Send a STEP",
+       "This estimate is not a production quote. A print still goes through the desk.",
      )}
-     ${copyRow(`<span style="color:#5c5c5c">${QUOTE_REVIEW} Weld, finish, and a print still go through <a href="${SITE_URL}/contact" style="color:#0b6bcb;text-decoration:none">contact</a>.</span>`)}`,
+     ${copyRow(`<span style="color:#5c5c5c"><a href="${escapeHtml(estimateForwardMailto(estimate))}" style="color:#0b6bcb;text-decoration:none">Forward to a coworker</a> · ${QUOTE_REVIEW}</span>`)}`,
   );
 }
 
@@ -370,10 +381,12 @@ export function sourceFiledReceiptHtml({
   company,
   machineCount,
   email,
+  hasAccount,
 }: {
   company?: string;
   machineCount: number;
   email?: string;
+  hasAccount?: boolean;
 }) {
   const who = company?.trim() ? escapeHtml(company.trim()) : "your shop";
   const n =
@@ -383,27 +396,54 @@ export function sourceFiledReceiptHtml({
   }`;
   const dashboardHref = `${SITE_URL}/source/dashboard`;
   const upgradeHref = `${SITE_URL}/source/upgrade`;
+  const cta = hasAccount
+    ? ctaBannerRow(
+        dashboardHref,
+        "Open the shop dashboard",
+        "Add cells, edit the listing, or change the plan.",
+      )
+    : ctaBannerRow(
+        confirmHref,
+        "Confirm your Source account",
+        "Use this email. Then the shop dashboard.",
+      );
   return shell(
-    "Confirm your Source account. Then log in and finish the shop.",
+    hasAccount
+      ? "We have the list. Finish the shop from the dashboard."
+      : "Confirm your Source account. Then log in and finish the shop.",
     `${kickerRow()}
-     ${headingRow("Confirm your Source account")}
-     ${copyRow(`We have the list. ${who} filed ${n}. Confirm the account, then log in to finish registration and add more iron.`)}
+     ${headingRow(hasAccount ? "Your cells are on Source" : "Confirm your Source account")}
+     ${copyRow(`We have the list. ${who} filed ${n}. ${
+       hasAccount
+         ? "The shop dashboard is where you add more iron."
+         : "Confirm the account, then log in to finish registration and add more iron."
+     }`)}
+     ${cta}
+     ${copyRow(`<span style="color:#5c5c5c">${SOURCE_PLAN_LINE} <a href="${escapeHtml(upgradeHref)}" style="color:#0b6bcb;text-decoration:none">Plans</a>.</span>`)}`,
+  );
+}
+
+export function sourceClaimedReceiptHtml({
+  company,
+  slug,
+}: {
+  company: string;
+  slug: string;
+}) {
+  const who = escapeHtml(company.trim() || "your shop");
+  const listingHref = `${SITE_URL}/directory/${encodeURIComponent(slug)}`;
+  const dashboardHref = `${SITE_URL}/source/dashboard`;
+  return shell(
+    "You claimed the directory page. File cells from the shop dashboard.",
+    `${kickerRow()}
+     ${headingRow("You claimed the page")}
+     ${copyRow(`${who} is yours on Source. Public listing stays <a href="${escapeHtml(listingHref)}" style="color:#0b6bcb;text-decoration:none">${escapeHtml(`${SITE_HOST}/directory/${slug}`)}</a>. File CNC cells from the dashboard.`)}
      ${ctaBannerRow(
-       confirmHref,
-       "Confirm your Source account",
-       "Use this email. Then the shop dashboard.",
-     )}
-     ${ctaButtonRow(
        dashboardHref,
        "Open the shop dashboard",
-       "Log in if you already confirmed. Upload more equipment from there.",
+       "One cell is free. Add the iron on the floor.",
      )}
-     ${copyRow(SOURCE_PLAN_LINE)}
-     ${ctaButtonRow(
-       upgradeHref,
-       "See Source plans",
-       "Pay on Stripe. Cancel any month from the dashboard.",
-     )}`,
+     ${copyRow(SOURCE_PLAN_LINE)}`,
   );
 }
 
@@ -429,6 +469,11 @@ export function sourceJobReceiptHtml({
     `${kickerRow()}
      ${headingRow("Your Source job is in")}
      ${copyRow(chairs)}
-     ${copyRow(`<span style="color:#5c5c5c">Instant estimate on usawireform.com is still this floor — 4–14 mm Robomac. Source is the trade.</span>`)}`,
+     ${ctaBannerRow(
+       `${SITE_URL}/source/job`,
+       "Send another job",
+       "Wire size, 2D or 3D, locale. We introduce — emails stay with the desk.",
+     )}
+     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/dashboard" style="color:#0b6bcb;text-decoration:none">Open the shop dashboard</a> and file cells so the next job can find you. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
   );
 }

@@ -40,7 +40,7 @@ export default async function NewestSourceShopsPage() {
       <PageHero
         kicker="Source"
         title="Newest members"
-        lede="Shops that filed cells on Source, newest first. Public listing only — emails stay with the desk."
+        lede="US shops that filed cells on Source, newest first. Public listing only — emails stay with the desk. Europe later, on its own platform."
       />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
         <Link href="/source" className="text-copper hover:underline">

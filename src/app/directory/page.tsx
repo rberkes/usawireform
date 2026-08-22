@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Page, PageHero, Section, Kicker } from "@/components/ui";
+import { Page, PageHero, Section, Kicker, btn } from "@/components/ui";
 import { cx } from "@/lib/cx";
 import {
   directoryCompanies,
@@ -16,6 +16,7 @@ import {
 import { CNC_COMPARE } from "@/lib/cnc-oems";
 import { pageMeta } from "@/lib/seo";
 import { listPublishedSourceDirectoryCompanies } from "@/lib/source";
+import { mergeDirectoryList, sourceClaimPath, sourceClaimable } from "@/lib/source-directory";
 import type { DirectoryCompany } from "@/lib/directory-types";
 
 export const dynamic = "force-dynamic";
@@ -40,11 +41,10 @@ export default async function DirectoryPage({ searchParams }: Props) {
   const { iron } = await searchParams;
   const filter = isIronClass(iron) ? iron : undefined;
   const sourced = await listPublishedSourceDirectoryCompanies();
-  const listed = new Set(directoryCompanies.map((company) => company.slug));
-  const companies: DirectoryCompany[] = [
-    ...directoryCompanies,
-    ...sourced.filter((company) => !listed.has(company.slug)),
-  ];
+  const companies: DirectoryCompany[] = mergeDirectoryList(
+    directoryCompanies,
+    sourced,
+  );
   const usaCount = companies.filter((c) => c.country === "USA").length;
   const canadaCount = companies.filter((c) => c.country === "Canada").length;
   const activeFilter = IRON_FILTERS.find((item) => item.id === filter);
@@ -70,10 +70,14 @@ export default async function DirectoryPage({ searchParams }: Props) {
         lede={`${companies.length} wire forming factories across the United States and Canada — part of the resource for the trade. Equipment tags come from public pages or cells the shop filed on Source.`}
       />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
+        Click a factory to open its listing. US shops:{" "}
+        <strong className="font-medium text-foreground">Claim this page</strong>{" "}
+        is on that listing — then file cells on Source. Source is USA for now.
+        Europe later, on its own platform.{" "}
         <Link href="/directory/new" className="text-copper hover:underline">
           Newest Source shops
-        </Link>{" "}
-        — members who just filed cells.
+        </Link>
+        .
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -206,6 +210,14 @@ export default async function DirectoryPage({ searchParams }: Props) {
                       ))}
                     </div>
                   )}
+                  {sourceClaimable(company) ? (
+                    <Link
+                      href={sourceClaimPath(company.slug)}
+                      className={cx(btn.compact, "mt-4 self-start")}
+                    >
+                      Claim this page
+                    </Link>
+                  ) : null}
                 </div>
               ))}
             </div>

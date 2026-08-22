@@ -27,7 +27,7 @@ export default async function SourcePage() {
       <PageHero
         kicker="Source"
         title="Jobs match the iron on the floor"
-        lede="Shops file equipment. Buyers ask three shops whose cells can run the print. Diameter, 2D or 3D, OEM, locale — not a directory blurb."
+        lede="US shops file equipment. Buyers ask three shops whose cells can run the print. Diameter, 2D or 3D, OEM, locale — not a directory blurb. Europe later, on its own platform."
       />
       <div className="mt-10 max-w-2xl space-y-6 text-sm leading-6 text-muted">
         <p>
@@ -43,6 +43,12 @@ export default async function SourcePage() {
           <TextLink href="/source/dashboard">shop dashboard</TextLink> is
           where you add more iron. {SOURCE_PLAN_LINE}{" "}
           <TextLink href="/source/upgrade">Plans</TextLink>.
+        </p>
+        <p>
+          Already in the{" "}
+          <TextLink href="/directory">directory</TextLink>? US shops: open the
+          listing and claim the page. That URL stays. File cells from the
+          dashboard. Source is USA for now. Europe later, on its own platform.
         </p>
         <p>
           Instant estimate on this site is still this cell — 4–14 mm on the

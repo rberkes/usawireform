@@ -1,13 +1,14 @@
 import { get, list, put } from "@vercel/blob";
 import { Resend } from "resend";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
-import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
+import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 import {
   customerThanksHtml,
   escapeHtml,
   estimateLeadHtml,
   estimateReceiptHtml,
   shopLeadHtml,
+  sourceClaimedReceiptHtml,
   sourceFiledReceiptHtml,
   sourceInviteHtml,
   sourceJobReceiptHtml,
@@ -334,6 +335,7 @@ export async function sendSourceFilingEmails({
   machines,
   notes,
   fileName,
+  hasAccount,
 }: {
   to: string;
   company: string;
@@ -352,6 +354,7 @@ export async function sendSourceFilingEmails({
   }>;
   notes?: string;
   fileName?: string;
+  hasAccount?: boolean;
 }) {
   const cells = machines
     .map(
@@ -385,10 +388,43 @@ export async function sendSourceFilingEmails({
         company,
         machineCount: machines.length,
         email: to,
+        hasAccount,
       }),
     }),
   ]);
   console.log("[Source filing mail]", { to, company, shop, receipt });
+  return shop && receipt;
+}
+
+export async function sendSourceClaimEmails({
+  to,
+  company,
+  slug,
+}: {
+  to: string;
+  company: string;
+  slug: string;
+}) {
+  const shopLabel = escapeHtml(company || "Shop");
+  const safeTo = escapeHtml(to);
+  const listing = `${SITE_URL}/directory/${slug}`;
+  const [shop, receipt] = await Promise.all([
+    sendLeadEmail({
+      replyTo: to,
+      heading: "LEAD — directory claim",
+      subject: `LEAD: claimed directory — ${company || to}`,
+      html: `<p><strong>${shopLabel}</strong> claimed its directory page.</p>
+        <p>Email: <a href="mailto:${safeTo}">${safeTo}</a></p>
+        <p>Listing: <a href="${escapeHtml(listing)}">${escapeHtml(listing)}</a></p>`,
+    }),
+    sendResendMail({
+      to,
+      replyTo: QUOTE_EMAIL,
+      subject: `You claimed ${company || "the listing"} — ${COMPANY}`,
+      html: sourceClaimedReceiptHtml({ company, slug }),
+    }),
+  ]);
+  console.log("[Source claim mail]", { to, company, slug, shop, receipt });
   return shop && receipt;
 }
 

@@ -6,6 +6,7 @@ import {
   slugifyShopName,
   sourceProfileToDirectoryCompany,
 } from "@/lib/source-directory";
+import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import type {
   SourceFiling,
@@ -221,7 +222,9 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
     state: String(payload.state ?? ""),
     website: String(payload.website ?? ""),
     blurb: String(payload.blurb ?? ""),
+    secondaries: parseSourceSecondaries(payload.secondaries),
     published: payload.published !== false,
+    claimedDirectory: payload.claimedDirectory === true,
     listedAt: String(
       payload.listedAt ?? payload.updatedAt ?? new Date().toISOString(),
     ),
@@ -306,10 +309,31 @@ export async function saveSourceProfile(profile: SourceProfile) {
   return true;
 }
 
-export async function getSourceProfileBySlug(slug: string) {
+export async function setSourceProfileSecondaries(
+  userId: string,
+  secondaries: string[],
+) {
+  const existing = await getSourceProfile(userId);
+  if (!existing) return false;
+  const ids = parseSourceSecondaries(secondaries);
+  await saveSourceProfile({
+    ...existing,
+    secondaries: ids,
+    updatedAt: new Date().toISOString(),
+  });
+  return true;
+}
+
+export async function findSourceProfileBySlug(slug: string) {
   if (!slug) return null;
   const rows = await listSourceProfiles();
-  return rows.find((row) => row.published && row.slug === slug) ?? null;
+  return rows.find((row) => row.slug === slug) ?? null;
+}
+
+export async function getSourceProfileBySlug(slug: string) {
+  const profile = await findSourceProfileBySlug(slug);
+  if (!profile?.published) return null;
+  return profile;
 }
 
 export function applyProfilesToFilings(

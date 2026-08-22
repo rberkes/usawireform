@@ -71,7 +71,7 @@ export default function SiteMapPage() {
             {
               href: "/source/upgrade",
               title: "Source plans",
-              body: "One cell free. $30 / $49 / $99 a month.",
+              body: "One cell free. $30 / $49 / $99 a month. Secondaries $5 each.",
             },
             {
               href: "/secondary-operations",
@@ -432,6 +432,11 @@ export default function SiteMapPage() {
               href: "/directory/new",
               title: "Newest Source shops",
               body: "Members who just filed cells, newest first.",
+            },
+            {
+              href: "/directory",
+              title: "Claim a directory page",
+              body: "Existing shops claim the listing and file cells on Source.",
             },
             {
               href: "/directory/areas",

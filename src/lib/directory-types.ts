@@ -21,4 +21,6 @@ export interface DirectoryCompany {
   /** Shop filed its own CNC cells on Source. */
   filedOnSource?: boolean;
   listedAt?: string;
+  /** Paid Source secondaries the shop listed. */
+  secondaries?: string[];
 }

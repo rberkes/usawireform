@@ -2,10 +2,13 @@
 
 import { randomUUID } from "crypto";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { isAdmin } from "@/app/admin/actions";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { blobErrorMessage, blobReady } from "@/lib/blob";
+import { getDirectoryCompany } from "@/lib/directory";
 import {
+  sendSourceClaimEmails,
   sendSourceFilingEmails,
   sendSourceInviteEmails,
   sendSourceJobEmails,
@@ -21,10 +24,16 @@ import { getSourcePlanForUser } from "@/lib/source-billing";
 import { parseBuyerJob } from "@/lib/source-job-parse";
 import { matchFilingsToJob } from "@/lib/source-match";
 import { planById } from "@/lib/source-plans";
-import { normalizeShopWebsite } from "@/lib/source-directory";
+import {
+  directoryCity,
+  normalizeShopWebsite,
+  sourceClaimable,
+  sourceClaimPath,
+} from "@/lib/source-directory";
 import type { SourcePublicMatch } from "@/lib/source-types";
 import {
   applyProfilesToFilings,
+  findSourceProfileBySlug,
   getSourceInvite,
   getSourceProfile,
   listSourceFilings,
@@ -101,6 +110,8 @@ async function upsertShopProfile({
     website: normalizeShopWebsite(website),
     blurb: (blurb ?? existing?.blurb ?? "").trim().slice(0, 500),
     published: true,
+    claimedDirectory: existing?.claimedDirectory,
+    secondaries: existing?.secondaries ?? [],
     listedAt: existing?.listedAt || existing?.updatedAt || now,
     updatedAt: now,
   });
@@ -156,6 +167,93 @@ export async function sendSourceInvite(
     success: true,
     message: `Invite sent to ${to}. LEAD copy is in the shop inbox.`,
   };
+}
+
+export async function claimDirectoryListing(
+  _prev: SourceFormState,
+  formData: FormData,
+): Promise<SourceFormState> {
+  const slug = String(formData.get("slug") ?? "").trim();
+  const signedIn = await signedInShop();
+  if (!signedIn) {
+    redirect(
+      `/sign-in?redirect_url=${encodeURIComponent(sourceClaimPath(slug))}`,
+    );
+  }
+
+  const listed = getDirectoryCompany(slug);
+  if (!listed) {
+    return { success: false, message: "That listing is not in the directory." };
+  }
+  if (!sourceClaimable(listed)) {
+    return {
+      success: false,
+      message: "Source is USA shops for now. Europe later, on its own platform.",
+    };
+  }
+
+  const owner = await findSourceProfileBySlug(slug);
+  if (owner && owner.userId === signedIn.userId) {
+    redirect("/source/dashboard");
+  }
+  if (owner) {
+    return {
+      success: false,
+      message: "This page is already claimed.",
+    };
+  }
+
+  const existing = await getSourceProfile(signedIn.userId);
+  if (
+    existing?.slug &&
+    existing.slug !== slug &&
+    (existing.claimedDirectory || getDirectoryCompany(existing.slug))
+  ) {
+    return {
+      success: false,
+      message: `This account already claimed ${existing.company}.`,
+    };
+  }
+
+  if (!(await blobReady())) {
+    return { success: false, message: "Could not store the claim." };
+  }
+
+  const now = new Date().toISOString();
+  try {
+    await saveSourceProfile({
+      userId: signedIn.userId,
+      slug: listed.slug,
+      company: listed.name,
+      name: existing?.name ?? "",
+      phone: existing?.phone || listed.phone || "",
+      city: existing?.city || directoryCity(listed),
+      state: existing?.state || listed.state,
+      website: normalizeShopWebsite(existing?.website || listed.website || ""),
+      blurb: (existing?.blurb || listed.description).trim().slice(0, 500),
+      published: true,
+      claimedDirectory: true,
+      secondaries: existing?.secondaries ?? [],
+      listedAt: existing?.listedAt || existing?.updatedAt || now,
+      updatedAt: now,
+    });
+  } catch (error) {
+    console.error("[Source claim store]", error);
+    return {
+      success: false,
+      message: `Could not store the claim (${blobErrorMessage(error)}).`,
+    };
+  }
+
+  if (signedIn.email) {
+    await sendSourceClaimEmails({
+      to: signedIn.email,
+      company: listed.name,
+      slug: listed.slug,
+    });
+  }
+
+  redirect("/source/dashboard");
 }
 
 export async function submitSourceEquipment(
@@ -258,6 +356,7 @@ export async function submitSourceEquipment(
     machines,
     notes,
     fileName,
+    hasAccount: Boolean(signedIn?.userId),
   });
   if (!emailed) {
     return {

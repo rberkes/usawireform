@@ -10,6 +10,7 @@ import {
   Section,
   Kicker,
   SpecList,
+  ButtonLink,
 } from "@/components/ui";
 import {
   directoryCompanies,
@@ -18,9 +19,13 @@ import {
   publicHost,
 } from "@/lib/directory";
 import { pageMeta } from "@/lib/seo";
+import { overlaySourceOnDirectory, sourceClaimPath, sourceClaimable } from "@/lib/source-directory";
+import { secondaryHref, secondaryLabel } from "@/lib/source-secondaries";
 import { getSourceDirectoryCompany } from "@/lib/source";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return directoryCompanies.map((company) => ({ slug: company.slug }));
@@ -30,10 +35,23 @@ export const dynamicParams = true;
 
 async function resolveDirectoryCompany(slug: string) {
   const listed = getDirectoryCompany(slug);
-  if (listed) return { company: listed, source: false as const };
   const sourced = await getSourceDirectoryCompany(slug);
+  if (listed && sourced) {
+    return {
+      company: overlaySourceOnDirectory(listed, sourced.company),
+      source: sourced.cells.length > 0,
+      claimable: false,
+    };
+  }
+  if (listed) {
+    return {
+      company: listed,
+      source: false,
+      claimable: sourceClaimable(listed),
+    };
+  }
   if (!sourced) return null;
-  return { company: sourced.company, source: true as const };
+  return { company: sourced.company, source: true, claimable: false };
 }
 
 export async function generateMetadata({ params }: Props) {
@@ -60,7 +78,7 @@ export default async function DirectoryCompanyPage({ params }: Props) {
   const { slug } = await params;
   const resolved = await resolveDirectoryCompany(slug);
   if (!resolved) notFound();
-  const { company, source } = resolved;
+  const { company, source, claimable } = resolved;
 
   const relatedCompanies = getCompaniesByRegion(company.region)
     .filter((c) => c.slug !== slug)
@@ -124,6 +142,17 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             <p className="mt-6 text-sm leading-7 text-muted">
               {company.description}
             </p>
+            {claimable ? (
+              <div className="mt-6 space-y-3">
+                <ButtonLink href={sourceClaimPath(company.slug)}>
+                  Claim this page
+                </ButtonLink>
+                <p className="max-w-xl text-sm leading-6 text-muted">
+                  This is your US shop? Claim the listing, then file CNC cells
+                  on Source. One cell free. Europe later, on its own platform.
+                </p>
+              </div>
+            ) : null}
 
             {company.website && (
               <p className="mt-4">
@@ -167,6 +196,36 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                 ))}
               </ul>
             </Section>
+
+            {company.secondaries && company.secondaries.length > 0 ? (
+              <Section title="Secondaries">
+                <p className="mt-3 text-sm leading-6 text-muted">
+                  Main secondary operations the shop listed on Source. Confirm
+                  with the chair before you send a print.
+                </p>
+                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {company.secondaries.map((id) => {
+                    const href = secondaryHref(id);
+                    const label = secondaryLabel(id);
+                    return (
+                      <li
+                        key={id}
+                        className="flex items-start gap-2 text-sm leading-6"
+                      >
+                        <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-copper" />
+                        {href ? (
+                          <Link href={href} className="hover:text-copper">
+                            {label}
+                          </Link>
+                        ) : (
+                          label
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </Section>
+            ) : null}
 
             {company.machines && company.machines.length > 0 ? (
               <Section title={source ? "Filed cells" : "What the shop published"}>
@@ -237,10 +296,28 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                   </Link>
                 </div>
               ) : (
-                <DirectoryLeadForm
-                  companyName={company.name}
-                  companySlug={company.slug}
-                />
+                <div className="space-y-6">
+                  {claimable ? (
+                    <div className="space-y-3 border-b border-line pb-6">
+                      <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
+                        This shop
+                      </p>
+                      <p className="text-sm leading-6 text-muted">
+                        Claim this US listing and file the cells on the floor.
+                      </p>
+                      <Link
+                        href={sourceClaimPath(company.slug)}
+                        className="inline-flex items-center justify-center rounded-sm bg-copper px-5 py-2.5 text-sm font-medium text-white hover:bg-copper-dim"
+                      >
+                        Claim this page
+                      </Link>
+                    </div>
+                  ) : null}
+                  <DirectoryLeadForm
+                    companyName={company.name}
+                    companySlug={company.slug}
+                  />
+                </div>
               )}
             </div>
           </div>

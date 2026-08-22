@@ -3,6 +3,12 @@ import "server-only";
 import { clerkClient } from "@clerk/nextjs/server";
 import type Stripe from "stripe";
 import { SOURCE_PAID_PLANS, planById, planByLookupKey, type SourcePlan, type SourcePlanId } from "@/lib/source-plans";
+import {
+  SOURCE_SECONDARY_CENTS,
+  SOURCE_SECONDARY_LOOKUP,
+  parseSourceSecondaries,
+} from "@/lib/source-secondaries";
+import { getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
 import { appOrigin, getStripe, stripeConfigured } from "@/lib/stripe";
 
 const PRICE_CACHE = new Map<string, string>();
@@ -11,18 +17,41 @@ function subscriptionIsLive(status: Stripe.Subscription.Status) {
   return status === "active" || status === "trialing" || status === "past_due";
 }
 
+function isSecondaryPrice(price?: Stripe.Price | Stripe.DeletedPrice | string | null) {
+  if (!price || typeof price === "string" || !("lookup_key" in price)) return false;
+  return (
+    price.lookup_key === SOURCE_SECONDARY_LOOKUP ||
+    price.metadata?.source_addon === "secondary"
+  );
+}
+
+function cellPlanItem(subscription: Stripe.Subscription) {
+  return subscription.items.data.find((item) => !isSecondaryPrice(item.price));
+}
+
+function secondaryPlanItem(subscription: Stripe.Subscription) {
+  return subscription.items.data.find((item) => isSecondaryPrice(item.price));
+}
+
 export function planFromSubscription(subscription: Stripe.Subscription): SourcePlan {
   if (!subscriptionIsLive(subscription.status)) {
     return planById("free");
   }
-  const item = subscription.items.data[0];
-  const lookup = item?.price?.lookup_key;
+  const item = cellPlanItem(subscription);
+  const lookup = item?.price && typeof item.price !== "string" ? item.price.lookup_key : undefined;
   const meta =
-    item?.price?.metadata?.source_plan ||
-    subscription.metadata?.source_plan;
-  return planByLookupKey(lookup) !== planById("free")
-    ? planByLookupKey(lookup)
-    : planById(meta);
+    (item?.price && typeof item.price !== "string"
+      ? item.price.metadata?.source_plan
+      : undefined) || subscription.metadata?.source_plan;
+  if (lookup && planByLookupKey(lookup).id !== "free") {
+    return planByLookupKey(lookup);
+  }
+  return planById(meta);
+}
+
+export function secondaryQtyFromSubscription(subscription: Stripe.Subscription) {
+  if (!subscriptionIsLive(subscription.status)) return 0;
+  return secondaryPlanItem(subscription)?.quantity ?? 0;
 }
 
 export async function ensurePaidPriceId(plan: SourcePlan) {
@@ -59,6 +88,113 @@ export async function ensurePaidPriceId(plan: SourcePlan) {
   });
   PRICE_CACHE.set(plan.lookupKey, price.id);
   return price.id;
+}
+
+export async function ensureSecondaryPriceId() {
+  const cached = PRICE_CACHE.get(SOURCE_SECONDARY_LOOKUP);
+  if (cached) return cached;
+
+  const stripe = getStripe();
+  const existing = await stripe.prices.list({
+    lookup_keys: [SOURCE_SECONDARY_LOOKUP],
+    active: true,
+    limit: 1,
+  });
+  if (existing.data[0]?.id) {
+    PRICE_CACHE.set(SOURCE_SECONDARY_LOOKUP, existing.data[0].id);
+    return existing.data[0].id;
+  }
+
+  const product = await stripe.products.create({
+    name: "Source — secondary operation",
+    description: "List one main secondary on the public Source shop page.",
+    metadata: { source_addon: "secondary" },
+  });
+  const price = await stripe.prices.create({
+    product: product.id,
+    currency: "usd",
+    unit_amount: SOURCE_SECONDARY_CENTS,
+    recurring: { interval: "month" },
+    lookup_key: SOURCE_SECONDARY_LOOKUP,
+    transfer_lookup_key: true,
+    metadata: { source_addon: "secondary" },
+  });
+  PRICE_CACHE.set(SOURCE_SECONDARY_LOOKUP, price.id);
+  return price.id;
+}
+
+async function liveSubscriptionForCustomer(customerId: string) {
+  const stripe = getStripe();
+  const subscriptions = await stripe.subscriptions.list({
+    customer: customerId,
+    status: "all",
+    limit: 10,
+    expand: ["data.items.data.price"],
+  });
+  return subscriptions.data.find((row) => subscriptionIsLive(row.status)) ?? null;
+}
+
+export async function getLiveSourceSubscription(customerId: string) {
+  return liveSubscriptionForCustomer(customerId);
+}
+
+export async function setSubscriptionSecondaryQuantity({
+  customerId,
+  quantity,
+}: {
+  customerId: string;
+  quantity: number;
+}) {
+  const stripe = getStripe();
+  const live = await liveSubscriptionForCustomer(customerId);
+  if (!live) return { ok: false as const, needsCheckout: true as const };
+  const priceId = await ensureSecondaryPriceId();
+  const existing = secondaryPlanItem(live);
+  const qty = Math.max(0, quantity);
+
+  if (qty === 0) {
+    if (!existing) return { ok: true as const, needsCheckout: false as const };
+    const cell = cellPlanItem(live);
+    if (!cell) {
+      await stripe.subscriptions.cancel(live.id);
+      return { ok: true as const, needsCheckout: false as const };
+    }
+    await stripe.subscriptions.update(live.id, {
+      items: [{ id: existing.id, deleted: true }],
+      proration_behavior: "create_prorations",
+    });
+    return { ok: true as const, needsCheckout: false as const };
+  }
+
+  if (existing) {
+    await stripe.subscriptions.update(live.id, {
+      items: [{ id: existing.id, quantity: qty }],
+      proration_behavior: "create_prorations",
+    });
+    return { ok: true as const, needsCheckout: false as const };
+  }
+
+  await stripe.subscriptions.update(live.id, {
+    items: [{ price: priceId, quantity: qty }],
+    proration_behavior: "create_prorations",
+  });
+  return { ok: true as const, needsCheckout: false as const };
+}
+
+async function clampProfileSecondaries({
+  userId,
+  subscription,
+  pending,
+}: {
+  userId: string;
+  subscription: Stripe.Subscription;
+  pending?: string[];
+}) {
+  const qty = secondaryQtyFromSubscription(subscription);
+  const profile = await getSourceProfile(userId);
+  const current = parseSourceSecondaries(profile?.secondaries);
+  const next = parseSourceSecondaries(pending?.length ? pending : current);
+  await setSourceProfileSecondaries(userId, next.slice(0, qty));
 }
 
 async function writePlanToClerk({
@@ -127,7 +263,20 @@ export async function applyStripeSubscription(subscription: Stripe.Subscription)
     });
     return;
   }
-  await syncSubscriptionToClerk({ userId, subscription, customerId });
+  const stripe = getStripe();
+  let live = subscription;
+  try {
+    live = await stripe.subscriptions.retrieve(subscription.id, {
+      expand: ["items.data.price"],
+    });
+  } catch {
+    /* use the webhook payload */
+  }
+  await syncSubscriptionToClerk({ userId, subscription: live, customerId });
+  await clampProfileSecondaries({
+    userId,
+    subscription: live,
+  });
 }
 
 export async function applyCheckoutSession(session: Stripe.Checkout.Session) {
@@ -155,6 +304,17 @@ export async function applyCheckoutSession(session: Stripe.Checkout.Session) {
     expand: ["items.data.price"],
   });
   await syncSubscriptionToClerk({ userId, subscription, customerId });
+  await clampProfileSecondaries({
+    userId,
+    subscription,
+    pending: parseSourceSecondaries(
+      (
+        session.metadata?.source_secondaries ||
+        subscription.metadata?.source_secondaries ||
+        ""
+      ).split(","),
+    ),
+  });
 }
 
 export async function getSourcePlanForUser(userId: string): Promise<SourcePlan> {
@@ -168,15 +328,8 @@ export async function getSourcePlanForUser(userId: string): Promise<SourcePlan> 
 
   if (stripeConfigured() && privateMeta.stripeCustomerId) {
     try {
-      const stripe = getStripe();
-      const subscriptions = await stripe.subscriptions.list({
-        customer: privateMeta.stripeCustomerId,
-        status: "all",
-        limit: 10,
-        expand: ["data.items.data.price"],
-      });
-      const live = subscriptions.data.find((row) =>
-        subscriptionIsLive(row.status),
+      const live = await liveSubscriptionForCustomer(
+        privateMeta.stripeCustomerId,
       );
       if (live) return planFromSubscription(live);
       return planById("free");
@@ -186,6 +339,18 @@ export async function getSourcePlanForUser(userId: string): Promise<SourcePlan> 
   }
 
   return planById(publicMeta.sourcePlan);
+}
+
+export async function getSourceSecondaryQtyForUser(userId: string) {
+  const customerId = await getStripeCustomerId(userId);
+  if (!customerId || !stripeConfigured()) return 0;
+  try {
+    const live = await liveSubscriptionForCustomer(customerId);
+    return live ? secondaryQtyFromSubscription(live) : 0;
+  } catch (error) {
+    console.error("[Source billing] secondary lookup", error);
+    return 0;
+  }
 }
 
 export async function getStripeCustomerId(userId: string) {
@@ -200,6 +365,7 @@ export function checkoutUrls() {
   return {
     success: `${origin}/source/dashboard?session_id={CHECKOUT_SESSION_ID}`,
     cancel: `${origin}/source/upgrade`,
+    cancelDashboard: `${origin}/source/dashboard`,
     portalReturn: `${origin}/source/dashboard`,
   };
 }

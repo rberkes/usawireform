@@ -564,7 +564,7 @@ export const staticSeoPages: SeoRecord[] = [
     path: "/source/upgrade",
     title: "Source Plans — Shop Dashboard",
     description:
-      "File CNC cells on Source. One cell free. $30/mo for 4. $49/mo for 10. $99/mo for 20.",
+      "File CNC cells on Source. One cell free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Secondaries $5/mo each.",
     section: "company",
     keywords: ["source shop plan", "CNC equipment list", "wire forming capacity"],
     priority: 0.6,

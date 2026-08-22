@@ -58,7 +58,9 @@ export type SourceProfile = {
   state: string;
   website: string;
   blurb: string;
+  secondaries?: string[];
   published: boolean;
+  claimedDirectory?: boolean;
   listedAt?: string;
   updatedAt: string;
 };

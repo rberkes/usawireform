@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
 import { openSourceBillingPortal } from "@/app/actions/source-billing";
 import { SourceAddCellsForm } from "@/components/SourceAddCellsForm";
+import { SourceSecondariesForm } from "@/components/SourceSecondariesForm";
 import { SourceShopForm } from "@/components/SourceShopForm";
 import { Button, ButtonLink, Page, PageHero, Panel } from "@/components/ui";
 import {
@@ -11,7 +12,7 @@ import {
   shopFromFilings,
   sourceFilingsForShop,
 } from "@/lib/source-account";
-import { getSourcePlanForUser, getStripeCustomerId } from "@/lib/source-billing";
+import { getSourcePlanForUser, getSourceSecondaryQtyForUser, getStripeCustomerId } from "@/lib/source-billing";
 import { formatPlanPrice } from "@/lib/source-plans";
 import {
   getSourceProfile,
@@ -19,6 +20,7 @@ import {
   saveSourceProfile,
   uniqueSourceSlug,
 } from "@/lib/source";
+import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { normalizeShopWebsite } from "@/lib/source-directory";
 
 export const dynamic = "force-dynamic";
@@ -62,6 +64,8 @@ async function ensureProfile({
     website: normalizeShopWebsite(website),
     blurb: "",
     published: true,
+    claimedDirectory: false,
+    secondaries: [],
     listedAt: now,
     updatedAt: now,
   };
@@ -79,10 +83,11 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
     redirect("/source/dashboard");
   }
 
-  const [user, plan, filings] = await Promise.all([
+  const [user, plan, filings, billedSecondaries] = await Promise.all([
     currentUser(),
     getSourcePlanForUser(userId),
     listSourceFilings(),
+    getSourceSecondaryQtyForUser(userId),
   ]);
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const shopRows = sourceFilingsForShop(filings, { userId, email });
@@ -171,15 +176,31 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         />
       </section>
 
+      {shop?.company ? (
+        <section className="mt-12">
+          <SourceSecondariesForm
+            selected={parseSourceSecondaries(profile?.secondaries)}
+            billedQty={billedSecondaries}
+          />
+        </section>
+      ) : null}
+
       <section className="mt-12">
         <h2 className="text-lg font-medium">Filed cells</h2>
         {cells.length === 0 ? (
           <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
-            Nothing on the list yet.{" "}
-            <a href="/source/equipment" className="text-copper hover:underline">
-              Register the shop
-            </a>{" "}
-            first, then add cells here.
+            Nothing on the list yet. Add a cell below
+            {profile?.claimedDirectory
+              ? " — it shows on the directory page you claimed."
+              : "."}{" "}
+            {!profile?.company ? (
+              <>
+                <a href="/source/equipment" className="text-copper hover:underline">
+                  Register the shop
+                </a>{" "}
+                first if this is a new listing.
+              </>
+            ) : null}
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-line border border-line">
