@@ -1,7 +1,7 @@
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StepQuoteBlock } from "@/components/StepUpload";
-import { ProductForm } from "@/components/ProductForm";
+import { ProductCatalogVisual } from "@/components/ProductCatalogVisual";
 import { CardGrid, Page, PageHero, Section, TextLink } from "@/components/ui";
 import { catalogByGroup, STOCK } from "@/lib/catalog";
 import { shopLines } from "@/lib/site";
@@ -88,12 +88,7 @@ export default function ProductsPage() {
               href: `/products/${item.slug}`,
               title: item.title,
               body: item.summary,
-              visual: (
-                <ProductForm
-                  slug={item.slug}
-                  className="h-full w-full p-4"
-                />
-              ),
+              visual: <ProductCatalogVisual slug={item.slug} />,
             }))}
           />
         </Section>

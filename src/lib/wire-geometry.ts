@@ -77,7 +77,11 @@ function join(...parts: Polyline[]): Polyline {
   for (const part of parts) {
     for (const p of part) {
       const last = out[out.length - 1];
-      if (last && last[0] === p[0] && last[1] === p[1] && last[2] === p[2]) continue;
+      if (
+        last &&
+        Math.hypot(last[0] - p[0], last[1] - p[1], last[2] - p[2]) < 1e-9
+      )
+        continue;
       out.push(p);
     }
   }
@@ -178,14 +182,15 @@ function fitInches(pts: Polyline, heightIn: number): Polyline {
 export const S_HOOK_SVG =
   "M101 22A24 24 0 1 0 80 58L80 66A24 24 0 1 1 59 102";
 
+/** Formed S-hook: 240° eyes, tangent shank. Bottom eye winds clockwise so the tube does not reverse into itself. */
 function sHookCenterline(): Polyline {
-  const r = 0.7;
-  const span = 1.5;
-  const opening = (60 * Math.PI) / 180;
+  const r = 0.9;
+  const span = 1.15;
+  const opening = (50 * Math.PI) / 180;
   return join(
-    arc(r, span, 0, r, -opening, Math.PI, 32),
-    line([0, span, 0], [0, -span, 0], 16),
-    arc(-r, -span, 0, r, 0, Math.PI + (Math.PI - opening), 32),
+    arc(r, span, 0, r, -opening, Math.PI, 36),
+    line([0, span, 0], [0, -span, 0], 12),
+    arc(-r, -span, 0, r, 0, -(Math.PI + opening), 36),
   );
 }
 

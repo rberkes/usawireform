@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { cx } from "@/lib/cx";
 
 const VIEWER_VERSION = "7.108.0";
 const VIEWER_BASE = `https://developer.api.autodesk.com/modelderivative/v2/viewers/${VIEWER_VERSION}`;
@@ -34,6 +35,7 @@ declare global {
           shutdown: () => void;
         };
         GuiViewer3D: new (container: HTMLElement) => AutodeskGuiViewer;
+        Viewer3D: new (container: HTMLElement) => AutodeskGuiViewer;
       };
     };
   }
@@ -82,7 +84,15 @@ function loadViewerAssets() {
   return assetsPromise;
 }
 
-export function AutodeskShareViewer({ part }: { part: string }) {
+export function AutodeskShareViewer({
+  part,
+  className,
+  chrome = "gui",
+}: {
+  part: string;
+  className?: string;
+  chrome?: "gui" | "bare";
+}) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState("Loading Autodesk viewer…");
 
@@ -135,7 +145,11 @@ export function AutodeskShareViewer({ part }: { part: string }) {
         },
         () => {
           if (cancelled || !hostRef.current) return;
-          viewer = new Autodesk.Viewing.GuiViewer3D(hostRef.current);
+          const Viewer =
+            chrome === "bare"
+              ? Autodesk.Viewing.Viewer3D
+              : Autodesk.Viewing.GuiViewer3D;
+          viewer = new Viewer(hostRef.current);
           const started = viewer.start();
           if (started < 0) {
             setStatus("WebGL is required to stream this model.");
@@ -172,10 +186,15 @@ export function AutodeskShareViewer({ part }: { part: string }) {
       viewer?.finish();
       host.replaceChildren();
     };
-  }, [part]);
+  }, [part, chrome]);
 
   return (
-    <div className="relative h-[min(70vh,36rem)] min-h-[22rem] w-full overflow-hidden bg-inset">
+    <div
+      className={cx(
+        "relative w-full overflow-hidden bg-inset",
+        className ?? "h-[min(70vh,36rem)] min-h-[22rem]",
+      )}
+    >
       <div ref={hostRef} className="absolute inset-0" />
       {status ? (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-inset/80 text-sm">

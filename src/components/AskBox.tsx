@@ -93,19 +93,28 @@ export function AskBox() {
           Ask USA Wire Form a question
         </label>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
-          <input
+          <textarea
             id="shop-ask"
-            type="text"
+            rows={5}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                void ask(query);
+              }
+            }}
             placeholder={DEFAULT_QUESTION}
             autoComplete="off"
-            className="h-16 w-full flex-1 rounded-sm border border-line bg-background px-4 text-lg outline-none placeholder:text-muted/60 focus:border-copper sm:text-xl"
+            className="min-h-40 w-full flex-1 resize-y rounded-sm border border-line bg-background px-4 py-4 text-lg leading-7 outline-none placeholder:text-muted/60 focus:border-copper sm:min-h-28 sm:text-xl sm:leading-8"
           />
           <button
             type="submit"
             disabled={asking || !query.trim()}
-            className={cx(btn.quote, "h-16 min-w-32 px-8 text-lg disabled:opacity-50")}
+            className={cx(
+              btn.quote,
+              "min-h-14 min-w-32 px-8 py-4 text-lg disabled:opacity-50 sm:min-h-28",
+            )}
           >
             {asking ? "Asking…" : "Ask"}
           </button>

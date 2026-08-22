@@ -300,17 +300,20 @@ export function CardGrid({
       )}
     >
       {items.map((item) => (
-        <Link
+        <article
           key={`${item.href}-${item.title}`}
-          href={item.href}
-          className="bg-background p-7 hover:bg-inset"
+          className="bg-background hover:bg-inset"
         >
           {item.visual ? (
-            <div className="mb-4 aspect-[5/3] bg-inset">{item.visual}</div>
+            <div className="aspect-[5/3] overflow-hidden bg-inset">
+              {item.visual}
+            </div>
           ) : null}
-          <h3 className="font-medium">{item.title}</h3>
-          <p className="mt-3 text-sm leading-6 text-muted">{item.body}</p>
-        </Link>
+          <Link href={item.href} className="block p-7">
+            <h3 className="font-medium">{item.title}</h3>
+            <p className="mt-3 text-sm leading-6 text-muted">{item.body}</p>
+          </Link>
+        </article>
       ))}
     </div>
   );
