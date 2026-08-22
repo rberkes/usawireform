@@ -1,6 +1,6 @@
 "use client";
 
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { Show } from "@clerk/nextjs";
 import { startSourceCheckout } from "@/app/actions/source-billing";
 import { Button, ButtonLink, Panel } from "@/components/ui";
 import {
@@ -33,27 +33,24 @@ export function SourceUpgradePlans({
               {current ? (
                 <p className="text-sm text-foreground">Current plan.</p>
               ) : (
-                <>
-                  <SignedIn>
-                    <form action={startSourceCheckout}>
-                      <input type="hidden" name="planId" value={plan.id} />
-                      <Button type="submit" className="w-full">
-                        {currentPlanId === "free" ? "Subscribe" : "Switch to this"}
-                      </Button>
-                    </form>
-                  </SignedIn>
-                  <SignedOut>
-                    <SignInButton
-                      mode="redirect"
-                      forceRedirectUrl="/source/upgrade"
-                      signUpForceRedirectUrl="/source/upgrade"
+                <Show
+                  when="signed-in"
+                  fallback={
+                    <ButtonLink
+                      href="/sign-in?redirect_url=/source/upgrade"
+                      className="w-full"
                     >
-                      <ButtonLink href="/sign-in?redirect_url=/source/upgrade" className="w-full">
-                        Sign in to subscribe
-                      </ButtonLink>
-                    </SignInButton>
-                  </SignedOut>
-                </>
+                      Sign in to subscribe
+                    </ButtonLink>
+                  }
+                >
+                  <form action={startSourceCheckout}>
+                    <input type="hidden" name="planId" value={plan.id} />
+                    <Button type="submit" className="w-full">
+                      {currentPlanId === "free" ? "Subscribe" : "Switch to this"}
+                    </Button>
+                  </form>
+                </Show>
               )}
             </div>
           </Panel>
