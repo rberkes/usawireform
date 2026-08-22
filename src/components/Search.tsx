@@ -85,7 +85,7 @@ const searchItems: SearchItem[] = [
   { title: "Steel V-Hooks", href: "/steel-v-hooks", category: "Products", description: "1018 and galvanized V-hooks for finishing lines." },
   { title: "Stainless Steel V-Hooks", href: "/stainless-steel-v-hooks", category: "Products", description: "304 / 316 V-hooks for corrosive wash." },
   { title: "90° V-Hooks", href: "/90-degree-v-hooks", category: "Products", description: "Rotated V-hooks for rack clearance." },
-  { title: "Heavy-Duty V-Hooks", href: "/heavy-duty-v-hooks", category: "Products", description: "3/8, 7/16, and 1/2 in V-hooks. Not catalog 0.120 in." },
+  { title: "Heavy-Duty V-Hooks", href: "/heavy-duty-v-hooks", category: "Products", description: "USA made heavy-duty powder coat V-hooks in 3/8, 7/16, and 1/2 in. Three-column calculator." },
   { title: "Custom V-Hooks", href: "/custom-v-hooks", category: "Products", description: "Custom V-hooks. Live estimate from length and leg ID." },
   { title: "V-Hooks", href: "/v-hooks", category: "Products", description: "Powder coating V-hooks. Centered hang from coil in 4–14 mm." },
   { title: "C-Hooks", href: "/c-hooks", category: "Products", description: "Powder coating C-hooks. Open hang for rack clearance." },

@@ -232,8 +232,8 @@ export default function SiteMapPage() {
             },
             {
               href: "/heavy-duty-v-hooks",
-              title: "Heavy-duty V-hooks",
-              body: "3/8, 7/16, 1/2 in. Not catalog 0.120 in.",
+              title: "USA made heavy-duty powder coat V-hooks",
+              body: "3/8, 7/16, 1/2 in. Three-column calculator.",
             },
             {
               href: "/custom-v-hooks",

@@ -25,6 +25,7 @@ const highPriorityPaths = new Set([
   "/custom-cnc-wire-forming-services",
   "/powder-coating-hooks",
   "/powder-coating-v-hooks",
+  "/heavy-duty-v-hooks",
   "/wire-mesh",
   "/blog",
   "/models",

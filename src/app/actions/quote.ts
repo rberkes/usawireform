@@ -5,6 +5,7 @@ import { blobAuth, blobErrorMessage, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
 import { sendDrawingLeadEmails, previewAttachmentFromForm, sendLeadEmail, sendLeadThanksEmail, sendInstantEstimateEmails } from "@/lib/leads";
 import { estimatePiece, parseInstantQuote, usd2 } from "@/lib/quoting";
+import { priceVHook } from "@/lib/v-hook-price";
 import { QUOTE_REVIEW } from "@/lib/price";
 
 export type QuoteFormState = {
@@ -494,12 +495,24 @@ export async function submitInstantQuote(
   }
 
   const input = parsed.value;
-  const result = estimatePiece({
-    bends: input.bends,
-    lengthIn: input.lengthIn,
-    quantity: input.quantity,
-    cuts: input.cuts,
-  });
+  const pricing = String(formData.get("pricing") ?? "");
+  const hookNotes = String(formData.get("hookNotes") ?? "").trim();
+  const shopSteel =
+    pricing === "heavy-duty-v" || pricing === "v-hook-supplied";
+  const result = shopSteel
+    ? priceVHook({
+        developedIn: input.lengthIn,
+        diameterIn: input.diameterIn,
+        quantity: input.quantity,
+        materialId: input.materialId,
+        cuts: input.cuts,
+      })
+    : estimatePiece({
+        bends: input.bends,
+        lengthIn: input.lengthIn,
+        quantity: input.quantity,
+        cuts: input.cuts,
+      });
   const piece = usd2(result.piece);
   const lot = usd2(result.lot);
   const payload = {
@@ -512,7 +525,15 @@ export async function submitInstantQuote(
     bend: usd2(result.bendCost),
     discountRate: result.discountRate,
     targetPrice: piece,
-    notes: `${input.cuts} cuts · ${input.bends} bends · ${input.lengthIn} in · ${lot} lot`,
+    notes: [
+      `${input.cuts} cuts · ${input.bends} bends · ${input.lengthIn} in · ${lot} lot`,
+      shopSteel && "steelUsd" in result
+        ? `V-hook shop steel · ${input.diameterLabel} · ${result.steelLb.toFixed(3)} lb · ${usd2(result.steelUsd)} steel · forming ${usd2(result.forming)} · 5% beat −${usd2(result.beatUsd)}`
+        : "",
+      hookNotes,
+    ]
+      .filter(Boolean)
+      .join(" · "),
     material: input.materialLabel,
     diameter: input.diameterLabel,
     timestamp: new Date().toISOString(),
@@ -552,6 +573,19 @@ export async function submitInstantQuote(
             ? `Qty break · −${Math.round(result.discountRate * 100)}%`
             : undefined,
         stock: input.stock,
+        shopSteel,
+        steelLb:
+          shopSteel && "steelLb" in result
+            ? result.steelLb.toFixed(3)
+            : undefined,
+        steelUsd:
+          shopSteel && "steelUsd" in result
+            ? usd2(result.steelUsd)
+            : undefined,
+        beatUsd:
+          shopSteel && "beatUsd" in result
+            ? usd2(result.beatUsd)
+            : undefined,
       });
     } catch (error) {
       console.error("[Instant Quote Email Error]", error);

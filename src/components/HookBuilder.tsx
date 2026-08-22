@@ -14,6 +14,7 @@ import {
   type HookTypeId,
   type HookWireId,
 } from "@/lib/hook-builder";
+import { isShopSteelHook } from "@/lib/v-hook-price";
 import { ESTIMATE, usd2 } from "@/lib/quoting";
 import { PRICE_LINE, QUOTE_REVIEW, TOOLING } from "@/lib/price";
 import { WIRE } from "@/lib/range";
@@ -71,9 +72,11 @@ export function HookBuilder({
         overall: overallN,
         legId: legN,
         quantity: qtyN,
+        materialId,
       }),
-    [type, wireIn, overallN, legN, qtyN],
+    [type, wireIn, overallN, legN, qtyN, materialId],
   );
+  const shopSteel = isShopSteelHook(type);
 
   const stockId =
     wireId === "3/8 in" || wireId === "7/16 in" || wireId === "1/2 in"
@@ -91,10 +94,22 @@ export function HookBuilder({
   return (
     <form id="builder" action={formAction} className="scroll-mt-24 space-y-6">
       <p className="text-sm leading-6 text-muted">
-        {PRICE_LINE} $1.00 per cut, $0.50 per bend, $0.05 per inch of developed
-        length. Material is not in the price — you buy the coil. {WIRE.short}{" "}
-        only. Catalog 0.080–0.120 in is below the floor; 4 mm (0.157 in) is the
-        step up.
+        {PRICE_LINE}{" "}
+        {shopSteel ? (
+          <>
+            V-hooks: we buy the steel — 1018, galvanized, 304, or 316 is in the
+            estimate. $1.00 per cut, $0.09 per developed inch on 3/8 in (heavier
+            wire scales by section), then 5% off. Bends are in the drawing, not
+            billed. 7/16 and 1/2 in are stock on this cell.
+          </>
+        ) : (
+          <>
+            $1.00 per cut, $0.50 per bend, $0.05 per inch of developed length.
+            Material is not in the price — you buy the coil.
+          </>
+        )}{" "}
+        {WIRE.short} only. Catalog 0.080–0.120 in is below the floor; 4 mm
+        (0.157 in) is the step up.
       </p>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div className="space-y-4">
@@ -120,8 +135,8 @@ export function HookBuilder({
               ready={built.ok}
             />
             <p className="mt-3 font-mono text-[11px] tracking-widest text-muted uppercase">
-              Qty: {Number.isFinite(qtyN) ? qtyN : "—"} pcs · {WIRE.short} ·
-              customer coil
+              Qty: {Number.isFinite(qtyN) ? qtyN : "—"} pcs · {WIRE.short} ·{" "}
+              {shopSteel ? "shop steel" : "customer coil"}
             </p>
           </Panel>
           <Panel className="p-4 sm:p-5">
@@ -150,6 +165,20 @@ export function HookBuilder({
                   label="Forming"
                   value={`${built.cuts} cut · ${built.bends} bend${built.bends === 1 ? "" : "s"} · ${built.developedIn} in developed`}
                 />
+                {built.estimate.shopSteel && built.estimate.steelUsd != null ? (
+                  <SumRow
+                    label="Steel (shop)"
+                    value={`${built.estimate.steelLb?.toFixed(3)} lb · ${usd2(built.estimate.steelUsd)}`}
+                  />
+                ) : (
+                  <SumRow label="Coil" value="You buy it — not in the price" />
+                )}
+                {built.estimate.shopSteel && built.estimate.beatUsd ? (
+                  <SumRow
+                    label="5% under boxed 3/8"
+                    value={`−${usd2(built.estimate.beatUsd)}`}
+                  />
+                ) : null}
                 <SumRow label="Per piece" value={usd2(built.estimate.piece)} />
                 <SumRow label="Lot" value={usd2(built.estimate.lot)} />
                 {built.estimate.discountRate > 0 ? (
@@ -278,6 +307,11 @@ export function HookBuilder({
 
           <input type="hidden" name="stockId" value={stockId} />
           <input type="hidden" name="customMm" value={customMmPosted} />
+          <input
+            type="hidden"
+            name="pricing"
+            value={shopSteel ? "v-hook-supplied" : ""}
+          />
           <input
             type="hidden"
             name="cuts"

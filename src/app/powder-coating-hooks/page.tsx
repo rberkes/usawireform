@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HookFigure } from "@/components/VHookFigure";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
@@ -32,12 +33,12 @@ const faqs = [
   },
   {
     question: "Can you make custom powder coating hooks?",
-    answer: `Yes. Style, length, openings, 90° rotation, and alloy are the print. 100-piece minimum. You buy the coil. Send a STEP or PDF on /contact.`,
+    answer: `Yes. Style, length, openings, 90° rotation, and alloy are the print. 100-piece minimum. V-hooks and 90° V: we buy the steel. C, CV, and S: you buy the coil. Send a STEP or PDF on /contact.`,
   },
   {
     question: "Do you make stainless steel powder coating hooks?",
     answer:
-      "Yes. 304 or 316 coil for wash chemistry and corrosion. Carbon for everyday steel powder coating hooks. You supply the coil.",
+      "Yes. 304 or 316 for wash chemistry and corrosion. Carbon for everyday steel powder coating hooks. V-hooks: we buy the steel. Other styles: you supply the coil.",
   },
 ];
 
@@ -76,6 +77,9 @@ export default function PowderCoatingHooksPage() {
           you want both, S for speed, 90° when the rack is tight.{" "}
           {COMPANY} CNC-forms them from coil — not a boxed 9-gauge catalog.
         </p>
+        <div className="not-prose my-8">
+          <HookFigure type="v" label="V-hook" />
+        </div>
         <ul>
           {POWDER_HOOK_STYLES.map((style) => (
             <li key={style.id}>
@@ -119,7 +123,11 @@ export default function PowderCoatingHooksPage() {
         <p>
           This cell is the heavy end: {WIRE.label}. Finishing shops hanging
           large parts, fixtures, and racks use 3/8, 7/16, and 1/2 in wire.
-          Light line hooks at 0.080–0.250 in are not a quote here.
+          Live 3-column estimate:{" "}
+          <Link href="/heavy-duty-v-hooks">
+            USA made heavy-duty powder coat V-hooks
+          </Link>
+          . Light line hooks at 0.080–0.250 in are not a quote here.
         </p>
 
         <h2 id="custom">Custom powder coating hooks</h2>
@@ -130,7 +138,8 @@ export default function PowderCoatingHooksPage() {
             Custom powder coating hooks
           </Link>
           : builder on this site — style, wire in {WIRE.short}, overall length,
-          leg ID. Estimate is forming only. You buy the coil.
+          leg ID. V-hooks include steel. C, CV, and S are forming only — you buy
+          the coil.
         </p>
 
         <h2 id="choose">How to choose</h2>

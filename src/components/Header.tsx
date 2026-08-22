@@ -64,6 +64,7 @@ const navSections = [
       { href: "/custom-cnc-wire-forming-services", label: "Custom CNC Wire Forming Services" },
       { href: "/powder-coating-hooks", label: "Powder Coating Hooks" },
       { href: "/powder-coating-v-hooks", label: "Powder Coating V-Hooks" },
+      { href: "/heavy-duty-v-hooks", label: "Heavy-Duty Powder Coat V-Hooks" },
       { href: "/custom-powder-coating-hooks", label: "Custom Hook Builder" },
       { href: "/guide/s-hooks-vs-v-hooks-vs-c-hooks", label: "S vs V vs C Hooks" },
       { href: "/wire-forming-companies-near-me", label: "Companies Near Me" },

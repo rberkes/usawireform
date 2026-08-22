@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cx } from "@/lib/cx";
+import { hookCenterline, type HookTypeId } from "@/lib/hook-builder";
 import { S_HOOK_SVG as S_HOOK_PATH } from "@/lib/wire-geometry";
 
 /** Shop-drawing of a formed-wire part. Same stroke language as the brand mark. */
@@ -62,6 +63,34 @@ const MESH = new Set([
   "bread-racks",
 ]);
 
+function fittedHookPath(
+  type: HookTypeId,
+  width = 160,
+  height = 120,
+  pad = 16,
+) {
+  const { points } = hookCenterline(type, 12, 4);
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const p of points) {
+    minX = Math.min(minX, p.x);
+    maxX = Math.max(maxX, p.x);
+    minY = Math.min(minY, p.y);
+    maxY = Math.max(maxY, p.y);
+  }
+  const s = Math.min(
+    (width - pad * 2) / (maxX - minX),
+    (height - pad * 2) / (maxY - minY),
+  );
+  const ox = (width - (maxX - minX) * s) / 2 - minX * s;
+  const oy = (height - (maxY - minY) * s) / 2 + maxY * s;
+  return points
+    .map((p, i) => `${i === 0 ? "M" : "L"} ${(ox + p.x * s).toFixed(2)} ${(oy - p.y * s).toFixed(2)}`)
+    .join(" ");
+}
+
 function grid(x: number, y: number, w: number, h: number, cols: number, rows: number) {
   const lines: ReactNode[] = [];
   for (let i = 0; i <= cols; i++) {
@@ -113,7 +142,8 @@ function shape(slug: string): ReactNode {
     case "powder-coating-hooks":
       return (
         <path
-          d="M122 24 102 12 80 44 80 76 58 108 38 96"
+          d={fittedHookPath("v")}
+          strokeLinecap="butt"
           strokeLinejoin="miter"
         />
       );

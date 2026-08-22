@@ -215,7 +215,7 @@ export const catalog: CatalogItem[] = [
     lede: "Powder coating hooks that carry a part through wash, coat, and cure. Stock coil, custom length and angle — not a bag of 9-gauge C-hooks.",
     body: [
       "Powder coating hooks in this shop are C-hooks, S-hooks, V-hooks, CV-hooks, and 90° hooks, 2D CNC from 3/8, 7/16, or 1/2 in. Length, opening, and point geometry are the print. Bright or mill going into a booth; we also hang our own forms on the in-line powder line — see plating and coating.",
-      "Steel powder coating hooks for everyday lines. Stainless steel powder coating hooks in 304 / 316 when the washer eats carbon. Light line hooks under 4 mm are a different cell. This directory is the heavy hangers.",
+      "V-hooks and 90° V: we buy the steel — it is in the estimate. C, S, and CV: you buy the coil. Steel powder coating hooks for everyday lines. Stainless steel powder coating hooks in 304 / 316 when the washer eats carbon. Light line hooks under 4 mm are a different cell. This directory is the heavy hangers.",
     ],
     jobs: [
       "C-hooks for wide parts",

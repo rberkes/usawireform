@@ -1,4 +1,5 @@
 import { STOCK } from "@/lib/catalog";
+import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
 import type { HookMaterialId, HookTypeId, HookWireId } from "@/lib/hook-builder";
 
@@ -55,7 +56,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
         heading: "4–14 mm, not catalog 0.120 in",
         body: [
           `Catalog 0.080 in and 0.120 in V-hooks are below this cell. Production is ${WIRE.label}. 4 mm (0.157 in) is the step up from 0.120 in. Stock tooling is ${STOCK}. 3/8 in (0.375 in) is the everyday heavy powder coating V-hook.`,
-          "You buy the coil. 100-piece minimum. Lowest prices guaranteed — we will not be beat.",
+          "We buy the steel. 3/8 in is 5% under boxed 0.375 in. 7/16 and 1/2 in are stock on this cell. 100-piece minimum. Lowest prices guaranteed — we will not be beat.",
         ],
       },
     ],
@@ -92,7 +93,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
         id: "stock",
         heading: "Stock 3/8 in",
         body: [
-          "0.375 in is 9.53 mm. It sits in the band and on stock tooling — no new die for the wire size. Length, leg ID, and 90° rotation are still the print.",
+          "0.375 in is 9.53 mm. It sits in the band and on stock tooling — no new die for the wire size. Length, leg ID, and 90° rotation are still the print. We buy the steel — it is in the price, then 5% under boxed 0.375 in.",
           "Heavier than catalog 0.120 and 0.180. Lighter than 7/16 and 1/2 in when those are more hook than the part.",
         ],
       },
@@ -133,7 +134,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
       {
         question: "What steel do you form V-hooks from?",
         answer:
-          "1018 carbon is the usual. Galvanized carbon when the print wants it. You buy the coil. 100-piece minimum.",
+          "1018 carbon is the usual. Galvanized carbon when the print wants it. We buy the steel — it is in the price. 100-piece minimum.",
       },
     ],
   },
@@ -156,7 +157,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
         id: "why",
         heading: "Why stainless",
         body: [
-          "Washers, acid pretreat, and wet racks eat carbon V-hooks. Stainless lasts on the line. Springback is higher — the program compensates if the print names 304 or 316.",
+          "Washers, acid pretreat, and wet racks eat carbon V-hooks. Stainless lasts on the line. Springback is higher — the program compensates if the print names 304 or 316. We buy the steel — 304 or 316 is in the price.",
         ],
       },
     ],
@@ -187,7 +188,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
         id: "rotate",
         heading: "Off the bar",
         body: [
-          "A 90 degree V-hook is a V with a right-angle offset so the part hangs beside the rack bar instead of in line with it. Call the rotation, both openings, and overall length.",
+          "A 90 degree V-hook is a V with a right-angle offset so the part hangs beside the rack bar instead of in line with it. Call the rotation, both openings, and overall length. We buy the steel.",
         ],
       },
     ],
@@ -201,31 +202,53 @@ export const V_HOOK_LANDERS: VHookLander[] = [
   },
   {
     path: "/heavy-duty-v-hooks",
-    title: "Heavy-Duty V-Hooks",
-    h1: "Heavy-duty V-hooks",
-    kicker: "4–14 mm",
-    description: `Heavy-duty V-hooks in ${WIRE.short} for large parts, fixtures, and racks. Stock ${STOCK}. Not 0.080–0.120 in catalog wire. 100-piece minimum.`,
-    lede: "Heavy-duty V-hooks: 3/8, 7/16, and 1/2 in for parts that laugh at a 0.120 in catalog hook. Powder coating, paint, and plant hang from coil.",
+    title: "USA Made Heavy-Duty Powder Coat V-Hooks",
+    h1: "USA made heavy-duty powder coat V-hooks",
+    kicker: '3/8" · 7/16" · 1/2"',
+    description: `USA made heavy-duty powder coat V-hooks in 3/8, 7/16, and 1/2 in. We buy the steel. Live 3-column estimate. CNC in ${WIRE.short}. 100-piece minimum. Northeast Ohio.`,
+    lede: "Heavy-duty powder coat V-hooks in the three stock sizes: 3/8, 7/16, and 1/2 in. Made in the USA. We buy the steel — it is in the price. 3/8 in is 5% under boxed 0.375 in. 7/16 and 1/2 in are stock on this cell.",
     keywords: [
+      "USA made heavy-duty powder coat V-hooks",
+      "heavy duty powder coat V-hooks",
       "heavy-duty V-hooks",
-      "heavy duty powder coating hooks",
+      "heavy duty powder coating V-hooks",
       "3/8 V-hooks",
+      "7/16 V-hooks",
+      "1/2 V-hooks",
       "powder coating V-hooks",
     ],
-    builder: { type: "v", wire: "3/8 in" },
     sections: [
       {
-        id: "band",
-        heading: "The heavy end",
+        id: "sizes",
+        heading: "3/8, 7/16, and 1/2 in",
         body: [
-          `This cell is ${WIRE.label}. Catalog light V-hooks at 0.080–0.250 in are not a quote. Large parts, fixtures, and racks use 3/8, 7/16, and 1/2 in.`,
+          "Three stock columns. We buy the steel. 3/8 in (0.375 in) is $1.00 per cut and $0.09 per developed inch, plus the wire, then 5% under boxed 0.375 in. Bends are in the drawing, not billed.",
+          "7/16 in and 1/2 in are stock on this cell — not a boxed 0.375 catalog size. The inch rate is the 3/8 in rate times (d ÷ 3/8)², plus more steel, then the same 5% off.",
+          `Catalog 0.080–0.250 in finishing hooks are below this cell. Production is ${WIRE.label}. Steel is in the estimate.`,
+        ],
+      },
+      {
+        id: "usa",
+        heading: "Made in the USA",
+        body: [
+          `${COMPANY} CNC-forms USA made heavy-duty powder coat V-hooks in Northeast Ohio. Dual V — rack crotch, shank, part trough. 100-piece minimum. Lowest prices guaranteed. We will not be beat.`,
         ],
       },
     ],
     faqs: [
       {
-        question: "What makes a V-hook heavy-duty here?",
-        answer: `${WIRE.short} from coil. Stock 3/8, 7/16, and 1/2 in. Not a boxed 0.120 in finishing hook.`,
+        question: "What sizes are USA made heavy-duty powder coat V-hooks?",
+        answer: `Stock 3/8, 7/16, and 1/2 in. ${WIRE.short}. Not a boxed 0.120 in catalog hook.`,
+      },
+      {
+        question: "How is 3/8 in priced?",
+        answer:
+          "One cut at $1.00, plus $0.09 per developed inch on 3/8 in, plus the steel we buy, then 5% off boxed 0.375 in. Quantity −5% at 1,000 and −10% at 10,000. Steel is included.",
+      },
+      {
+        question: "How are 7/16 in and 1/2 in priced?",
+        answer:
+          "Same cut as 3/8 in. Those sizes are stock here. The inch rate scales with section: 7/16 in is (7/16 ÷ 3/8)² times the 3/8 in inch rate. 1/2 in is (1/2 ÷ 3/8)². Steel mass scales with diameter. Same 5% off. We buy the wire.",
       },
     ],
   },
@@ -235,7 +258,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
     h1: "Custom V-hooks",
     kicker: "Your print",
     description: `Custom V-hooks: length, leg ID, 90° rotation, and wire size on the print. CNC from coil in ${WIRE.short}. 100-piece minimum. Instant estimate in the builder.`,
-    lede: "Custom V-hooks are a print, not a boxed SKU. Overall length, leg ID, diameter, alloy. The builder estimates forming. You buy the coil.",
+    lede: "Custom V-hooks are a print, not a boxed SKU. Overall length, leg ID, diameter, alloy. We buy the steel. The builder estimates forming plus wire.",
     keywords: [
       "custom V-hooks",
       "custom powder coating V-hooks",
@@ -255,7 +278,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
     faqs: [
       {
         question: "Can you make custom V-hooks?",
-        answer: `Yes. Length, leg ID, 90° rotation, diameter, and alloy on the print. ${WIRE.short}. 100-piece minimum. You buy the coil.`,
+        answer: `Yes. Length, leg ID, 90° rotation, diameter, and alloy on the print. ${WIRE.short}. 100-piece minimum. We buy the steel.`,
       },
     ],
   },

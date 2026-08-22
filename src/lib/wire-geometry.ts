@@ -1,3 +1,5 @@
+import { vHookPoints } from "./v-hook-geometry";
+
 /** Centerline polylines in inches. Y is up. */
 
 export type Vec3 = [number, number, number];
@@ -205,6 +207,11 @@ export function polylinesForModel(id: string): Polyline[] {
   switch (id) {
     case "s-hooks":
       return [sHookCenterline()];
+    case "powder-coating-hooks": {
+      const pts = vHookPoints(12, 4);
+      const midY = 6;
+      return [pts.map((p) => [p.x, p.y - midY, 0] as Vec3)];
+    }
     case "j-hooks":
       return [jHookCenterline()];
     case "d-rings": {

@@ -244,6 +244,10 @@ export type InstantEstimateMail = {
   bend: string;
   discount?: string;
   stock: boolean;
+  shopSteel?: boolean;
+  steelLb?: string;
+  steelUsd?: string;
+  beatUsd?: string;
 };
 
 function instantEstimateHtml(estimate: InstantEstimateMail) {
@@ -251,19 +255,26 @@ function instantEstimateHtml(estimate: InstantEstimateMail) {
   const tooling = estimate.stock
     ? ""
     : `<p>Non-stock diameter: new tooling in ${TOOLING.newLead}, ${TOOLING.newCostLabel}. Not in the piece price.</p>`;
+  const coilLine = estimate.shopSteel
+    ? `Steel: ${escapeHtml(estimate.materialLabel)} — we buy it. ${escapeHtml(estimate.steelLb ?? "")} lb · ${escapeHtml(estimate.steelUsd ?? "")} in the piece price.`
+    : `Coil: ${escapeHtml(estimate.materialLabel)} — you buy it and bring it in. Alloy is not in this number.`;
+  const bendLine = estimate.shopSteel
+    ? `<li>Bends on the drawing — not billed</li>`
+    : `<li>${estimate.bends} bend${estimate.bends === 1 ? "" : "s"} — ${escapeHtml(estimate.bend)}</li>`;
   return `
     <p>USA Wire Form — instant estimate from the numbers you entered.</p>
     <p style="font-size:28px;margin:8px 0 0"><strong>${escapeHtml(estimate.piece)}</strong> / piece</p>
     <p>${escapeHtml(estimate.lot)} for ${qty} pcs</p>
     <p>
       ${escapeHtml(estimate.diameterLabel)}<br />
-      Coil: ${escapeHtml(estimate.materialLabel)} — you buy it and bring it in. Alloy is not in this number.
+      ${coilLine}
     </p>
     <ul>
       <li>Forming · ${estimate.lengthIn} in — ${escapeHtml(estimate.forming)}</li>
       <li>${estimate.cuts} cut${estimate.cuts === 1 ? "" : "s"} — ${escapeHtml(estimate.cut)}</li>
-      <li>${estimate.bends} bend${estimate.bends === 1 ? "" : "s"} — ${escapeHtml(estimate.bend)}</li>
+      ${bendLine}
       ${estimate.discount ? `<li>${escapeHtml(estimate.discount)}</li>` : ""}
+      ${estimate.shopSteel && estimate.beatUsd ? `<li>5% under boxed 3/8 — −${escapeHtml(estimate.beatUsd)}</li>` : ""}
     </ul>
     ${tooling}
     <p>${QUOTE_REVIEW} This is not a production quote. Weld, finish, and a print still go through <a href="${SITE_URL}/contact">contact</a>.</p>

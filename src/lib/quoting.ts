@@ -69,6 +69,7 @@ export function estimatePiece({
   lengthIn,
   quantity,
   cuts = 1,
+  inchUsd,
 }: {
   diameterIn?: number;
   bends: number;
@@ -76,8 +77,9 @@ export function estimatePiece({
   stainless?: boolean;
   quantity: number;
   cuts?: number;
+  inchUsd?: number;
 }) {
-  const inchRate = FORMING_RATES.inchUsd;
+  const inchRate = inchUsd ?? FORMING_RATES.inchUsd;
   const cutCount = Number.isFinite(cuts) && cuts >= 0 ? cuts : 1;
   const forming = lengthIn * inchRate;
   const cut = cutCount * FORMING_RATES.cutUsd;

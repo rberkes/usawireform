@@ -54,7 +54,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
     h1: "V-hooks",
     kicker: "Powder coating hooks",
     description: `V-hooks for powder coating, paint, and finishing lines. CNC from coil in ${WIRE.short}. Stock ${STOCK}. Custom length and included angle. 100-piece minimum.`,
-    lede: "A V that centers the hang. Dual legs, a crotch, a length. Powder coating V-hooks, paint-line V-hooks, and rack V-hooks from coil — not a 9-gauge bag.",
+    lede: "A V that centers the hang. Dual legs, a crotch, a length. Powder coating V-hooks, paint-line V-hooks, and rack V-hooks — we buy the steel.",
     keywords: [
       "V-hooks",
       "V hooks",
@@ -68,7 +68,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
       "Parts that need a settled, centered hang through wash, coat, and cure.",
     hang: "The crotch locates. Legs spread load. Opening and included angle are the print.",
     body: [
-      "V-hooks are 2D CNC: feed, two legs, a crotch radius, cutoff. Length, included angle, and point or blunt ends belong on the drawing. Carbon for everyday powder coating hooks. 304 or 316 when the washer or the chemistry eats bright basic.",
+      "V-hooks are 2D CNC: feed, two sharp 45° Vs, a shank, cutoff. Rack V on top, part V on the bottom, 180° rotational symmetry. Length, opening, and point or blunt ends belong on the drawing. Carbon for everyday powder coating hooks. 304 or 316 when the washer or the chemistry eats bright basic.",
       `This shop forms V-hooks in ${WIRE.label}. Stock tooling is ${STOCK}. Light catalog V-hooks at 0.080–0.250 in are a different cell — the quote says no under ${WIRE.minMm} mm.`,
     ],
     jobs: [
@@ -85,7 +85,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
       },
       {
         question: "Can you form custom V-hooks?",
-        answer: `Yes. Length, included angle, wire diameter, and alloy are the print. Production is ${WIRE.short}. 100-piece minimum. You buy the coil.`,
+        answer: `Yes. Length, included angle, wire diameter, and alloy are the print. Production is ${WIRE.short}. 100-piece minimum. We buy the steel — it is in the price.`,
       },
     ],
   },
@@ -233,7 +233,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
     hang: "Same V, C, or CV openings, rotated 90°. Call the rotation, both insides, and length.",
     body: [
       "90° hooks are still powder coating hooks — V, C, or CV — with a right-angle offset so the part hangs off the bar instead of in line with it. That is a 2D or 3D CNC program, not a different product family.",
-      `Wire stays ${WIRE.short}. Stock ${STOCK}. Stainless when the washer demands it. You buy the coil.`,
+      `Wire stays ${WIRE.short}. Stock ${STOCK}. Stainless when the washer demands it. 90° V: we buy the steel. 90° C and CV: you buy the coil.`,
     ],
     jobs: [
       "90° V-hooks for centered hang off the bar",

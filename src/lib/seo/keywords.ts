@@ -34,6 +34,8 @@ export const CORE_KEYWORDS = [
   "90 degree hooks",
   "custom powder coating hooks",
   "powder coating V-hooks",
+  "heavy-duty V-hooks",
+  "USA made heavy-duty powder coat V-hooks",
   "steel V-hooks",
   "stainless steel V-hooks",
 ];

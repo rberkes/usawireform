@@ -40,6 +40,14 @@ export const showcaseModels: ShowcaseModel[] = [
     kind: "wire",
   },
   {
+    id: "powder-coating-hooks",
+    title: "Powder coating V-hook",
+    productSlug: "powder-coating-hooks",
+    group: "Hooks and rings",
+    summary: "Dual V — rack crotch, shank, part trough. From coil.",
+    kind: "wire",
+  },
+  {
     id: "d-rings",
     title: "D-ring",
     productSlug: "d-rings",

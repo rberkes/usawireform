@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HookBuilder } from "@/components/HookBuilder";
+import { HookFigure } from "@/components/VHookFigure";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -35,12 +36,12 @@ const faqs = [
   {
     question: "Do you have an online custom hook builder?",
     answer:
-      "Yes. Pick style, wire size in 4–14 mm, overall length, and leg ID. The estimate is $1 per cut, $0.50 per bend, $0.05 per developed inch. Material is not included. 100-piece minimum. All instant quotes are subject to quote department review.",
+      "Yes. Pick style, wire size in 4–14 mm, overall length, and leg ID. V-hooks and 90° V: $1 per cut, $0.09 per developed inch on 3/8 in (heavier wire scales by section), plus the steel we buy, then 5% off. 7/16 and 1/2 in are stock. C, CV, and S: $1 per cut, $0.50 per bend, $0.05 per developed inch — you buy the coil. 100-piece minimum. All instant quotes are subject to quote department review.",
   },
   {
     question: "Who supplies the wire?",
     answer:
-      "You buy the coil and bring it to Northeast Ohio. We form it. Carbon, stainless, or another coil alloy in the 4–14 mm band.",
+      "V-hooks and 90° V: we buy the steel — 1018, galvanized, 304, or 316 is in the estimate. C-hooks, CV-hooks, S-hooks, and other CNC forms: you buy the coil and bring it to Northeast Ohio.",
   },
 ];
 
@@ -70,11 +71,14 @@ export default function CustomPowderCoatingHooksPage() {
             { label: "Custom" },
           ]}
         />
-        <PageHero
-          kicker="Custom"
-          title="Custom powder coating hooks"
-          lede={`${PRICE_LINE} Build a V, C, CV, S, or 90° hook. Live drawing and forming estimate. ${WIRE.short}. You buy the coil.`}
-        />
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
+          <PageHero
+            kicker="Custom"
+            title="Custom powder coating hooks"
+            lede={`${PRICE_LINE} Build a V, C, CV, S, or 90° hook. Live drawing and estimate. ${WIRE.short}. V-hooks: we buy the steel. Other styles: you buy the coil.`}
+          />
+          <HookFigure type="v" label="Custom V-hook" />
+        </div>
         <div className="mt-12">
           <HookBuilder />
         </div>

@@ -99,9 +99,10 @@ export default function WireFormShapesPage() {
 
       <h3>V</h3>
       <p>
-        Two legs, a tight crotch. Line{" "}
-        <Link href="/v-hooks">V-hooks</Link> and
-        simple saddles. Included angle and inside radius on the print.
+        Dual V: rack crotch on top, part trough on the bottom, sharp 45° bends.
+        Line{" "}
+        <Link href="/v-hooks">V-hooks</Link>. Opening and overall on the print —
+        not a Z and not a radiused crotch.
       </p>
 
       <h3>Z / offset</h3>

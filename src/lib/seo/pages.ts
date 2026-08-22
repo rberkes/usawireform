@@ -293,7 +293,7 @@ export const staticSeoPages: SeoRecord[] = [
       description: lander.description,
       section: "products" as const,
       keywords: lander.keywords,
-      priority: lander.path === "/powder-coating-v-hooks" ? 0.9 : 0.8,
+      priority: lander.path === "/powder-coating-v-hooks" || lander.path === "/heavy-duty-v-hooks" ? 0.9 : 0.8,
     }),
   ),
   record({

@@ -1,19 +1,39 @@
 import { HookBuilder } from "@/components/HookBuilder";
+import { HookFigure } from "@/components/VHookFigure";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
+import type { HookTypeId } from "@/lib/hook-builder";
 import { PRICE_LINE } from "@/lib/price";
 import {
   POWDER_HOOK_HUB,
   POWDER_HOOK_STYLES,
   type PowderHookStyle,
+  type PowderHookStyleId,
 } from "@/lib/powder-coating-hooks";
 import { WIRE } from "@/lib/range";
+
+const STYLE_HOOK: Record<PowderHookStyleId, HookTypeId> = {
+  "v-hooks": "v",
+  "c-hooks": "c",
+  "cv-hooks": "cv",
+  "s-hooks": "s",
+  "90-degree-hooks": "90v",
+};
+
+const STYLE_LABEL: Record<PowderHookStyleId, string> = {
+  "v-hooks": "V-hook",
+  "c-hooks": "C-hook",
+  "cv-hooks": "CV-hook",
+  "s-hooks": "S-hook",
+  "90-degree-hooks": "90° V-hook",
+};
 
 export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
   const faqs = style.faqs;
   const siblings = POWDER_HOOK_STYLES.filter((item) => item.id !== style.id);
+  const hookType = STYLE_HOOK[style.id];
 
   return (
     <>
@@ -40,9 +60,7 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
         ]}
         toc={[
           { id: "hang", label: "How they hang" },
-          ...(style.id === "v-hooks"
-            ? [{ id: "builder", label: "Builder" }]
-            : []),
+          { id: "builder", label: "Builder" },
           { id: "form", label: "How we form them" },
           { id: "jobs", label: "Typical jobs" },
           { id: "faq", label: "FAQ" },
@@ -52,13 +70,14 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
         <h2 id="hang">How they hang</h2>
         <p>{style.bestFor}</p>
         <p>{style.hang}</p>
+        <div className="not-prose my-8">
+          <HookFigure type={hookType} label={STYLE_LABEL[style.id]} />
+        </div>
 
-        {style.id === "v-hooks" ? (
-          <div className="not-prose my-10">
-            <h2 id="builder">Custom V-hook builder</h2>
-            <HookBuilder defaultType="v" defaultWire="3/8 in" />
-          </div>
-        ) : null}
+        <h2 id="builder">Custom {style.title.toLowerCase()} builder</h2>
+        <div className="not-prose my-8">
+          <HookBuilder defaultType={hookType} defaultWire="3/8 in" />
+        </div>
 
         <h2 id="form">How we form them</h2>
         {style.body.map((paragraph) => (
@@ -73,7 +92,12 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
           <Link href="/stainless-steel-powder-coating-hooks">
             stainless steel powder coating hooks
           </Link>
-          . Band: {WIRE.label}. You buy the coil.
+          . Band: {WIRE.label}.{" "}
+          {style.id === "v-hooks"
+            ? "We buy the steel — it is in the price."
+            : style.id === "90-degree-hooks"
+              ? "90° V: we buy the steel. 90° C and CV: you buy the coil."
+              : "You buy the coil."}
         </p>
 
         <h2 id="jobs">Typical jobs</h2>

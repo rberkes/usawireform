@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HookFigure } from "@/components/VHookFigure";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { ArticleSchema, FAQSchema } from "@/components/SeoSchemas";
@@ -77,14 +78,21 @@ export default function HookStyleGuidePage() {
           more than a V if the part can swing. Closed eyes when the hook has to
           stay on a bar or a D-ring.
         </p>
+        <div className="not-prose my-8">
+          <HookFigure type="s" label="S-hook" />
+        </div>
 
         <h2 id="v">V-hooks</h2>
         <p>
-          Dual legs and a crotch.{" "}
+          Dual V: rack crotch on top, part trough on the bottom, sharp 45°
+          bends.{" "}
           <Link href="/v-hooks">V-hooks</Link> center the part and keep contact
           consistent through wash, coat, and cure. Use them when orientation
           matters more than load speed.
         </p>
+        <div className="not-prose my-8">
+          <HookFigure type="v" label="V-hook" />
+        </div>
 
         <h2 id="c">C-hooks</h2>
         <p>
@@ -93,6 +101,9 @@ export default function HookStyleGuidePage() {
           Better for wide parts and racks that fight a V. Less locate than a V.
           Pointed ends when the spec wants a bite.
         </p>
+        <div className="not-prose my-8">
+          <HookFigure type="c" label="C-hook" />
+        </div>
 
         <h2 id="cv">CV-hooks</h2>
         <p>
@@ -100,12 +111,18 @@ export default function HookStyleGuidePage() {
           One opening for load, one for a settled hang. Common when a shop runs
           mixed part families on one rack style.
         </p>
+        <div className="not-prose my-8">
+          <HookFigure type="cv" label="CV-hook" />
+        </div>
 
         <h2 id="ninety">90° hooks</h2>
         <p>
           <Link href="/90-degree-hooks">90° hooks</Link> rotate V, C, or CV off
           the bar. Use them for tight centers and a different face to the gun.
         </p>
+        <div className="not-prose my-8">
+          <HookFigure type="90v" label="90° V-hook" />
+        </div>
 
         <h2 id="pick">How to choose</h2>
         <ul>

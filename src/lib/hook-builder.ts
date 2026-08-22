@@ -1,5 +1,10 @@
 import { ESTIMATE, estimatePiece } from "@/lib/quoting";
 import { WIRE } from "@/lib/range";
+import { isShopSteelHook, priceVHook } from "@/lib/v-hook-price";
+import { vExtents, vHookPoints, type Vec2 } from "@/lib/v-hook-geometry";
+
+export type { Vec2 };
+export { vHookPoints };
 
 export const HOOK_TYPES = [
   { id: "v", label: "V-Hook", maxOverall: 48 },
@@ -75,42 +80,8 @@ export const HOOK_MATERIALS = [
 
 export type HookMaterialId = (typeof HOOK_MATERIALS)[number]["id"];
 
-export type Vec2 = { x: number; y: number };
-
-/** 45° V-arms — powder-coating V-hook crotches are sharp, not radiused. */
-const ARM_K = Math.SQRT1_2;
-
 function dist(a: Vec2, b: Vec2) {
   return Math.hypot(b.x - a.x, b.y - a.y);
-}
-
-function vExtents(legId: number) {
-  const tip = Math.min(Math.max(legId * 0.2, 0.35), 1);
-  return {
-    run: legId * ARM_K,
-    rise: legId * ARM_K,
-    tip,
-    tipRun: tip * ARM_K,
-    tipRise: tip * ARM_K,
-    minOverall: 2 * legId * ARM_K + 0.35,
-  };
-}
-
-function dualVPoints(overall: number, legId: number, jog = 0): Vec2[] {
-  const { run, rise, tipRun, tipRise } = vExtents(legId);
-  const topJoin = overall - rise;
-  const top: Vec2[] = [
-    { x: run + tipRun, y: overall - tipRise },
-    { x: run, y: overall },
-    { x: 0, y: topJoin },
-  ];
-  const bottom: Vec2[] = [
-    { x: jog, y: rise },
-    { x: jog - run, y: 0 },
-    { x: jog - run - tipRun, y: tipRise },
-  ];
-  if (!jog) return [...top, ...bottom];
-  return [...top, { x: jog, y: topJoin }, ...bottom];
 }
 
 function polylineLength(pts: Vec2[]) {
@@ -141,6 +112,7 @@ export type HookBuildInput = {
   overall: number;
   legId: number;
   quantity: number;
+  materialId?: string;
 };
 
 export type HookBuildOk = {
@@ -150,7 +122,14 @@ export type HookBuildOk = {
   developedIn: number;
   points: Vec2[];
   title: string;
-  estimate: ReturnType<typeof estimatePiece>;
+  estimate: ReturnType<typeof estimatePiece> & {
+    steelLb?: number;
+    steelUsd?: number;
+    shopSteel?: boolean;
+    beatUsd?: number;
+    beatRate?: number;
+    subtotal?: number;
+  };
 };
 
 export type HookBuildErr = { ok: false; message: string };
@@ -166,12 +145,12 @@ export function hookCenterline(
   legId: number,
 ): { points: Vec2[]; bends: number } {
   if (type === "v") {
-    return { bends: 4, points: dualVPoints(overall, legId) };
+    return { bends: 4, points: vHookPoints(overall, legId) };
   }
 
   if (type === "90v") {
     const jog = Math.max(vExtents(legId).run, 0.75);
-    return { bends: 5, points: dualVPoints(overall, legId, jog) };
+    return { bends: 5, points: vHookPoints(overall, legId, jog) };
   }
 
   if (type === "c" || type === "90c") {
@@ -261,12 +240,40 @@ export function buildHookQuote(input: HookBuildInput): HookBuildOk | HookBuildEr
   const { points, bends } = hookCenterline(input.type, overall, legId);
   const developedIn = Math.round(polylineLength(points) * 100) / 100;
   const cuts = 1;
-  const estimate = estimatePiece({
-    cuts,
-    bends,
-    lengthIn: developedIn,
-    quantity,
-  });
+  const estimate = isShopSteelHook(input.type)
+    ? (() => {
+        const priced = priceVHook({
+          developedIn,
+          diameterIn: wireIn,
+          quantity,
+          materialId: input.materialId ?? "1018",
+          cuts,
+        });
+        return {
+          inchRate: priced.inchRate,
+          forming: priced.forming,
+          cut: priced.cut,
+          cutCount: cuts,
+          bendCost: 0,
+          gross: priced.gross,
+          discountRate: priced.discountRate,
+          piece: priced.piece,
+          setup: 0,
+          lot: priced.lot,
+          steelLb: priced.steelLb,
+          steelUsd: priced.steelUsd,
+          shopSteel: true as const,
+          beatUsd: priced.beatUsd,
+          beatRate: priced.beatRate,
+          subtotal: priced.subtotal,
+        };
+      })()
+    : estimatePiece({
+        cuts,
+        bends,
+        lengthIn: developedIn,
+        quantity,
+      });
 
   return {
     ok: true,

@@ -11,6 +11,7 @@ const library = [
   { href: "/powder-coating-hooks", label: "Powder coating hooks" },
   { href: "/powder-coating-v-hooks", label: "Powder coating V-hooks" },
   { href: "/375-v-hooks", label: '.375" V-hooks' },
+  { href: "/heavy-duty-v-hooks", label: "USA made heavy-duty powder coat V-hooks" },
   { href: "/v-hooks", label: "V-hooks" },
   { href: "/c-hooks", label: "C-hooks" },
   { href: "/s-hooks", label: "S-hooks" },

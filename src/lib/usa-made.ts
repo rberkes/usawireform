@@ -46,6 +46,14 @@ export const USA_MADE: UsaMadeEntry[] = [
     href: "/products/trellis-systems",
     phrases: ["USA made wire stakes"],
   },
+  {
+    slug: "heavy-duty-v-hooks",
+    href: "/heavy-duty-v-hooks",
+    phrases: [
+      "USA made heavy-duty powder coat V-hooks",
+      "USA made heavy duty powder coating V-hooks",
+    ],
+  },
 ];
 
 export function usaMadeForSlug(slug: string) {

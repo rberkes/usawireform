@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HookBuilder } from "@/components/HookBuilder";
+import { HookFigure } from "@/components/VHookFigure";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -11,6 +12,7 @@ import { V_HOOK_LANDERS } from "@/lib/v-hook-landers";
 
 export function VHookLanderPage({ lander }: { lander: VHookLander }) {
   const others = V_HOOK_LANDERS.filter((item) => item.path !== lander.path);
+  const hookType = lander.builder?.type ?? "v";
 
   return (
     <>
@@ -34,11 +36,14 @@ export function VHookLanderPage({ lander }: { lander: VHookLander }) {
             { label: lander.title },
           ]}
         />
-        <PageHero
-          kicker={lander.kicker}
-          title={lander.h1}
-          lede={`${PRICE_LINE} ${lander.lede}`}
-        />
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
+          <PageHero
+            kicker={lander.kicker}
+            title={lander.h1}
+            lede={`${PRICE_LINE} ${lander.lede}`}
+          />
+          <HookFigure type={hookType} label="V-hook" />
+        </div>
         {lander.builder ? (
           <div className="mt-12">
             <HookBuilder

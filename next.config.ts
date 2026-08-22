@@ -128,6 +128,16 @@ const nextConfig: NextConfig = {
         destination: "/heavy-duty-v-hooks",
         permanent: true,
       },
+      {
+        source: "/heavy-duty-powder-coat-v-hooks",
+        destination: "/heavy-duty-v-hooks",
+        permanent: true,
+      },
+      {
+        source: "/usa-made-heavy-duty-powder-coat-v-hooks",
+        destination: "/heavy-duty-v-hooks",
+        permanent: true,
+      },
       { source: "/custom-v-hook", destination: "/custom-v-hooks", permanent: true },
       {
         source: "/hook-builder",
