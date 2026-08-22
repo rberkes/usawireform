@@ -183,7 +183,12 @@ export async function submitContactForm(
 
   if (emailConfigured()) {
     try {
-      const preview = await previewAttachmentFromForm(formData);
+      let preview;
+      try {
+        preview = await previewAttachmentFromForm(formData);
+      } catch (error) {
+        console.error("[Preview attach]", error);
+      }
       emailed = await sendDrawingLeadEmails({
         to: data.email,
         name: data.name,
@@ -317,7 +322,12 @@ export async function submitQuickQuote(
 
   if (emailConfigured()) {
     try {
-      const preview = await previewAttachmentFromForm(formData);
+      let preview;
+      try {
+        preview = await previewAttachmentFromForm(formData);
+      } catch (error) {
+        console.error("[Preview attach]", error);
+      }
       emailed = await sendDrawingLeadEmails({
         to: data.email,
         subject: `Drawing: ${data.fileName ?? "STEP"}${data.source ? ` (${data.source})` : ""}`,

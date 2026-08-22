@@ -107,7 +107,7 @@ async function sendResendMail({
       ? {
           attachments: attachments.map((item) => ({
             filename: item.filename,
-            content: item.content,
+            content: item.content.toString("base64"),
             contentType: item.contentType,
             contentId: item.contentId,
           })),
@@ -115,7 +115,10 @@ async function sendResendMail({
       : {}),
   });
   if (error) {
-    console.error("[Lead email]", error);
+    console.error("[Lead email]", { to, subject, error });
+    if (attachments?.length) {
+      return sendResendMail({ to, subject, html, replyTo });
+    }
     return false;
   }
   return true;
@@ -200,7 +203,7 @@ export async function sendDrawingLeadEmails({
   rows: MailRow[];
 }) {
   const attachments = preview ? [preview] : undefined;
-  const [shop] = await Promise.all([
+  const [shop, customer] = await Promise.all([
     sendResendMail({
       to: LEADS_NOTIFY_EMAIL,
       replyTo: to,
@@ -222,6 +225,7 @@ export async function sendDrawingLeadEmails({
       preview,
     }),
   ]);
+  console.log("[Drawing lead mail]", { to, shop, customer, hasPreview: Boolean(preview) });
   return shop;
 }
 

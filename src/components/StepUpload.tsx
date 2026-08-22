@@ -37,6 +37,40 @@ function validate(file: File): string | null {
   return null;
 }
 
+function shrinkStill(blob: Blob): Promise<Blob> {
+  return new Promise((resolve) => {
+    const image = new Image();
+    const url = URL.createObjectURL(blob);
+    image.onload = () => {
+      const maxW = 720;
+      const scale = Math.min(1, maxW / Math.max(image.width, 1));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.width * scale));
+      canvas.height = Math.max(1, Math.round(image.height * scale));
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        URL.revokeObjectURL(url);
+        resolve(blob);
+        return;
+      }
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(
+        (next) => {
+          URL.revokeObjectURL(url);
+          resolve(next && next.size < blob.size ? next : blob);
+        },
+        "image/jpeg",
+        0.72,
+      );
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(blob);
+    };
+    image.src = url;
+  });
+}
+
 function assignFile(input: HTMLInputElement | null, file: File | null) {
   if (!input) return;
   if (!file) {
@@ -73,14 +107,12 @@ export function StepUpload({
   const previewRef = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [previewData, setPreviewData] = useState("");
 
   function take(next: File | null) {
     if (!next) {
       setError(null);
       assignFile(inputRef.current, null);
       assignFile(previewRef.current, null);
-      setPreviewData("");
       onChange(null);
       return;
     }
@@ -89,24 +121,20 @@ export function StepUpload({
       setError(message);
       assignFile(inputRef.current, null);
       assignFile(previewRef.current, null);
-      setPreviewData("");
       onChange(null);
       return;
     }
     setError(null);
     assignFile(previewRef.current, null);
-    setPreviewData("");
     assignFile(inputRef.current, next);
     onChange(next);
   }
 
-  function takeStill(blob: Blob) {
+  async function takeStill(blob: Blob) {
+    const compact = await shrinkStill(blob);
     const base = (file?.name ?? "drawing").replace(/\.[^.]+$/, "") || "drawing";
-    const still = new File([blob], `${base}.jpg`, { type: "image/jpeg" });
+    const still = new File([compact], `${base}.jpg`, { type: "image/jpeg" });
     assignFile(previewRef.current, still);
-    const reader = new FileReader();
-    reader.onload = () => setPreviewData(String(reader.result ?? ""));
-    reader.readAsDataURL(blob);
   }
 
   return (
@@ -204,7 +232,6 @@ export function StepUpload({
         tabIndex={-1}
         aria-hidden
       />
-      <input type="hidden" name="previewData" value={previewData} />
       {file ? (
         <UploadedDrawingPreview file={file} onStill={takeStill} />
       ) : null}
