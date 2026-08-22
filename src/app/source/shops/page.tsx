@@ -33,8 +33,8 @@ export const metadata = pageMeta({
 const STEPS = [
   {
     n: "01",
-    title: "Claim the listing or file one cell",
-    body: "US shops already in the directory keep that URL. New shops file one CNC cell and publish a page.",
+    title: "Claim the listing — as a plant",
+    body: "US shops keep that URL. Three checks: numbered plant street, a public floor page, and you attest this is not a sales or sourcing office.",
   },
   {
     n: "02",

@@ -38,7 +38,11 @@ export function SourceEquipmentForm({
 
       <Panel className="space-y-4 p-4 sm:p-5">
         <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
-          Register the shop
+          Register the plant
+        </p>
+        <p className="text-sm leading-6 text-muted">
+          Three checks: numbered plant street, a cell or a public floor page,
+          and you attest this is not a sales or sourcing office.
         </p>
         <label className="block text-sm">
           Shop name
@@ -102,6 +106,39 @@ export function SourceEquipmentForm({
             placeholder="https://"
             autoComplete="url"
           />
+        </label>
+        <label className="block text-sm">
+          Plant street
+          <input
+            className={`mt-1.5 ${fieldClass}`}
+            name="plantStreet"
+            required
+            autoComplete="street-address"
+            placeholder="123 Industrial Ave"
+          />
+        </label>
+        <label className="block text-sm">
+          Floor proof URL
+          <input
+            className={`mt-1.5 ${fieldClass}`}
+            name="plantProofUrl"
+            type="url"
+            autoComplete="url"
+            placeholder="Optional if you name a cell below"
+          />
+        </label>
+        <label className="flex items-start gap-2 text-sm leading-6">
+          <input
+            className="mt-1"
+            type="checkbox"
+            name="plantAttest"
+            value="1"
+            required
+          />
+          <span>
+            This location forms wire or strip on the floor. Not a sales office,
+            sourcing desk, or manufacturer’s rep.
+          </span>
         </label>
       </Panel>
 

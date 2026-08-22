@@ -100,6 +100,12 @@ export type SourceProfile = {
   updatedAt: string;
   /** Private blob path for the public shop logo. */
   logoPath?: string;
+  /** Numbered plant street. Required to pass the plant check. */
+  plantStreet?: string;
+  /** Public page that names machines or shows the floor. */
+  plantProofUrl?: string;
+  /** When the shop passed the three-check plant test. */
+  plantVerifiedAt?: string;
 };
 
 export type SourceJob = {

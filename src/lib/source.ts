@@ -274,6 +274,9 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
       payload.logoPath.startsWith("source/logos/")
         ? payload.logoPath
         : undefined,
+    plantStreet: String(payload.plantStreet ?? "").trim() || undefined,
+    plantProofUrl: String(payload.plantProofUrl ?? "").trim() || undefined,
+    plantVerifiedAt: String(payload.plantVerifiedAt ?? "").trim() || undefined,
     listedAt: String(
       payload.listedAt ?? payload.updatedAt ?? new Date().toISOString(),
     ),

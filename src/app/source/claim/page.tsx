@@ -88,7 +88,7 @@ export default async function SourceClaimPage({ searchParams }: Props) {
         title={`Claim ${listed.name}`}
         lede={
           usaShop
-            ? `This keeps /directory/${listed.slug}. File CNC cells on that listing from the shop dashboard.`
+            ? `Three checks before this URL stays a factory listing: plant street, floor proof, not a sales or sourcing office. Then file cells from the shop dashboard.`
             : "Source is USA shops for now. Europe later, on its own platform."
         }
       />

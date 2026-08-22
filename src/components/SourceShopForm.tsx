@@ -18,6 +18,9 @@ export function SourceShopForm({
   slug,
   claimedDirectory = false,
   logoUrl,
+  plantStreet = "",
+  plantProofUrl = "",
+  plantVerified = false,
 }: {
   company: string;
   name: string;
@@ -29,6 +32,9 @@ export function SourceShopForm({
   slug?: string;
   claimedDirectory?: boolean;
   logoUrl?: string;
+  plantStreet?: string;
+  plantProofUrl?: string;
+  plantVerified?: boolean;
 }) {
   const [formState, action, pending] = useActionState(updateSourceShop, initial);
 
@@ -112,6 +118,45 @@ export function SourceShopForm({
             autoComplete="url"
           />
         </label>
+        <label className="block text-sm">
+          Plant street
+          <input
+            className={`mt-1.5 ${fieldClass}`}
+            name="plantStreet"
+            defaultValue={plantStreet}
+            autoComplete="street-address"
+            placeholder="123 Industrial Ave"
+          />
+        </label>
+        <label className="block text-sm">
+          Floor proof URL
+          <input
+            className={`mt-1.5 ${fieldClass}`}
+            name="plantProofUrl"
+            defaultValue={plantProofUrl}
+            placeholder="https:// — equipment or facility page"
+            autoComplete="url"
+          />
+        </label>
+        {plantVerified ? (
+          <p className="text-sm leading-6 text-muted">
+            Plant check passed. Sales and sourcing offices stay off the USA
+            factories page.
+          </p>
+        ) : (
+          <label className="flex items-start gap-2 text-sm leading-6">
+            <input
+              className="mt-1"
+              type="checkbox"
+              name="plantAttest"
+              value="1"
+            />
+            <span>
+              This location forms wire or strip on the floor. Not a sales
+              office, sourcing desk, or manufacturer’s rep.
+            </span>
+          </label>
+        )}
         <label className="block text-sm">
           Logo
           {logoUrl ? (

@@ -25,4 +25,13 @@ export interface DirectoryCompany {
   secondaries?: string[];
   /** Public shop logo from Source. */
   logoUrl?: string;
+  /**
+   * Plant vs desk. Set when we checked, or when the shop passed the
+   * three-check claim / filed a cell. Offices stay off the USA factories page.
+   */
+  plantKind?: "plant" | "office";
+  /** Numbered plant street. Not a PO box. */
+  plantStreet?: string;
+  /** Public page that names machines or shows the floor. */
+  plantProofUrl?: string;
 }

@@ -71,6 +71,9 @@ async function ensureProfile({
     listedAt: now,
     updatedAt: now,
     logoPath: undefined,
+    plantStreet: undefined,
+    plantProofUrl: undefined,
+    plantVerifiedAt: undefined,
   };
   await saveSourceProfile(profile);
   return profile;
@@ -183,6 +186,9 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           blurb={profile?.blurb ?? ""}
           slug={profile?.slug}
           claimedDirectory={sourceAccountLocksClaim(profile)}
+          plantStreet={profile?.plantStreet ?? ""}
+          plantProofUrl={profile?.plantProofUrl ?? ""}
+          plantVerified={Boolean(profile?.plantVerifiedAt)}
           logoUrl={
             profile?.logoPath && profile.slug
               ? `/directory/logo/${profile.slug}?v=${encodeURIComponent(profile.updatedAt)}`

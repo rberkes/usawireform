@@ -20,6 +20,7 @@ import {
   publicHost,
 } from "@/lib/directory";
 import { pageMeta } from "@/lib/seo";
+import { directoryPlantStatus } from "@/lib/plant-verify";
 import {
   overlaySourceOnDirectory,
   sourceAccountLocksClaim,
@@ -101,7 +102,26 @@ export default async function DirectoryCompanyPage({ params }: Props) {
     { label: "Region", value: company.region },
     { label: "Country", value: company.country },
   ];
+  const plantStatus = directoryPlantStatus(company);
+  if (plantStatus === "plant") {
+    specs.push({
+      label: "Plant check",
+      value: company.filedOnSource
+        ? "Passed — filed a cell on Source"
+        : company.plantStreet
+          ? "Passed — street and floor proof"
+          : "Passed — named iron on a public page",
+    });
+  } else if (plantStatus === "office") {
+    specs.push({
+      label: "Plant check",
+      value: "Desk — sales or sourcing language. Not on the USA factories page.",
+    });
+  }
 
+  if (company.plantStreet) {
+    specs.push({ label: "Plant street", value: company.plantStreet });
+  }
   if (company.wireDiameters) {
     specs.push({ label: "Wire diameters", value: company.wireDiameters });
   }

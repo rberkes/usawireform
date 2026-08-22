@@ -49,6 +49,8 @@ const shop = [
   { href: "/equipment/cnc-manufacturers", label: "CNC machine catalog" },
   { href: "/equipment/machine-comparison", label: "Machine comparison" },
   { href: "/directory", label: "Company Directory" },
+  { href: "/wire-form-factories-in-usa", label: "Wire form factories in the USA" },
+  { href: "/find-factories-by-machine", label: "Find factories by machine" },
   { href: "/directory/new", label: "Newest Source shops" },
   { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/ohio", label: "Ohio cities" },

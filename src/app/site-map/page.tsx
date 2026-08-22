@@ -429,6 +429,16 @@ export default function SiteMapPage() {
               body: `Browse all ${directoryCompanies.length} companies by region, with lead capture forms.`,
             },
             {
+              href: "/wire-form-factories-in-usa",
+              title: "Wire form factories in the USA",
+              body: "U.S. factories only, on the same company cards.",
+            },
+            {
+              href: "/find-factories-by-machine",
+              title: "Find factories by machine",
+              body: "Type a machine. Three or four plants that name that iron drop as you type.",
+            },
+            {
               href: "/directory/new",
               title: "Newest Source shops",
               body: "Members who just filed cells, newest first.",

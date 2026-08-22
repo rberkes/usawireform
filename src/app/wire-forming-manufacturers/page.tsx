@@ -68,7 +68,11 @@ export default function ManufacturersPage() {
         . We form that wire into parts.
       </p>
       <p>
-        Other U.S. shops, different bands:{" "}
+        Other U.S. shops, company cards:{" "}
+        <Link href="/wire-form-factories-in-usa">
+          wire form factories in the USA
+        </Link>
+        . Full list including Canada:{" "}
         <Link href="/directory">directory</Link>. Near you by ZIP:{" "}
         <Link href="/wire-forming-companies-near-me">companies near me</Link>.
       </p>

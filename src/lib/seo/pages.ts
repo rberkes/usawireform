@@ -631,6 +631,36 @@ export const staticSeoPages: SeoRecord[] = [
     changeFrequency: "weekly",
   }),
   record({
+    path: "/wire-form-factories-in-usa",
+    title: "Wire Form Factories in the USA",
+    description:
+      "Company cards for wire form factories in the United States. Sales and sourcing offices are out. Three checks: street plant, floor proof, not a desk.",
+    section: "company",
+    keywords: [
+      "wire form factories in USA",
+      "wire forming factories United States",
+      "USA wire form manufacturers",
+      "CNC wire forming shops USA",
+    ],
+    priority: 0.9,
+    changeFrequency: "weekly",
+  }),
+  record({
+    path: "/find-factories-by-machine",
+    title: "Find Factories by Machine",
+    description:
+      "Type a machine — fourslide, Robomac, Baird, Bihler, WAFIOS — and see 3–4 plants that name that iron. Public pages and Source filings. Not a floor walk.",
+    section: "company",
+    keywords: [
+      "find wire forming factory by machine",
+      "fourslide factories",
+      "Robomac shops",
+      "Bihler wire form plants",
+    ],
+    priority: 0.8,
+    changeFrequency: "weekly",
+  }),
+  record({
     path: "/directory/areas",
     title: "Wire Forming Cities in the USA",
     description:

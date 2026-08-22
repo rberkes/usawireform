@@ -32,6 +32,11 @@ import {
   sourceClaimable,
   sourceClaimPath,
 } from "@/lib/source-directory";
+import {
+  readPlantForm,
+  verifyPlantClaim,
+  verifyPlantFiling,
+} from "@/lib/plant-verify";
 import { isSourceJobClass, type SourcePublicMatch } from "@/lib/source-types";
 import {
   applyProfilesToFilings,
@@ -91,6 +96,9 @@ async function upsertShopProfile({
   website,
   blurb,
   logoPath,
+  plantStreet,
+  plantProofUrl,
+  plantVerifiedAt,
 }: {
   userId: string;
   company: string;
@@ -101,6 +109,9 @@ async function upsertShopProfile({
   website: string;
   blurb?: string;
   logoPath?: string | null;
+  plantStreet?: string;
+  plantProofUrl?: string;
+  plantVerifiedAt?: string;
 }) {
   const existing = await getSourceProfile(userId);
   const slug = existing?.slug || (await uniqueSourceSlug(company, userId));
@@ -122,6 +133,9 @@ async function upsertShopProfile({
     updatedAt: now,
     logoPath:
       logoPath === null ? undefined : logoPath ?? existing?.logoPath,
+    plantStreet: plantStreet ?? existing?.plantStreet,
+    plantProofUrl: plantProofUrl ?? existing?.plantProofUrl,
+    plantVerifiedAt: plantVerifiedAt ?? existing?.plantVerifiedAt,
   });
   return slug;
 }
@@ -200,6 +214,17 @@ export async function claimDirectoryListing(
     };
   }
 
+  const plant = readPlantForm(formData);
+  const plantCheck = verifyPlantClaim({
+    ...plant,
+    name: listed.name,
+    location: listed.location,
+    description: listed.description,
+  });
+  if (!plantCheck.ok) {
+    return { success: false, message: plantCheck.message };
+  }
+
   const owner = await findSourceProfileBySlug(slug);
   if (owner && owner.userId === signedIn.userId) {
     redirect("/source/dashboard");
@@ -245,6 +270,9 @@ export async function claimDirectoryListing(
       listedAt: existing?.listedAt || existing?.updatedAt || now,
       updatedAt: now,
       logoPath: existing?.logoPath,
+      plantStreet: plant.plantStreet,
+      plantProofUrl: plant.plantProofUrl,
+      plantVerifiedAt: now,
     });
   } catch (error) {
     console.error("[Source claim store]", error);
@@ -323,6 +351,7 @@ export async function submitSourceEquipment(
   const state = String(formData.get("state") ?? "").trim().slice(0, 40);
   const website = String(formData.get("website") ?? "").trim().slice(0, 200);
   const notes = String(formData.get("notes") ?? "").trim().slice(0, 2000);
+  const plant = readPlantForm(formData);
   const machines = parseSourceMachines(String(formData.get("machines") ?? "[]"));
   const file = formData.get("list") as File | null;
   const fileName =
@@ -333,6 +362,14 @@ export async function submitSourceEquipment(
   }
   if (!isValidEmail(email)) {
     return { success: false, message: "Enter a valid email." };
+  }
+  const plantCheck = verifyPlantFiling({
+    ...plant,
+    hasCell: machines.length > 0 || Boolean(file && file.size > 0),
+    name: company,
+  });
+  if (!plantCheck.ok) {
+    return { success: false, message: plantCheck.message };
   }
   if (machines.length === 0 && !(file && file.size > 0)) {
     return {
@@ -388,6 +425,9 @@ export async function submitSourceEquipment(
           city,
           state,
           website,
+          plantStreet: plant.plantStreet,
+          plantProofUrl: plant.plantProofUrl || website,
+          plantVerifiedAt: new Date().toISOString(),
         });
       }
     }
@@ -617,9 +657,25 @@ export async function updateSourceShop(
   const state = String(formData.get("state") ?? "").trim().slice(0, 40);
   const website = String(formData.get("website") ?? "").trim().slice(0, 200);
   const blurb = String(formData.get("blurb") ?? "").trim().slice(0, 500);
+  const plant = readPlantForm(formData);
 
   if (!company) {
     return { success: false, message: "Enter the shop name." };
+  }
+
+  const existing = await getSourceProfile(signedIn.userId);
+  let plantVerifiedAt = existing?.plantVerifiedAt;
+  if (plant.plantStreet || plant.plantProofUrl || plant.plantAttest) {
+    const plantCheck = verifyPlantClaim({
+      plantStreet: plant.plantStreet || existing?.plantStreet || "",
+      plantProofUrl: plant.plantProofUrl || existing?.plantProofUrl || website,
+      plantAttest: plant.plantAttest || Boolean(existing?.plantVerifiedAt),
+      name: company,
+    });
+    if (!plantCheck.ok) {
+      return { success: false, message: plantCheck.message };
+    }
+    plantVerifiedAt = existing?.plantVerifiedAt || new Date().toISOString();
   }
 
   const removeLogo = String(formData.get("removeLogo") ?? "") === "1";
@@ -649,6 +705,9 @@ export async function updateSourceShop(
       website,
       blurb,
       logoPath,
+      plantStreet: plant.plantStreet || existing?.plantStreet,
+      plantProofUrl: plant.plantProofUrl || existing?.plantProofUrl,
+      plantVerifiedAt,
     });
     return {
       success: true,

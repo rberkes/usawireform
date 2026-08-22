@@ -32,6 +32,8 @@ const highPriorityPaths = new Set([
   "/models",
   "/ohio",
   "/directory/areas",
+  "/wire-form-factories-in-usa",
+  "/find-factories-by-machine",
 ]);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

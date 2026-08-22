@@ -103,9 +103,14 @@ export default function Home() {
                 body: "Ten CNC OEMs and sixty models. We run a Robomac 214TF. We do not sell the iron.",
               },
               {
-                href: "/directory",
+                href: "/wire-form-factories-in-usa",
                 title: "Wire form factories",
-                body: "Shops in the United States and Canada, tagged by machine class.",
+                body: "U.S. shops on company cards, tagged by machine class.",
+              },
+              {
+                href: "/find-factories-by-machine",
+                title: "Find factories by machine",
+                body: "Type fourslide, Robomac, Baird. Three or four plants drop as you type.",
               },
               {
                 href: "/materials",
