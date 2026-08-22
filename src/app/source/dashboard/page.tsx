@@ -74,6 +74,7 @@ async function ensureProfile({
     plantStreet: undefined,
     plantProofUrl: undefined,
     plantVerifiedAt: undefined,
+    fit: undefined,
   };
   await saveSourceProfile(profile);
   return profile;
@@ -121,8 +122,8 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         title="Shop dashboard"
         lede={
           shop?.company
-            ? `Signed in as ${shop.company.replace(/\.$/, "")} — one shop per account.`
-            : "Shop listing, cells, and the plan. Account is email and password."
+            ? `Signed in as ${shop.company.replace(/\.$/, "")} — one shop per account. Buyer fit is free.`
+            : "Shop listing, buyer fit, cells, and the plan. How the plant operates is free. Account is email and password."
         }
       />
       <div className="mt-8 flex flex-wrap gap-3">
@@ -171,6 +172,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           <p className="mt-2 text-xl font-medium">{shop?.company || "Not filed"}</p>
           <p className="mt-1 text-sm text-muted">
             {location || email || "—"}
+            {shop?.company ? " · Buyer fit is free on the listing." : ""}
           </p>
         </Panel>
       </div>
@@ -189,6 +191,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           plantStreet={profile?.plantStreet ?? ""}
           plantProofUrl={profile?.plantProofUrl ?? ""}
           plantVerified={Boolean(profile?.plantVerifiedAt)}
+          fit={profile?.fit}
           logoUrl={
             profile?.logoPath && profile.slug
               ? `/directory/logo/${profile.slug}?v=${encodeURIComponent(profile.updatedAt)}`

@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Source plans — shop dashboard",
   description:
-    "File CNC cells on Source. One cell free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Secondaries $5/mo each. Stripe checkout.",
+    "File CNC cells on Source. One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Secondaries $5/mo each. Stripe checkout.",
   path: "/source/upgrade",
   keywords: [
     "wire forming capacity",
@@ -29,7 +29,7 @@ export default async function SourceUpgradePage() {
       <PageHero
         kicker="Source"
         title="Shop plans"
-        lede="The dashboard is where you add cells. One cell is free. Three more is $30 a month. Secondaries are $5 a month each."
+        lede="The dashboard is where you add cells. One cell is free. How the factory operates — min, setup, stock, lead — is free on the listing. Extra cells are $30 a month for four. Secondaries are $5 a month each."
       />
 
       <Panel className="mt-10 max-w-xl p-5 sm:p-6">
@@ -40,8 +40,10 @@ export default async function SourceUpgradePage() {
           {formatPlanPrice(free.priceCents)}
         </p>
         <p className="mt-2 text-sm leading-6 text-muted">
-          One cell. Confirm the account. Three more is $30 a month. Then 10
-          and 20. Main secondaries are $5 a month each, from the dashboard.
+          One cell. Confirm the account. Min order, setup, stocked coil, and
+          lead stay free on the public listing so a buyer can see how the
+          plant runs. Extra cells and listed secondaries are what you pay
+          for.
         </p>
         <div className="mt-6">
           <ButtonLink href="/source/dashboard" variant="ghost">

@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Wire form shops — add a machine cell free",
   description:
-    "Wire form shops: add a machine cell free. List CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
+    "Wire form shops: add a machine cell free. File how the plant operates free — min, setup, stock, lead. List CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
   path: "/source/shops",
   keywords: [
     "wire forming capacity",
@@ -38,8 +38,8 @@ const STEPS = [
   },
   {
     n: "02",
-    title: "Name the machine on the floor",
-    body: "Wire size, 2D or 3D, make, and city. That row is how a print finds you. Not a paragraph that says you form wire.",
+    title: "Name the machine. File how you operate.",
+    body: "Wire size, 2D or 3D, make, and city. Then min order, setup, stock, and lead — free on the listing so a buyer can see how the plant runs.",
   },
   {
     n: "03",
@@ -88,8 +88,9 @@ export default async function SourceShopsPage() {
             Jobs that fit those machines come to you.
           </p>
           <p className="mt-4 text-sm leading-6 text-muted">
-            No card for the first cell. Four cells $30/mo. Ten $49/mo. Twenty
-            $99/mo.
+            No card for the first cell. Min order, setup, stock, and lead are
+            free on the listing so a buyer can see how the plant operates.
+            Four cells $30/mo. Ten $49/mo. Twenty $99/mo.
           </p>
           <p className="mt-6 text-sm leading-6 text-muted">
             Already filed? <TextLink href="/sign-in">Log in</TextLink>.
@@ -100,7 +101,7 @@ export default async function SourceShopsPage() {
       <StatRow
         className="mt-14 sm:mt-16"
         items={[
-          { value: "Free", label: "Add one machine cell" },
+          { value: "Free", label: "One cell + how the plant operates" },
           { value: String(usaShops.length), label: "US listings to claim" },
           { value: "3 shops", label: "Max intros on a job" },
           { value: "US", label: "Shops on Source" },

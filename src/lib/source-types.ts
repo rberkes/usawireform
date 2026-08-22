@@ -1,3 +1,5 @@
+import type { SourceBuyerFit } from "@/lib/source-fit";
+
 export const SOURCE_KINDS = [
   "3D CNC",
   "2D CNC",
@@ -76,6 +78,8 @@ export type SourceFiling = {
   notes: string;
   fileName?: string;
   timestamp: string;
+  /** Buyer-fit from the shop profile, when matched. */
+  fit?: SourceBuyerFit;
 };
 
 export type SourceFilingRow = SourceFiling & {
@@ -106,6 +110,8 @@ export type SourceProfile = {
   plantProofUrl?: string;
   /** When the shop passed the three-check plant test. */
   plantVerifiedAt?: string;
+  /** Shop-filed buyer-fit: MOQ, setup, stock, lead, coil. */
+  fit?: SourceBuyerFit;
 };
 
 export type SourceJob = {
@@ -135,6 +141,8 @@ export type SourcePublicMatch = {
   minMm: string;
   maxMm: string;
   why: string;
+  /** MOQ, lead, coil — from the shop profile, if filed. */
+  fitNote?: string;
 };
 
 export type SourceInternalMatch = SourcePublicMatch & {

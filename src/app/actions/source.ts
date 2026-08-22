@@ -37,6 +37,7 @@ import {
   verifyPlantClaim,
   verifyPlantFiling,
 } from "@/lib/plant-verify";
+import { readSourceFitForm, type SourceBuyerFit } from "@/lib/source-fit";
 import { isSourceJobClass, type SourcePublicMatch } from "@/lib/source-types";
 import {
   applyProfilesToFilings,
@@ -99,6 +100,7 @@ async function upsertShopProfile({
   plantStreet,
   plantProofUrl,
   plantVerifiedAt,
+  fit,
 }: {
   userId: string;
   company: string;
@@ -112,6 +114,8 @@ async function upsertShopProfile({
   plantStreet?: string;
   plantProofUrl?: string;
   plantVerifiedAt?: string;
+  /** Pass null to clear. Omit to keep the stored fit. */
+  fit?: SourceBuyerFit | null;
 }) {
   const existing = await getSourceProfile(userId);
   const slug = existing?.slug || (await uniqueSourceSlug(company, userId));
@@ -136,6 +140,7 @@ async function upsertShopProfile({
     plantStreet: plantStreet ?? existing?.plantStreet,
     plantProofUrl: plantProofUrl ?? existing?.plantProofUrl,
     plantVerifiedAt: plantVerifiedAt ?? existing?.plantVerifiedAt,
+    fit: fit === null ? undefined : (fit ?? existing?.fit),
   });
   return slug;
 }
@@ -273,6 +278,7 @@ export async function claimDirectoryListing(
       plantStreet: plant.plantStreet,
       plantProofUrl: plant.plantProofUrl,
       plantVerifiedAt: now,
+      fit: existing?.fit,
     });
   } catch (error) {
     console.error("[Source claim store]", error);
@@ -708,6 +714,7 @@ export async function updateSourceShop(
       plantStreet: plant.plantStreet || existing?.plantStreet,
       plantProofUrl: plant.plantProofUrl || existing?.plantProofUrl,
       plantVerifiedAt,
+      fit: readSourceFitForm(formData) ?? null,
     });
     return {
       success: true,
@@ -762,6 +769,7 @@ export async function submitSourceJob(
     state,
     notes,
     buyerEmail: email,
+    qty,
   });
   if (parsed.spec.diameterMm == null) {
     return {

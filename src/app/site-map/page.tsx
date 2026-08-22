@@ -71,12 +71,17 @@ export default function SiteMapPage() {
             {
               href: "/source/shops",
               title: "Add a machine cell",
-              body: "Add one machine cell free. Claim the listing or file a cell.",
+              body: "Add one machine cell free. How the plant operates is free. Claim the listing or file a cell.",
             },
             {
               href: "/source/upgrade",
               title: "Source plans",
-              body: "One cell free. $30 / $49 / $99 a month. Secondaries $5 each.",
+              body: "One cell free. How the plant operates is free. $30 / $49 / $99 a month. Secondaries $5 each.",
+            },
+            {
+              href: "/source/dashboard",
+              title: "How the factory operates",
+              body: "Free on a registered listing: min order, setup, stocked materials, lead, coil, quote time. Buyers see how that plant runs.",
             },
             {
               href: "/secondary-operations",
@@ -447,6 +452,11 @@ export default function SiteMapPage() {
               href: "/directory/new",
               title: "Newest Source shops",
               body: "Members who just filed cells, newest first.",
+            },
+            {
+              href: "/source/shops",
+              title: "How a factory operates",
+              body: "Registered plants file min, setup, stock, and lead free. It shows on their public directory page so a buyer can see if they are the right fit.",
             },
             {
               href: "/directory",

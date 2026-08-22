@@ -1,4 +1,5 @@
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
+import { fitScoreAdjust, formatFitWhy } from "@/lib/source-fit";
 import { type SourceFiling, type SourceInternalMatch } from "@/lib/source-types";
 
 const BAND_SLACK_MM = 0.05;
@@ -27,6 +28,13 @@ export function parseWireMm(raw: string): number | null {
   return roundMm(value < 2 ? value * 25.4 : value);
 }
 
+export function parseQty(raw: string): number | null {
+  const digits = String(raw).replace(/,/g, "").match(/\d+/);
+  if (!digits) return null;
+  const n = Number(digits[0]);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
 export function roundMm(value: number) {
   return Math.round(value * 100) / 100;
 }
@@ -43,6 +51,7 @@ export type SourceJobSpec = {
   city: string;
   state: string;
   buyerEmail: string;
+  qty: number | null;
 };
 
 function kindMatches(jobKind: string, machineKind: string) {
@@ -95,6 +104,7 @@ export function matchFilingsToJob(
   limit = SOURCE_MATCH_LIMIT,
 ): SourceInternalMatch[] {
   if (job.diameterMm == null) return [];
+  const diameterMm = job.diameterMm;
   const ranked: Array<SourceInternalMatch & { score: number }> = [];
 
   for (const filing of filings) {
@@ -111,12 +121,14 @@ export function matchFilingsToJob(
       const min = parseBandMm(machine.minMm) ?? 0;
       const max = parseBandMm(machine.maxMm) ?? 0;
       const city = filing.city;
+      const fitNote = formatFitWhy(filing.fit, job.qty);
       const score =
         100 +
         oemScore(job.oem, machine.oem) +
         localeScore(job, city, filing.state) +
-        tightnessScore(job.diameterMm, min, max);
-      const why = `${machine.kind} · ${job.diameterMm} mm sits in ${machine.oem} ${machine.model} · ${machine.minMm}–${machine.maxMm} mm`;
+        tightnessScore(diameterMm, min, max) +
+        fitScoreAdjust(filing.fit, job.qty);
+      const why = `${machine.kind} · ${diameterMm} mm sits in ${machine.oem} ${machine.model} · ${machine.minMm}–${machine.maxMm} mm`;
       const row: SourceInternalMatch & { score: number } = {
         company: filing.company,
         email: filing.email,
@@ -128,6 +140,7 @@ export function matchFilingsToJob(
         minMm: machine.minMm,
         maxMm: machine.maxMm,
         why,
+        fitNote: fitNote || undefined,
         score,
       };
       if (!best || row.score > best.score) best = row;

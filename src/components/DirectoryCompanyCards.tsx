@@ -9,8 +9,11 @@ import {
   type IronClass,
 } from "@/lib/directory-iron";
 import type { DirectoryCompany } from "@/lib/directory-types";
+import { sourceFitCardLine } from "@/lib/source-fit";
 
 export function DirectoryCompanyCard({ company }: { company: DirectoryCompany }) {
+  const fitLine = sourceFitCardLine(company.buyerFit);
+
   return (
     <div className="flex flex-col bg-background p-4 hover:bg-inset transition-colors">
       {company.logoUrl ? (
@@ -45,6 +48,9 @@ export function DirectoryCompanyCard({ company }: { company: DirectoryCompany })
       <p className="mt-2 text-sm text-muted line-clamp-2">
         {company.description.slice(0, 100)}...
       </p>
+      {fitLine ? (
+        <p className="mt-2 text-xs leading-5 text-muted">{fitLine}</p>
+      ) : null}
       {(company.machines ?? company.capabilities).length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1">
           {(company.machines ?? company.capabilities).slice(0, 4).map((cap) => (

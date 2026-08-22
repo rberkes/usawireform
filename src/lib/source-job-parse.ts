@@ -1,7 +1,7 @@
 import { generateText, jsonSchema, Output } from "ai";
 import { SOURCE_OEM_NAMES } from "@/lib/source-iron";
 import { SOURCE_JOB_CLASSES, isSourceJobClass } from "@/lib/source-types";
-import { parseWireMm, roundMm, type SourceJobSpec } from "@/lib/source-match";
+import { parseWireMm, parseQty, roundMm, type SourceJobSpec } from "@/lib/source-match";
 
 export type ParsedBuyerJob = {
   spec: SourceJobSpec;
@@ -81,6 +81,7 @@ export async function parseBuyerJob(input: {
   state: string;
   notes: string;
   buyerEmail: string;
+  qty?: string;
 }): Promise<ParsedBuyerJob> {
   const formMm = parseWireMm(input.diameterRaw);
   const formKind = cleanKind(input.kind);
@@ -111,6 +112,7 @@ export async function parseBuyerJob(input: {
     city: formCity || (ai?.city ?? "").trim(),
     state: formState || (ai?.state ?? "").trim(),
     buyerEmail: input.buyerEmail,
+    qty: parseQty(input.qty ?? ""),
   };
 
   const usedAi = Boolean(ai);

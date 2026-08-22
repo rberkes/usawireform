@@ -1,3 +1,5 @@
+import type { SourceBuyerFit } from "@/lib/source-fit";
+
 export interface DirectoryCompany {
   slug: string;
   name: string;
@@ -34,4 +36,6 @@ export interface DirectoryCompany {
   plantStreet?: string;
   /** Public page that names machines or shows the floor. */
   plantProofUrl?: string;
+  /** Shop-filed buyer-fit. Empty on public-page listings we did not walk. */
+  buyerFit?: SourceBuyerFit;
 }

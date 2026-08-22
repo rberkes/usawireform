@@ -31,7 +31,8 @@ export function SourceSecondariesForm({
         </p>
         <p className="text-sm leading-6 text-muted">
           Main secondary operations on the public listing. ${each} a month
-          for each one you list. Uncheck to drop the charge.
+          for each one you list. Uncheck to drop the charge. Min order,
+          setup, stock, and lead stay free above.
         </p>
         <ul className="space-y-2">
           {SOURCE_SECONDARIES.map((row) => (

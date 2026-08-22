@@ -7,6 +7,7 @@ import {
   sourceProfileToDirectoryCompany,
 } from "@/lib/source-directory";
 import { filedSourceMachines, sourceFilingsForShop } from "@/lib/source-account";
+import { parseSourceBuyerFit } from "@/lib/source-fit";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import type {
@@ -277,6 +278,7 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
     plantStreet: String(payload.plantStreet ?? "").trim() || undefined,
     plantProofUrl: String(payload.plantProofUrl ?? "").trim() || undefined,
     plantVerifiedAt: String(payload.plantVerifiedAt ?? "").trim() || undefined,
+    fit: parseSourceBuyerFit(payload.fit),
     listedAt: String(
       payload.listedAt ?? payload.updatedAt ?? new Date().toISOString(),
     ),
@@ -447,6 +449,7 @@ export function applyProfilesToFilings(
       city: profile.city || filing.city,
       state: profile.state || filing.state,
       website: profile.website || filing.website,
+      fit: profile.fit,
     };
   });
 }

@@ -466,6 +466,7 @@ export async function sendSourceJobEmails({
     minMm: string;
     maxMm: string;
     why: string;
+    fitNote?: string;
   }>;
 }) {
   const size =
@@ -476,7 +477,7 @@ export async function sendSourceJobEmails({
     .map(
       (row, index) =>
         `${index + 1}. ${escapeHtml(row.company)} — <a href="mailto:${escapeHtml(row.email)}">${escapeHtml(row.email)}</a><br />
-        ${escapeHtml(row.why)}${row.city || row.state ? ` · ${escapeHtml([row.city, row.state].filter(Boolean).join(", "))}` : ""}`,
+        ${escapeHtml(row.why)}${row.fitNote ? ` · ${escapeHtml(row.fitNote)}` : ""}${row.city || row.state ? ` · ${escapeHtml([row.city, row.state].filter(Boolean).join(", "))}` : ""}`,
     )
     .join("<p></p>");
   const [shop, receipt] = await Promise.all([

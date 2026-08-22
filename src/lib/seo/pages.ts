@@ -555,7 +555,7 @@ export const staticSeoPages: SeoRecord[] = [
     path: "/source/shops",
     title: "Wire Form Shops — Add a Machine Cell Free",
     description:
-      "Wire form shops: add a machine cell free. List CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
+      "Wire form shops: add a machine cell free. File how the plant operates free — min, setup, stock, lead. List CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
     section: "company",
     keywords: [
       "wire forming capacity",
@@ -569,7 +569,7 @@ export const staticSeoPages: SeoRecord[] = [
     path: "/source/upgrade",
     title: "Source Plans — Shop Dashboard",
     description:
-      "File CNC cells on Source. One cell free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Secondaries $5/mo each.",
+      "File CNC cells on Source. One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Secondaries $5/mo each.",
     section: "company",
     keywords: ["source shop plan", "CNC equipment list", "wire forming capacity"],
     priority: 0.6,

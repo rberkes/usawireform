@@ -86,6 +86,7 @@ export function overlaySourceOnDirectory(
     plantKind: sourced.plantKind || listed.plantKind,
     plantStreet: sourced.plantStreet || listed.plantStreet,
     plantProofUrl: sourced.plantProofUrl || listed.plantProofUrl,
+    buyerFit: sourced.buyerFit || listed.buyerFit,
   };
 }
 
@@ -141,5 +142,6 @@ export function sourceProfileToDirectoryCompany(
     plantKind: profile.plantVerifiedAt || cells.length > 0 ? "plant" : undefined,
     plantStreet: profile.plantStreet,
     plantProofUrl: profile.plantProofUrl,
+    buyerFit: profile.fit,
   };
 }

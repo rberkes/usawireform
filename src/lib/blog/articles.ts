@@ -2,6 +2,83 @@ import type { BlogPost } from "./types";
 
 export const articles: BlogPost[] = [
   {
+    slug: "a-matching-engine-not-a-shop-list",
+    title: "A matching engine, not a shop list",
+    description:
+      "AI matches a wire form job to the machine cell and secondaries on the floor. Not every CNC can run every print. Instant estimate stays this 4–14 mm Robomac.",
+    date: "2026-08-22",
+    kind: "article",
+    tags: ["source", "wire forming", "CNC"],
+    related: [
+      { href: "/source", label: "Find a shop" },
+      { href: "/find-factories-by-machine", label: "Search by machine" },
+      { href: "/equipment/machine-comparison", label: "Machine comparison" },
+      { href: "/instant-quote", label: "Instant estimate" },
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "Google still files us next to generic wire-form directories. Those lists treat every plant as the same CNC. They are not. USA Wire Form is a B2B matching engine for the wire forming sector: the print goes to a factory that actually has the cell — and the secondaries — for that job.",
+      },
+      {
+        type: "p",
+        text: "Some shops have a 100-piece minimum. Some will not look at a job under fifty thousand. Some run a coiler. Some run a Robomac-class 3D former. Some run fourslide. They are not interchangeable. Sending one drawing to twenty plants and hoping is how you get the wrong quote, the wrong date, and a part farmed through three buildings.",
+      },
+      {
+        type: "h2",
+        id: "not-universal",
+        text: "A CNC wire bender is not a universal tool",
+      },
+      {
+        type: "p",
+        text: "A spring coiler (WAFIOS, Itaya, Simplex class) is built for tight coils and lighter gauges. A heavy 3D cell (Numalliance Robomac class) is built for 4–14 mm structural forms — frames, baskets, hooks. Put the agricultural hook on the coiler and you fight the machine. Put the retail clip on the 214TF and you waste the cell. 2D tables and cut-to-length lines are a third class. Fourslide is not 3D CNC. The comparison page exists so a buyer does not pay for the wrong iron because the photo looked similar.",
+      },
+      {
+        type: "p",
+        text: "This floor runs a Numalliance Robomac 214TF in Northeast Ohio. Instant estimate is that cell only: 4–14 mm, 100-piece minimum. If the print is a spring, a fourslide clip, or outside the band, Source is the match — not a fake quote from this machine.",
+      },
+      {
+        type: "h2",
+        id: "secondaries",
+        text: "Bending is often half the job",
+      },
+      {
+        type: "p",
+        text: "Weld, plate, powder, end-form, inspect. If those live on another vendor, you pay a second quality stack and a second queue. The match looks at secondaries the shop filed on Source — end forming, weld, plate, heat treat, inspection — so the buyer is not assembling a supply chain in email. In-house on that floor is the point. We did not walk every plant. A filed cell and a listed secondary are what the shop put on the record.",
+      },
+      {
+        type: "h2",
+        id: "moq",
+        text: "Minimums follow the cell, not a directory blurb",
+      },
+      {
+        type: "p",
+        text: "Fourslide and transfer tools can take a day to set. That shop needs volume to justify the downtime. A CNC cell that programs from the print can run a hundred pieces. Mix those two in one RFQ blast and one quote looks “expensive” only because the machine was never right. The engine asks for the cell class first — spring, 2D CNC, 3D CNC, fourslide, multi-slide — then the wire size. Up to three introductions to shops that filed that kind of cell and a band that fits.",
+      },
+      {
+        type: "h2",
+        id: "how",
+        text: "What the engine actually does",
+      },
+      {
+        type: "p",
+        text: "It does not scrape CAD against a secret idle-capacity feed. Buyers pick the class and the diameter on /source. Engineers type an OEM or class on /find-factories-by-machine and get up to four plants that named that iron. Shops claim the directory page, pass the plant check, and file cells — OEM, model, 2D or 3D, millimetres. One cell free. Instant estimate stays this Ohio floor. We do not sell machines. We do not invent who runs a WAFIOS if they never named it.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Wrong cell: wrong piece price, wrong date, sometimes damaged tooling.",
+          "Secondaries off-site: extra freight, extra inspection, extra delay.",
+          "Right cell on that floor: one roof for the form and the finish the shop actually runs.",
+        ],
+      },
+      {
+        type: "p",
+        text: "Not all factories are the same. That is the whole product.",
+      },
+    ],
+  },
+  {
     slug: "fall-shows-for-wire-forming-shops",
     title: "Fall shows for a wire forming shop",
     description:

@@ -109,7 +109,8 @@ export function SourceJobForm() {
         <p className="text-sm leading-6 text-muted">
           Wire size is the second match key. Notes can be plain language. We
           do not let a model pick the shop. Mesh and this floor’s Robomac
-          estimate are not this form.
+          estimate are not this form. Quantity is checked against a shop’s
+          filed min when they have one.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
@@ -176,6 +177,9 @@ export function SourceJobForm() {
                   : ""}
               </p>
               <p className="mt-1 text-muted">{row.why}</p>
+              {row.fitNote ? (
+                <p className="mt-1 text-muted">{row.fitNote}</p>
+              ) : null}
             </li>
           ))}
         </ul>

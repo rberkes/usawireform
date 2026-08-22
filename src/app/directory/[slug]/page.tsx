@@ -28,6 +28,7 @@ import {
   sourceClaimable,
 } from "@/lib/source-directory";
 import { secondaryHref, secondaryLabel } from "@/lib/source-secondaries";
+import { sourceFitSpecs } from "@/lib/source-fit";
 import { getSourceDirectoryCompany, getSourceProfile } from "@/lib/source";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -140,6 +141,7 @@ export default async function DirectoryCompanyPage({ params }: Props) {
   if (company.machines && company.machines.length > 0) {
     specs.push({ label: "Public equipment notes", value: company.machines.join(", ") });
   }
+  specs.push(...sourceFitSpecs(company.buyerFit));
 
   return (
     <>
@@ -180,7 +182,8 @@ export default async function DirectoryCompanyPage({ params }: Props) {
               Claim this page
             </ButtonLink>
             <p className="text-sm leading-6 text-muted">
-              US shops: file CNC cells on this listing. One cell free.
+              US shops: file CNC cells on this listing. One cell free. How
+              the plant operates is free.
             </p>
           </div>
         ) : null}

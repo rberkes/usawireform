@@ -85,8 +85,8 @@ export function AskBox() {
       </h2>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted sm:text-lg">
         AI matches wire form factories to the equipment and secondaries on the
-        floor. Not all factories are the same. This cell is still 4–14 mm CNC,
-        100-piece minimum, Northeast Ohio.
+        floor. Not all factories are the same. The world’s most efficient
+        manufacturing sourcing engine.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8">
