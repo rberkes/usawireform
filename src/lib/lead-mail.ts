@@ -101,6 +101,31 @@ export function mailRowsHtml(rows: MailRow[]) {
   </tr>`;
 }
 
+function ctaButtonRow(href: string, label: string, hint: string) {
+  return `<tr>
+    <td style="padding:24px 32px 0">
+      <a href="${escapeHtml(href)}" style="display:inline-block;background:#0b6bcb;color:#ffffff;font-family:${FONT};font-size:14px;font-weight:500;text-decoration:none;padding:12px 20px;border-radius:2px">
+        ${escapeHtml(label)}
+      </a>
+      <p style="margin:10px 0 0;font-family:${FONT};font-size:13px;line-height:1.5;color:#5c5c5c">${escapeHtml(hint)}</p>
+    </td>
+  </tr>`;
+}
+
+function estimateForwardMailto(estimate: EstimateMailCopy) {
+  const part = estimate.hookType ?? "wire form";
+  const lines = [
+    `USA Wire Form estimate — ${part}`,
+    "",
+    ...estimateFactRows(estimate).map((row) => `${row.label}: ${row.value}`),
+    "",
+    `Builder: ${SITE_URL}/custom-powder-coating-hooks`,
+    "Not a production quote. Reply to USA Wire Form if you want a STEP reviewed.",
+  ];
+  const subject = `${COMPANY} estimate — ${part}`;
+  return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
+}
+
 export function customerThanksHtml({
   name,
   fileName,
@@ -267,6 +292,11 @@ export function estimateReceiptHtml(estimate: EstimateMailCopy) {
      ${headingRow("Your estimate receipt")}
      ${copyRow("Keep this email. It is not a production quote. Reply if you want the shop to look at a STEP.")}
      ${mailRowsHtml(estimateFactRows(estimate))}
+     ${ctaButtonRow(
+       estimateForwardMailto(estimate),
+       "Forward to a coworker",
+       "Opens a new message with this estimate. Add their address and send.",
+     )}
      ${copyRow(`<span style="color:#5c5c5c">${QUOTE_REVIEW} Weld, finish, and a print still go through <a href="${SITE_URL}/contact" style="color:#0b6bcb;text-decoration:none">contact</a>.</span>`)}`,
   );
 }
