@@ -84,8 +84,9 @@ export function AskBox() {
         Type a question. Get an answer.
       </h2>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted sm:text-lg">
-        Learning, machines, factories, coil — United States and beyond.
-        Production is 4–14 mm CNC, 100-piece minimum, Northeast Ohio.
+        AI matches wire form factories to the equipment and secondaries on the
+        floor. Not all factories are the same. This cell is still 4–14 mm CNC,
+        100-piece minimum, Northeast Ohio.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8">
