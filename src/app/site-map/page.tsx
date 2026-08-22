@@ -81,7 +81,7 @@ export default function SiteMapPage() {
             {
               href: "/source/dashboard",
               title: "How the factory operates",
-              body: "Free on a registered listing: min order, setup, stocked materials, lead, coil, quote time. Buyers see how that plant runs.",
+              body: "Free on a registered listing: min order, setup, stocked materials, lead, and weekly open slots on each cell. Buyers see how that plant runs.",
             },
             {
               href: "/secondary-operations",
@@ -446,7 +446,7 @@ export default function SiteMapPage() {
             {
               href: "/find-factories-by-machine",
               title: "Find factories by machine",
-              body: "Type a machine. Three or four plants that name that iron drop as you type.",
+              body: "Type a machine or a secondary. Three or four plants that name that work drop as you type.",
             },
             {
               href: "/directory/new",

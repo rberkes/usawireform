@@ -53,6 +53,10 @@ export type SourceMachine = {
   minMm: string;
   maxMm: string;
   city: string;
+  /** Open slots this week, 0–10. 10 = 100% open, needs work. Shop-filed. */
+  openSlots?: number;
+  /** When the shop last filed this week's open slots. */
+  capacityAt?: string;
 };
 
 export type SourceInvite = {

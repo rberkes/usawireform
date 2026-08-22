@@ -75,7 +75,7 @@ export const NAV_FACTORIES: NavSection = {
   items: [
     { href: "/directory", label: "Company directory" },
     { href: "/wire-form-factories-in-usa", label: "USA factories" },
-    { href: "/find-factories-by-machine", label: "Find by machine" },
+    { href: "/find-factories-by-machine", label: "Machine or secondary" },
     { href: "/source", label: "Match a print" },
     { href: "/source/shops", label: "Add a cell (free)" },
     { href: "/directory/new", label: "Newest Source shops" },

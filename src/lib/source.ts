@@ -7,6 +7,7 @@ import {
   sourceProfileToDirectoryCompany,
 } from "@/lib/source-directory";
 import { filedSourceMachines, sourceFilingsForShop } from "@/lib/source-account";
+import { withCapacity } from "@/lib/source-capacity";
 import { parseSourceBuyerFit } from "@/lib/source-fit";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
@@ -153,7 +154,9 @@ export async function listSourceFilings(): Promise<SourceFilingRow[]> {
         website: String(payload.website ?? ""),
         machines: filedSourceMachines(
           Array.isArray(payload.machines)
-            ? payload.machines.map(hydrateMachineFromCatalog)
+            ? payload.machines.map((row) =>
+                withCapacity(hydrateMachineFromCatalog(row as SourceMachine)),
+              )
             : [],
         ),
         notes: String(payload.notes ?? ""),

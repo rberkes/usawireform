@@ -43,7 +43,7 @@ const library = [
 const factories = [
   { href: "/directory", label: "Company Directory" },
   { href: "/wire-form-factories-in-usa", label: "Wire form factories in the USA" },
-  { href: "/find-factories-by-machine", label: "Find factories by machine" },
+  { href: "/find-factories-by-machine", label: "Find by machine or secondary" },
   { href: "/source", label: "Find a wire form shop" },
   { href: "/source/shops", label: "Add a machine cell" },
   { href: "/source/upgrade", label: "Source plans" },

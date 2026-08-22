@@ -224,7 +224,7 @@ export function siteArchitectureTree(): ArchNode[] {
         leaf("/directory", "USA + Canada cards"),
         leaf("/directory/[slug]", `${s.shops} company listings`, "pattern"),
         leaf("/wire-form-factories-in-usa", "USA plants only · desks out"),
-        leaf("/find-factories-by-machine", "Type a machine → 3–4 plants"),
+        leaf("/find-factories-by-machine", "Type a machine or secondary → 3–4 plants"),
         leaf("/directory/new", "Newest Source filings"),
         leaf("/directory/areas", `${s.metros} forming cities`),
         leaf("/directory/areas/[slug]", `${s.metros} metro landers`, "pattern"),

@@ -110,7 +110,7 @@ export default function Home() {
               {
                 href: "/find-factories-by-machine",
                 title: "Find factories by machine",
-                body: "Type fourslide, Robomac, Baird. Three or four plants drop as you type.",
+                body: "Type fourslide, Robomac, powder coating, TIG. Three or four plants drop as you type.",
               },
               {
                 href: "/materials",

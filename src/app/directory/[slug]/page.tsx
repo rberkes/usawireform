@@ -142,6 +142,9 @@ export default async function DirectoryCompanyPage({ params }: Props) {
     specs.push({ label: "Public equipment notes", value: company.machines.join(", ") });
   }
   specs.push(...sourceFitSpecs(company.buyerFit));
+  if (company.weeklyCapacity) {
+    specs.push({ label: "This week", value: company.weeklyCapacity });
+  }
 
   return (
     <>

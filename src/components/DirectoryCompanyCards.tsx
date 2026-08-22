@@ -51,6 +51,11 @@ export function DirectoryCompanyCard({ company }: { company: DirectoryCompany })
       {fitLine ? (
         <p className="mt-2 text-xs leading-5 text-muted">{fitLine}</p>
       ) : null}
+      {company.weeklyCapacity ? (
+        <p className="mt-1 text-xs leading-5 text-muted">
+          {company.weeklyCapacity}
+        </p>
+      ) : null}
       {(company.machines ?? company.capabilities).length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1">
           {(company.machines ?? company.capabilities).slice(0, 4).map((cap) => (

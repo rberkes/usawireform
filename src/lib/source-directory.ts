@@ -1,5 +1,6 @@
 import { directoryRegionForState, getDirectoryCompany } from "@/lib/directory";
 import type { DirectoryCompany } from "@/lib/directory-types";
+import { shopCapacityLine } from "@/lib/source-capacity";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import type { SourceMachine, SourceProfile } from "@/lib/source-types";
 
@@ -87,6 +88,7 @@ export function overlaySourceOnDirectory(
     plantStreet: sourced.plantStreet || listed.plantStreet,
     plantProofUrl: sourced.plantProofUrl || listed.plantProofUrl,
     buyerFit: sourced.buyerFit || listed.buyerFit,
+    weeklyCapacity: sourced.weeklyCapacity || listed.weeklyCapacity,
   };
 }
 
@@ -143,5 +145,6 @@ export function sourceProfileToDirectoryCompany(
     plantStreet: profile.plantStreet,
     plantProofUrl: profile.plantProofUrl,
     buyerFit: profile.fit,
+    weeklyCapacity: shopCapacityLine(cells),
   };
 }

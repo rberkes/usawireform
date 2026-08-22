@@ -118,7 +118,7 @@ export function MachineFactorySearch({ autofocus = false }: { autofocus?: boolea
         result.shopTotal
           ? `${result.shopTotal} plant${result.shopTotal === 1 ? "" : "s"}`
           : null,
-        result.machineTotal
+        !result.term.secondary && result.machineTotal
           ? `${result.machineTotal} machine${result.machineTotal === 1 ? "" : "s"}`
           : null,
       ]
@@ -129,7 +129,7 @@ export function MachineFactorySearch({ autofocus = false }: { autofocus?: boolea
   return (
     <div ref={rootRef} className="relative max-w-2xl">
       <label className="block text-sm">
-        Machine on the floor
+        Machine or secondary
         <input
           ref={inputRef}
           className={cx(fieldClass, "mt-1.5")}
@@ -143,7 +143,7 @@ export function MachineFactorySearch({ autofocus = false }: { autofocus?: boolea
           }
           autoComplete="off"
           autoFocus={autofocus}
-          placeholder="Fourslide, Robomac, Baird, Bihler, WAFIOS…"
+          placeholder="Fourslide, powder coating, TIG, zinc, Robomac…"
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
@@ -171,7 +171,7 @@ export function MachineFactorySearch({ autofocus = false }: { autofocus?: boolea
         <div
           id={listId}
           role="listbox"
-          aria-label="Factories for that machine"
+          aria-label="Factories for that machine or secondary"
           className="absolute z-20 mt-2 w-full overflow-hidden rounded-sm border border-line bg-background shadow-lg"
         >
           {countLine ? (
@@ -182,8 +182,8 @@ export function MachineFactorySearch({ autofocus = false }: { autofocus?: boolea
 
           {showEmpty ? (
             <p className="px-3 py-3 text-sm leading-6 text-muted">
-              No listing on this site names that iron. Tags come from public
-              pages and cells shops filed — not a floor walk.{" "}
+              No listing on this site names that iron or secondary. Tags come
+              from public pages and cells shops filed — not a floor walk.{" "}
               <Link href="/source" className="text-copper hover:underline">
                 File a print on Source
               </Link>
@@ -243,9 +243,10 @@ export function MachineFactorySearch({ autofocus = false }: { autofocus?: boolea
       ) : null}
 
       <p className="mt-3 text-sm leading-6 text-muted">
-        Each hit is a machine. The dropdown is {MACHINE_SEARCH_LIMIT} plants.
-        Named iron from the shop’s page or a cell it filed. Confirm before you
-        send a print.
+        Each hit is a machine or a named secondary. The dropdown is{" "}
+        {MACHINE_SEARCH_LIMIT} plants. Powder, zinc, TIG, MIG, resistance weld,
+        end forming, heat treat — only if the listing or a Source filing said
+        so. Confirm before you send a print.
       </p>
     </div>
   );

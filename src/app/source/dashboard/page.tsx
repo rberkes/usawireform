@@ -4,6 +4,7 @@ import { syncCheckoutSession } from "@/app/actions/source-billing";
 import { openSourceBillingPortal } from "@/app/actions/source-billing";
 import { SourceAddCellsForm } from "@/components/SourceAddCellsForm";
 import { SourceFiledCells } from "@/components/SourceFiledCells";
+import { SourceWeeklyCapacityForm } from "@/components/SourceWeeklyCapacityForm";
 import { SourceSecondariesForm } from "@/components/SourceSecondariesForm";
 import { SourceShopForm } from "@/components/SourceShopForm";
 import { Button, ButtonLink, Page, PageHero, Panel } from "@/components/ui";
@@ -122,8 +123,8 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         title="Shop dashboard"
         lede={
           shop?.company
-            ? `Signed in as ${shop.company.replace(/\.$/, "")} — one shop per account. Buyer fit is free.`
-            : "Shop listing, buyer fit, cells, and the plan. How the plant operates is free. Account is email and password."
+            ? `Signed in as ${shop.company.replace(/\.$/, "")} — one shop per account. Buyer fit and weekly open slots are free.`
+            : "Shop listing, buyer fit, weekly open slots, cells, and the plan. How the plant operates is free. Account is email and password."
         }
       />
       <div className="mt-8 flex flex-wrap gap-3">
@@ -227,7 +228,10 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             ) : null}
           </p>
         ) : (
-          <SourceFiledCells cells={cells} />
+          <>
+            <SourceFiledCells cells={cells} />
+            <SourceWeeklyCapacityForm cells={cells} />
+          </>
         )}
       </section>
 

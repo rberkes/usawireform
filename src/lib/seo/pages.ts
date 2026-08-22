@@ -647,12 +647,15 @@ export const staticSeoPages: SeoRecord[] = [
   }),
   record({
     path: "/find-factories-by-machine",
-    title: "Find Factories by Machine",
+    title: "Find Factories by Machine or Secondary",
     description:
-      "Type a machine — fourslide, Robomac, Baird, Bihler, WAFIOS — and see 3–4 plants that name that iron. Public pages and Source filings. Not a floor walk.",
+      "Type a machine or a secondary — fourslide, Robomac, powder coating, TIG, zinc, resistance weld — and see 3–4 plants that named it. Public pages and Source filings. Not a floor walk.",
     section: "company",
     keywords: [
       "find wire forming factory by machine",
+      "wire forming powder coating shops",
+      "wire forming TIG welding factories",
+      "zinc plating wire form plants",
       "fourslide factories",
       "Robomac shops",
       "Bihler wire form plants",

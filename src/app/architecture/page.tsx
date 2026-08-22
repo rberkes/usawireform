@@ -54,7 +54,7 @@ export default function ArchitecturePage() {
         . Factories:{" "}
         <TextLink href="/directory">directory</TextLink>
         {` (${stats.usa} USA, ${stats.canada} Canada). `}
-        Machine search:{" "}
+        Machine or secondary search:{" "}
         <TextLink href="/find-factories-by-machine">
           find factories by machine
         </TextLink>

@@ -6,6 +6,12 @@ import {
 } from "./directory-iron";
 import type { DirectoryCompany } from "./directory-types";
 import { isFactoryListing } from "./plant-verify";
+import {
+  isSecondaryTerm,
+  SECONDARY_TERMS,
+  shopSecondaryHay,
+  THIS_FLOOR_SECONDARY_HAY,
+} from "./secondary-ops";
 
 export const MACHINE_SEARCH_PATH = "/find-factories-by-machine";
 export const MACHINE_SEARCH_LIMIT = 4;
@@ -52,7 +58,7 @@ export type MachineSearchFactoryHit = {
 
 export type MachineSearchResult = {
   query: string;
-  term: { id: string; label: string } | null;
+  term: { id: string; label: string; secondary?: boolean } | null;
   hits: MachineSearchFactoryHit[];
   shopTotal: number;
   machineTotal: number;
@@ -211,7 +217,9 @@ export const MACHINE_TERMS: MachineTerm[] = [
   },
 ];
 
-export const MACHINE_HINTS = MACHINE_TERMS.filter((term) => term.hint);
+export const SEARCH_TERMS: MachineTerm[] = [...MACHINE_TERMS, ...SECONDARY_TERMS];
+
+export const MACHINE_HINTS = SEARCH_TERMS.filter((term) => term.hint);
 
 const STOP = new Set([
   "wire",
@@ -259,7 +267,10 @@ function tokenInHay(hay: string, token: string) {
   const folded = foldMachineQuery(token);
   if (!folded) return false;
   if (` ${hay} `.includes(` ${folded} `)) return true;
-  if (folded.length < 3) return false;
+  if (folded.includes(" ") && hay.includes(folded)) return true;
+  // Short tokens ("tig", "mig") must be whole words. Prefix matching
+  // would treat "tight" as TIG.
+  if (folded.length < 5) return false;
   return hay.split(" ").some((word) => word.startsWith(folded));
 }
 
@@ -272,7 +283,10 @@ function termScore(term: MachineTerm, query: string) {
     else if (aliasFold.startsWith(query)) {
       best = Math.max(best, 86 - Math.min(aliasFold.length - query.length, 20));
     } else if (query.startsWith(aliasFold) && aliasFold.length >= 3) {
-      best = Math.max(best, 72);
+      const next = query[aliasFold.length];
+      if (next === undefined || next === " ") {
+        best = Math.max(best, 72);
+      }
     } else if (query.length >= 3 && aliasFold.includes(query)) {
       best = Math.max(best, 55);
     }
@@ -283,7 +297,7 @@ function termScore(term: MachineTerm, query: string) {
 function pickTerm(query: string) {
   let best: MachineTerm | null = null;
   let bestScore = 0;
-  for (const term of MACHINE_TERMS) {
+  for (const term of SEARCH_TERMS) {
     const score = termScore(term, query);
     if (score > bestScore) {
       best = term;
@@ -335,7 +349,8 @@ function hayFor(oem: string, model: string, kind: string, extra = "") {
   return foldMachineQuery([oem, model, kind, extra].join(" "));
 }
 
-function whyFor(doc: MachineDoc) {
+function whyFor(doc: MachineDoc, term: MachineTerm | null) {
+  if (term && isSecondaryTerm(term)) return term.label;
   const model = doc.model.trim();
   const oem = doc.oem.trim();
   if (oem && model) {
@@ -419,7 +434,9 @@ const THIS_FLOOR_DOC: Omit<MachineDoc, "id"> = {
   kind: "3D CNC",
   minMm: "4",
   maxMm: "14",
-  hay: foldMachineQuery("Numalliance Robomac 214TF R214TF 3D CNC from coil 4-14 mm"),
+  hay: foldMachineQuery(
+    `Numalliance Robomac 214TF R214TF 3D CNC from coil 4-14 mm ${THIS_FLOOR_SECONDARY_HAY}`,
+  ),
   classes: ["3d-cnc"],
   shopSlug: "this-floor",
   href: "/equipment",
@@ -449,6 +466,7 @@ export function machineDocsFromCompanies(companies: DirectoryCompany[]): Machine
       filedOnSource: Boolean(company.filedOnSource),
       classes,
     };
+    const secondaryHay = shopSecondaryHay(company);
     const notes = company.machines ?? [];
     let added = 0;
     for (const note of notes) {
@@ -461,6 +479,7 @@ export function machineDocsFromCompanies(companies: DirectoryCompany[]): Machine
           kind: filed.kind,
           minMm: filed.minMm,
           maxMm: filed.maxMm,
+          hay: hayFor(filed.oem, filed.model, filed.kind, secondaryHay),
           source: "source-cell",
         });
         added += 1;
@@ -474,20 +493,36 @@ export function machineDocsFromCompanies(companies: DirectoryCompany[]): Machine
         kind: kindClass ? kindFromClass(kindClass) : note,
         minMm: "",
         maxMm: "",
+        hay: hayFor("", note, kindClass ? kindFromClass(kindClass) : note, secondaryHay),
         source: "public-page",
       });
       added += 1;
     }
-    if (added > 0) continue;
-    for (const iron of companyIronClasses(company)) {
+    if (added === 0) {
+      for (const iron of companyIronClasses(company)) {
+        pushDoc(docs, seen, {
+          ...shop,
+          oem: "",
+          model: kindFromClass(iron),
+          kind: kindFromClass(iron),
+          minMm: "",
+          maxMm: "",
+          hay: hayFor("", kindFromClass(iron), kindFromClass(iron), secondaryHay),
+          source: "public-page",
+        });
+        added += 1;
+      }
+    }
+    if (added === 0 && foldMachineQuery(secondaryHay)) {
       pushDoc(docs, seen, {
         ...shop,
         oem: "",
-        model: kindFromClass(iron),
-        kind: kindFromClass(iron),
+        model: "Secondaries",
+        kind: "Secondary",
         minMm: "",
         maxMm: "",
-        source: "public-page",
+        hay: foldMachineQuery(secondaryHay),
+        source: company.filedOnSource ? "source-cell" : "public-page",
       });
     }
   }
@@ -536,7 +571,7 @@ export function searchFactoriesByMachine(
       href: row.doc.href,
       name: row.doc.shopName,
       location: row.doc.location,
-      why: whyFor(row.doc),
+      why: whyFor(row.doc, term),
       thisFloor: row.doc.thisFloor,
     });
   }
@@ -551,7 +586,9 @@ export function searchFactoriesByMachine(
 
   return {
     query: trimmed,
-    term: term ? { id: term.id, label: term.label } : null,
+    term: term
+      ? { id: term.id, label: term.label, secondary: isSecondaryTerm(term) }
+      : null,
     hits: [...shops.values()].slice(0, MACHINE_SEARCH_LIMIT),
     shopTotal,
     machineTotal: matched.length,

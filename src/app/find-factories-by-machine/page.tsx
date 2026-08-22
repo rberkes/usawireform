@@ -7,16 +7,18 @@ import { MACHINE_SEARCH_PATH } from "@/lib/machine-search";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Find Factories by Machine",
+  title: "Find Factories by Machine or Secondary",
   description:
-    "Type a machine — fourslide, Robomac, Baird, Bihler, WAFIOS — and see 3–4 plants that have that iron. Index is machines, not shops. Public pages and Source filings. Not a floor walk.",
+    "Type a machine or a secondary — fourslide, Robomac, powder coating, TIG, zinc, resistance weld — and see 3–4 plants that named it. Public pages and Source filings. Not a floor walk.",
   path: MACHINE_SEARCH_PATH,
   keywords: [
     "find wire forming factory by machine",
+    "wire forming powder coating shops",
+    "wire forming TIG welding factories",
+    "zinc plating wire form plants",
     "fourslide factories",
     "Robomac shops",
     "Bihler wire form plants",
-    "Baird fourslide",
     "WAFIOS spring CNC shops",
   ],
 });
@@ -30,9 +32,9 @@ export default function FindFactoriesByMachinePage() {
       <Breadcrumbs items={[{ label: "Find factories by machine" }]} />
 
       <PageHero
-        kicker="Machine search"
-        title="Type a machine. See the plants."
-        lede="The index is machines — OEM, model, class. As you type, up to four factories with a hit drop in. Public pages and cells shops filed. Not a floor walk."
+        kicker="Machine and secondary search"
+        title="Type a machine or a secondary. See the plants."
+        lede="OEM, model, class — or powder coating, zinc, TIG, MIG, resistance weld, end forming, heat treat. Up to four factories that named that work. Public pages and Source filings. Not a floor walk."
       />
 
       <div className="mt-10">
@@ -41,13 +43,18 @@ export default function FindFactoriesByMachinePage() {
 
       <div className="mt-12 max-w-2xl space-y-4 text-sm leading-7 text-muted">
         <p>
-          A shop can have twenty cells. The dropdown still shows plants, not a
-          wall of serial numbers. Fourslide, 3D CNC, and multi-slide are
-          classes. Robomac, Baird, Nilson, Bihler, WAFIOS, AIM only hit shops
-          that named that iron.
+          A shop can have twenty cells and a finish line. The dropdown still
+          shows plants. Fourslide, 3D CNC, and multi-slide are classes.
+          Robomac, Baird, Nilson, Bihler, WAFIOS, AIM only hit shops that named
+          that iron. Powder, e-coat, anodize, black oxide, nickel, zinc, TIG,
+          MIG, resistance, laser and robotic weld, press brake, end thread, end
+          forming, heat treat, coining, and cold heading only hit shops that
+          named that secondary — not because they sell a hook that goes in a
+          booth.
         </p>
         <p>
-          Empty means nobody on this list named that machine. File a print on{" "}
+          Empty means nobody on this list named that machine or secondary. File
+          a print on{" "}
           <TextLink href="/source">Source</TextLink> for a matched intro, or
           browse{" "}
           <TextLink href="/wire-form-factories-in-usa">
@@ -71,11 +78,13 @@ export default function FindFactoriesByMachinePage() {
           File each cell. That is how the index grows.
         </h2>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-muted">
-          If you run the machine,{" "}
+          If you run the machine or the secondary,{" "}
           <Link href="/source/shops" className="text-copper hover:underline">
             file the cell
           </Link>
-          . One row per OEM and model. We do not invent a floor list.
+          {" "}
+          and list secondaries from the dashboard. One row per OEM and model.
+          We do not invent a floor list.
         </p>
       </section>
     </Page>

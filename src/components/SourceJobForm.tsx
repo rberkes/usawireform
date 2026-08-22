@@ -110,7 +110,8 @@ export function SourceJobForm() {
           Wire size is the second match key. Notes can be plain language. We
           do not let a model pick the shop. Mesh and this floor’s Robomac
           estimate are not this form. Quantity is checked against a shop’s
-          filed min when they have one.
+          filed min when they have one. This week’s open slots boost shops
+          that already fit the cell.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">

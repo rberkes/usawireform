@@ -44,7 +44,7 @@ const STEPS = [
   {
     n: "03",
     title: "Jobs that fit those machines come to you",
-    body: "A buyer sends a print. We introduce up to three shops whose cells can run it. Emails stay with the desk.",
+    body: "A buyer sends a print. We introduce up to three shops whose cells can run it. File 10/10 open this week and matching sends more of the jobs that already fit that cell.",
   },
 ];
 
@@ -90,7 +90,9 @@ export default async function SourceShopsPage() {
           <p className="mt-4 text-sm leading-6 text-muted">
             No card for the first cell. Min order, setup, stock, and lead are
             free on the listing so a buyer can see how the plant operates.
-            Four cells $30/mo. Ten $49/mo. Twenty $99/mo.
+            File 0–10 open slots on each cell every week. 10/10 means you
+            need work — matching sends more jobs that already fit that
+            iron. Four cells $30/mo. Ten $49/mo. Twenty $99/mo.
           </p>
           <p className="mt-6 text-sm leading-6 text-muted">
             Already filed? <TextLink href="/sign-in">Log in</TextLink>.

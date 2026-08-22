@@ -1,4 +1,5 @@
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
+import { capacityScoreAdjust, formatCapacityWhy } from "@/lib/source-capacity";
 import { fitScoreAdjust, formatFitWhy } from "@/lib/source-fit";
 import { type SourceFiling, type SourceInternalMatch } from "@/lib/source-types";
 
@@ -122,13 +123,15 @@ export function matchFilingsToJob(
       const max = parseBandMm(machine.maxMm) ?? 0;
       const city = filing.city;
       const fitNote = formatFitWhy(filing.fit, job.qty);
+      const openNote = formatCapacityWhy(machine);
       const score =
         100 +
         oemScore(job.oem, machine.oem) +
         localeScore(job, city, filing.state) +
         tightnessScore(diameterMm, min, max) +
-        fitScoreAdjust(filing.fit, job.qty);
-      const why = `${machine.kind} · ${diameterMm} mm sits in ${machine.oem} ${machine.model} · ${machine.minMm}–${machine.maxMm} mm`;
+        fitScoreAdjust(filing.fit, job.qty) +
+        capacityScoreAdjust(machine);
+      const why = `${machine.kind} · ${diameterMm} mm sits in ${machine.oem} ${machine.model} · ${machine.minMm}–${machine.maxMm} mm${openNote ? ` · ${openNote}` : ""}`;
       const row: SourceInternalMatch & { score: number } = {
         company: filing.company,
         email: filing.email,

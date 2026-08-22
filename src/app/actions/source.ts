@@ -37,6 +37,7 @@ import {
   verifyPlantClaim,
   verifyPlantFiling,
 } from "@/lib/plant-verify";
+import { parseOpenSlots, SOURCE_SLOT_CAP } from "@/lib/source-capacity";
 import { readSourceFitForm, type SourceBuyerFit } from "@/lib/source-fit";
 import { isSourceJobClass, type SourcePublicMatch } from "@/lib/source-types";
 import {
@@ -616,6 +617,63 @@ export async function removeSourceCell(
     };
   }
   redirect("/source/dashboard");
+}
+
+export async function updateSourceCapacity(
+  _prev: SourceFormState,
+  formData: FormData,
+): Promise<SourceFormState> {
+  const signedIn = await signedInShop();
+  if (!signedIn?.email) {
+    return { success: false, message: "Sign in to file this week's open slots." };
+  }
+  const current = await shopCellsForEdit(signedIn.userId, signedIn.email);
+  if (!current.shop) {
+    return { success: false, message: "No shop on this account." };
+  }
+  if (current.machines.length === 0) {
+    return { success: false, message: "File a cell first." };
+  }
+
+  const now = new Date().toISOString();
+  let filed = 0;
+  const machines = current.machines.map((cell, index) => {
+    const raw = formData.get(`open-${index}`);
+    if (raw == null || String(raw).trim() === "") return cell;
+    const openSlots = parseOpenSlots(raw);
+    if (openSlots == null) return cell;
+    filed += 1;
+    return { ...cell, openSlots, capacityAt: now };
+  });
+  if (filed === 0) {
+    return {
+      success: false,
+      message: `Enter 0–${SOURCE_SLOT_CAP} open slots on a cell.`,
+    };
+  }
+
+  try {
+    await replaceSourceFilingsForShop({
+      userId: signedIn.userId,
+      email: current.email,
+      shop: current.shop,
+      machines,
+    });
+  } catch (error) {
+    console.error("[Source capacity store]", error);
+    return {
+      success: false,
+      message: `Could not store this week (${blobErrorMessage(error)}).`,
+    };
+  }
+
+  return {
+    success: true,
+    message:
+      filed === 1
+        ? "Filed 1 cell for this week. Matching uses it on jobs that fit."
+        : `Filed ${filed} cells for this week. Matching uses it on jobs that fit.`,
+  };
 }
 
 export async function clearSourceCells(

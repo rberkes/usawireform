@@ -35,8 +35,8 @@ const STEPS = [
   },
   {
     n: "02",
-    title: "We match filed machines",
-    body: "An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs.",
+    title: "We match capability, then this week's open slots",
+    body: "The cell and the wire size have to fit first. Shops that filed 10/10 open this week — they need work — rank higher among those chairs. Stale weeks are not a live feed.",
   },
   {
     n: "03",

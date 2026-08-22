@@ -76,7 +76,7 @@ export default async function WireFormFactoriesUsaPage({ searchParams }: Props) 
       />
       <PlantCheckList />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
-        Type a machine — fourslide, Robomac, Baird — on{" "}
+        Type a machine or a secondary — fourslide, Robomac, powder coating, TIG — on{" "}
         <Link
           href="/find-factories-by-machine"
           className="text-copper hover:underline"

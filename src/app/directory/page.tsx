@@ -81,7 +81,7 @@ export default async function DirectoryPage({ searchParams }: Props) {
         >
           wire form factories in the USA
         </Link>
-        . Type a machine:{" "}
+        . Type a machine or a secondary:{" "}
         <Link
           href="/find-factories-by-machine"
           className="text-copper hover:underline"
