@@ -23,13 +23,13 @@ function shell(preheader: string, innerRows: string) {
       <td align="center" style="padding:32px 16px">
         <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;background:#ffffff;border:1px solid #eceae6">
           <tr>
-            <td style="height:6px;background:#9a4f1f;font-size:0;line-height:0">&nbsp;</td>
+            <td style="height:6px;background:#0b6bcb;font-size:0;line-height:0">&nbsp;</td>
           </tr>
           ${innerRows}
           <tr>
             <td style="padding:4px 32px 28px;font-family:${FONT};font-size:13px;line-height:1.55;color:#5c5c5c">
               ${COMPANY} · Northeast Ohio · 4–14 mm CNC<br />
-              <a href="${SITE_URL}" style="color:#9a4f1f;text-decoration:none">${SITE_HOST}</a>
+              <a href="${SITE_URL}" style="color:#0b6bcb;text-decoration:none">${SITE_HOST}</a>
             </td>
           </tr>
         </table>
@@ -43,7 +43,7 @@ function shell(preheader: string, innerRows: string) {
 function kickerRow() {
   return `<tr>
     <td style="padding:24px 32px 0;font-family:${FONT}">
-      <p style="margin:0;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#9a4f1f">${COMPANY}</p>
+      <p style="margin:0;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#0b6bcb">${COMPANY}</p>
     </td>
   </tr>`;
 }
@@ -74,7 +74,7 @@ function drawingRow(fileName: string | undefined, hasPreview: boolean) {
     : "";
   return `<tr>
     <td style="padding:20px 32px 0">
-      <p style="margin:0 0 10px;font-family:${FONT};font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9a4f1f">The form you sent</p>
+      <p style="margin:0 0 10px;font-family:${FONT};font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#0b6bcb">The form you sent</p>
       ${image}
       ${caption}
     </td>
@@ -85,7 +85,7 @@ export function mailRowsHtml(rows: MailRow[]) {
   const cells = rows
     .map((row) => {
       const value = row.href
-        ? `<a href="${escapeHtml(row.href)}" style="color:#9a4f1f;text-decoration:none">${escapeHtml(row.value)}</a>`
+        ? `<a href="${escapeHtml(row.href)}" style="color:#0b6bcb;text-decoration:none">${escapeHtml(row.value)}</a>`
         : escapeHtml(row.value);
       return `<tr>
         <td style="padding:9px 0;border-bottom:1px solid #eceae6;font-family:${FONT};font-size:13px;color:#5c5c5c;width:36%;vertical-align:top">${escapeHtml(row.label)}</td>
@@ -160,9 +160,9 @@ export function shopLeadHtml({
     : "";
   const links = `<tr>
     <td style="padding:20px 32px 0;font-family:${FONT};font-size:14px">
-      <a href="${SITE_URL}/admin" style="color:#9a4f1f;text-decoration:none">Open quote files</a>
+      <a href="${SITE_URL}/admin" style="color:#0b6bcb;text-decoration:none">Open quote files</a>
       &nbsp;·&nbsp;
-      <a href="${SITE_URL}/admin/leads" style="color:#9a4f1f;text-decoration:none">Open directory</a>
+      <a href="${SITE_URL}/admin/leads" style="color:#0b6bcb;text-decoration:none">Open directory</a>
     </td>
   </tr>`;
 

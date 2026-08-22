@@ -4,13 +4,13 @@
   --background: #ffffff;
   --foreground: #111111;
   --muted: #5c5c5c;
-  --line: rgba(17, 17, 17, 0.12);
-  --copper: #9a4f1f;
-  --copper-dim: #7a3e18;
-  --zoom: #2d8cff;
-  --zoom-dim: #1a73e8;
+  --line: rgba(10, 90, 180, 0.16);
+  --copper: #0b6bcb;
+  --copper-dim: #0856a8;
+  --zoom: #007aff;
+  --zoom-dim: #0066d6;
   --steel: #3d5a66;
-  --inset: #f4f4f2;
+  --inset: #f3f5f8;
 }
 
 @theme inline {

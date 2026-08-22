@@ -92,10 +92,10 @@ export function AskBox() {
         <label htmlFor="shop-ask" className="sr-only">
           Ask USA Wire Form a question
         </label>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <textarea
             id="shop-ask"
-            rows={5}
+            rows={1}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={(event) => {
@@ -106,14 +106,14 @@ export function AskBox() {
             }}
             placeholder={DEFAULT_QUESTION}
             autoComplete="off"
-            className="min-h-40 w-full flex-1 resize-y rounded-sm border border-line bg-background px-4 py-4 text-lg leading-7 outline-none placeholder:text-muted/60 focus:border-copper sm:min-h-28 sm:text-xl sm:leading-8"
+            className="min-h-44 w-full flex-1 resize-y rounded-sm border border-line bg-background px-4 py-4 text-lg leading-7 outline-none placeholder:text-muted/60 focus:border-copper sm:h-14 sm:min-h-14 sm:resize-none sm:py-3 sm:text-lg sm:leading-7"
           />
           <button
             type="submit"
             disabled={asking || !query.trim()}
             className={cx(
               btn.quote,
-              "min-h-14 min-w-32 px-8 py-4 text-lg disabled:opacity-50 sm:min-h-28",
+              "min-h-14 min-w-32 px-8 py-4 text-lg disabled:opacity-50 sm:h-14 sm:min-h-14 sm:py-0",
             )}
           >
             {asking ? "Asking…" : "Ask"}
