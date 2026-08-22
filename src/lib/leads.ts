@@ -265,7 +265,7 @@ export async function sendInstantEstimateEmails(estimate: InstantEstimateMail) {
   const [shop, customer] = await Promise.all([
     sendShopMails({
       replyTo: estimate.to,
-      subject: `Lead: ${estimate.to}`,
+      subject: `LEAD: ${estimate.to}`,
       html: estimateLeadHtml(estimate),
     }),
     sendResendMail({

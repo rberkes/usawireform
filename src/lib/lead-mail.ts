@@ -275,9 +275,10 @@ export function estimateReceiptHtml(estimate: EstimateMailCopy) {
 export function estimateLeadHtml(estimate: EstimateMailCopy) {
   const email = escapeHtml(estimate.to);
   return shopLeadHtml({
-    heading: "New lead",
-    intro: `<p style="font-size:22px;line-height:1.3;margin:0"><a href="mailto:${email}" style="color:#0b6bcb;text-decoration:none">${email}</a></p>
-      <p style="margin:12px 0 0">They asked us to email themselves this estimate. Reply to this message to write them.</p>`,
+    heading: "LEAD",
+    intro: `<p style="margin:0 0 12px;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:#0b6bcb">Lead — follow up</p>
+      <p style="font-size:22px;line-height:1.3;margin:0"><a href="mailto:${email}" style="color:#0b6bcb;text-decoration:none">${email}</a></p>
+      <p style="margin:12px 0 0">This person asked us to email themselves an estimate. Reply to this message to write them.</p>`,
     hasPreview: false,
     rows: [
       {
