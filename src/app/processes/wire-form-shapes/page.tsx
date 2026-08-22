@@ -85,7 +85,7 @@ export default function WireFormShapesPage() {
       <h3>S</h3>
       <p>
         Two bends, opposite ways.{" "}
-        <Link href="/products/s-hooks">S-hooks</Link>. Eyes even or offset.
+        <Link href="/s-hooks">S-hooks</Link>. Eyes even or offset.
         Closed eyes when the print wants them to stay on a ring.
       </p>
 
@@ -93,14 +93,14 @@ export default function WireFormShapesPage() {
       <p>
         An open ring.{" "}
         <Link href="/products/hog-rings">Hog rings</Link>, powder-line{" "}
-        <Link href="/products/powder-coating-hooks">C-hooks</Link>, keepers.
+        <Link href="/c-hooks">C-hooks</Link>, keepers.
         Open gap and whether the ends are pointed.
       </p>
 
       <h3>V</h3>
       <p>
         Two legs, a tight crotch. Line{" "}
-        <Link href="/products/powder-coating-hooks">V-hooks</Link> and
+        <Link href="/v-hooks">V-hooks</Link> and
         simple saddles. Included angle and inside radius on the print.
       </p>
 

@@ -49,6 +49,17 @@ export async function generateMetadata({ params }: Props) {
       item.group,
       "custom wire form",
       STOCK,
+      ...(slug === "powder-coating-hooks"
+        ? [
+            "powder coating hooks",
+            "V-hooks",
+            "C-hooks",
+            "CV-hooks",
+            "S-hooks",
+            "90 degree hooks",
+          ]
+        : []),
+      ...(slug === "s-hooks" ? ["S-hooks", "powder coating S-hooks"] : []),
     ],
   });
 }
@@ -152,6 +163,20 @@ export default async function CatalogProductPage({ params }: Props) {
                 {phrase}
               </span>
             ))}
+            .
+          </p>
+        ) : null}
+        {slug === "powder-coating-hooks" ? (
+          <p>
+            Styles:{" "}
+            <TextLink href="/v-hooks">V-hooks</TextLink>,{" "}
+            <TextLink href="/c-hooks">C-hooks</TextLink>,{" "}
+            <TextLink href="/cv-hooks">CV-hooks</TextLink>,{" "}
+            <TextLink href="/s-hooks">S-hooks</TextLink>,{" "}
+            <TextLink href="/90-degree-hooks">90° hooks</TextLink>. Hub:{" "}
+            <TextLink href="/powder-coating-hooks">
+              powder coating hooks
+            </TextLink>
             .
           </p>
         ) : null}

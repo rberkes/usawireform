@@ -104,8 +104,8 @@ export default function PlatingPage() {
       <p>
         In-line means a conveyor: hang, wash / pretreat, dry, spray, cure.
         Not a batch booth for every job. Stock 3/8, 7/16, and 1/2 in frames,
-        hangers, grids, and baskets hang on{" "}
-        <Link href="/products/powder-coating-hooks">line hooks</Link> and
+        hangers, grids, and baskets         hang on{" "}
+        <Link href="/powder-coating-hooks">powder coating hooks</Link> and
         run. Color, gloss, and max film build belong on the quote.
       </p>
       <p>
@@ -161,7 +161,7 @@ export default function PlatingPage() {
           <Link href="/capabilities">Capabilities</Link> — what we run
         </li>
         <li>
-          <Link href="/products/powder-coating-hooks">Powder-coating hooks</Link>
+          <Link href="/powder-coating-hooks">Powder coating hooks</Link>
         </li>
         <li>
           <Link href="/processes/resistance-welding">Resistance welding</Link>

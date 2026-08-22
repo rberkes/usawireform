@@ -68,8 +68,8 @@ export default function IndustrialPage() {
             <TextLink href="/products/wire-racks">USA made wire racks</TextLink>
           </li>
           <li>
-            <TextLink href="/products/powder-coating-hooks">
-              Powder-coating hooks
+            <TextLink href="/powder-coating-hooks">
+              Powder coating hooks
             </TextLink>{" "}
             and{" "}
             <TextLink href="/products/j-hooks">J-hooks</TextLink>

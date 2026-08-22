@@ -8,7 +8,7 @@ const DEFAULT_QUESTION =
   "I have a part with 4 bends and its 14 inches long whats is the cost?";
 
 const EXAMPLES = [
-  "Can you form 3/8 in S-hooks?",
+  "Can you form 3/8 in powder coating V-hooks?",
   "What's the minimum order?",
   "How do you price a form?",
 ] as const;

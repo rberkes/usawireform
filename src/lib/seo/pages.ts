@@ -11,6 +11,7 @@ import { publishedProcesses } from "@/lib/processes";
 import { industries, shopLines } from "@/lib/site";
 import { US_STATES } from "@/lib/states";
 import { allPosts, postPath } from "@/lib/blog";
+import { V_HOOK_LANDERS } from "@/lib/v-hook-landers";
 
 export type SeoSection =
   | "home"
@@ -178,6 +179,135 @@ export const staticSeoPages: SeoRecord[] = [
       "custom wire baskets",
     ],
     priority: 0.8,
+  }),
+  record({
+    path: "/powder-coating-hooks",
+    title: "Powder Coating Hooks",
+    description:
+      "Powder coating hooks made in the USA: S-hooks, V-hooks, C-hooks, CV-hooks, 90° hooks, and custom heavy-duty wire hooks. CNC from coil in 4–14 mm. 100-piece minimum.",
+    section: "products",
+    keywords: [
+      "powder coating hooks",
+      "V-hooks",
+      "C-hooks",
+      "CV-hooks",
+      "S-hooks",
+      "90 degree hooks",
+      "custom powder coating hooks",
+    ],
+    priority: 0.9,
+  }),
+  record({
+    path: "/v-hooks",
+    title: "V-Hooks",
+    description:
+      "V-hooks for powder coating, paint, and finishing lines. CNC from coil in 4–14 mm. Stock 3/8, 7/16, and 1/2 in. Custom length and included angle.",
+    section: "products",
+    keywords: ["V-hooks", "powder coating V-hooks", "steel V-hooks"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/c-hooks",
+    title: "C-Hooks",
+    description:
+      "C-hooks for powder coating and finishing racks. Open C hang for load, unload, and clearance. CNC from coil in 4–14 mm.",
+    section: "products",
+    keywords: ["C-hooks", "powder coating C-hooks", "steel C-hooks"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/cv-hooks",
+    title: "CV-Hooks",
+    description:
+      "CV-hooks for powder coating lines: C clearance plus a V locate. CNC from coil in 4–14 mm. Custom CV and 90° CV.",
+    section: "products",
+    keywords: ["CV-hooks", "powder coating CV-hooks", "steel CV-hooks"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/s-hooks",
+    title: "S-Hooks",
+    description:
+      "S-hooks for powder coating, plant hang, and lift. CNC from coil in 4–14 mm. Stock 3/8, 7/16, and 1/2 in. Open or closed eyes.",
+    section: "products",
+    keywords: ["S-hooks", "powder coating S-hooks", "steel S-hooks"],
+    priority: 0.8,
+  }),
+  record({
+    path: "/90-degree-hooks",
+    title: "90 Degree Hooks",
+    description:
+      "90° powder coating hooks: 90 degree V-hooks, C-hooks, and CV-hooks. Rotate the hang for rack clearance. CNC from coil in 4–14 mm.",
+    section: "products",
+    keywords: [
+      "90 degree hooks",
+      "90° hooks",
+      "90 degree V-hooks",
+      "90 degree C-hooks",
+    ],
+    priority: 0.8,
+  }),
+  record({
+    path: "/custom-powder-coating-hooks",
+    title: "Custom Powder Coating Hooks",
+    description:
+      "Custom powder coating hooks: V-hooks, C-hooks, CV-hooks, S-hooks, and 90° hooks from coil. Length, openings, and wire size on the print. 4–14 mm. 100-piece minimum.",
+    section: "products",
+    keywords: [
+      "custom powder coating hooks",
+      "custom V-hooks",
+      "custom wire hooks",
+    ],
+    priority: 0.8,
+  }),
+  record({
+    path: "/stainless-steel-powder-coating-hooks",
+    title: "Stainless Steel Powder Coating Hooks",
+    description:
+      "Stainless steel powder coating hooks in 304 / 316: V-hooks, C-hooks, CV-hooks, S-hooks, and 90° hooks from coil. 4–14 mm. Corrosion-resistant finishing hooks.",
+    section: "products",
+    keywords: [
+      "stainless steel powder coating hooks",
+      "stainless steel V-hooks",
+      "stainless steel C-hooks",
+    ],
+    priority: 0.8,
+  }),
+  record({
+    path: "/guide/s-hooks-vs-v-hooks-vs-c-hooks",
+    title: "S-Hooks vs V-Hooks vs C-Hooks",
+    description:
+      "S-hooks vs V-hooks vs C-hooks for powder coating: which hook to use for hang stability, rack clearance, and line speed. CV-hooks and 90° hooks included.",
+    section: "processes",
+    keywords: [
+      "S-hooks vs V-hooks vs C-hooks",
+      "powder coating hook guide",
+      "which powder coating hook",
+    ],
+    priority: 0.8,
+  }),
+  ...V_HOOK_LANDERS.map((lander) =>
+    record({
+      path: lander.path,
+      title: lander.title,
+      description: lander.description,
+      section: "products" as const,
+      keywords: lander.keywords,
+      priority: lander.path === "/powder-coating-v-hooks" ? 0.9 : 0.8,
+    }),
+  ),
+  record({
+    path: "/custom-cnc-wire-forming-services",
+    title: "Custom CNC Wire Forming Services",
+    description: `${COMPANY} custom CNC wire forming services in 4–14 mm: your print, from coil, 2D and 3D on a Robomac 214TF. 100-piece minimum. Northeast Ohio.`,
+    section: "forming",
+    keywords: [
+      "custom CNC wire forming services",
+      "CNC wire forming services",
+      "custom wire forming",
+      "custom CNC wire forms",
+    ],
+    priority: 0.9,
   }),
   record({
     path: "/wire-forming-process",
@@ -647,13 +777,23 @@ function productPages(): SeoRecord[] {
         ? `${made.phrases[0]} in ${STOCK} wire. ${item.summary}`
         : `${item.title} in ${STOCK} wire. ${item.summary}`,
       section: "products" as const,
-      keywords: [
-        ...(made?.phrases ?? []),
-        item.title,
-        item.group,
-        "custom wire form",
-        STOCK,
-      ],
+        keywords: [
+          ...(made?.phrases ?? []),
+          item.title,
+          item.group,
+          "custom wire form",
+          STOCK,
+          ...(item.slug === "powder-coating-hooks"
+            ? [
+                "powder coating hooks",
+                "V-hooks",
+                "C-hooks",
+                "CV-hooks",
+                "S-hooks",
+                "90 degree hooks",
+              ]
+            : []),
+        ],
       priority: 0.7,
     });
   });

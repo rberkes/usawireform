@@ -196,6 +196,91 @@ export default function SiteMapPage() {
               body: "Your print, 4–14 mm from coil.",
             },
             {
+              href: "/custom-cnc-wire-forming-services",
+              title: "Custom CNC wire forming services",
+              body: "2D and 3D CNC from coil. 100-piece minimum.",
+            },
+            {
+              href: "/powder-coating-hooks",
+              title: "Powder coating hooks",
+              body: "S, V, C, CV, and 90° hooks from coil. Heavy 4–14 mm.",
+            },
+            {
+              href: "/powder-coating-v-hooks",
+              title: "Powder coating V-hooks",
+              body: "Wash, coat, cure, paint, e-coat. Live builder.",
+            },
+            {
+              href: "/375-v-hooks",
+              title: '.375" V-hooks',
+              body: "3/8 in stock. Custom length from coil.",
+            },
+            {
+              href: "/steel-v-hooks",
+              title: "Steel V-hooks",
+              body: "1018 and galvanized finishing V-hooks.",
+            },
+            {
+              href: "/stainless-steel-v-hooks",
+              title: "Stainless steel V-hooks",
+              body: "304 / 316 wash-line V-hooks.",
+            },
+            {
+              href: "/90-degree-v-hooks",
+              title: "90° V-hooks",
+              body: "Rotated hang for rack clearance.",
+            },
+            {
+              href: "/heavy-duty-v-hooks",
+              title: "Heavy-duty V-hooks",
+              body: "3/8, 7/16, 1/2 in. Not catalog 0.120 in.",
+            },
+            {
+              href: "/custom-v-hooks",
+              title: "Custom V-hooks",
+              body: "Builder: length, leg ID, live estimate.",
+            },
+            {
+              href: "/v-hooks",
+              title: "V-hooks",
+              body: "Centered hang for powder coating and paint lines.",
+            },
+            {
+              href: "/c-hooks",
+              title: "C-hooks",
+              body: "Open C hang for rack clearance and fast load.",
+            },
+            {
+              href: "/cv-hooks",
+              title: "CV-hooks",
+              body: "C clearance plus a V locate on one form.",
+            },
+            {
+              href: "/s-hooks",
+              title: "S-hooks",
+              body: "Powder coating and plant S-hooks from coil.",
+            },
+            {
+              href: "/90-degree-hooks",
+              title: "90 degree hooks",
+              body: "90° V, C, and CV for tight racks.",
+            },
+            {
+              href: "/custom-powder-coating-hooks",
+              title: "Custom powder coating hooks",
+              body: "Your length, openings, and wire size.",
+            },
+            {
+              href: "/stainless-steel-powder-coating-hooks",
+              title: "Stainless steel powder coating hooks",
+              body: "304 / 316 finishing hooks from coil.",
+            },
+            {
+              href: "/guide/s-hooks-vs-v-hooks-vs-c-hooks",
+              title: "S-hooks vs V-hooks vs C-hooks",
+              body: "Which powder coating hook to use.",
+            },
+            {
               href: "/wire-forming-process",
               title: "Wire forming process",
               body: "Straighten, CNC, cut, weld, inspect.",

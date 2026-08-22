@@ -36,6 +36,11 @@ export function organizationJsonLd() {
           "wire forming directory",
           "CNC wire forming machines",
           "coil steel",
+          "powder coating hooks",
+          "V-hooks",
+          "C-hooks",
+          "CV-hooks",
+          "S-hooks",
         ],
       },
       {

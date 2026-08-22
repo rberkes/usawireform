@@ -34,6 +34,10 @@ const organizationJsonLd = {
         name: "Hooks and Rings",
         itemListElement: [
           { "@type": "Offer", itemOffered: { "@type": "Product", name: "S-hooks" } },
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "V-hooks" } },
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "C-hooks" } },
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "CV-hooks" } },
+          { "@type": "Offer", itemOffered: { "@type": "Product", name: "Powder coating hooks" } },
           { "@type": "Offer", itemOffered: { "@type": "Product", name: "D-rings" } },
           { "@type": "Offer", itemOffered: { "@type": "Product", name: "J-hooks" } },
         ],

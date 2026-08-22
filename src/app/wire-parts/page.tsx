@@ -30,9 +30,9 @@ const families = [
     body: "Closed D-rings in stock coil for strap, frame, and construction hardware.",
   },
   {
-    href: "/products/s-hooks",
-    title: "Wire hooks",
-    body: "S, J, lift, gate, display, and powder-line hooks in stock coil.",
+    href: "/powder-coating-hooks",
+    title: "Powder coating hooks",
+    body: "S, V, C, CV, and 90° line hooks in stock coil — not 9-gauge catalog wire.",
   },
   {
     href: "/products/heavy-duty-wire-baskets",

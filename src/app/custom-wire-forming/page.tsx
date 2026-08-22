@@ -66,6 +66,14 @@ export default function CustomWireFormingPage() {
       <h2 id="next">Related</h2>
       <ul>
         <li>
+          <Link href="/custom-cnc-wire-forming-services">
+            Custom CNC wire forming services
+          </Link>
+        </li>
+        <li>
+          <Link href="/powder-coating-hooks">Powder coating hooks</Link>
+        </li>
+        <li>
           <Link href="/wire-forming-manufacturers">Wire forming manufacturers</Link>
         </li>
         <li>

@@ -211,17 +211,17 @@ export const catalog: CatalogItem[] = [
     title: "Powder-coating hooks",
     group: "Hooks and rings",
     summary:
-      "C, S, V, and CV line hooks in 3/8, 7/16, and 1/2 in for hanging parts through a coating line.",
-    lede: "Hooks that carry a part through powder. Stock coil, custom length and angle — not a bag of 9-gauge C-hooks.",
+      "C, S, V, and CV powder coating hooks in 3/8, 7/16, and 1/2 in for hanging parts through a coating line.",
+    lede: "Powder coating hooks that carry a part through wash, coat, and cure. Stock coil, custom length and angle — not a bag of 9-gauge C-hooks.",
     body: [
-      "C, S, V, and CV hooks are 2D CNC from 3/8, 7/16, or 1/2 in. Length, opening, and point geometry are the print. Bright or mill going into a booth; we also hang our own forms on the in-line powder line — see plating and coating.",
-      "Light line hooks under 4 mm are a different cell. This directory is the heavy hangers.",
+      "Powder coating hooks in this shop are C-hooks, S-hooks, V-hooks, CV-hooks, and 90° hooks, 2D CNC from 3/8, 7/16, or 1/2 in. Length, opening, and point geometry are the print. Bright or mill going into a booth; we also hang our own forms on the in-line powder line — see plating and coating.",
+      "Steel powder coating hooks for everyday lines. Stainless steel powder coating hooks in 304 / 316 when the washer eats carbon. Light line hooks under 4 mm are a different cell. This directory is the heavy hangers.",
     ],
     jobs: [
       "C-hooks for wide parts",
       "S-hooks for line loading",
       "V-hooks for a settled hang",
-      "CV-hooks, mixed opening",
+      "CV-hooks and 90° hooks, mixed opening",
     ],
     quote: "Have a line-hook style and a wire size?",
     processHref: "/processes/2d-cnc-wire-forming",

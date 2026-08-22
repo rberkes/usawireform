@@ -78,6 +78,23 @@ const searchItems: SearchItem[] = [
   { title: "Wire Forming Manufacturers", href: "/wire-forming-manufacturers", category: "Pages", description: "U.S. wire forming manufacturer in Northeast Ohio." },
   { title: "Wire Forming Companies Near Me", href: "/wire-forming-companies-near-me", category: "Locations", description: "ZIP lookup to your state page. One cell in Northeast Ohio." },
   { title: "Custom Wire Forming", href: "/custom-wire-forming", category: "Pages", description: "Custom 4–14 mm CNC from coil. 100-piece minimum." },
+  { title: "Custom CNC Wire Forming Services", href: "/custom-cnc-wire-forming-services", category: "Pages", description: "Your print, from coil, 2D and 3D CNC. 100-piece minimum. Northeast Ohio." },
+  { title: "Powder Coating Hooks", href: "/powder-coating-hooks", category: "Products", description: "S, V, C, CV, and 90° hooks from coil. Heavy 4–14 mm. 100-piece minimum." },
+  { title: "Powder Coating V-Hooks", href: "/powder-coating-v-hooks", category: "Products", description: "V-hooks for wash, coat, cure, paint, and e-coat. Live builder. 4–14 mm." },
+  { title: '.375" V-Hooks', href: "/375-v-hooks", category: "Products", description: "3/8 in stock V-hooks. Custom length from coil." },
+  { title: "Steel V-Hooks", href: "/steel-v-hooks", category: "Products", description: "1018 and galvanized V-hooks for finishing lines." },
+  { title: "Stainless Steel V-Hooks", href: "/stainless-steel-v-hooks", category: "Products", description: "304 / 316 V-hooks for corrosive wash." },
+  { title: "90° V-Hooks", href: "/90-degree-v-hooks", category: "Products", description: "Rotated V-hooks for rack clearance." },
+  { title: "Heavy-Duty V-Hooks", href: "/heavy-duty-v-hooks", category: "Products", description: "3/8, 7/16, and 1/2 in V-hooks. Not catalog 0.120 in." },
+  { title: "Custom V-Hooks", href: "/custom-v-hooks", category: "Products", description: "Custom V-hooks. Live estimate from length and leg ID." },
+  { title: "V-Hooks", href: "/v-hooks", category: "Products", description: "Powder coating V-hooks. Centered hang from coil in 4–14 mm." },
+  { title: "C-Hooks", href: "/c-hooks", category: "Products", description: "Powder coating C-hooks. Open hang for rack clearance." },
+  { title: "CV-Hooks", href: "/cv-hooks", category: "Products", description: "Powder coating CV-hooks. C clearance plus a V locate." },
+  { title: "S-Hooks", href: "/s-hooks", category: "Products", description: "Powder coating and plant S-hooks from coil in 4–14 mm." },
+  { title: "90 Degree Hooks", href: "/90-degree-hooks", category: "Products", description: "90° V, C, and CV powder coating hooks." },
+  { title: "Custom Powder Coating Hooks", href: "/custom-powder-coating-hooks", category: "Products", description: "Custom V, C, CV, S, and 90° hooks from coil." },
+  { title: "Stainless Steel Powder Coating Hooks", href: "/stainless-steel-powder-coating-hooks", category: "Products", description: "304 / 316 finishing hooks from coil." },
+  { title: "S-Hooks vs V-Hooks vs C-Hooks", href: "/guide/s-hooks-vs-v-hooks-vs-c-hooks", category: "Resources", description: "Which powder coating hook to use on the line." },
   { title: "Wire Forming Process", href: "/wire-forming-process", category: "Processes", description: "Straighten, CNC bend, cut-to-length, weld, inspect." },
   { title: "Steel Wire Manufacturers in the USA", href: "/steel-wire-manufacturers-in-usa", category: "Pages", description: "We form U.S. coil. We are not a mill." },
   { title: "Stainless Steel Wire Basket", href: "/stainless-steel-wire-basket", category: "Products", description: "304 / 316 wet service. 330 for heat-treat baskets." },
@@ -393,7 +410,7 @@ export function SearchDialog({
             </ul>
           ) : (
             <div className="px-4 py-8 text-center text-sm text-muted">
-              Search products, or ask: can you form 3/8 in S-hooks?
+              Search products, or ask: can you form 3/8 in powder coating V-hooks?
             </div>
           )}
         </div>
