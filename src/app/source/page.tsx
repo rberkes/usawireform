@@ -30,8 +30,8 @@ export const metadata = pageMeta({
 const STEPS = [
   {
     n: "01",
-    title: "Send the print",
-    body: "Wire size, 2D or 3D, city. Brand if it matters. That is the match — not a company blurb.",
+    title: "Pick the cell, then the wire size",
+    body: "Spring, 2D CNC, 3D CNC, fourslide, or multi-slide. Then millimetres or inches. That is the match — not a company blurb.",
   },
   {
     n: "02",
@@ -55,7 +55,7 @@ export default async function SourcePage() {
           large
           kicker="Find a shop"
           title="We send your print only to shops that can run it."
-          lede="Enter wire size, 2D or 3D, and city. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs."
+          lede="Pick the cell — spring, 2D CNC, 3D CNC, fourslide, or multi-slide — then the wire size. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs."
         >
           <ButtonLink
             href="#job"

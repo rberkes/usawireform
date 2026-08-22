@@ -1,6 +1,6 @@
 import { generateText, jsonSchema, Output } from "ai";
 import { SOURCE_OEM_NAMES } from "@/lib/source-iron";
-import { SOURCE_KINDS } from "@/lib/source-types";
+import { SOURCE_JOB_CLASSES, isSourceJobClass } from "@/lib/source-types";
 import { parseWireMm, roundMm, type SourceJobSpec } from "@/lib/source-match";
 
 export type ParsedBuyerJob = {
@@ -37,7 +37,7 @@ function cleanKind(value: string) {
   const trimmed = value.trim();
   if (!trimmed || /^any$/i.test(trimmed)) return "";
   if (trimmed === "Other") return "";
-  return (SOURCE_KINDS as readonly string[]).includes(trimmed) ? trimmed : "";
+  return isSourceJobClass(trimmed) ? trimmed : "";
 }
 
 async function extractJobWithAi(text: string): Promise<AiFields | null> {
@@ -60,7 +60,7 @@ async function extractJobWithAi(text: string): Promise<AiFields | null> {
         }),
       }),
       system: `Extract a wire-forming RFQ. Do not name shops or invent capacity.
-kind must be one of: ${SOURCE_KINDS.join(", ")} — or null.
+kind must be one of: ${SOURCE_JOB_CLASSES.map((row) => row.kind).join(", ")} — or null. Spring / coiler = Spring CNC. Bihler / verti-slide = Multi-slide. Cut-to-length = 2D CNC.
 oem must be one of: ${SOURCE_OEM_NAMES.filter((name) => name !== "Other").join(", ")} — or null. Robomac/FTX/FRX = Numalliance. BM/BMU/FUL/FMU = WAFIOS. AFM/AFC/AFE/Gemini = AIM Inc.
 diameterMm: convert inches to millimetres (3/8 in = 9.525). Null if unknown.
 state: US state name or 2-letter code if present. Null if unknown.`,

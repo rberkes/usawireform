@@ -32,7 +32,7 @@ import {
   sourceClaimable,
   sourceClaimPath,
 } from "@/lib/source-directory";
-import type { SourcePublicMatch } from "@/lib/source-types";
+import { isSourceJobClass, type SourcePublicMatch } from "@/lib/source-types";
 import {
   applyProfilesToFilings,
   findSourceProfileBySlug,
@@ -682,6 +682,12 @@ export async function submitSourceJob(
   if (!isValidEmail(email)) {
     return { success: false, message: "Enter a valid email." };
   }
+  if (!isSourceJobClass(kind)) {
+    return {
+      success: false,
+      message: "Pick the cell: spring, 2D CNC, 3D CNC, fourslide, or multi-slide.",
+    };
+  }
   if (!diameterRaw && !notes) {
     return {
       success: false,
@@ -702,6 +708,12 @@ export async function submitSourceJob(
     return {
       success: false,
       message: "Could not read a wire diameter. Use mm or inches (8 mm, 3/8 in).",
+    };
+  }
+  if (!isSourceJobClass(parsed.spec.kind)) {
+    return {
+      success: false,
+      message: "Pick the cell: spring, 2D CNC, 3D CNC, fourslide, or multi-slide.",
     };
   }
 

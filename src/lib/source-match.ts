@@ -48,8 +48,8 @@ export type SourceJobSpec = {
 function kindMatches(jobKind: string, machineKind: string) {
   const job = jobKind.trim();
   const cell = machineKind.trim();
-  if (!job || job === "Other" || job === "Any") return true;
-  if (!cell || cell === "Other") return true;
+  if (!job || job === "Other" || job === "Any") return false;
+  if (!cell || cell === "Other") return false;
   return job === cell;
 }
 
@@ -116,7 +116,7 @@ export function matchFilingsToJob(
         oemScore(job.oem, machine.oem) +
         localeScore(job, city, filing.state) +
         tightnessScore(job.diameterMm, min, max);
-      const why = `${job.diameterMm} mm sits in ${machine.oem} ${machine.model} · ${machine.minMm}–${machine.maxMm} mm`;
+      const why = `${machine.kind} · ${job.diameterMm} mm sits in ${machine.oem} ${machine.model} · ${machine.minMm}–${machine.maxMm} mm`;
       const row: SourceInternalMatch & { score: number } = {
         company: filing.company,
         email: filing.email,

@@ -7,7 +7,7 @@ import {
 } from "@/app/actions/source";
 import { Button, fieldClass, Panel } from "@/components/ui";
 import { SOURCE_OEM_NAMES } from "@/lib/source-iron";
-import { SOURCE_KINDS } from "@/lib/source-types";
+import { SOURCE_JOB_CLASSES } from "@/lib/source-types";
 
 const initial: SourceFormState = { success: false, message: "" };
 
@@ -16,6 +16,38 @@ export function SourceJobForm() {
 
   return (
     <form action={action} className="space-y-6">
+      <Panel className="space-y-4 p-4 sm:p-5">
+        <fieldset>
+          <legend className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
+            What should run this job?
+          </legend>
+          <p className="mt-3 text-sm leading-6 text-muted">
+            Pick the cell first. We match shops that filed that iron and a
+            wire band that fits — not a shop that says they form wire.
+          </p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+            {SOURCE_JOB_CLASSES.map((row) => (
+              <label
+                key={row.kind}
+                className="flex cursor-pointer flex-col border border-line bg-background px-3 py-3 has-[:checked]:border-copper has-[:checked]:bg-inset"
+              >
+                <input
+                  type="radio"
+                  name="kind"
+                  value={row.kind}
+                  required
+                  className="sr-only"
+                />
+                <span className="text-sm font-medium">{row.label}</span>
+                <span className="mt-1 text-xs leading-5 text-muted">
+                  {row.hint}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </Panel>
+
       <Panel className="space-y-4 p-4 sm:p-5">
         <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
           Buyer
@@ -75,9 +107,9 @@ export function SourceJobForm() {
           The print
         </p>
         <p className="text-sm leading-6 text-muted">
-          Wire size is the match key — same bands shops file from the OEM
-          catalogs. Notes can be plain language; we read inches, 2D vs 3D, and
-          brand into those fields. We do not let a model pick the shop.
+          Wire size is the second match key. Notes can be plain language. We
+          do not let a model pick the shop. Mesh and this floor’s Robomac
+          estimate are not this form.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
@@ -86,6 +118,7 @@ export function SourceJobForm() {
               className={`mt-1.5 ${fieldClass}`}
               name="diameter"
               placeholder="8 mm or 3/8 in"
+              required
             />
           </label>
           <label className="block text-sm">
@@ -98,36 +131,23 @@ export function SourceJobForm() {
             />
           </label>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block text-sm">
-            Type
-            <select className={`mt-1.5 ${fieldClass}`} name="kind" defaultValue="">
-              <option value="">Any</option>
-              {SOURCE_KINDS.map((kind) => (
-                <option key={kind} value={kind}>
-                  {kind}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="block text-sm">
-            OEM if it matters
-            <select className={`mt-1.5 ${fieldClass}`} name="oem" defaultValue="">
-              <option value="">Any</option>
-              {SOURCE_OEM_NAMES.filter((name) => name !== "Other").map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+        <label className="block text-sm">
+          OEM if it matters
+          <select className={`mt-1.5 ${fieldClass}`} name="oem" defaultValue="">
+            <option value="">Any</option>
+            {SOURCE_OEM_NAMES.filter((name) => name !== "Other").map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className="block text-sm">
           Notes
           <textarea
             className={`${fieldClass} mt-1.5 min-h-24`}
             name="notes"
-            placeholder="3/8 3D V-hook, 5k pcs, Midwest. Robomac class if you have it."
+            placeholder="3/8 3D V-hook, 5k pcs, Midwest."
           />
         </label>
       </Panel>

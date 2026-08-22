@@ -9,6 +9,41 @@ export const SOURCE_KINDS = [
 
 export type SourceKind = (typeof SOURCE_KINDS)[number];
 
+/** Buyer must pick one. Maps 1:1 to the kind shops file on a cell. */
+export const SOURCE_JOB_CLASSES = [
+  {
+    kind: "Spring CNC",
+    label: "Spring",
+    hint: "Compression, extension, torsion. CNC or mechanical coiler. Not hot-wound rail coil.",
+  },
+  {
+    kind: "2D CNC",
+    label: "2D CNC",
+    hint: "Bends in one plane. Tables, 2D benders, cut-to-length.",
+  },
+  {
+    kind: "3D CNC",
+    label: "3D CNC",
+    hint: "Spatial forms from coil or bar. Hooks, frames, baskets.",
+  },
+  {
+    kind: "Fourslide",
+    label: "Fourslide",
+    hint: "Cam four-slide. Volume wire forms and light stampings.",
+  },
+  {
+    kind: "Multi-slide",
+    label: "Multi-slide",
+    hint: "Multi-slide, verti-slide, Bihler. More stations than fourslide.",
+  },
+] as const;
+
+export type SourceJobClassKind = (typeof SOURCE_JOB_CLASSES)[number]["kind"];
+
+export function isSourceJobClass(value: string): value is SourceJobClassKind {
+  return SOURCE_JOB_CLASSES.some((row) => row.kind === value);
+}
+
 export type SourceMachine = {
   oem: string;
   model: string;
