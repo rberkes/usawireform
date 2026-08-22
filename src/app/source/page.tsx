@@ -161,21 +161,25 @@ export default async function SourcePage() {
         ) : (
           <ul className="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
             {newest.map((shop) => (
-              <li key={shop.slug} className="bg-background px-5 py-6">
-                {shop.logoUrl ? (
-                  <img
-                    src={shop.logoUrl}
-                    alt=""
-                    className="mb-4 h-10 w-auto max-w-[8rem] object-contain"
-                  />
-                ) : null}
-                <Link
-                  href={`/directory/${shop.slug}`}
-                  className="font-medium hover:text-copper"
-                >
-                  {shop.name}
-                </Link>
-                <p className="mt-1 text-sm text-muted">{shop.location}</p>
+              <li key={shop.slug} className="flex items-center gap-4 bg-background px-5 py-5">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center border border-line bg-inset">
+                  {shop.logoUrl ? (
+                    <img
+                      src={shop.logoUrl}
+                      alt=""
+                      className="max-h-12 max-w-12 object-contain"
+                    />
+                  ) : null}
+                </div>
+                <div className="min-w-0">
+                  <Link
+                    href={`/directory/${shop.slug}`}
+                    className="font-medium hover:text-copper"
+                  >
+                    {shop.name}
+                  </Link>
+                  <p className="mt-1 text-sm text-muted">{shop.location}</p>
+                </div>
               </li>
             ))}
           </ul>
