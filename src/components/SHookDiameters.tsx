@@ -1,12 +1,8 @@
+"use client";
+
 import { cx } from "@/lib/cx";
 import { WIRE } from "@/lib/range";
-import { S_HOOK_SVG } from "@/lib/wire-geometry";
-
-/**
- * Formed S-hook centerline: two opposite ~240° eyes and a short shank.
- * Reads as a letter S — top opening right, bottom opening left.
- */
-export const S_HOOK_PATH = S_HOOK_SVG;
+import { StepCanvas } from "./StepCanvas";
 
 const SIZES = [
   {
@@ -32,7 +28,16 @@ export function SHookDiameters({ className }: { className?: string }) {
       <div className="grid gap-px bg-line sm:grid-cols-3">
         {SIZES.map((size) => (
           <figure key={size.mm} className="bg-background">
-            <SHookWire mm={size.mm} />
+            <StepCanvas
+              source={{
+                type: "wire",
+                id: "s-hooks",
+                diameterIn: size.mm / 25.4,
+                finish: "carbon",
+              }}
+              autoRotate
+              className="relative h-52 w-full overflow-hidden bg-inset sm:h-56"
+            />
             <figcaption className="border-t border-line px-5 py-4">
               <p className="font-mono text-[11px] tracking-widest text-muted uppercase">
                 Ø {size.mm} mm
@@ -44,38 +49,8 @@ export function SHookDiameters({ className }: { className?: string }) {
         ))}
       </div>
       <p className="border-t border-line px-5 py-3 font-mono text-[11px] tracking-widest text-muted uppercase">
-        Same centerline · stroke is the wire
+        Same form · 4, 9, and 14 mm · drag to orbit
       </p>
     </div>
-  );
-}
-
-function SHookWire({ mm }: { mm: number }) {
-  const gid = `s-hook-${mm}mm`;
-
-  return (
-    <svg
-      viewBox="0 0 160 124"
-      className="h-auto w-full overflow-visible p-6 sm:p-8"
-      fill="none"
-      role="img"
-      aria-label={`S-hook formed from ${mm} millimeter wire`}
-    >
-      <defs>
-        <linearGradient id={gid} x1="8%" y1="0%" x2="92%" y2="100%">
-          <stop offset="0%" stopColor="#eceeef" />
-          <stop offset="38%" stopColor="#b4bac0" />
-          <stop offset="72%" stopColor="#7c848c" />
-          <stop offset="100%" stopColor="#4a5158" />
-        </linearGradient>
-      </defs>
-      <path
-        d={S_HOOK_PATH}
-        stroke={`url(#${gid})`}
-        strokeWidth={mm}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }

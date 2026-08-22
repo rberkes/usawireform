@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { cx } from "@/lib/cx";
-import { S_HOOK_PATH } from "./SHookDiameters";
+import { S_HOOK_SVG as S_HOOK_PATH } from "@/lib/wire-geometry";
 
 /** Shop-drawing of a formed-wire part. Same stroke language as the brand mark. */
 export function ProductForm({
