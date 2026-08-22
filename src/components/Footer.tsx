@@ -60,6 +60,7 @@ const shop = [
   { href: "/videos", label: "Videos" },
   { href: "/blog", label: "Blog" },
   { href: "/instant-quote", label: "Instant quote" },
+  { href: "/source", label: "Source — equipment & jobs" },
   { href: "/quoting", label: "Tooling & coil" },
   { href: "/about", label: "About" },
   { href: "/cleveland", label: "Northeast Ohio" },

@@ -62,7 +62,7 @@ export function blobErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Blob store failed.";
 }
 
-const ADMIN_PREFIXES = ["quotes/", "quick-quotes/", "leads/", "careers/", "resumes/"];
+const ADMIN_PREFIXES = ["quotes/", "quick-quotes/", "leads/", "careers/", "resumes/", "source/"];
 
 export function isAdminBlobPath(path: string) {
   return Boolean(path) && !path.includes("..") && ADMIN_PREFIXES.some((p) => path.startsWith(p));

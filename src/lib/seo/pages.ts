@@ -529,6 +529,29 @@ export const staticSeoPages: SeoRecord[] = [
     ],
   }),
   record({
+    path: "/source",
+    title: "Source — Equipment and Jobs",
+    description:
+      "Source wire forming jobs by the iron on the floor. Shops file OEM, 2D or 3D, and wire band. Buyers ask shops whose cells can run the print.",
+    section: "company",
+    keywords: [
+      "wire forming capacity",
+      "CNC equipment list",
+      "wire forming RFQ",
+      "source jobs",
+    ],
+    priority: 0.8,
+  }),
+  record({
+    path: "/source/equipment",
+    title: "Upload Equipment List — Source",
+    description:
+      "Register the shop and upload CNC cells: OEM, model, 2D or 3D, min and max mm, city. Source matches jobs to that list.",
+    section: "company",
+    keywords: ["upload equipment list", "CNC machine list", "wire forming capacity"],
+    priority: 0.7,
+  }),
+  record({
     path: "/secondary-operations",
     title: "Secondary Operations",
     description:

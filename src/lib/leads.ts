@@ -4,9 +4,12 @@ import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
 import {
   customerThanksHtml,
+  escapeHtml,
   estimateLeadHtml,
   estimateReceiptHtml,
   shopLeadHtml,
+  sourceFiledReceiptHtml,
+  sourceInviteHtml,
   type EstimateMailCopy,
   type MailRow,
 } from "@/lib/lead-mail";
@@ -282,6 +285,109 @@ export async function sendInstantEstimateEmails(estimate: InstantEstimateMail) {
     notify: shopNotifyEmails(),
   });
   return shop && customer;
+}
+
+export async function sendSourceInviteEmails({
+  to,
+  company,
+  href,
+}: {
+  to: string;
+  company?: string;
+  href: string;
+}) {
+  const shopName = company?.trim() || to;
+  const safeTo = escapeHtml(to);
+  const safeCompany = company ? escapeHtml(company) : "";
+  const safeHref = escapeHtml(href);
+  const [shop, invite] = await Promise.all([
+    sendLeadEmail({
+      replyTo: to,
+      heading: "LEAD — Source invite sent",
+      subject: `LEAD: Source invite — ${shopName}`,
+      html: `<p>Invite sent to <a href="mailto:${safeTo}">${safeTo}</a>${
+        safeCompany ? ` (${safeCompany})` : ""
+      }.</p>
+        <p>They register and upload equipment from this link:<br />
+        <a href="${safeHref}">${safeHref}</a></p>`,
+    }),
+    sendResendMail({
+      to,
+      replyTo: QUOTE_EMAIL,
+      subject: `Invite: file your equipment — ${COMPANY} Source`,
+      html: sourceInviteHtml({ company, href }),
+    }),
+  ]);
+  console.log("[Source invite mail]", { to, company, shop, invite });
+  return shop && invite;
+}
+
+export async function sendSourceFilingEmails({
+  to,
+  company,
+  name,
+  phone,
+  city,
+  state,
+  website,
+  machines,
+  notes,
+  fileName,
+}: {
+  to: string;
+  company: string;
+  name?: string;
+  phone?: string;
+  city?: string;
+  state?: string;
+  website?: string;
+  machines: Array<{
+    oem: string;
+    model: string;
+    kind: string;
+    minMm: string;
+    maxMm: string;
+    city: string;
+  }>;
+  notes?: string;
+  fileName?: string;
+}) {
+  const cells = machines
+    .map(
+      (row) =>
+        `${escapeHtml(row.oem)} ${escapeHtml(row.model)} · ${escapeHtml(row.kind)} · ${escapeHtml(row.minMm)}–${escapeHtml(row.maxMm)} mm${
+          row.city ? ` · ${escapeHtml(row.city)}` : ""
+        }`,
+    )
+    .join("<br />");
+  const shopLabel = escapeHtml(company || "Shop");
+  const safeTo = escapeHtml(to);
+  const [shop, receipt] = await Promise.all([
+    sendLeadEmail({
+      replyTo: to,
+      heading: "LEAD — equipment list",
+      subject: `LEAD: equipment list — ${company || to}`,
+      html: `<p><strong>${shopLabel}</strong> filed equipment on Source.</p>
+        <p>Email: <a href="mailto:${safeTo}">${safeTo}</a>${name ? ` · ${escapeHtml(name)}` : ""}</p>
+        ${phone ? `<p>Phone: ${escapeHtml(phone)}</p>` : ""}
+        ${city || state ? `<p>Locale: ${escapeHtml([city, state].filter(Boolean).join(", "))}</p>` : ""}
+        ${website ? `<p>Site: ${escapeHtml(website)}</p>` : ""}
+        <p>${cells || "No machine rows — see attached list if any."}</p>
+        ${fileName ? `<p>File: ${escapeHtml(fileName)}</p>` : ""}
+        ${notes ? `<p>Notes: ${escapeHtml(notes)}</p>` : ""}`,
+    }),
+    sendResendMail({
+      to,
+      replyTo: QUOTE_EMAIL,
+      subject: `Receipt: your equipment list — ${COMPANY} Source`,
+      html: sourceFiledReceiptHtml({
+        company,
+        machineCount: machines.length,
+      }),
+    }),
+  ]);
+  console.log("[Source filing mail]", { to, company, shop, receipt });
+  return shop && receipt;
 }
 
 export async function storeDirectoryLead(lead: DirectoryLeadRecord) {

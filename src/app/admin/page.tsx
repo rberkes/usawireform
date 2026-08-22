@@ -3,6 +3,7 @@ import { isAdmin } from "./actions";
 import { AdminLogin } from "./login-form";
 import { listQuoteSubmissions } from "@/lib/quotes";
 import { countDirectoryLeads } from "@/lib/leads";
+import { countSourceFilings } from "@/lib/source";
 import { AdminStepPreview } from "@/components/UploadedDrawingPreview";
 import { AdminInboxNav } from "@/components/AdminInboxNav";
 import { Page, PageHero } from "@/components/ui";
@@ -36,9 +37,10 @@ export default async function AdminQuotesPage({
     return <AdminLogin next="/admin" error={error} title="Quote files" />;
   }
 
-  const [rows, directoryCount] = await Promise.all([
+  const [rows, directoryCount, sourceCount] = await Promise.all([
     listQuoteSubmissions(),
     countDirectoryLeads(),
+    countSourceFilings(),
   ]);
 
   return (
@@ -52,6 +54,7 @@ export default async function AdminQuotesPage({
         current="quotes"
         quoteCount={rows.length}
         directoryCount={directoryCount}
+        sourceCount={sourceCount}
       />
       {rows.length === 0 ? (
         <p className="mt-8 max-w-xl text-sm leading-6 text-muted">

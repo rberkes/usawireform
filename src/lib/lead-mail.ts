@@ -320,3 +320,46 @@ export function estimateLeadHtml(estimate: EstimateMailCopy) {
     ],
   });
 }
+
+export function sourceInviteHtml({
+  company,
+  href,
+}: {
+  company?: string;
+  href: string;
+}) {
+  const who = company?.trim()
+    ? `We are asking ${escapeHtml(company.trim())} to file the equipment on the floor.`
+    : "We are asking you to file the equipment on the floor.";
+  return shell(
+    "File your equipment so jobs that fit your cells can reach you.",
+    `${kickerRow()}
+     ${headingRow("You're invited to Source")}
+     ${copyRow(`${who} Jobs on Source match by machine — diameter, 2D or 3D, OEM, locale — not by a directory blurb.`)}
+     ${copyRow("Register the shop and upload the list. One row per cell: OEM, model, 2D or 3D, wire min and max, city.")}
+     ${ctaButtonRow(
+       href,
+       "Register and upload equipment",
+       "Opens the Source equipment form. Use the email this invite was sent to.",
+     )}`,
+  );
+}
+
+export function sourceFiledReceiptHtml({
+  company,
+  machineCount,
+}: {
+  company?: string;
+  machineCount: number;
+}) {
+  const who = company?.trim() ? escapeHtml(company.trim()) : "your shop";
+  const n =
+    machineCount === 1 ? "1 cell" : `${machineCount.toLocaleString("en-US")} cells`;
+  return shell(
+    "We have your equipment list.",
+    `${kickerRow()}
+     ${headingRow("We have your equipment list")}
+     ${copyRow(`Thank you. ${who} is on Source with ${n}. Jobs that fit those cells can be sent to you to quote.`)}
+     ${copyRow(`<span style="color:#5c5c5c">This is not a floor walk. You named the iron. Reply if a cell sold or a new head came in.</span>`)}`,
+  );
+}

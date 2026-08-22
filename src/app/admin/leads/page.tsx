@@ -2,6 +2,7 @@ import { isAdmin } from "../actions";
 import { AdminLogin } from "../login-form";
 import { listDirectoryLeadRows } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
+import { countSourceFilings } from "@/lib/source";
 import { AdminInboxNav } from "@/components/AdminInboxNav";
 import { Page, PageHero } from "@/components/ui";
 
@@ -25,9 +26,10 @@ export default async function AdminLeadsPage({
     );
   }
 
-  const [rows, quoteCount] = await Promise.all([
+  const [rows, quoteCount, sourceCount] = await Promise.all([
     listDirectoryLeadRows(),
     countQuoteSubmissions(),
+    countSourceFilings(),
   ]);
 
   return (
@@ -41,6 +43,7 @@ export default async function AdminLeadsPage({
         current="directory"
         quoteCount={quoteCount}
         directoryCount={rows.length}
+        sourceCount={sourceCount}
       />
       {rows.length === 0 ? (
         <p className="mt-8 max-w-xl text-sm leading-6 text-muted">

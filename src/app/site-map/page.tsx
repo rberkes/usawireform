@@ -59,6 +59,11 @@ export default function SiteMapPage() {
               body: "Robomac 214TF and the floor list.",
             },
             {
+              href: "/source",
+              title: "Source",
+              body: "Invite shops to file equipment. Jobs match the iron.",
+            },
+            {
               href: "/secondary-operations",
               title: "Secondary operations",
               body: "Weld, plate, powder, ends, inspect.",
