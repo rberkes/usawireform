@@ -23,7 +23,6 @@ export default async function SignUpPage({ searchParams }: Props) {
       <div className="mt-10">
         <SignUp
           appearance={clerkAppearance}
-          forceRedirectUrl="/source/dashboard"
           fallbackRedirectUrl="/source/dashboard"
           signInUrl="/sign-in"
           initialValues={email ? { emailAddress: email } : undefined}

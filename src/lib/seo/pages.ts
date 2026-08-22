@@ -530,9 +530,9 @@ export const staticSeoPages: SeoRecord[] = [
   }),
   record({
     path: "/source",
-    title: "Source — Equipment and Jobs",
+    title: "Source — List Your Machines",
     description:
-      "Source wire forming jobs by the iron on the floor. Shops file OEM, 2D or 3D, and wire band. Buyers ask shops whose cells can run the print.",
+      "We send the job only to shops that can run it. US shops list CNC machines — wire size, 2D or 3D, make, city. One cell free. Claim your listing or file a cell.",
     section: "company",
     keywords: [
       "wire forming capacity",

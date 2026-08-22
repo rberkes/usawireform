@@ -421,6 +421,7 @@ export async function submitSourceEquipment(
   return {
     success: true,
     message: `Confirm the account in ${email}. The shop dashboard is where you add more cells.`,
+    receiptTo: email,
   };
 }
 

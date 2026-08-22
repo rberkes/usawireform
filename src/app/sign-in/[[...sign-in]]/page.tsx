@@ -18,7 +18,6 @@ export default function SignInPage() {
       <div className="mt-10">
         <SignIn
           appearance={clerkAppearance}
-          forceRedirectUrl="/source/dashboard"
           fallbackRedirectUrl="/source/dashboard"
           signUpUrl="/sign-up"
         />

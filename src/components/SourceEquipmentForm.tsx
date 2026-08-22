@@ -9,7 +9,8 @@ import {
   SourceMachineRows,
   emptySourceMachine,
 } from "@/components/SourceMachineRows";
-import { Button, fieldClass, Panel } from "@/components/ui";
+import { Button, ButtonLink, fieldClass, Panel } from "@/components/ui";
+import { sourceAccountHref } from "@/lib/source-plans";
 import type { SourceMachine } from "@/lib/source-types";
 
 const initial: SourceFormState = { success: false, message: "" };
@@ -144,6 +145,23 @@ export function SourceEquipmentForm({
         >
           {state.message}
         </p>
+      ) : null}
+      {state.success ? (
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <ButtonLink
+            href={sourceAccountHref(state.receiptTo)}
+            className="w-full justify-center sm:w-auto"
+          >
+            Confirm your account
+          </ButtonLink>
+          <ButtonLink
+            href="/source/dashboard"
+            variant="ghost"
+            className="w-full justify-center sm:w-auto"
+          >
+            Shop dashboard
+          </ButtonLink>
+        </div>
       ) : null}
     </form>
   );
