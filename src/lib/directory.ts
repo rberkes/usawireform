@@ -5,7 +5,9 @@
 
 import type { DirectoryCompany } from "./directory-types";
 import { extraDirectoryCompanies } from "./directory-extra";
+import { fourslideDirectoryCompanies } from "./directory-fourslide";
 import { applyDirectoryIron } from "./directory-iron";
+import { smiDirectoryCompanies } from "./directory-smi";
 import { stateBoostCompanies } from "./directory-state-boost";
 import { STATE_SHOPS } from "./state-shops";
 
@@ -1285,6 +1287,8 @@ export const directoryCompanies = mergeDirectory([
   CORE_DIRECTORY_COMPANIES,
   extraDirectoryCompanies,
   stateBoostCompanies,
+  smiDirectoryCompanies,
+  fourslideDirectoryCompanies,
   fromStateShops(),
 ]).map(applyDirectoryIron);
 

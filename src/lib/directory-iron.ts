@@ -160,6 +160,52 @@ export const DIRECTORY_IRON: Record<string, IronNote> = {
     machines: ["3D CNC wire forming"],
     source: "https://www.oregonwire.co/what-is-wire-forming/",
   },
+  "metco-fourslide": {
+    classes: ["fourslide"],
+    machines: ["Fourslide"],
+    source: "https://metcofourslide.com",
+  },
+  "southington-tool-manufacturing": {
+    classes: ["fourslide", "3d-cnc"],
+    machines: ["Fourslide", "3D CNC wire forming"],
+    source: "https://www.stmc.com/capabilities/metal-stamping/fourslide-stamping/",
+  },
+  "dynamic-manufacturing-bristol": {
+    classes: ["fourslide"],
+    machines: ["Fourslide"],
+    source: "https://www.dymco.com/page/four-slide-and-stamping",
+  },
+  "northwest-fourslide": {
+    classes: ["fourslide"],
+    machines: ["Fourslide"],
+    source: "https://nw4s.com/about-us/",
+  },
+  "bel-air-manufacturing": {
+    classes: ["fourslide"],
+    machines: ["Fourslide"],
+    source: "https://www.belairmfg.com/Four-Slide",
+  },
+  "william-dudek-manufacturing": {
+    classes: ["fourslide", "multi-slide"],
+    machines: ["Fourslide", "Multi-slide"],
+    source: "https://www.dudekmfg.com",
+  },
+  "formco-metal-products": {
+    classes: ["fourslide", "multi-slide"],
+    machines: ["Four-slide", "Multi-slide"],
+    source: "https://formcometal.com",
+  },
+  "forward-metal-craft": {
+    classes: ["fourslide", "multi-slide", "cnc"],
+    machines: ["Fourslide", "Multislide", "CNC wire forming"],
+    source: "https://forwardmetalcraft.com",
+  },
+  "keats-southwest": {
+    classes: ["fourslide", "multi-slide"],
+    machines: ["Four-slide", "Multi-slide", "Baird", "Nilson"],
+    source:
+      "https://www.keatsmfg.com/high-volume-resources-and-relationship-management/",
+  },
 };
 
 const CLASS_RE: Record<IronClass, RegExp> = {
