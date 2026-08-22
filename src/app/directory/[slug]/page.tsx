@@ -319,7 +319,7 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                     stay with the desk.
                   </p>
                   <Link
-                    href="/source/job"
+                    href="/source"
                     className="inline-flex items-center justify-center rounded-sm bg-copper px-5 py-2.5 text-sm font-medium text-white hover:bg-copper-dim"
                   >
                     Match a job

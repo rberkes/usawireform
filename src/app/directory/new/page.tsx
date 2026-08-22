@@ -43,10 +43,10 @@ export default async function NewestSourceShopsPage() {
         lede="US shops that filed cells on Source, newest first. Public listing only — emails stay with the desk. Europe later, on its own platform."
       />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
-        <Link href="/source" className="text-copper hover:underline">
-          Source
+        <Link href="/source/shops" className="text-copper hover:underline">
+          Add a machine cell
         </Link>{" "}
-        is the trade.{" "}
+        is how shops get on Source.{" "}
         <Link href="/source/equipment" className="text-copper hover:underline">
           File a cell
         </Link>{" "}

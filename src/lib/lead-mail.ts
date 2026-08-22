@@ -162,7 +162,7 @@ export function customerThanksHtml({
   const cta =
     kind === "directory"
       ? ctaBannerRow(
-          `${SITE_URL}/source/job`,
+          `${SITE_URL}/source`,
           "Match a job on Source",
           "Wire size, 2D or 3D, locale. We introduce shops that filed that iron.",
         )
@@ -470,10 +470,10 @@ export function sourceJobReceiptHtml({
      ${headingRow("Your Source job is in")}
      ${copyRow(chairs)}
      ${ctaBannerRow(
-       `${SITE_URL}/source/job`,
+       `${SITE_URL}/source`,
        "Send another job",
        "Wire size, 2D or 3D, locale. We introduce — emails stay with the desk.",
      )}
-     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/dashboard" style="color:#0b6bcb;text-decoration:none">Open the shop dashboard</a> and file cells so the next job can find you. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
+     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/shops" style="color:#0b6bcb;text-decoration:none">Add one machine cell free</a>. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
   );
 }

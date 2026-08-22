@@ -158,6 +158,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/source/job",
+        destination: "/source",
+        permanent: true,
+      },
+      {
         source: "/wire-forming-cities",
         destination: "/directory/areas",
         permanent: true,

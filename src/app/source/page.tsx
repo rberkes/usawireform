@@ -1,32 +1,28 @@
-import Link from "next/link";
 import {
   ButtonLink,
   Kicker,
   Page,
   PageHero,
-  Panel,
   Section,
   StatRow,
   TextLink,
 } from "@/components/ui";
-import { SourceShopFinder } from "@/components/SourceShopFinder";
-import { directoryCompanies } from "@/lib/directory";
+import { SourceJobForm } from "@/components/SourceJobForm";
+import { SourceNewestMembers } from "@/components/SourceNewestMembers";
 import { pageMeta } from "@/lib/seo";
-import { sourceClaimable } from "@/lib/source-directory";
-import { SOURCE_PLAN_LINE } from "@/lib/source-plans";
 import { listNewestSourceDirectoryCompanies } from "@/lib/source";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = pageMeta({
-  title: "Source — list your machines, get the jobs that fit",
+  title: "Find a wire form shop — Source",
   description:
-    "We send the job only to shops that can run it. US shops list CNC machines — wire size, 2D or 3D, make, city. One cell free. Claim your listing or file a cell.",
+    "Send the print. We introduce up to three US shops that already listed a machine that can run it — wire size, 2D or 3D, city. Not every shop that says they form wire.",
   path: "/source",
   keywords: [
-    "wire forming capacity",
-    "CNC equipment list",
+    "find wire forming shop",
     "wire forming RFQ",
+    "CNC wire form shops",
     "source wire forming jobs",
   ],
 });
@@ -34,106 +30,64 @@ export const metadata = pageMeta({
 const STEPS = [
   {
     n: "01",
-    title: "Claim the listing or file one cell",
-    body: "US shops already in the directory keep that URL. New shops file one CNC cell and publish a page.",
+    title: "Send the print",
+    body: "Wire size, 2D or 3D, city. Brand if it matters. That is the match — not a company blurb.",
   },
   {
     n: "02",
-    title: "Name the machine on the floor",
-    body: "Wire size, 2D or 3D, make, and city. That row is how a print finds you. Not a paragraph that says you form wire.",
+    title: "We match filed machines",
+    body: "Only shops that listed a cell that can run that job. Not every shop that says they form wire.",
   },
   {
     n: "03",
-    title: "Jobs that fit those machines come to you",
-    body: "A buyer sends a print. We introduce up to three shops whose cells can run it. Emails stay with the desk.",
+    title: "Up to three introductions",
+    body: "Shop emails stay with the desk until we make the intro. You talk to chairs that can run the work.",
   },
 ];
 
 export default async function SourcePage() {
   const newest = await listNewestSourceDirectoryCompanies(6);
-  const usaShops = directoryCompanies
-    .filter((shop) => sourceClaimable(shop))
-    .map((shop) => ({
-      name: shop.name,
-      slug: shop.slug,
-      location: shop.location,
-    }));
 
   return (
     <Page className="py-10 sm:py-20">
-      <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
+      <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
         <PageHero
           large
-          kicker="Source"
-          title="We send the job only to shops that can run it."
-          lede="A shop lists the CNC machines on the floor — wire size, 2D or 3D, make, and city. When a buyer has a print, we send it to shops that already filed a machine that fits. Not every shop that says they form wire."
+          kicker="Find a shop"
+          title="We send your print only to shops that can run it."
+          lede="Enter wire size, 2D or 3D, and city. We introduce up to three shops that already listed a machine that fits. Not a directory of everyone who says they form wire."
         >
           <ButtonLink
-            href="#claim"
+            href="#job"
             variant="quote"
             className="w-full justify-center whitespace-nowrap sm:w-auto"
           >
-            Claim your listing
-          </ButtonLink>
-          <ButtonLink
-            href="/source/equipment"
-            variant="ghost"
-            className="w-full justify-center whitespace-nowrap sm:w-auto"
-          >
-            File a cell
+            Send the print
           </ButtonLink>
         </PageHero>
-        <Panel className="p-5 sm:p-8">
-          <Kicker>For shops</Kicker>
+        <div className="border border-line bg-inset p-5 sm:p-8">
+          <Kicker>What you get</Kicker>
           <p className="mt-4 text-2xl font-medium tracking-tight sm:text-3xl">
-            List your machines. Jobs that fit those machines come to you.
+            Three shops whose machines fit the job.
           </p>
           <p className="mt-4 text-sm leading-6 text-muted">
-            One cell free. No card. US shops only. Canada stays in the
-            directory. Europe later, on its own platform.
+            Instant estimate on this site is still this floor — 4–14 mm on the
+            Robomac. Source is other US shops.
           </p>
-          <p className="mt-6 text-sm leading-6 text-muted">
-            Already filed?{" "}
-            <TextLink href="/sign-in">Log in</TextLink>
-            . Plans: {SOURCE_PLAN_LINE}
-          </p>
-        </Panel>
+        </div>
       </div>
 
       <StatRow
         className="mt-14 sm:mt-16"
         items={[
-          { value: "1 cell", label: "Free to start" },
-          { value: String(usaShops.length), label: "US listings to claim" },
-          { value: "3 shops", label: "Max intros on a job" },
-          { value: "USA", label: "Source floor for now" },
+          { value: "3", label: "Shops introduced" },
+          { value: "Size", label: "Wire diameter first" },
+          { value: "2D / 3D", label: "Bend type" },
+          { value: "Desk", label: "Emails stay here" },
         ]}
       />
 
-      <section
-        id="claim"
-        className="mt-16 scroll-mt-24 border-t border-line pt-12 sm:mt-20"
-      >
-        <Kicker>Claim</Kicker>
-        <h2 className="mt-3 max-w-2xl text-2xl tracking-tight sm:text-3xl">
-          Find the directory page. Claim it. File the cells on that URL.
-        </h2>
-        <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
-          Type the shop name. Claim keeps{" "}
-          <span className="text-foreground">/directory/[your-shop]</span>. One
-          shop per account.
-        </p>
-        <div className="mt-8 max-w-xl">
-          <SourceShopFinder shops={usaShops} />
-        </div>
-        <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
-          Not in the directory?{" "}
-          <TextLink href="/source/equipment">File a cell</TextLink>
-          . Confirm the account from the receipt, then the dashboard.
-        </p>
-      </section>
-
-      <Section kicker="How it works" title="Three steps. Then the jobs that fit.">
+      <Section kicker="How it works" title="The job finds the machine.">
         <ol className="mt-10 grid gap-px bg-line sm:grid-cols-3">
           {STEPS.map((step) => (
             <li key={step.n} className="bg-background px-5 py-8 sm:px-6">
@@ -149,49 +103,27 @@ export default async function SourcePage() {
         </ol>
       </Section>
 
-      <Section kicker="Newest members" title="Shops that already filed.">
-        <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
-          <TextLink href="/directory/new">See all newest Source shops</TextLink>
-          .
-        </p>
-        {newest.length === 0 ? (
-          <p className="mt-6 text-sm leading-6 text-muted">
-            Nobody has published a listing yet.
-          </p>
-        ) : (
-          <ul className="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
-            {newest.map((shop) => (
-              <li key={shop.slug} className="flex items-center gap-4 bg-background px-5 py-5">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center border border-line bg-inset">
-                  {shop.logoUrl ? (
-                    <img
-                      src={shop.logoUrl}
-                      alt=""
-                      className="max-h-12 max-w-12 object-contain"
-                    />
-                  ) : null}
-                </div>
-                <div className="min-w-0">
-                  <Link
-                    href={`/directory/${shop.slug}`}
-                    className="font-medium hover:text-copper"
-                  >
-                    {shop.name}
-                  </Link>
-                  <p className="mt-1 text-sm text-muted">{shop.location}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+      <section
+        id="job"
+        className="mt-16 scroll-mt-24 border-t border-line pt-12 sm:mt-20"
+      >
+        <Kicker>The print</Kicker>
+        <h2 className="mt-3 max-w-2xl text-2xl tracking-tight sm:text-3xl">
+          Send the job. We match the shops.
+        </h2>
+        <div className="mt-8">
+          <SourceJobForm />
+        </div>
+      </section>
+
+      <Section kicker="Newest members" title="Shops already on Source.">
+        <SourceNewestMembers shops={newest} />
       </Section>
 
       <section className="mt-16 border-t border-line pt-12 sm:mt-20">
         <p className="max-w-xl text-sm leading-6 text-muted">
-          Buy formed wire?{" "}
-          <TextLink href="/source/job">Send the job</TextLink>
-          . Instant estimate on this site is still this cell — 4–14 mm on the
-          Robomac. Source is other floors.
+          Run a shop?{" "}
+          <TextLink href="/source/shops">Add one machine cell free</TextLink>.
         </p>
       </section>
     </Page>

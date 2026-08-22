@@ -530,14 +530,14 @@ export const staticSeoPages: SeoRecord[] = [
   }),
   record({
     path: "/source",
-    title: "Source — List Your Machines",
+    title: "Find a Wire Form Shop — Source",
     description:
-      "We send the job only to shops that can run it. US shops list CNC machines — wire size, 2D or 3D, make, city. One cell free. Claim your listing or file a cell.",
+      "Send the print. We introduce up to three US shops that already listed a machine that can run it — wire size, 2D or 3D, city. Not every shop that says they form wire.",
     section: "company",
     keywords: [
-      "wire forming capacity",
-      "CNC equipment list",
+      "find wire forming shop",
       "wire forming RFQ",
+      "CNC wire form shops",
       "source jobs",
     ],
     priority: 0.8,
@@ -552,12 +552,17 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.7,
   }),
   record({
-    path: "/source/job",
-    title: "Match a Job — Source",
+    path: "/source/shops",
+    title: "Add One Machine Cell Free — Source for Shops",
     description:
-      "Enter wire size, 2D or 3D, and locale. Source matches the RFQ to shops that filed those OEM cells. We introduce three chairs.",
+      "Add one machine cell free. US shops list CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
     section: "company",
-    keywords: ["wire forming RFQ", "match CNC shops", "source wire forming jobs"],
+    keywords: [
+      "wire forming capacity",
+      "CNC equipment list",
+      "add CNC cell",
+      "source wire forming shops",
+    ],
     priority: 0.8,
   }),
   record({

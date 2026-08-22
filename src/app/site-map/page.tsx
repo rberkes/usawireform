@@ -60,13 +60,13 @@ export default function SiteMapPage() {
             },
             {
               href: "/source",
-              title: "Source",
-              body: "File cells. Match jobs to that iron.",
+              title: "Find a wire form shop",
+              body: "Send the print. We introduce shops whose machines can run it.",
             },
             {
-              href: "/source/job",
-              title: "Source a job",
-              body: "Wire size and type match filed shops. We introduce.",
+              href: "/source/shops",
+              title: "Add a machine cell",
+              body: "Add one machine cell free. Claim the listing or file a cell.",
             },
             {
               href: "/source/upgrade",
