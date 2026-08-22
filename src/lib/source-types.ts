@@ -59,6 +59,7 @@ export type SourceProfile = {
   website: string;
   blurb: string;
   published: boolean;
+  listedAt?: string;
   updatedAt: string;
 };
 

@@ -1,5 +1,6 @@
 import { COMPANY, SITE_HOST, SITE_URL } from "@/lib/company";
 import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
+import { SOURCE_PLAN_LINE } from "@/lib/source-plans";
 
 export function escapeHtml(value: string) {
   return value
@@ -397,7 +398,7 @@ export function sourceFiledReceiptHtml({
        "Open the shop dashboard",
        "Log in if you already confirmed. Upload more equipment from there.",
      )}
-     ${copyRow(`Free is 3 cells. $39/mo up to 10. $59/mo up to 15. $99/mo up to 20.`)}
+     ${copyRow(SOURCE_PLAN_LINE)}
      ${ctaButtonRow(
        upgradeHref,
        "See Source plans",

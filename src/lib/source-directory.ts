@@ -62,5 +62,6 @@ export function sourceProfileToDirectoryCompany(
     machines: sourceCellsToMachineNotes(cells),
     wireDiameters: bands[0] && bands.length === 1 ? bands[0] : bands.join(", ") || undefined,
     filedOnSource: true,
+    listedAt: profile.listedAt || profile.updatedAt,
   };
 }

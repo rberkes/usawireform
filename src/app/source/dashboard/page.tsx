@@ -50,6 +50,7 @@ async function ensureProfile({
   if (existing) return existing;
   if (!company) return null;
   const slug = await uniqueSourceSlug(company, userId);
+  const now = new Date().toISOString();
   const profile = {
     userId,
     slug,
@@ -61,7 +62,8 @@ async function ensureProfile({
     website: normalizeShopWebsite(website),
     blurb: "",
     published: true,
-    updatedAt: new Date().toISOString(),
+    listedAt: now,
+    updatedAt: now,
   };
   await saveSourceProfile(profile);
   return profile;

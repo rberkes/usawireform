@@ -49,6 +49,7 @@ const shop = [
   { href: "/equipment/cnc-manufacturers", label: "CNC machine catalog" },
   { href: "/equipment/machine-comparison", label: "Machine comparison" },
   { href: "/directory", label: "Company Directory" },
+  { href: "/directory/new", label: "Newest Source shops" },
   { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/ohio", label: "Ohio cities" },
   { href: "/products/carts-and-trolleys", label: "Carts and trolleys" },

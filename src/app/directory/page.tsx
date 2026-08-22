@@ -69,6 +69,12 @@ export default async function DirectoryPage({ searchParams }: Props) {
         title="Wire Forming Companies"
         lede={`${companies.length} wire forming factories across the United States and Canada — part of the resource for the trade. Equipment tags come from public pages or cells the shop filed on Source.`}
       />
+      <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
+        <Link href="/directory/new" className="text-copper hover:underline">
+          Newest Source shops
+        </Link>{" "}
+        — members who just filed cells.
+      </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="border border-line p-4">

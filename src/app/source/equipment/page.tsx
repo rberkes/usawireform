@@ -8,7 +8,7 @@ import {
 } from "@/lib/source-account";
 import { getSourcePlanForUser } from "@/lib/source-billing";
 import { pageMeta } from "@/lib/seo";
-import { planById } from "@/lib/source-plans";
+import { planById, SOURCE_PLAN_LINE } from "@/lib/source-plans";
 import { getSourceInvite, listSourceFilings } from "@/lib/source";
 
 export const dynamic = "force-dynamic";
@@ -57,15 +57,11 @@ export default async function SourceEquipmentPage({ searchParams }: Props) {
         </p>
       ) : null}
       <p className="mt-6 max-w-2xl text-sm leading-6 text-muted">
-        Free is 3 cells. Confirm the account from the receipt, then the{" "}
+        {SOURCE_PLAN_LINE} Confirm the account from the receipt, then the{" "}
         <a href="/source/dashboard" className="text-copper hover:underline">
           shop dashboard
         </a>{" "}
-        is where you add more.{" "}
-        <a href="/source/upgrade" className="text-copper hover:underline">
-          Plans
-        </a>
-        : $39/mo up to 10, $59/mo up to 15, $99/mo up to 20.
+        is where you add more.
       </p>
       {maxCells <= 0 ? (
         <div className="mt-8 space-y-4">

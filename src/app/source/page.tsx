@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { Page, PageHero, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
+import { SOURCE_PLAN_LINE } from "@/lib/source-plans";
+import { listNewestSourceDirectoryCompanies } from "@/lib/source";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = pageMeta({
   title: "Source — equipment and jobs",
@@ -15,7 +19,9 @@ export const metadata = pageMeta({
   ],
 });
 
-export default function SourcePage() {
+export default async function SourcePage() {
+  const newest = await listNewestSourceDirectoryCompanies(6);
+
   return (
     <Page>
       <PageHero
@@ -35,9 +41,8 @@ export default function SourcePage() {
           upload one row per cell. Confirm the account from the receipt.
           The{" "}
           <TextLink href="/source/dashboard">shop dashboard</TextLink> is
-          where you add more iron. Free is 3 cells.{" "}
-          <TextLink href="/source/upgrade">$39 / $59 / $99 a month</TextLink>{" "}
-          for 10, 15, or 20.
+          where you add more iron. {SOURCE_PLAN_LINE}{" "}
+          <TextLink href="/source/upgrade">Plans</TextLink>.
         </p>
         <p>
           Instant estimate on this site is still this cell — 4–14 mm on the
@@ -58,6 +63,33 @@ export default function SourcePage() {
           stays on usawireform.com for this floor.
         </p>
       </div>
+
+      <section className="mt-14 max-w-2xl">
+        <h2 className="text-lg font-medium">Newest members</h2>
+        <p className="mt-2 text-sm leading-6 text-muted">
+          <TextLink href="/directory/new">See all newest Source shops</TextLink>
+          .
+        </p>
+        {newest.length === 0 ? (
+          <p className="mt-4 text-sm leading-6 text-muted">
+            Nobody has published a listing yet.
+          </p>
+        ) : (
+          <ul className="mt-4 divide-y divide-line border border-line">
+            {newest.map((shop) => (
+              <li key={shop.slug} className="px-4 py-3 text-sm">
+                <Link
+                  href={`/directory/${shop.slug}`}
+                  className="font-medium hover:text-copper"
+                >
+                  {shop.name}
+                </Link>
+                <p className="mt-1 text-muted">{shop.location}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </Page>
   );
 }

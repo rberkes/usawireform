@@ -20,4 +20,5 @@ export interface DirectoryCompany {
   established?: string;
   /** Shop filed its own CNC cells on Source. */
   filedOnSource?: boolean;
+  listedAt?: string;
 }

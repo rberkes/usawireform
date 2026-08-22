@@ -89,6 +89,7 @@ async function upsertShopProfile({
 }) {
   const existing = await getSourceProfile(userId);
   const slug = existing?.slug || (await uniqueSourceSlug(company, userId));
+  const now = new Date().toISOString();
   await saveSourceProfile({
     userId,
     slug,
@@ -100,7 +101,8 @@ async function upsertShopProfile({
     website: normalizeShopWebsite(website),
     blurb: (blurb ?? existing?.blurb ?? "").trim().slice(0, 500),
     published: true,
-    updatedAt: new Date().toISOString(),
+    listedAt: existing?.listedAt || existing?.updatedAt || now,
+    updatedAt: now,
   });
   return slug;
 }

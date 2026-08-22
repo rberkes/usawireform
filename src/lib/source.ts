@@ -222,6 +222,9 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
     website: String(payload.website ?? ""),
     blurb: String(payload.blurb ?? ""),
     published: payload.published !== false,
+    listedAt: String(
+      payload.listedAt ?? payload.updatedAt ?? new Date().toISOString(),
+    ),
     updatedAt: String(payload.updatedAt ?? new Date().toISOString()),
   };
 }
@@ -330,12 +333,22 @@ export function applyProfilesToFilings(
 }
 
 export async function listPublishedSourceDirectoryCompanies() {
+  return listNewestSourceDirectoryCompanies(200);
+}
+
+export async function listNewestSourceDirectoryCompanies(limit = 24) {
   const [profiles, filings] = await Promise.all([
     listSourceProfiles(),
     listSourceFilings(),
   ]);
   return profiles
     .filter((profile) => profile.published && profile.slug && profile.company)
+    .sort((a, b) => {
+      const aAt = a.listedAt || a.updatedAt;
+      const bAt = b.listedAt || b.updatedAt;
+      return aAt < bAt ? 1 : aAt > bAt ? -1 : 0;
+    })
+    .slice(0, limit)
     .map((profile) => {
       const cells = filings
         .filter((row) => row.userId === profile.userId)

@@ -71,7 +71,7 @@ export default function SiteMapPage() {
             {
               href: "/source/upgrade",
               title: "Source plans",
-              body: "Free 3 cells. $39 / $59 / $99 a month.",
+              body: "One cell free. $30 / $49 / $99 a month.",
             },
             {
               href: "/secondary-operations",
@@ -427,6 +427,11 @@ export default function SiteMapPage() {
               href: "/directory",
               title: "Wire Forming Companies Directory",
               body: `Browse all ${directoryCompanies.length} companies by region, with lead capture forms.`,
+            },
+            {
+              href: "/directory/new",
+              title: "Newest Source shops",
+              body: "Members who just filed cells, newest first.",
             },
             {
               href: "/directory/areas",

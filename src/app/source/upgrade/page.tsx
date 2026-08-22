@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Source plans — shop dashboard",
   description:
-    "File CNC cells on Source. Free is 3 cells. $39/mo up to 10. $59/mo up to 15. $99/mo up to 20. Stripe checkout.",
+    "File CNC cells on Source. One cell free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Stripe checkout.",
   path: "/source/upgrade",
   keywords: [
     "wire forming capacity",
@@ -29,7 +29,7 @@ export default async function SourceUpgradePage() {
       <PageHero
         kicker="Source"
         title="Shop plans"
-        lede="The dashboard is where you add cells. Free is three. Pay on Stripe when the floor is bigger."
+        lede="The dashboard is where you add cells. One cell is free. Three more is $30 a month."
       />
 
       <Panel className="mt-10 max-w-xl p-5 sm:p-6">
@@ -40,8 +40,8 @@ export default async function SourceUpgradePage() {
           {formatPlanPrice(free.priceCents)}
         </p>
         <p className="mt-2 text-sm leading-6 text-muted">
-          Three cells. Confirm the account. Log in and finish the list from
-          the shop dashboard.
+          One cell. Confirm the account. Three more is $30 a month. Then 10
+          and 20.
         </p>
         <div className="mt-6">
           <ButtonLink href="/source/dashboard" variant="ghost">

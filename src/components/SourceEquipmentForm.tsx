@@ -18,7 +18,7 @@ export function SourceEquipmentForm({
   inviteId,
   company: companyPrefill = "",
   email: emailPrefill = "",
-  maxCells = 3,
+  maxCells = 1,
 }: {
   inviteId?: string;
   company?: string;
@@ -110,9 +110,9 @@ export function SourceEquipmentForm({
         </p>
         <p className="text-sm leading-6 text-muted">
           Pick the OEM, then the model. Type and wire band come from that
-          catalog row — confirm the plate on the cell. Free Source is{" "}
-          {maxCells} {maxCells === 1 ? "cell" : "cells"}. More iron is a paid
-          plan on the shop dashboard.
+          catalog row — confirm the plate on the cell. This plan holds{" "}
+          {maxCells} {maxCells === 1 ? "cell" : "cells"} here. More iron is a
+          paid plan on the shop dashboard.
         </p>
         <SourceMachineRows
           machines={machines}
