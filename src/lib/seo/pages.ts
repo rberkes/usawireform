@@ -532,7 +532,7 @@ export const staticSeoPages: SeoRecord[] = [
     path: "/source",
     title: "Find a Wire Form Shop — Source",
     description:
-      "Send the print. We introduce up to three US shops that already listed a machine that can run it — wire size, 2D or 3D, city. Not every shop that says they form wire.",
+      "Send the print. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs.",
     section: "company",
     keywords: [
       "find wire forming shop",
@@ -553,9 +553,9 @@ export const staticSeoPages: SeoRecord[] = [
   }),
   record({
     path: "/source/shops",
-    title: "Add One Machine Cell Free — Source for Shops",
+    title: "Wire Form Shops — Add a Machine Cell Free",
     description:
-      "Add one machine cell free. US shops list CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
+      "Wire form shops: add a machine cell free. List CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
     section: "company",
     keywords: [
       "wire forming capacity",

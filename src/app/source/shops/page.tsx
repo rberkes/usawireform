@@ -18,9 +18,9 @@ import { listNewestSourceDirectoryCompanies } from "@/lib/source";
 export const dynamic = "force-dynamic";
 
 export const metadata = pageMeta({
-  title: "Add one machine cell free — Source for shops",
+  title: "Wire form shops — add a machine cell free",
   description:
-    "Add one machine cell free. US shops list CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
+    "Wire form shops: add a machine cell free. List CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
   path: "/source/shops",
   keywords: [
     "wire forming capacity",
@@ -63,9 +63,9 @@ export default async function SourceShopsPage() {
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
         <PageHero
           large
-          kicker="For shops"
-          title="Add one machine cell free."
-          lede="List the CNC machines on the floor — wire size, 2D or 3D, make, and city. When a buyer has a print, we send it to shops that already filed a machine that fits. Not every shop that says they form wire."
+          kicker="Wire form shops"
+          title="Add a machine cell free."
+          lede="List the CNC machines on the floor — wire size, 2D or 3D, make, and city. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs."
         >
           <ButtonLink
             href="#claim"

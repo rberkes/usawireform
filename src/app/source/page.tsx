@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Find a wire form shop — Source",
   description:
-    "Send the print. We introduce up to three US shops that already listed a machine that can run it — wire size, 2D or 3D, city. Not every shop that says they form wire.",
+    "Send the print. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs.",
   path: "/source",
   keywords: [
     "find wire forming shop",
@@ -36,7 +36,7 @@ const STEPS = [
   {
     n: "02",
     title: "We match filed machines",
-    body: "Only shops that listed a cell that can run that job. Not every shop that says they form wire.",
+    body: "An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs.",
   },
   {
     n: "03",
@@ -55,7 +55,7 @@ export default async function SourcePage() {
           large
           kicker="Find a shop"
           title="We send your print only to shops that can run it."
-          lede="Enter wire size, 2D or 3D, and city. We introduce up to three shops that already listed a machine that fits. Not a directory of everyone who says they form wire."
+          lede="Enter wire size, 2D or 3D, and city. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs."
         >
           <ButtonLink
             href="#job"
