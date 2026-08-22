@@ -10,6 +10,7 @@ import {
   shopLeadHtml,
   sourceFiledReceiptHtml,
   sourceInviteHtml,
+  sourceJobReceiptHtml,
   type EstimateMailCopy,
   type MailRow,
 } from "@/lib/lead-mail";
@@ -387,6 +388,85 @@ export async function sendSourceFilingEmails({
     }),
   ]);
   console.log("[Source filing mail]", { to, company, shop, receipt });
+  return shop && receipt;
+}
+
+export async function sendSourceJobEmails({
+  to,
+  company,
+  name,
+  phone,
+  city,
+  state,
+  diameterRaw,
+  diameterMm,
+  kind,
+  oem,
+  qty,
+  notes,
+  matches,
+}: {
+  to: string;
+  company: string;
+  name?: string;
+  phone?: string;
+  city?: string;
+  state?: string;
+  diameterRaw: string;
+  diameterMm: number | null;
+  kind: string;
+  oem: string;
+  qty: string;
+  notes: string;
+  matches: Array<{
+    company: string;
+    email: string;
+    city: string;
+    state: string;
+    oem: string;
+    model: string;
+    kind: string;
+    minMm: string;
+    maxMm: string;
+    why: string;
+  }>;
+}) {
+  const size =
+    diameterMm != null
+      ? `${diameterMm} mm`
+      : diameterRaw.trim() || "unspecified wire";
+  const chairs = matches
+    .map(
+      (row, index) =>
+        `${index + 1}. ${escapeHtml(row.company)} — <a href="mailto:${escapeHtml(row.email)}">${escapeHtml(row.email)}</a><br />
+        ${escapeHtml(row.why)}${row.city || row.state ? ` · ${escapeHtml([row.city, row.state].filter(Boolean).join(", "))}` : ""}`,
+    )
+    .join("<p></p>");
+  const [shop, receipt] = await Promise.all([
+    sendLeadEmail({
+      replyTo: to,
+      heading: "LEAD — Source job",
+      subject: `LEAD: Source job — ${size} — ${company || to}`,
+      html: `<p><strong>${escapeHtml(company || "Buyer")}</strong> asked Source to match a job.</p>
+        <p>Email: <a href="mailto:${escapeHtml(to)}">${escapeHtml(to)}</a>${name ? ` · ${escapeHtml(name)}` : ""}</p>
+        ${phone ? `<p>Phone: ${escapeHtml(phone)}</p>` : ""}
+        ${city || state ? `<p>Locale: ${escapeHtml([city, state].filter(Boolean).join(", "))}</p>` : ""}
+        <p>Wire: ${escapeHtml(diameterRaw || size)}${kind ? ` · ${escapeHtml(kind)}` : ""}${oem ? ` · ${escapeHtml(oem)}` : ""}${qty ? ` · qty ${escapeHtml(qty)}` : ""}</p>
+        ${notes ? `<p>Notes: ${escapeHtml(notes)}</p>` : ""}
+        <p><strong>${matches.length === 0 ? "No filed cell matched." : "Introduce these shops:"}</strong></p>
+        ${chairs || "<p>Empty floor list — work the RFQ from the desk.</p>"}`,
+    }),
+    sendResendMail({
+      to,
+      replyTo: QUOTE_EMAIL,
+      subject: `Receipt: your Source job — ${COMPANY}`,
+      html: sourceJobReceiptHtml({
+        matchCount: matches.length,
+        diameterMm,
+      }),
+    }),
+  ]);
+  console.log("[Source job mail]", { to, company, matches: matches.length, shop, receipt });
   return shop && receipt;
 }
 

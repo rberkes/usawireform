@@ -5,6 +5,7 @@ import type {
   SourceFiling,
   SourceFilingRow,
   SourceInvite,
+  SourceJob,
   SourceMachine,
 } from "@/lib/source-types";
 
@@ -12,8 +13,10 @@ export type {
   SourceFiling,
   SourceFilingRow,
   SourceInvite,
+  SourceJob,
   SourceKind,
   SourceMachine,
+  SourcePublicMatch,
 } from "@/lib/source-types";
 export { SOURCE_KINDS } from "@/lib/source-types";
 
@@ -154,4 +157,37 @@ export async function listSourceFilings(): Promise<SourceFilingRow[]> {
 export async function countSourceFilings() {
   const rows = await listSourceFilings();
   return rows.length;
+}
+
+export async function saveSourceJob(job: SourceJob) {
+  if (!(await blobReady())) return false;
+  await put(`source/jobs/${Date.now()}.json`, JSON.stringify(job), {
+    access: BLOB_ACCESS,
+    addRandomSuffix: true,
+    contentType: "application/json",
+    ...(await blobAuth()),
+  });
+  return true;
+}
+
+export async function listSourceJobs(): Promise<SourceJob[]> {
+  if (!(await blobReady())) return [];
+  const result = await list({ prefix: "source/jobs/", ...(await blobAuth()) });
+  const rows: SourceJob[] = [];
+  for (const blob of result.blobs
+    .sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))
+    .slice(0, 80)) {
+    const file = await get(blob.pathname, {
+      access: "private",
+      useCache: false,
+      ...(await blobAuth()),
+    });
+    if (!file?.stream || file.statusCode !== 200) continue;
+    try {
+      rows.push(JSON.parse(await new Response(file.stream).text()) as SourceJob);
+    } catch {
+      /* skip */
+    }
+  }
+  return rows;
 }

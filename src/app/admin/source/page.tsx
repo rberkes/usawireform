@@ -5,7 +5,7 @@ import { AdminInboxNav } from "@/components/AdminInboxNav";
 import { Page, PageHero } from "@/components/ui";
 import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
-import { listSourceFilings, listSourceInvites } from "@/lib/source";
+import { listSourceFilings, listSourceInvites, listSourceJobs } from "@/lib/source";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -25,9 +25,10 @@ export default async function AdminSourcePage({
     return <AdminLogin next="/admin/source" error={error} title="Source" />;
   }
 
-  const [invites, filings, quoteCount, directoryCount] = await Promise.all([
+  const [invites, filings, jobs, quoteCount, directoryCount] = await Promise.all([
     listSourceInvites(),
     listSourceFilings(),
+    listSourceJobs(),
     countQuoteSubmissions(),
     countDirectoryLeads(),
   ]);
@@ -110,6 +111,38 @@ export default async function AdminSourcePage({
                   <a href={row.href} className="text-copper hover:underline">
                     Download JSON
                   </a>
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+      <section className="mt-12">
+        <h2 className="text-lg font-medium">Jobs</h2>
+        {jobs.length === 0 ? (
+          <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
+            No buyer jobs yet.
+          </p>
+        ) : (
+          <ul className="mt-4 divide-y divide-line border border-line">
+            {jobs.map((row) => (
+              <li key={row.timestamp + row.email} className="px-4 py-4 text-sm">
+                <p className="font-medium">
+                  {row.company || row.email}
+                  <span className="ml-2 font-normal text-muted">{row.email}</span>
+                </p>
+                <p className="mt-1 text-muted">
+                  {row.diameterMm != null ? `${row.diameterMm} mm` : row.diameterRaw}
+                  {row.kind ? ` · ${row.kind}` : ""}
+                  {row.oem ? ` · ${row.oem}` : ""}
+                  {row.qty ? ` · qty ${row.qty}` : ""}
+                </p>
+                <p className="mt-1 font-mono text-[11px] text-muted">
+                  {row.timestamp
+                    ? new Date(row.timestamp).toLocaleString("en-US", {
+                        timeZone: "America/New_York",
+                      })
+                    : "—"}
                 </p>
               </li>
             ))}

@@ -46,3 +46,36 @@ export type SourceFilingRow = SourceFiling & {
   pathname: string;
   href: string;
 };
+
+export type SourceJob = {
+  company: string;
+  name: string;
+  email: string;
+  phone: string;
+  city: string;
+  state: string;
+  diameterRaw: string;
+  diameterMm: number | null;
+  kind: string;
+  oem: string;
+  qty: string;
+  notes: string;
+  parsedBy: "form" | "ai" | "form+ai";
+  timestamp: string;
+};
+
+export type SourcePublicMatch = {
+  company: string;
+  city: string;
+  state: string;
+  oem: string;
+  model: string;
+  kind: string;
+  minMm: string;
+  maxMm: string;
+  why: string;
+};
+
+export type SourceInternalMatch = SourcePublicMatch & {
+  email: string;
+};

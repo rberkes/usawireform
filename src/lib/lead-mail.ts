@@ -383,3 +383,29 @@ export function sourceFiledReceiptHtml({
      ${copyRow(`<span style="color:#5c5c5c">This is not a floor walk. You named the iron. Reply if a cell sold or a new head came in.</span>`)}`,
   );
 }
+
+export function sourceJobReceiptHtml({
+  matchCount,
+  diameterMm,
+}: {
+  matchCount: number;
+  diameterMm?: number | null;
+}) {
+  const size =
+    diameterMm != null
+      ? `${diameterMm.toLocaleString("en-US")} mm`
+      : "this print";
+  const chairs =
+    matchCount === 0
+      ? `No filed cell matches ${size} yet. The desk has the RFQ and will work it.`
+      : matchCount === 1
+        ? `One filed cell can run ${size}. We introduce — we do not send your print to a public list.`
+        : `Up to ${matchCount} filed cells can run ${size}. We introduce three chairs when we have them.`;
+  return shell(
+    "Your Source job is in.",
+    `${kickerRow()}
+     ${headingRow("Your Source job is in")}
+     ${copyRow(chairs)}
+     ${copyRow(`<span style="color:#5c5c5c">Instant estimate on usawireform.com is still this floor — 4–14 mm Robomac. Source is the trade.</span>`)}`,
+  );
+}

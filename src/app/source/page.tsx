@@ -25,6 +25,12 @@ export default function SourcePage() {
       />
       <div className="mt-10 max-w-2xl space-y-6 text-sm leading-6 text-muted">
         <p>
+          If you buy formed wire,{" "}
+          <TextLink href="/source/job">send the job</TextLink>. Diameter, 2D
+          or 3D, and locale match the cells shops filed. We introduce up to
+          three chairs. Emails stay with the desk.
+        </p>
+        <p>
           If you run a shop, start with the invite. Register the plant and
           upload one row per cell. Jobs that fit those bands can reach you.
         </p>

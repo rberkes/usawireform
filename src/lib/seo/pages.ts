@@ -552,6 +552,15 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.7,
   }),
   record({
+    path: "/source/job",
+    title: "Match a Job — Source",
+    description:
+      "Enter wire size, 2D or 3D, and locale. Source matches the RFQ to shops that filed those OEM cells. We introduce three chairs.",
+    section: "company",
+    keywords: ["wire forming RFQ", "match CNC shops", "source wire forming jobs"],
+    priority: 0.8,
+  }),
+  record({
     path: "/secondary-operations",
     title: "Secondary Operations",
     description:

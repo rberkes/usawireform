@@ -61,7 +61,12 @@ export default function SiteMapPage() {
             {
               href: "/source",
               title: "Source",
-              body: "Invite shops to file equipment. Jobs match the iron.",
+              body: "File cells. Match jobs to that iron.",
+            },
+            {
+              href: "/source/job",
+              title: "Source a job",
+              body: "Wire size and type match filed shops. We introduce.",
             },
             {
               href: "/secondary-operations",
