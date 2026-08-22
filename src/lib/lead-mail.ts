@@ -1,4 +1,5 @@
 import { COMPANY, SITE_HOST, SITE_URL } from "@/lib/company";
+import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
 
 export function escapeHtml(value: string) {
   return value
@@ -173,4 +174,118 @@ export function shopLeadHtml({
     ${rows?.length ? mailRowsHtml(rows) : ""}
     ${body}
     ${links}`);
+}
+
+export type EstimateMailCopy = {
+  to: string;
+  diameterLabel: string;
+  materialLabel: string;
+  cuts: number;
+  bends: number;
+  lengthIn: number;
+  quantity: number;
+  piece: string;
+  lot: string;
+  forming: string;
+  cut: string;
+  bend: string;
+  discount?: string;
+  stock: boolean;
+  shopSteel?: boolean;
+  steelLb?: string;
+  steelUsd?: string;
+  beatUsd?: string;
+  hookType?: string;
+  overallIn?: string;
+  legIdIn?: string;
+  notes?: string;
+};
+
+function estimateFactRows(estimate: EstimateMailCopy): MailRow[] {
+  const qty = estimate.quantity.toLocaleString("en-US");
+  const material = estimate.shopSteel
+    ? `${estimate.materialLabel} — shop steel${
+        estimate.steelLb && estimate.steelUsd
+          ? ` · ${estimate.steelLb} lb · ${estimate.steelUsd}`
+          : ""
+      }`
+    : `${estimate.materialLabel} — customer coil`;
+  const part = [
+    estimate.hookType,
+    estimate.overallIn ? `${estimate.overallIn} in overall` : "",
+    estimate.legIdIn ? `${estimate.legIdIn} in leg ID` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const rows: MailRow[] = [
+    ...(part ? [{ label: "Part", value: part }] : []),
+    { label: "Wire", value: estimate.diameterLabel },
+    { label: "Material", value: material },
+    { label: "Quantity", value: `${qty} pcs` },
+    { label: "Piece", value: `${estimate.piece} / piece` },
+    { label: "Lot", value: `${estimate.lot} for ${qty} pcs` },
+    {
+      label: "Forming",
+      value: `${estimate.lengthIn} in — ${estimate.forming}`,
+    },
+    {
+      label: "Cuts",
+      value: `${estimate.cuts} — ${estimate.cut}`,
+    },
+  ];
+  if (estimate.shopSteel) {
+    rows.push({ label: "Bends", value: "On the drawing — not billed" });
+  } else {
+    rows.push({
+      label: "Bends",
+      value: `${estimate.bends} — ${estimate.bend}`,
+    });
+  }
+  if (estimate.discount) {
+    rows.push({ label: "Qty break", value: estimate.discount });
+  }
+  if (estimate.shopSteel && estimate.beatUsd) {
+    rows.push({ label: "5% under boxed 3/8", value: `−${estimate.beatUsd}` });
+  }
+  if (!estimate.stock) {
+    rows.push({
+      label: "Tooling",
+      value: `Non-stock · ${TOOLING.newLead} · ${TOOLING.newCostLabel}. Not in the piece price.`,
+    });
+  }
+  if (estimate.notes) {
+    rows.push({ label: "Notes", value: estimate.notes });
+  }
+  return rows;
+}
+
+/** Client copy — a receipt to keep. */
+export function estimateReceiptHtml(estimate: EstimateMailCopy) {
+  return shell(
+    "Save this estimate for your files.",
+    `${kickerRow()}
+     ${headingRow("Your estimate receipt")}
+     ${copyRow("Keep this email. It is not a production quote. Reply if you want the shop to look at a STEP.")}
+     ${mailRowsHtml(estimateFactRows(estimate))}
+     ${copyRow(`<span style="color:#5c5c5c">${QUOTE_REVIEW} Weld, finish, and a print still go through <a href="${SITE_URL}/contact" style="color:#0b6bcb;text-decoration:none">contact</a>.</span>`)}`,
+  );
+}
+
+/** Shop copy — a lead. The customer's email is the point. */
+export function estimateLeadHtml(estimate: EstimateMailCopy) {
+  const email = escapeHtml(estimate.to);
+  return shopLeadHtml({
+    heading: "New lead",
+    intro: `<p style="font-size:22px;line-height:1.3;margin:0"><a href="mailto:${email}" style="color:#0b6bcb;text-decoration:none">${email}</a></p>
+      <p style="margin:12px 0 0">They asked us to email themselves this estimate. Reply to this message to write them.</p>`,
+    hasPreview: false,
+    rows: [
+      {
+        label: "Customer email",
+        value: estimate.to,
+        href: `mailto:${estimate.to}`,
+      },
+      ...estimateFactRows(estimate),
+    ],
+  });
 }

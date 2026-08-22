@@ -1,11 +1,13 @@
 import { get, list, put } from "@vercel/blob";
 import { Resend } from "resend";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
-import { COMPANY, QUOTE_EMAIL, SITE_HOST, SITE_URL } from "@/lib/company";
-import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
+import { COMPANY, QUOTE_EMAIL } from "@/lib/company";
 import {
   customerThanksHtml,
+  estimateLeadHtml,
+  estimateReceiptHtml,
   shopLeadHtml,
+  type EstimateMailCopy,
   type MailRow,
 } from "@/lib/lead-mail";
 
@@ -47,14 +49,6 @@ export type DirectoryLeadRecord = {
   source: string;
   timestamp: string;
 };
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 export type LeadMailAttachment = {
   filename: string;
@@ -143,6 +137,25 @@ async function sendResendMail({
   return true;
 }
 
+async function sendShopMails({
+  subject,
+  html,
+  replyTo,
+  attachments,
+}: {
+  subject: string;
+  html: string;
+  replyTo?: string;
+  attachments?: LeadMailAttachment[];
+}) {
+  const results = await Promise.all(
+    shopNotifyEmails().map((to) =>
+      sendResendMail({ to, subject, html, replyTo, attachments }),
+    ),
+  );
+  return results.some(Boolean);
+}
+
 export async function sendLeadEmail({
   subject,
   html,
@@ -158,8 +171,7 @@ export async function sendLeadEmail({
   fileName?: string;
   preview?: LeadMailAttachment;
 }) {
-  return sendResendMail({
-    to: shopNotifyEmails(),
+  return sendShopMails({
     replyTo,
     subject,
     html: shopLeadHtml({
@@ -223,8 +235,7 @@ export async function sendDrawingLeadEmails({
 }) {
   const attachments = preview ? [preview] : undefined;
   const [shop, customer] = await Promise.all([
-    sendResendMail({
-      to: shopNotifyEmails(),
+    sendShopMails({
       replyTo: to,
       subject,
       html: shopLeadHtml({
@@ -248,94 +259,20 @@ export async function sendDrawingLeadEmails({
   return shop;
 }
 
-export type InstantEstimateMail = {
-  to: string;
-  diameterLabel: string;
-  materialLabel: string;
-  cuts: number;
-  bends: number;
-  lengthIn: number;
-  quantity: number;
-  piece: string;
-  lot: string;
-  forming: string;
-  cut: string;
-  bend: string;
-  discount?: string;
-  stock: boolean;
-  shopSteel?: boolean;
-  steelLb?: string;
-  steelUsd?: string;
-  beatUsd?: string;
-  hookType?: string;
-  overallIn?: string;
-  legIdIn?: string;
-  notes?: string;
-};
-
-function instantEstimateHtml(estimate: InstantEstimateMail) {
-  const qty = estimate.quantity.toLocaleString("en-US");
-  const tooling = estimate.stock
-    ? ""
-    : `<p>Non-stock diameter: new tooling in ${TOOLING.newLead}, ${TOOLING.newCostLabel}. Not in the piece price.</p>`;
-  const coilLine = estimate.shopSteel
-    ? `Steel: ${escapeHtml(estimate.materialLabel)} — we buy it. ${escapeHtml(estimate.steelLb ?? "")} lb · ${escapeHtml(estimate.steelUsd ?? "")} in the piece price.`
-    : `Coil: ${escapeHtml(estimate.materialLabel)} — you buy it and bring it in. Alloy is not in this number.`;
-  const bendLine = estimate.shopSteel
-    ? `<li>Bends on the drawing — not billed</li>`
-    : `<li>${estimate.bends} bend${estimate.bends === 1 ? "" : "s"} — ${escapeHtml(estimate.bend)}</li>`;
-  const hookLine = estimate.hookType
-    ? `<p>${escapeHtml(estimate.hookType)}${
-        estimate.overallIn ? ` · ${escapeHtml(estimate.overallIn)} in overall` : ""
-      }${
-        estimate.legIdIn ? ` · ${escapeHtml(estimate.legIdIn)} in leg ID` : ""
-      }</p>`
-    : "";
-  const notesLine = estimate.notes
-    ? `<p>Notes: ${escapeHtml(estimate.notes)}</p>`
-    : "";
-  return `
-    <p>USA Wire Form — instant estimate from the numbers you entered.</p>
-    <p style="font-size:28px;margin:8px 0 0"><strong>${escapeHtml(estimate.piece)}</strong> / piece</p>
-    <p>${escapeHtml(estimate.lot)} for ${qty} pcs</p>
-    ${hookLine}
-    <p>
-      ${escapeHtml(estimate.diameterLabel)}<br />
-      ${coilLine}
-    </p>
-    <ul>
-      <li>Forming · ${estimate.lengthIn} in — ${escapeHtml(estimate.forming)}</li>
-      <li>${estimate.cuts} cut${estimate.cuts === 1 ? "" : "s"} — ${escapeHtml(estimate.cut)}</li>
-      ${bendLine}
-      ${estimate.discount ? `<li>${escapeHtml(estimate.discount)}</li>` : ""}
-      ${estimate.shopSteel && estimate.beatUsd ? `<li>5% under boxed 3/8 — −${escapeHtml(estimate.beatUsd)}</li>` : ""}
-    </ul>
-    ${notesLine}
-    ${tooling}
-    <p>${QUOTE_REVIEW} This is not a production quote. Weld, finish, and a print still go through <a href="${SITE_URL}/contact">contact</a>.</p>
-    <p>Reply to this email with a STEP if you want the shop to look at the form.<br />
-    ${COMPANY} · Northeast Ohio · <a href="${SITE_URL}">${SITE_HOST}</a></p>
-  `;
-}
+export type InstantEstimateMail = EstimateMailCopy;
 
 export async function sendInstantEstimateEmails(estimate: InstantEstimateMail) {
-  const html = instantEstimateHtml(estimate);
-  const qty = estimate.quantity.toLocaleString("en-US");
-  const part = estimate.hookType ?? "instant estimate";
   const [shop, customer] = await Promise.all([
-    sendLeadEmail({
+    sendShopMails({
       replyTo: estimate.to,
-      heading: "Interested party — instant estimate",
-      subject: `Lead: ${part} · ${estimate.piece}/pc · ${qty} pcs — ${estimate.to}`,
-      html: `<h2>Customer asked to email this estimate</h2>
-        <p>Reply to this message to write <a href="mailto:${escapeHtml(estimate.to)}">${escapeHtml(estimate.to)}</a>.</p>
-        ${html}`,
+      subject: `Lead: ${estimate.to}`,
+      html: estimateLeadHtml(estimate),
     }),
     sendResendMail({
       to: estimate.to,
       replyTo: QUOTE_EMAIL,
-      subject: `Your estimate — ${COMPANY}`,
-      html,
+      subject: `Receipt: your estimate — ${COMPANY}`,
+      html: estimateReceiptHtml(estimate),
     }),
   ]);
   console.log("[Instant estimate mail]", {

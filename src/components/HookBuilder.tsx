@@ -346,7 +346,7 @@ export function HookBuilder({
             />
           </label>
           <p className="text-sm leading-6 text-muted">
-            Sends the estimate to you and to the shop at the same time so we can
+            You get a receipt to save. We get a lead with your email so we can
             follow up.
           </p>
           <Button type="submit" disabled={!built.ok || pending}>
