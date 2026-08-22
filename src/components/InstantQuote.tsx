@@ -256,6 +256,10 @@ export function InstantQuote() {
                   placeholder="you@company.com"
                 />
               </label>
+              <p className="mt-2 text-sm leading-6 text-muted">
+                Sends the estimate to you and to the shop at the same time so we
+                can follow up.
+              </p>
               <Button
                 type="submit"
                 className="mt-4"

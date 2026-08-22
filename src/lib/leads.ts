@@ -12,6 +12,21 @@ import {
 export const LEADS_NOTIFY_EMAIL =
   process.env.LEADS_NOTIFY_EMAIL?.trim() || "rberkes@gmail.com";
 
+/** Shop inboxes that should see every estimate and lead. */
+export function shopNotifyEmails() {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of [QUOTE_EMAIL, LEADS_NOTIFY_EMAIL]) {
+    const email = raw.trim();
+    if (!email) continue;
+    const key = email.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(email);
+  }
+  return out;
+}
+
 export function resendFromEmail() {
   return (
     process.env.RESEND_FROM_EMAIL?.trim() ||
@@ -89,7 +104,7 @@ async function sendResendMail({
   replyTo,
   attachments,
 }: {
-  to: string;
+  to: string | string[];
   subject: string;
   html: string;
   replyTo?: string;
@@ -97,9 +112,13 @@ async function sendResendMail({
 }) {
   const resend = resendClient();
   if (!resend || !process.env.RESEND_API_KEY) return false;
+  const recipients = (Array.isArray(to) ? to : [to])
+    .map((addr) => addr.trim())
+    .filter(Boolean);
+  if (!recipients.length) return false;
   const { error } = await resend.emails.send({
     from: resendFromEmail(),
-    to,
+    to: recipients,
     replyTo,
     subject,
     html,
@@ -140,7 +159,7 @@ export async function sendLeadEmail({
   preview?: LeadMailAttachment;
 }) {
   return sendResendMail({
-    to: LEADS_NOTIFY_EMAIL,
+    to: shopNotifyEmails(),
     replyTo,
     subject,
     html: shopLeadHtml({
@@ -205,7 +224,7 @@ export async function sendDrawingLeadEmails({
   const attachments = preview ? [preview] : undefined;
   const [shop, customer] = await Promise.all([
     sendResendMail({
-      to: LEADS_NOTIFY_EMAIL,
+      to: shopNotifyEmails(),
       replyTo: to,
       subject,
       html: shopLeadHtml({
@@ -248,6 +267,10 @@ export type InstantEstimateMail = {
   steelLb?: string;
   steelUsd?: string;
   beatUsd?: string;
+  hookType?: string;
+  overallIn?: string;
+  legIdIn?: string;
+  notes?: string;
 };
 
 function instantEstimateHtml(estimate: InstantEstimateMail) {
@@ -261,10 +284,21 @@ function instantEstimateHtml(estimate: InstantEstimateMail) {
   const bendLine = estimate.shopSteel
     ? `<li>Bends on the drawing — not billed</li>`
     : `<li>${estimate.bends} bend${estimate.bends === 1 ? "" : "s"} — ${escapeHtml(estimate.bend)}</li>`;
+  const hookLine = estimate.hookType
+    ? `<p>${escapeHtml(estimate.hookType)}${
+        estimate.overallIn ? ` · ${escapeHtml(estimate.overallIn)} in overall` : ""
+      }${
+        estimate.legIdIn ? ` · ${escapeHtml(estimate.legIdIn)} in leg ID` : ""
+      }</p>`
+    : "";
+  const notesLine = estimate.notes
+    ? `<p>Notes: ${escapeHtml(estimate.notes)}</p>`
+    : "";
   return `
     <p>USA Wire Form — instant estimate from the numbers you entered.</p>
     <p style="font-size:28px;margin:8px 0 0"><strong>${escapeHtml(estimate.piece)}</strong> / piece</p>
     <p>${escapeHtml(estimate.lot)} for ${qty} pcs</p>
+    ${hookLine}
     <p>
       ${escapeHtml(estimate.diameterLabel)}<br />
       ${coilLine}
@@ -276,6 +310,7 @@ function instantEstimateHtml(estimate: InstantEstimateMail) {
       ${estimate.discount ? `<li>${escapeHtml(estimate.discount)}</li>` : ""}
       ${estimate.shopSteel && estimate.beatUsd ? `<li>5% under boxed 3/8 — −${escapeHtml(estimate.beatUsd)}</li>` : ""}
     </ul>
+    ${notesLine}
     ${tooling}
     <p>${QUOTE_REVIEW} This is not a production quote. Weld, finish, and a print still go through <a href="${SITE_URL}/contact">contact</a>.</p>
     <p>Reply to this email with a STEP if you want the shop to look at the form.<br />
@@ -285,13 +320,15 @@ function instantEstimateHtml(estimate: InstantEstimateMail) {
 
 export async function sendInstantEstimateEmails(estimate: InstantEstimateMail) {
   const html = instantEstimateHtml(estimate);
+  const qty = estimate.quantity.toLocaleString("en-US");
+  const part = estimate.hookType ?? "instant estimate";
   const [shop, customer] = await Promise.all([
     sendLeadEmail({
       replyTo: estimate.to,
-      heading: "Instant estimate",
-      subject: `Instant estimate: ${estimate.piece}/pc · ${estimate.quantity.toLocaleString("en-US")} pcs`,
-      html: `<h2>Instant estimate emailed to the customer</h2>
-        <p><strong>To:</strong> <a href="mailto:${escapeHtml(estimate.to)}">${escapeHtml(estimate.to)}</a></p>
+      heading: "Interested party — instant estimate",
+      subject: `Lead: ${part} · ${estimate.piece}/pc · ${qty} pcs — ${estimate.to}`,
+      html: `<h2>Customer asked to email this estimate</h2>
+        <p>Reply to this message to write <a href="mailto:${escapeHtml(estimate.to)}">${escapeHtml(estimate.to)}</a>.</p>
         ${html}`,
     }),
     sendResendMail({
@@ -301,6 +338,12 @@ export async function sendInstantEstimateEmails(estimate: InstantEstimateMail) {
       html,
     }),
   ]);
+  console.log("[Instant estimate mail]", {
+    to: estimate.to,
+    shop,
+    customer,
+    notify: shopNotifyEmails(),
+  });
   return shop && customer;
 }
 

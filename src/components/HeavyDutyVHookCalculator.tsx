@@ -244,6 +244,9 @@ export function HeavyDutyVHookCalculator() {
             />
             <input type="hidden" name="materialId" value={"1018" satisfies EstimateMaterialId} />
             <input type="hidden" name="qty" value={qty} />
+            <input type="hidden" name="hookType" value="V-Hook" />
+            <input type="hidden" name="overallIn" value={overall} />
+            <input type="hidden" name="legIdIn" value={legId} />
 
             <label className="mt-4 block text-sm">
               Email this {selected.label} estimate
@@ -257,6 +260,10 @@ export function HeavyDutyVHookCalculator() {
                 disabled={!built.ok}
               />
             </label>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Sends the estimate to you and to the shop at the same time so we can
+              follow up.
+            </p>
             <Button
               type="submit"
               className="mt-4"

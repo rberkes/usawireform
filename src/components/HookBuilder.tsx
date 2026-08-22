@@ -329,6 +329,9 @@ export function HookBuilder({
           />
           <input type="hidden" name="materialId" value={materialId as EstimateMaterialId} />
           <input type="hidden" name="qty" value={qty} />
+          <input type="hidden" name="hookType" value={typeMeta.label} />
+          <input type="hidden" name="overallIn" value={overall} />
+          <input type="hidden" name="legIdIn" value={legId} />
 
           <label className="block text-sm">
             Email this estimate
@@ -342,6 +345,10 @@ export function HookBuilder({
               disabled={!built.ok}
             />
           </label>
+          <p className="text-sm leading-6 text-muted">
+            Sends the estimate to you and to the shop at the same time so we can
+            follow up.
+          </p>
           <Button type="submit" disabled={!built.ok || pending}>
             {pending ? "Sending..." : "Email this estimate"}
           </Button>

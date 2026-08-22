@@ -497,6 +497,9 @@ export async function submitInstantQuote(
   const input = parsed.value;
   const pricing = String(formData.get("pricing") ?? "");
   const hookNotes = String(formData.get("hookNotes") ?? "").trim();
+  const hookType = String(formData.get("hookType") ?? "").trim().slice(0, 80);
+  const overallIn = String(formData.get("overallIn") ?? "").trim().slice(0, 16);
+  const legIdIn = String(formData.get("legIdIn") ?? "").trim().slice(0, 16);
   const shopSteel =
     pricing === "heavy-duty-v" || pricing === "v-hook-supplied";
   const result = shopSteel
@@ -527,6 +530,9 @@ export async function submitInstantQuote(
     targetPrice: piece,
     notes: [
       `${input.cuts} cuts · ${input.bends} bends · ${input.lengthIn} in · ${lot} lot`,
+      hookType
+        ? `${hookType}${overallIn ? ` · ${overallIn} in overall` : ""}${legIdIn ? ` · ${legIdIn} in leg ID` : ""}`
+        : "",
       shopSteel && "steelUsd" in result
         ? `V-hook shop steel · ${input.diameterLabel} · ${result.steelLb.toFixed(3)} lb · ${usd2(result.steelUsd)} steel · forming ${usd2(result.forming)} · 5% beat −${usd2(result.beatUsd)}`
         : "",
@@ -586,6 +592,10 @@ export async function submitInstantQuote(
           shopSteel && "beatUsd" in result
             ? usd2(result.beatUsd)
             : undefined,
+        hookType: hookType || undefined,
+        overallIn: overallIn || undefined,
+        legIdIn: legIdIn || undefined,
+        notes: hookNotes.slice(0, 2000) || undefined,
       });
     } catch (error) {
       console.error("[Instant Quote Email Error]", error);
@@ -610,6 +620,6 @@ export async function submitInstantQuote(
 
   return {
     success: true,
-    message: `Sent to ${input.email}: ${piece} / piece, ${lot} for ${input.quantity.toLocaleString("en-US")} pcs. ${QUOTE_REVIEW}`,
+    message: `Sent to ${input.email} and to the shop. ${piece} / piece, ${lot} for ${input.quantity.toLocaleString("en-US")} pcs. We'll follow up. ${QUOTE_REVIEW}`,
   };
 }
