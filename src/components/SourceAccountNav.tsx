@@ -55,6 +55,32 @@ function DashGlyph() {
   );
 }
 
+const SKIP = new Set([
+  "&",
+  "and",
+  "of",
+  "the",
+  "co",
+  "inc",
+  "llc",
+  "ltd",
+  "corp",
+  "company",
+]);
+
+function shopStamp(name: string) {
+  const words = name
+    .replace(/[.,]/g, " ")
+    .split(/\s+/)
+    .filter((word) => {
+      const key = word.toLowerCase().replace(/\.$/, "");
+      return key.length > 0 && !SKIP.has(key);
+    });
+  if (words.length === 0) return "SH";
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
 export function SourceAccountNav({
   shopName,
   shopSlug,
@@ -64,9 +90,10 @@ export function SourceAccountNav({
 }) {
   const listingHref =
     shopName && shopSlug ? `/directory/${shopSlug}` : "/source/dashboard";
+  const stamp = shopName ? shopStamp(shopName) : null;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center">
       <Show
         when="signed-in"
         fallback={
@@ -78,19 +105,10 @@ export function SourceAccountNav({
           </Link>
         }
       >
-        {shopName ? (
-          <Link
-            href={listingHref}
-            title={`Signed in as ${shopName}. One shop per account.`}
-            className="hidden max-w-[14rem] truncate text-sm text-foreground hover:text-copper sm:inline"
-          >
-            {shopName}
-          </Link>
-        ) : null}
         <UserButton
           key={shopName ?? "no-shop"}
           appearance={{
-            elements: { userButtonAvatarBox: "h-8 w-8" },
+            elements: { userButtonAvatarBox: "h-7 w-7" },
           }}
         >
           <UserButton.MenuItems>
@@ -106,6 +124,16 @@ export function SourceAccountNav({
             />
           </UserButton.MenuItems>
         </UserButton>
+        {stamp ? (
+          <Link
+            href={listingHref}
+            title={shopName}
+            aria-label={`Claimed shop: ${shopName}`}
+            className="ml-1.5 hidden font-mono text-[11px] font-medium tracking-wide text-muted hover:text-copper sm:inline"
+          >
+            {stamp}
+          </Link>
+        ) : null}
       </Show>
     </div>
   );

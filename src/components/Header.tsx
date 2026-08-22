@@ -179,10 +179,13 @@ export function Header({ account }: { account: ReactNode }) {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <SearchButton onClick={() => setSearchOpen(true)} />
             {account}
-            <Link href="/instant-quote" className={cx(btn.quote, "hidden sm:inline-flex")}>
+            <Link
+              href="/instant-quote"
+              className={cx(btn.quote, "hidden whitespace-nowrap sm:inline-flex")}
+            >
               Instant quote
             </Link>
 

@@ -1,4 +1,4 @@
-import { get, list, put } from "@vercel/blob";
+import { get, list, put, del } from "@vercel/blob";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { SITE_URL } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
@@ -6,7 +6,7 @@ import {
   slugifyShopName,
   sourceProfileToDirectoryCompany,
 } from "@/lib/source-directory";
-import { filedSourceMachines } from "@/lib/source-account";
+import { filedSourceMachines, sourceFilingsForShop } from "@/lib/source-account";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import type {
@@ -170,6 +170,47 @@ export async function listSourceFilings(): Promise<SourceFilingRow[]> {
     }
   }
   return rows;
+}
+
+export async function replaceSourceFilingsForShop({
+  userId,
+  email,
+  shop,
+  machines,
+}: {
+  userId: string;
+  email: string;
+  shop: {
+    company: string;
+    name: string;
+    phone: string;
+    city: string;
+    state: string;
+    website: string;
+  };
+  machines: SourceMachine[];
+}) {
+  if (!(await blobReady())) return false;
+  const rows = sourceFilingsForShop(await listSourceFilings(), { userId, email });
+  const paths = rows.map((row) => row.pathname).filter(Boolean);
+  if (paths.length > 0) {
+    await del(paths, { ...(await blobAuth()) });
+  }
+  if (machines.length === 0) return true;
+  await saveSourceFiling({
+    userId,
+    company: shop.company,
+    name: shop.name,
+    email,
+    phone: shop.phone,
+    city: shop.city,
+    state: shop.state,
+    website: shop.website,
+    machines,
+    notes: "",
+    timestamp: new Date().toISOString(),
+  });
+  return true;
 }
 
 export async function countSourceFilings() {

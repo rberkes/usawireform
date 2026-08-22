@@ -19,6 +19,7 @@ import {
   shopFromFilings,
   sourceCapMessage,
   sourceFilingsForShop,
+  filedSourceMachines,
 } from "@/lib/source-account";
 import { getSourcePlanForUser } from "@/lib/source-billing";
 import { parseBuyerJob } from "@/lib/source-job-parse";
@@ -47,6 +48,7 @@ import {
   sourceInviteHref,
   storeSourceLogo,
   uniqueSourceSlug,
+  replaceSourceFilingsForShop,
 } from "@/lib/source";
 
 export type SourceFormState = {
@@ -512,6 +514,90 @@ export async function addSourceCells(
         ? "Saved 1 cell."
         : `Saved ${machines.length} cells.`,
   };
+}
+
+async function shopCellsForEdit(userId: string, email: string) {
+  const [profile, budget] = await Promise.all([
+    getSourceProfile(userId),
+    shopCellBudget(email, userId),
+  ]);
+  const shop = profile
+    ? {
+        company: profile.company,
+        name: profile.name,
+        phone: profile.phone,
+        city: profile.city,
+        state: profile.state,
+        website: profile.website,
+      }
+    : shopFromFilings(budget.shopRows);
+  const machines = budget.shopRows.flatMap((row) =>
+    filedSourceMachines(row.machines),
+  );
+  return { shop, machines, email };
+}
+
+export async function removeSourceCell(
+  _prev: SourceFormState,
+  formData: FormData,
+): Promise<SourceFormState> {
+  const signedIn = await signedInShop();
+  if (!signedIn?.email) {
+    return { success: false, message: "Sign in to remove a cell." };
+  }
+  const index = Number(formData.get("index"));
+  const current = await shopCellsForEdit(signedIn.userId, signedIn.email);
+  if (!current.shop) {
+    return { success: false, message: "No shop on this account." };
+  }
+  if (!Number.isInteger(index) || index < 0 || index >= current.machines.length) {
+    return { success: false, message: "That cell is not on the list." };
+  }
+  const machines = current.machines.filter((_, i) => i !== index);
+  try {
+    await replaceSourceFilingsForShop({
+      userId: signedIn.userId,
+      email: current.email,
+      shop: current.shop,
+      machines,
+    });
+  } catch (error) {
+    console.error("[Source cells remove]", error);
+    return {
+      success: false,
+      message: `Could not remove the cell (${blobErrorMessage(error)}).`,
+    };
+  }
+  redirect("/source/dashboard");
+}
+
+export async function clearSourceCells(
+  _prev: SourceFormState,
+  _formData: FormData,
+): Promise<SourceFormState> {
+  const signedIn = await signedInShop();
+  if (!signedIn?.email) {
+    return { success: false, message: "Sign in to clear cells." };
+  }
+  const current = await shopCellsForEdit(signedIn.userId, signedIn.email);
+  if (!current.shop) {
+    return { success: false, message: "No shop on this account." };
+  }
+  try {
+    await replaceSourceFilingsForShop({
+      userId: signedIn.userId,
+      email: current.email,
+      shop: current.shop,
+      machines: [],
+    });
+  } catch (error) {
+    console.error("[Source cells clear]", error);
+    return {
+      success: false,
+      message: `Could not clear cells (${blobErrorMessage(error)}).`,
+    };
+  }
+  redirect("/source/dashboard");
 }
 
 export async function updateSourceShop(

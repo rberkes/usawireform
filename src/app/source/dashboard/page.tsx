@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
 import { openSourceBillingPortal } from "@/app/actions/source-billing";
 import { SourceAddCellsForm } from "@/components/SourceAddCellsForm";
+import { SourceFiledCells } from "@/components/SourceFiledCells";
 import { SourceSecondariesForm } from "@/components/SourceSecondariesForm";
 import { SourceShopForm } from "@/components/SourceShopForm";
 import { Button, ButtonLink, Page, PageHero, Panel } from "@/components/ui";
@@ -117,7 +118,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         title="Shop dashboard"
         lede={
           shop?.company
-            ? `Signed in as ${shop.company}. One shop per account.`
+            ? `Signed in as ${shop.company.replace(/\.$/, "")} — one shop per account.`
             : "Shop listing, cells, and the plan. Account is email and password."
         }
       />
@@ -150,11 +151,11 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             Cells
           </p>
           <p className="mt-2 text-xl font-medium">
-            {used} / {plan.cells}
+            {used} of {plan.cells}
           </p>
           <p className="mt-1 text-sm text-muted">
             {used > plan.cells
-              ? `You filed ${used}. This plan holds ${plan.cells}. Existing cells stay.`
+              ? `${used} cells filed. This plan holds ${plan.cells}. Existing cells stay. Remove extras or upgrade.`
               : remaining === 0
                 ? "This plan is full."
                 : `${remaining} left on this plan.`}
@@ -217,21 +218,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             ) : null}
           </p>
         ) : (
-          <ul className="mt-4 divide-y divide-line border border-line">
-            {cells.map((row, index) => (
-              <li key={`${row.oem}-${row.model}-${index}`} className="px-4 py-3 text-sm">
-                <p className="font-medium">
-                  {row.oem} {row.model}
-                </p>
-                <p className="mt-1 text-muted">
-                  {row.kind}
-                  {row.minMm || row.maxMm
-                    ? ` · ${row.minMm || "?"}–${row.maxMm || "?"} mm`
-                    : ""}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <SourceFiledCells cells={cells} />
         )}
       </section>
 
