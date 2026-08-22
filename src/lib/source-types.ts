@@ -29,6 +29,7 @@ export type SourceInvite = {
 
 export type SourceFiling = {
   inviteId?: string;
+  userId?: string;
   company: string;
   name: string;
   email: string;

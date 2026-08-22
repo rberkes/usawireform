@@ -106,6 +106,8 @@ const searchItems: SearchItem[] = [
   { title: "Source", href: "/source", category: "Pages", description: "Jobs match filed CNC cells — OEM, 2D or 3D, wire band, city." },
   { title: "Source a job", href: "/source/job", category: "Pages", description: "Enter wire size and type. Match shops that filed those cells." },
   { title: "Upload equipment", href: "/source/equipment", category: "Pages", description: "Register the shop and file one row per CNC cell." },
+  { title: "Source plans", href: "/source/upgrade", category: "Pages", description: "Free 3 cells. $39 / $59 / $99 a month for 10, 15, or 20." },
+  { title: "Source shop", href: "/source/dashboard", category: "Pages", description: "Shop dashboard — add cells and change the plan." },
   { title: "Wire Forming Cities", href: "/directory/areas", category: "Locations", description: "Top 20 U.S. forming cities. Cleveland is the cheap coil — mills and drawers." },
   { title: "Northeast Ohio", href: "/cleveland", category: "Locations", description: "Mills, wire drawers, and short-haul 4–14 mm coil." },
   { title: "Ohio city directory", href: "/ohio", category: "Locations", description: "30 Ohio city landers — forming towns and buyer cities. One CNC cell in Northeast Ohio." },

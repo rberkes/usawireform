@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useState, useEffect, useRef } from "react";
 import { BrandLockup } from "./WireMark";
 import { SearchButton } from "./Search";
+import { SourceAccountNav } from "./SourceAccountNav";
 import { btn, Container } from "./ui";
 import { industries } from "@/lib/site";
 import { catalogGroups, catalog } from "@/lib/catalog";
@@ -180,6 +181,7 @@ export function Header() {
 
           <div className="flex items-center gap-3">
             <SearchButton onClick={() => setSearchOpen(true)} />
+            <SourceAccountNav />
             <Link href="/instant-quote" className={cx(btn.quote, "hidden sm:inline-flex")}>
               Instant quote
             </Link>
@@ -363,6 +365,13 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           onClick={onClose}
         >
           Contact
+        </Link>
+        <Link
+          href="/source/dashboard"
+          className="py-2 text-base text-foreground"
+          onClick={onClose}
+        >
+          Source shop
         </Link>
         <Link
           href="/instant-quote"

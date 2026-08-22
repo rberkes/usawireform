@@ -69,6 +69,11 @@ export default function SiteMapPage() {
               body: "Wire size and type match filed shops. We introduce.",
             },
             {
+              href: "/source/upgrade",
+              title: "Source plans",
+              body: "Free 3 cells. $39 / $59 / $99 a month.",
+            },
+            {
               href: "/secondary-operations",
               title: "Secondary operations",
               body: "Weld, plate, powder, ends, inspect.",

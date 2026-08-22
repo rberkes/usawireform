@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -6,6 +7,7 @@ import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/JsonLd";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BackToTop } from "@/components/BackToTop";
+import { clerkAppearance } from "@/lib/clerk-appearance";
 import { COMPANY, QUOTE_EMAIL, SITE_PITCH, SITE_URL } from "@/lib/company";
 import { CORE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
@@ -83,24 +85,26 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
-    >
-      <head>
-        <link rel="dns-prefetch" href="https://www.youtube.com" />
-      </head>
-      <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
-        <SkipToContent />
-        <JsonLd />
-        <Header />
-        <div id="main-content" className="flex-1">
-          {children}
-        </div>
-        <Footer />
-        <BackToTop />
-        <Analytics />
-      </body>
-    </html>
+    <ClerkProvider appearance={clerkAppearance} afterSignOutUrl="/">
+      <html
+        lang="en"
+        className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
+      >
+        <head>
+          <link rel="dns-prefetch" href="https://www.youtube.com" />
+        </head>
+        <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
+          <SkipToContent />
+          <JsonLd />
+          <Header />
+          <div id="main-content" className="flex-1">
+            {children}
+          </div>
+          <Footer />
+          <BackToTop />
+          <Analytics />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -368,19 +368,41 @@ export function sourceInviteHtml({
 export function sourceFiledReceiptHtml({
   company,
   machineCount,
+  email,
 }: {
   company?: string;
   machineCount: number;
+  email?: string;
 }) {
   const who = company?.trim() ? escapeHtml(company.trim()) : "your shop";
   const n =
     machineCount === 1 ? "1 cell" : `${machineCount.toLocaleString("en-US")} cells`;
+  const confirmHref = `${SITE_URL}/sign-up?redirect_url=${encodeURIComponent(`${SITE_URL}/source/dashboard`)}${
+    email ? `&email_address=${encodeURIComponent(email)}` : ""
+  }`;
+  const dashboardHref = `${SITE_URL}/source/dashboard`;
+  const upgradeHref = `${SITE_URL}/source/upgrade`;
   return shell(
-    "We have your equipment list.",
+    "Confirm your Source account. Then log in and finish the shop.",
     `${kickerRow()}
-     ${headingRow("We have your equipment list")}
-     ${copyRow(`Thank you. ${who} is on Source with ${n}. Jobs that fit those cells can be sent to you to quote.`)}
-     ${copyRow(`<span style="color:#5c5c5c">This is not a floor walk. You named the iron. Reply if a cell sold or a new head came in.</span>`)}`,
+     ${headingRow("Confirm your Source account")}
+     ${copyRow(`We have the list. ${who} filed ${n}. Confirm the account, then log in to finish registration and add more iron.`)}
+     ${ctaBannerRow(
+       confirmHref,
+       "Confirm your Source account",
+       "Use this email. Then the shop dashboard.",
+     )}
+     ${ctaButtonRow(
+       dashboardHref,
+       "Open the shop dashboard",
+       "Log in if you already confirmed. Upload more equipment from there.",
+     )}
+     ${copyRow(`Free is 3 cells. $39/mo up to 10. $59/mo up to 15. $99/mo up to 20.`)}
+     ${ctaButtonRow(
+       upgradeHref,
+       "See Source plans",
+       "Pay on Stripe. Cancel any month from the dashboard.",
+     )}`,
   );
 }
 

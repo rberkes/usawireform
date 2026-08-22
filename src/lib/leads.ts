@@ -380,10 +380,11 @@ export async function sendSourceFilingEmails({
     sendResendMail({
       to,
       replyTo: QUOTE_EMAIL,
-      subject: `Receipt: your equipment list — ${COMPANY} Source`,
+      subject: `Confirm your Source account — ${COMPANY}`,
       html: sourceFiledReceiptHtml({
         company,
         machineCount: machines.length,
+        email: to,
       }),
     }),
   ]);

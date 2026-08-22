@@ -1,6 +1,7 @@
 "use server";
 
 import { randomUUID } from "crypto";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { isAdmin } from "@/app/admin/actions";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { blobErrorMessage, blobReady } from "@/lib/blob";
@@ -9,8 +10,17 @@ import {
   sendSourceInviteEmails,
   sendSourceJobEmails,
 } from "@/lib/leads";
+import {
+  countSourceCells,
+  remainingSourceCells,
+  shopFromFilings,
+  sourceCapMessage,
+  sourceFilingsForShop,
+} from "@/lib/source-account";
+import { getSourcePlanForUser } from "@/lib/source-billing";
 import { parseBuyerJob } from "@/lib/source-job-parse";
 import { matchFilingsToJob } from "@/lib/source-match";
+import { planById } from "@/lib/source-plans";
 import type { SourcePublicMatch } from "@/lib/source-types";
 import {
   getSourceInvite,
@@ -32,6 +42,24 @@ export type SourceFormState = {
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+async function signedInShop() {
+  const { userId, isAuthenticated } = await auth();
+  if (!isAuthenticated || !userId) return null;
+  const user = await currentUser();
+  return {
+    userId,
+    email: user?.primaryEmailAddress?.emailAddress ?? "",
+  };
+}
+
+async function shopCellBudget(email: string, userId?: string | null) {
+  const filings = await listSourceFilings();
+  const shopRows = sourceFilingsForShop(filings, { userId, email });
+  const used = countSourceCells(shopRows);
+  const plan = userId ? await getSourcePlanForUser(userId) : planById("free");
+  return { filings, shopRows, used, plan, remaining: remainingSourceCells(plan, used) };
 }
 
 export async function sendSourceInvite(
@@ -126,8 +154,18 @@ export async function submitSourceEquipment(
     }
   }
 
+  const signedIn = await signedInShop();
+  const budget = await shopCellBudget(email, signedIn?.userId);
+  if (machines.length > 0 && machines.length > budget.remaining) {
+    return {
+      success: false,
+      message: `${sourceCapMessage(budget.plan, budget.used)} See /source/upgrade.`,
+    };
+  }
+
   const filing = {
     inviteId: inviteId || undefined,
+    userId: signedIn?.userId,
     company,
     name,
     email,
@@ -173,7 +211,89 @@ export async function submitSourceEquipment(
   }
   return {
     success: true,
-    message: `Receipt sent to ${email}. The shop has a LEAD with this equipment list.`,
+    message: `Confirm the account in ${email}. The shop dashboard is where you add more cells.`,
+  };
+}
+
+export async function addSourceCells(
+  _prev: SourceFormState,
+  formData: FormData,
+): Promise<SourceFormState> {
+  const signedIn = await signedInShop();
+  if (!signedIn) {
+    return { success: false, message: "Sign in to add cells." };
+  }
+
+  const notes = String(formData.get("notes") ?? "").trim().slice(0, 2000);
+  const machines = parseSourceMachines(String(formData.get("machines") ?? "[]"));
+  const file = formData.get("list") as File | null;
+  const fileName =
+    file && file.size > 0 ? file.name.replace(/[^\w.-]+/g, "_") : undefined;
+
+  if (machines.length === 0 && !(file && file.size > 0)) {
+    return {
+      success: false,
+      message: "Add at least one cell, or upload an equipment list file.",
+    };
+  }
+  if (file && file.size > 4 * 1024 * 1024) {
+    return { success: false, message: "List file must be under 4 MB." };
+  }
+
+  const email = signedIn.email;
+  if (!isValidEmail(email)) {
+    return { success: false, message: "Your account needs an email." };
+  }
+
+  const budget = await shopCellBudget(email, signedIn.userId);
+  if (machines.length > budget.remaining) {
+    return {
+      success: false,
+      message: `${sourceCapMessage(budget.plan, budget.used)} See /source/upgrade.`,
+    };
+  }
+
+  const shop = shopFromFilings(budget.shopRows);
+  if (!shop) {
+    return {
+      success: false,
+      message: "Register the shop first on /source/equipment.",
+    };
+  }
+
+  const filing = {
+    userId: signedIn.userId,
+    company: shop.company,
+    name: shop.name,
+    email,
+    phone: shop.phone,
+    city: shop.city,
+    state: shop.state,
+    website: shop.website,
+    machines,
+    notes,
+    fileName,
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    if (await blobReady()) {
+      await saveSourceFiling(filing);
+    }
+  } catch (error) {
+    console.error("[Source cells store]", error);
+    return {
+      success: false,
+      message: `Could not store the cells (${blobErrorMessage(error)}).`,
+    };
+  }
+
+  return {
+    success: true,
+    message:
+      machines.length === 1
+        ? "Saved 1 cell."
+        : `Saved ${machines.length} cells.`,
   };
 }
 

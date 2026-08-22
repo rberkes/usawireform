@@ -132,6 +132,8 @@ export async function listSourceFilings(): Promise<SourceFilingRow[]> {
       ) as Partial<SourceFiling>;
       rows.push({
         inviteId: payload.inviteId,
+        userId:
+          typeof payload.userId === "string" ? payload.userId : undefined,
         company: String(payload.company ?? ""),
         name: String(payload.name ?? ""),
         email: String(payload.email ?? ""),

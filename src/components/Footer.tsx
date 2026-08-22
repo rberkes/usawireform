@@ -61,6 +61,7 @@ const shop = [
   { href: "/blog", label: "Blog" },
   { href: "/instant-quote", label: "Instant quote" },
   { href: "/source", label: "Source — equipment & jobs" },
+  { href: "/source/upgrade", label: "Source plans" },
   { href: "/quoting", label: "Tooling & coil" },
   { href: "/about", label: "About" },
   { href: "/cleveland", label: "Northeast Ohio" },

@@ -32,7 +32,12 @@ export default function SourcePage() {
         </p>
         <p>
           If you run a shop, start with the invite. Register the plant and
-          upload one row per cell. Jobs that fit those bands can reach you.
+          upload one row per cell. Confirm the account from the receipt.
+          The{" "}
+          <TextLink href="/source/dashboard">shop dashboard</TextLink> is
+          where you add more iron. Free is 3 cells.{" "}
+          <TextLink href="/source/upgrade">$39 / $59 / $99 a month</TextLink>{" "}
+          for 10, 15, or 20.
         </p>
         <p>
           Instant estimate on this site is still this cell — 4–14 mm on the
@@ -43,7 +48,8 @@ export default function SourcePage() {
             Register and upload equipment
           </TextLink>
           . Invites are sent from the shop. If you received one, use that
-          link.
+          link. Already filed?{" "}
+          <TextLink href="/sign-in">Log in</TextLink>.
         </p>
         <p>
           <Link href="/instant-quote" className="text-copper hover:underline">

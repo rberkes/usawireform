@@ -561,6 +561,15 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.8,
   }),
   record({
+    path: "/source/upgrade",
+    title: "Source Plans — Shop Dashboard",
+    description:
+      "File CNC cells on Source. Free is 3 cells. $39/mo up to 10. $59/mo up to 15. $99/mo up to 20.",
+    section: "company",
+    keywords: ["source shop plan", "CNC equipment list", "wire forming capacity"],
+    priority: 0.6,
+  }),
+  record({
     path: "/secondary-operations",
     title: "Secondary Operations",
     description:
