@@ -391,15 +391,17 @@ function HookDrawing({
     .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${-p.y}`)
     .join(" ");
   const stroke = Math.max(wireIn, 0.12);
-  const top = points[0];
-  const mid = points[Math.max(1, Math.floor(points.length / 2))];
+  const topCrotch = points[1];
+  const topJoin = points[2];
+  const shankA = points[2];
+  const shankB = points[3];
 
   return (
     <svg
       viewBox={vb}
       className="mt-4 h-[min(28rem,70vw)] w-full bg-background"
       role="img"
-      aria-label="Dimensioned hook drawing"
+      aria-label="Dimensioned V-hook drawing"
     >
       {ready && d ? (
         <path
@@ -407,8 +409,9 @@ function HookDrawing({
           fill="none"
           stroke="currentColor"
           strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          strokeLinecap="butt"
+          strokeLinejoin="miter"
+          strokeMiterlimit={3}
         />
       ) : (
         <text
@@ -421,12 +424,11 @@ function HookDrawing({
           Drawing updates with the form
         </text>
       )}
-      {ready && top ? (
+      {ready && topCrotch && topJoin ? (
         <>
           <text
-            x={top.x - 0.15}
-            y={-(top.y + overall) / 2}
-            textAnchor="end"
+            x={(topCrotch.x + topJoin.x) / 2 + 0.2}
+            y={-((topCrotch.y + topJoin.y) / 2)}
             className="fill-copper"
             fontSize="0.42"
             fontWeight="600"
@@ -434,8 +436,8 @@ function HookDrawing({
             {formatInches(legId)}
           </text>
           <text
-            x={mid.x + stroke + 0.15}
-            y={-mid.y}
+            x={Math.max(shankA.x, shankB.x) + stroke + 0.2}
+            y={-((shankA.y + shankB.y) / 2)}
             className="fill-copper"
             fontSize="0.38"
             fontWeight="600"

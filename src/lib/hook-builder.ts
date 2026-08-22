@@ -77,10 +77,40 @@ export type HookMaterialId = (typeof HOOK_MATERIALS)[number]["id"];
 
 export type Vec2 = { x: number; y: number };
 
-const FLARE = (32 * Math.PI) / 180;
+/** 45° V-arms — powder-coating V-hook crotches are sharp, not radiused. */
+const ARM_K = Math.SQRT1_2;
 
 function dist(a: Vec2, b: Vec2) {
   return Math.hypot(b.x - a.x, b.y - a.y);
+}
+
+function vExtents(legId: number) {
+  const tip = Math.min(Math.max(legId * 0.2, 0.35), 1);
+  return {
+    run: legId * ARM_K,
+    rise: legId * ARM_K,
+    tip,
+    tipRun: tip * ARM_K,
+    tipRise: tip * ARM_K,
+    minOverall: 2 * legId * ARM_K + 0.35,
+  };
+}
+
+function dualVPoints(overall: number, legId: number, jog = 0): Vec2[] {
+  const { run, rise, tipRun, tipRise } = vExtents(legId);
+  const topJoin = overall - rise;
+  const top: Vec2[] = [
+    { x: run + tipRun, y: overall - tipRise },
+    { x: run, y: overall },
+    { x: 0, y: topJoin },
+  ];
+  const bottom: Vec2[] = [
+    { x: jog, y: rise },
+    { x: jog - run, y: 0 },
+    { x: jog - run - tipRun, y: tipRise },
+  ];
+  if (!jog) return [...top, ...bottom];
+  return [...top, { x: jog, y: topJoin }, ...bottom];
 }
 
 function polylineLength(pts: Vec2[]) {
@@ -135,34 +165,13 @@ export function hookCenterline(
   overall: number,
   legId: number,
 ): { points: Vec2[]; bends: number } {
-  const rise = legId * Math.cos(FLARE);
-  const run = legId * Math.sin(FLARE);
-  const shank = Math.max(0.25, overall - 2 * rise);
-
   if (type === "v") {
-    return {
-      bends: 2,
-      points: [
-        { x: -run, y: overall },
-        { x: 0, y: overall - rise },
-        { x: 0, y: rise },
-        { x: run, y: 0 },
-      ],
-    };
+    return { bends: 4, points: dualVPoints(overall, legId) };
   }
 
   if (type === "90v") {
-    const jog = Math.max(run, 0.75);
-    return {
-      bends: 3,
-      points: [
-        { x: -run, y: overall },
-        { x: 0, y: overall - rise },
-        { x: jog, y: overall - rise - shank / 2 },
-        { x: jog, y: rise },
-        { x: jog + run, y: 0 },
-      ],
-    };
+    const jog = Math.max(vExtents(legId).run, 0.75);
+    return { bends: 5, points: dualVPoints(overall, legId, jog) };
   }
 
   if (type === "c" || type === "90c") {
@@ -187,13 +196,16 @@ export function hookCenterline(
     };
   }
 
-  // CV and 90° CV: C opening on top, V on the bottom.
+  // CV and 90° CV: C opening on top, part V on the bottom.
   const r = Math.max(legId * 0.55, 0.8);
+  const { run, rise, tipRun, tipRise } = vExtents(legId);
+  const shank = Math.max(0.25, overall - 2 * rise);
   const top = arcPts(0, overall - r, r, Math.PI * 0.2, Math.PI * 1.15, 18);
   const vBottom: Vec2[] = [
-    { x: 0, y: overall - 2 * r },
+    { x: 0, y: Math.max(rise, overall - 2 * r) },
     { x: 0, y: rise },
-    { x: run, y: 0 },
+    { x: -run, y: 0 },
+    { x: -run - tipRun, y: tipRise },
   ];
   const pts = [...top, ...vBottom];
   if (type === "90cv") {
@@ -201,9 +213,9 @@ export function hookCenterline(
       x: r * 0.7,
       y: overall - 2 * r - shank * 0.25,
     });
-    return { bends: 4, points: pts };
+    return { bends: 5, points: pts };
   }
-  return { bends: 3, points: pts };
+  return { bends: 4, points: pts };
 }
 
 export function buildHookQuote(input: HookBuildInput): HookBuildOk | HookBuildErr {
@@ -235,14 +247,15 @@ export function buildHookQuote(input: HookBuildInput): HookBuildOk | HookBuildEr
     return { ok: false, message: `Quantity starts at ${ESTIMATE.qtyMin}.` };
   }
 
-  const rise = legId * Math.cos(FLARE);
-  if (input.type === "v" || input.type === "90v") {
-    if (2 * rise >= overall - 0.2) {
-      return {
-        ok: false,
-        message: "Overall length must clear both V legs. Lengthen the hook or shorten the leg ID.",
-      };
-    }
+  const { minOverall } = vExtents(legId);
+  if (
+    (input.type === "v" || input.type === "90v" || input.type === "cv" || input.type === "90cv") &&
+    overall < minOverall
+  ) {
+    return {
+      ok: false,
+      message: "Overall length must clear both V legs. Lengthen the hook or shorten the leg ID.",
+    };
   }
 
   const { points, bends } = hookCenterline(input.type, overall, legId);

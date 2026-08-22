@@ -111,7 +111,12 @@ function shape(slug: string): ReactNode {
     case "display-hooks":
       return <path d="M36 28v16h88v8c0 14-18 22-32 14" />;
     case "powder-coating-hooks":
-      return <path d="M56 20c-12 8-8 24 8 28l40 16c16 8 12 28-8 32" />;
+      return (
+        <path
+          d="M122 24 102 12 80 44 80 76 58 108 38 96"
+          strokeLinejoin="miter"
+        />
+      );
     case "eye-forms":
       return (
         <>
