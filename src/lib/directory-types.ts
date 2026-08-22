@@ -7,6 +7,7 @@ export interface DirectoryCompany {
   region: "Northeast" | "Southeast" | "Midwest" | "Southwest" | "West" | "Canada";
   website?: string;
   linkedin?: string;
+  phone?: string;
   description: string;
   capabilities: string[];
   /** Named iron from a public page — not a floor audit. */
@@ -17,4 +18,6 @@ export interface DirectoryCompany {
   certifications?: string[];
   wireDiameters?: string;
   established?: string;
+  /** Shop filed its own CNC cells on Source. */
+  filedOnSource?: boolean;
 }

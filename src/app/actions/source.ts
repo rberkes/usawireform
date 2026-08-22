@@ -21,15 +21,21 @@ import { getSourcePlanForUser } from "@/lib/source-billing";
 import { parseBuyerJob } from "@/lib/source-job-parse";
 import { matchFilingsToJob } from "@/lib/source-match";
 import { planById } from "@/lib/source-plans";
+import { normalizeShopWebsite } from "@/lib/source-directory";
 import type { SourcePublicMatch } from "@/lib/source-types";
 import {
+  applyProfilesToFilings,
   getSourceInvite,
+  getSourceProfile,
   listSourceFilings,
+  listSourceProfiles,
   parseSourceMachines,
   saveSourceFiling,
   saveSourceInvite,
   saveSourceJob,
+  saveSourceProfile,
   sourceInviteHref,
+  uniqueSourceSlug,
 } from "@/lib/source";
 
 export type SourceFormState = {
@@ -60,6 +66,43 @@ async function shopCellBudget(email: string, userId?: string | null) {
   const used = countSourceCells(shopRows);
   const plan = userId ? await getSourcePlanForUser(userId) : planById("free");
   return { filings, shopRows, used, plan, remaining: remainingSourceCells(plan, used) };
+}
+
+async function upsertShopProfile({
+  userId,
+  company,
+  name,
+  phone,
+  city,
+  state,
+  website,
+  blurb,
+}: {
+  userId: string;
+  company: string;
+  name: string;
+  phone: string;
+  city: string;
+  state: string;
+  website: string;
+  blurb?: string;
+}) {
+  const existing = await getSourceProfile(userId);
+  const slug = existing?.slug || (await uniqueSourceSlug(company, userId));
+  await saveSourceProfile({
+    userId,
+    slug,
+    company,
+    name,
+    phone,
+    city,
+    state,
+    website: normalizeShopWebsite(website),
+    blurb: (blurb ?? existing?.blurb ?? "").trim().slice(0, 500),
+    published: true,
+    updatedAt: new Date().toISOString(),
+  });
+  return slug;
 }
 
 export async function sendSourceInvite(
@@ -182,6 +225,17 @@ export async function submitSourceEquipment(
   try {
     if (await blobReady()) {
       await saveSourceFiling(filing);
+      if (signedIn?.userId) {
+        await upsertShopProfile({
+          userId: signedIn.userId,
+          company,
+          name,
+          phone,
+          city,
+          state,
+          website,
+        });
+      }
     }
   } catch (error) {
     console.error("[Source filing store]", error);
@@ -253,7 +307,17 @@ export async function addSourceCells(
     };
   }
 
-  const shop = shopFromFilings(budget.shopRows);
+  const profile = await getSourceProfile(signedIn.userId);
+  const shop = profile
+    ? {
+        company: profile.company,
+        name: profile.name,
+        phone: profile.phone,
+        city: profile.city,
+        state: profile.state,
+        website: profile.website,
+      }
+    : shopFromFilings(budget.shopRows);
   if (!shop) {
     return {
       success: false,
@@ -295,6 +359,54 @@ export async function addSourceCells(
         ? "Saved 1 cell."
         : `Saved ${machines.length} cells.`,
   };
+}
+
+export async function updateSourceShop(
+  _prev: SourceFormState,
+  formData: FormData,
+): Promise<SourceFormState> {
+  const signedIn = await signedInShop();
+  if (!signedIn) {
+    return { success: false, message: "Sign in to edit the shop." };
+  }
+
+  const company = String(formData.get("company") ?? "").trim().slice(0, 120);
+  const name = String(formData.get("name") ?? "").trim().slice(0, 80);
+  const phone = String(formData.get("phone") ?? "").trim().slice(0, 40);
+  const city = String(formData.get("city") ?? "").trim().slice(0, 80);
+  const state = String(formData.get("state") ?? "").trim().slice(0, 40);
+  const website = String(formData.get("website") ?? "").trim().slice(0, 200);
+  const blurb = String(formData.get("blurb") ?? "").trim().slice(0, 500);
+
+  if (!company) {
+    return { success: false, message: "Enter the shop name." };
+  }
+
+  try {
+    if (!(await blobReady())) {
+      return { success: false, message: "Could not store the shop." };
+    }
+    const slug = await upsertShopProfile({
+      userId: signedIn.userId,
+      company,
+      name,
+      phone,
+      city,
+      state,
+      website,
+      blurb,
+    });
+    return {
+      success: true,
+      message: `Shop saved. Public page is /directory/${slug}.`,
+    };
+  } catch (error) {
+    console.error("[Source shop store]", error);
+    return {
+      success: false,
+      message: `Could not store the shop (${blobErrorMessage(error)}).`,
+    };
+  }
 }
 
 export async function submitSourceJob(
@@ -339,7 +451,10 @@ export async function submitSourceJob(
     };
   }
 
-  const filings = await listSourceFilings();
+  const filings = applyProfilesToFilings(
+    await listSourceFilings(),
+    await listSourceProfiles(),
+  );
   const internal = matchFilingsToJob(filings, parsed.spec);
   const matches: SourcePublicMatch[] = internal.map(
     ({ email: _email, ...row }) => row,

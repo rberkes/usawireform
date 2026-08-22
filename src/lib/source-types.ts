@@ -48,6 +48,20 @@ export type SourceFilingRow = SourceFiling & {
   href: string;
 };
 
+export type SourceProfile = {
+  userId: string;
+  slug: string;
+  company: string;
+  name: string;
+  phone: string;
+  city: string;
+  state: string;
+  website: string;
+  blurb: string;
+  published: boolean;
+  updatedAt: string;
+};
+
 export type SourceJob = {
   company: string;
   name: string;

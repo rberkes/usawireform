@@ -1271,6 +1271,18 @@ export const directoryCompanies = mergeDirectory([
   fromStateShops(),
 ]).map(applyDirectoryIron);
 
+const CANADA_PROVINCES = new Set([
+  "ON", "QC", "BC", "AB", "MB", "SK", "NS", "NB", "NL", "PE", "NT", "YT", "NU",
+]);
+
+export function directoryRegionForState(
+  state: string,
+): DirectoryCompany["region"] {
+  const key = state.trim().toUpperCase();
+  if (CANADA_PROVINCES.has(key)) return "Canada";
+  return REGION_BY_STATE[key] ?? "Midwest";
+}
+
 export function publicHost(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, "");

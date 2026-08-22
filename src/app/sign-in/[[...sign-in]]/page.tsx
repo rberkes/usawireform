@@ -13,7 +13,7 @@ export default function SignInPage() {
       <PageHero
         kicker="Source"
         title="Log in to the shop"
-        lede="Confirm the account, then the dashboard is where you add cells and change the plan."
+        lede="Forgot the password? Use Forgot password on this form. Then the shop dashboard."
       />
       <div className="mt-10">
         <SignIn

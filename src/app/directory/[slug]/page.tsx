@@ -18,6 +18,7 @@ import {
   publicHost,
 } from "@/lib/directory";
 import { pageMeta } from "@/lib/seo";
+import { getSourceDirectoryCompany } from "@/lib/source";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,12 +26,21 @@ export function generateStaticParams() {
   return directoryCompanies.map((company) => ({ slug: company.slug }));
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
+
+async function resolveDirectoryCompany(slug: string) {
+  const listed = getDirectoryCompany(slug);
+  if (listed) return { company: listed, source: false as const };
+  const sourced = await getSourceDirectoryCompany(slug);
+  if (!sourced) return null;
+  return { company: sourced.company, source: true as const };
+}
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const company = getDirectoryCompany(slug);
-  if (!company) return {};
+  const resolved = await resolveDirectoryCompany(slug);
+  if (!resolved) return {};
+  const { company } = resolved;
 
   return pageMeta({
     title: `${company.name} — Wire Forming Company | ${company.location}`,
@@ -48,8 +58,9 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function DirectoryCompanyPage({ params }: Props) {
   const { slug } = await params;
-  const company = getDirectoryCompany(slug);
-  if (!company) notFound();
+  const resolved = await resolveDirectoryCompany(slug);
+  if (!resolved) notFound();
+  const { company, source } = resolved;
 
   const relatedCompanies = getCompaniesByRegion(company.region)
     .filter((c) => c.slug !== slug)
@@ -72,6 +83,9 @@ export default async function DirectoryCompanyPage({ params }: Props) {
   }
   if (company.website) {
     specs.push({ label: "Website", value: publicHost(company.website) });
+  }
+  if (company.phone) {
+    specs.push({ label: "Phone", value: company.phone });
   }
   if (company.machines && company.machines.length > 0) {
     specs.push({ label: "Public equipment notes", value: company.machines.join(", ") });
@@ -155,10 +169,11 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             </Section>
 
             {company.machines && company.machines.length > 0 ? (
-              <Section title="What the shop published">
+              <Section title={source ? "Filed cells" : "What the shop published"}>
                 <p className="mt-3 text-sm leading-6 text-muted">
-                  Named iron from a public page. Not a floor audit. Confirm before you
-                  send a print.
+                  {source
+                    ? "OEM, type, and wire band from the shop on Source. Not a floor walk by us."
+                    : "Named iron from a public page. Not a floor audit. Confirm before you send a print."}
                 </p>
                 <ul className="mt-4 grid gap-2 sm:grid-cols-2">
                   {company.machines.map((machine) => (
@@ -205,17 +220,38 @@ export default async function DirectoryCompanyPage({ params }: Props) {
 
           <div className="lg:sticky lg:top-8 lg:self-start">
             <div className="border border-line bg-inset/30 p-6">
-              <DirectoryLeadForm
-                companyName={company.name}
-                companySlug={company.slug}
-              />
+              {source ? (
+                <div className="space-y-4">
+                  <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
+                    Source
+                  </p>
+                  <p className="text-sm leading-6 text-muted">
+                    Jobs match the cells this shop filed. We introduce — emails
+                    stay with the desk.
+                  </p>
+                  <Link
+                    href="/source/job"
+                    className="inline-flex items-center justify-center rounded-sm bg-copper px-5 py-2.5 text-sm font-medium text-white hover:bg-copper-dim"
+                  >
+                    Match a job
+                  </Link>
+                </div>
+              ) : (
+                <DirectoryLeadForm
+                  companyName={company.name}
+                  companySlug={company.slug}
+                />
+              )}
             </div>
           </div>
         </div>
 
         <div className="mt-12 border border-line bg-inset/30 p-4 text-xs leading-5 text-muted">
           <p>
-            <strong className="text-foreground">Disclaimer:</strong> {company.name} is not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. This listing is provided for informational purposes only. Contact {company.name} directly to verify their capabilities, credentials, current equipment, and current business status.
+            <strong className="text-foreground">Disclaimer:</strong>{" "}
+            {source
+              ? `${company.name} filed its own cells on Source. USA Wire Form did not walk the floor. Confirm with the shop before you send a print.`
+              : `${company.name} is not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. This listing is provided for informational purposes only. Contact ${company.name} directly to verify their capabilities, credentials, current equipment, and current business status.`}
           </p>
         </div>
 

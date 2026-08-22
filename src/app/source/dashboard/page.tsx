@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
 import { openSourceBillingPortal } from "@/app/actions/source-billing";
 import { SourceAddCellsForm } from "@/components/SourceAddCellsForm";
+import { SourceShopForm } from "@/components/SourceShopForm";
 import { Button, ButtonLink, Page, PageHero, Panel } from "@/components/ui";
 import {
   countSourceCells,
@@ -12,7 +13,13 @@ import {
 } from "@/lib/source-account";
 import { getSourcePlanForUser, getStripeCustomerId } from "@/lib/source-billing";
 import { formatPlanPrice } from "@/lib/source-plans";
-import { listSourceFilings } from "@/lib/source";
+import {
+  getSourceProfile,
+  listSourceFilings,
+  saveSourceProfile,
+  uniqueSourceSlug,
+} from "@/lib/source";
+import { normalizeShopWebsite } from "@/lib/source-directory";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -21,6 +28,44 @@ export const metadata = {
 };
 
 type Props = { searchParams: Promise<{ session_id?: string }> };
+
+async function ensureProfile({
+  userId,
+  company,
+  name,
+  phone,
+  city,
+  state,
+  website,
+}: {
+  userId: string;
+  company: string;
+  name: string;
+  phone: string;
+  city: string;
+  state: string;
+  website: string;
+}) {
+  const existing = await getSourceProfile(userId);
+  if (existing) return existing;
+  if (!company) return null;
+  const slug = await uniqueSourceSlug(company, userId);
+  const profile = {
+    userId,
+    slug,
+    company,
+    name,
+    phone,
+    city,
+    state,
+    website: normalizeShopWebsite(website),
+    blurb: "",
+    published: true,
+    updatedAt: new Date().toISOString(),
+  };
+  await saveSourceProfile(profile);
+  return profile;
+}
 
 export default async function SourceDashboardPage({ searchParams }: Props) {
   const { userId } = await auth();
@@ -41,20 +86,34 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
   const shopRows = sourceFilingsForShop(filings, { userId, email });
   const used = countSourceCells(shopRows);
   const remaining = remainingSourceCells(plan, used);
-  const shop = shopFromFilings(shopRows);
+  const fromFiling = shopFromFilings(shopRows);
+  const profile = await ensureProfile({
+    userId,
+    company: fromFiling?.company ?? "",
+    name: fromFiling?.name ?? "",
+    phone: fromFiling?.phone ?? "",
+    city: fromFiling?.city ?? "",
+    state: fromFiling?.state ?? "",
+    website: fromFiling?.website ?? "",
+  });
+  const shop = profile ?? fromFiling;
   const cells = shopRows.flatMap((row) => row.machines);
   const customerId = await getStripeCustomerId(userId);
+  const location = [shop?.city, shop?.state].filter(Boolean).join(", ");
 
   return (
     <Page>
       <PageHero
         kicker="Source"
         title="Shop dashboard"
-        lede="Confirm the account is done. Add cells here. Jobs match this list."
+        lede="Shop listing, cells, and the plan. Account is email and password."
       />
       <div className="mt-8 flex flex-wrap gap-3">
         <ButtonLink href="/source/upgrade" variant="ghost">
           {plan.id === "free" ? "Upgrade" : "Change plan"}
+        </ButtonLink>
+        <ButtonLink href="/source/account" variant="ghost">
+          Account
         </ButtonLink>
         {customerId ? (
           <form action={openSourceBillingPortal}>
@@ -91,9 +150,24 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             Shop
           </p>
           <p className="mt-2 text-xl font-medium">{shop?.company || "Not filed"}</p>
-          <p className="mt-1 text-sm text-muted">{email || "—"}</p>
+          <p className="mt-1 text-sm text-muted">
+            {location || email || "—"}
+          </p>
         </Panel>
       </div>
+
+      <section className="mt-12">
+        <SourceShopForm
+          company={shop?.company ?? ""}
+          name={shop?.name ?? ""}
+          phone={shop?.phone ?? ""}
+          city={shop?.city ?? ""}
+          state={shop?.state ?? ""}
+          website={shop?.website ?? ""}
+          blurb={profile?.blurb ?? ""}
+          slug={profile?.slug}
+        />
+      </section>
 
       <section className="mt-12">
         <h2 className="text-lg font-medium">Filed cells</h2>
@@ -125,7 +199,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
       </section>
 
       <section className="mt-12">
-        {shop ? (
+        {shop?.company ? (
           <SourceAddCellsForm remaining={remaining} />
         ) : (
           <Panel className="space-y-3 p-5">

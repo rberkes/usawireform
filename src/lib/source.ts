@@ -1,6 +1,11 @@
 import { get, list, put } from "@vercel/blob";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { SITE_URL } from "@/lib/company";
+import { directoryCompanies } from "@/lib/directory";
+import {
+  slugifyShopName,
+  sourceProfileToDirectoryCompany,
+} from "@/lib/source-directory";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import type {
   SourceFiling,
@@ -8,6 +13,7 @@ import type {
   SourceInvite,
   SourceJob,
   SourceMachine,
+  SourceProfile,
 } from "@/lib/source-types";
 
 export type {
@@ -17,6 +23,7 @@ export type {
   SourceJob,
   SourceKind,
   SourceMachine,
+  SourceProfile,
   SourcePublicMatch,
 } from "@/lib/source-types";
 export { SOURCE_KINDS } from "@/lib/source-types";
@@ -197,4 +204,156 @@ export async function listSourceJobs(): Promise<SourceJob[]> {
     }
   }
   return rows;
+}
+
+function profilePath(userId: string) {
+  return `source/profiles/${userId.replace(/[^a-zA-Z0-9_-]/g, "")}.json`;
+}
+
+function readProfile(payload: Partial<SourceProfile>, userId: string): SourceProfile {
+  return {
+    userId: String(payload.userId ?? userId),
+    slug: String(payload.slug ?? ""),
+    company: String(payload.company ?? ""),
+    name: String(payload.name ?? ""),
+    phone: String(payload.phone ?? ""),
+    city: String(payload.city ?? ""),
+    state: String(payload.state ?? ""),
+    website: String(payload.website ?? ""),
+    blurb: String(payload.blurb ?? ""),
+    published: payload.published !== false,
+    updatedAt: String(payload.updatedAt ?? new Date().toISOString()),
+  };
+}
+
+export async function getSourceProfile(userId: string) {
+  if (!userId || !(await blobReady())) return null;
+  const result = await get(profilePath(userId), {
+    access: "private",
+    useCache: false,
+    ...(await blobAuth()),
+  });
+  if (!result?.stream || result.statusCode !== 200) return null;
+  try {
+    return readProfile(
+      JSON.parse(await new Response(result.stream).text()) as Partial<SourceProfile>,
+      userId,
+    );
+  } catch {
+    return null;
+  }
+}
+
+export async function listSourceProfiles(): Promise<SourceProfile[]> {
+  if (!(await blobReady())) return [];
+  const result = await list({
+    prefix: "source/profiles/",
+    ...(await blobAuth()),
+  });
+  const rows: SourceProfile[] = [];
+  for (const blob of result.blobs.slice(0, 200)) {
+    const file = await get(blob.pathname, {
+      access: "private",
+      useCache: false,
+      ...(await blobAuth()),
+    });
+    if (!file?.stream || file.statusCode !== 200) continue;
+    try {
+      const payload = JSON.parse(
+        await new Response(file.stream).text(),
+      ) as Partial<SourceProfile>;
+      const userId = String(
+        payload.userId ??
+          blob.pathname.split("/").pop()?.replace(/\.json$/, "") ??
+          "",
+      );
+      if (!userId) continue;
+      rows.push(readProfile(payload, userId));
+    } catch {
+      /* skip */
+    }
+  }
+  return rows;
+}
+
+export async function uniqueSourceSlug(name: string, userId: string) {
+  const existing = await getSourceProfile(userId);
+  if (existing?.slug) return existing.slug;
+
+  const base = slugifyShopName(name) || `shop-${userId.slice(-6).toLowerCase()}`;
+  const taken = new Set(directoryCompanies.map((company) => company.slug));
+  for (const profile of await listSourceProfiles()) {
+    if (profile.userId !== userId) taken.add(profile.slug);
+  }
+  if (!taken.has(base)) return base;
+  let n = 2;
+  while (taken.has(`${base}-${n}`)) n += 1;
+  return `${base}-${n}`;
+}
+
+export async function saveSourceProfile(profile: SourceProfile) {
+  if (!(await blobReady())) return false;
+  await put(profilePath(profile.userId), JSON.stringify(profile), {
+    access: BLOB_ACCESS,
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    contentType: "application/json",
+    ...(await blobAuth()),
+  });
+  return true;
+}
+
+export async function getSourceProfileBySlug(slug: string) {
+  if (!slug) return null;
+  const rows = await listSourceProfiles();
+  return rows.find((row) => row.published && row.slug === slug) ?? null;
+}
+
+export function applyProfilesToFilings(
+  filings: SourceFiling[],
+  profiles: SourceProfile[],
+) {
+  const byUser = new Map(profiles.map((row) => [row.userId, row]));
+  return filings.map((filing) => {
+    const profile = filing.userId ? byUser.get(filing.userId) : undefined;
+    if (!profile) return filing;
+    return {
+      ...filing,
+      company: profile.company || filing.company,
+      name: profile.name || filing.name,
+      phone: profile.phone || filing.phone,
+      city: profile.city || filing.city,
+      state: profile.state || filing.state,
+      website: profile.website || filing.website,
+    };
+  });
+}
+
+export async function listPublishedSourceDirectoryCompanies() {
+  const [profiles, filings] = await Promise.all([
+    listSourceProfiles(),
+    listSourceFilings(),
+  ]);
+  return profiles
+    .filter((profile) => profile.published && profile.slug && profile.company)
+    .map((profile) => {
+      const cells = filings
+        .filter((row) => row.userId === profile.userId)
+        .flatMap((row) => row.machines);
+      return sourceProfileToDirectoryCompany(profile, cells);
+    });
+}
+
+export async function getSourceDirectoryCompany(slug: string) {
+  const profile = await getSourceProfileBySlug(slug);
+  if (!profile) return null;
+  const filings = await listSourceFilings();
+  const cells = filings
+    .filter((row) => row.userId === profile.userId)
+    .flatMap((row) => row.machines);
+  return {
+    profile,
+    company: sourceProfileToDirectoryCompany(profile, cells),
+    cells,
+  };
 }

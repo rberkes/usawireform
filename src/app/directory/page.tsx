@@ -6,7 +6,6 @@ import { cx } from "@/lib/cx";
 import {
   directoryCompanies,
   DIRECTORY_REGIONS,
-  getCompaniesByRegion,
   publicHost,
 } from "@/lib/directory";
 import {
@@ -16,6 +15,10 @@ import {
 } from "@/lib/directory-iron";
 import { CNC_COMPARE } from "@/lib/cnc-oems";
 import { pageMeta } from "@/lib/seo";
+import { listPublishedSourceDirectoryCompanies } from "@/lib/source";
+import type { DirectoryCompany } from "@/lib/directory-types";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = pageMeta({
   title: "Wire Forming Companies Directory — USA & Canada",
@@ -36,18 +39,24 @@ type Props = { searchParams: Promise<{ iron?: string }> };
 export default async function DirectoryPage({ searchParams }: Props) {
   const { iron } = await searchParams;
   const filter = isIronClass(iron) ? iron : undefined;
-  const usaCount = directoryCompanies.filter((c) => c.country === "USA").length;
-  const canadaCount = directoryCompanies.filter((c) => c.country === "Canada").length;
+  const sourced = await listPublishedSourceDirectoryCompanies();
+  const listed = new Set(directoryCompanies.map((company) => company.slug));
+  const companies: DirectoryCompany[] = [
+    ...directoryCompanies,
+    ...sourced.filter((company) => !listed.has(company.slug)),
+  ];
+  const usaCount = companies.filter((c) => c.country === "USA").length;
+  const canadaCount = companies.filter((c) => c.country === "Canada").length;
   const activeFilter = IRON_FILTERS.find((item) => item.id === filter);
   const ironCounts = Object.fromEntries(
     IRON_FILTERS.map((item) => [
       item.id,
-      directoryCompanies.filter((company) => companyHasIron(company, item.id)).length,
+      companies.filter((company) => companyHasIron(company, item.id)).length,
     ]),
   ) as Record<(typeof IRON_FILTERS)[number]["id"], number>;
   const matched = filter
-    ? directoryCompanies.filter((company) => companyHasIron(company, filter))
-    : directoryCompanies;
+    ? companies.filter((company) => companyHasIron(company, filter))
+    : companies;
   const matchedUsa = matched.filter((company) => company.country === "USA").length;
 
   return (
@@ -58,12 +67,12 @@ export default async function DirectoryPage({ searchParams }: Props) {
       <PageHero
         kicker="Industry Directory"
         title="Wire Forming Companies"
-        lede={`${directoryCompanies.length} wire forming factories across the United States and Canada — part of the resource for the trade. Equipment tags come from public pages, not a floor walk.`}
+        lede={`${companies.length} wire forming factories across the United States and Canada — part of the resource for the trade. Equipment tags come from public pages or cells the shop filed on Source.`}
       />
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="border border-line p-4">
-          <p className="font-mono text-3xl text-copper">{directoryCompanies.length}</p>
+          <p className="font-mono text-3xl text-copper">{companies.length}</p>
           <p className="mt-1 text-sm text-muted">Total Companies</p>
         </div>
         <div className="border border-line p-4">
@@ -146,15 +155,15 @@ export default async function DirectoryPage({ searchParams }: Props) {
       </div>
 
       {DIRECTORY_REGIONS.map((region) => {
-        const companies = getCompaniesByRegion(region).filter((company) =>
-          filter ? companyHasIron(company, filter) : true,
+        const regionCompanies = companies.filter((company) =>
+          company.region === region && (filter ? companyHasIron(company, filter) : true),
         );
-        if (companies.length === 0) return null;
+        if (regionCompanies.length === 0) return null;
 
         return (
-          <Section key={region} title={`${region} (${companies.length})`}>
+          <Section key={region} title={`${region} (${regionCompanies.length})`}>
             <div className="mt-4 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
-              {companies.map((company) => (
+              {regionCompanies.map((company) => (
                 <div
                   key={company.slug}
                   className="flex flex-col bg-background p-4 hover:bg-inset transition-colors"

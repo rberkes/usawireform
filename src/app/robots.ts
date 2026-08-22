@@ -6,6 +6,8 @@ const privatePaths = [
   "/admin/",
   "/source/dashboard",
   "/source/dashboard/",
+  "/source/account",
+  "/source/account/",
   "/sign-in",
   "/sign-in/",
   "/sign-up",
