@@ -192,88 +192,39 @@ export default function Home() {
 
         <CapabilityStrip />
 
-        <Section className="mt-16">
+        <Section kicker="Also here" title="The trade, this floor, and the rest of the site.">
           <LinkList
+            className="mt-8"
             items={[
               {
                 href: "https://www.wireformingtech.com",
                 title: "Wire Forming Technology International",
-                body: "The trade magazine for spring makers, wire formers, mesh welders, and rebar processors. First industry link.",
+                body: "The trade magazine. First industry link.",
               },
               {
                 href: "/directory/areas",
                 title: "Wire forming cities",
-                body: "Twenty U.S. forming clusters. Cleveland is the cheap coil — mills and drawers on a local truck.",
-              },
-              {
-                href: "/ohio",
-                title: "Ohio city directory",
-                body: "Thirty Ohio landers — Akron, Canton, Youngstown, and the forming towns. One CNC cell in Northeast Ohio.",
-              },
-              {
-                href: "/cleveland",
-                title: "Northeast Ohio",
-                body: "Mills, wire drawers, and short-haul coil — the low-cost location for 4–14 mm forming and secondaries.",
-              },
-              {
-                href: "/wire-fabrication",
-                title: "Wire fabrication, 4–14 mm",
-                body: "Low to high carbon, stainless, and other ferrous and non-ferrous coil.",
+                body: "Twenty U.S. forming clusters. Cleveland is the cheap coil.",
               },
               {
                 href: "/sizes",
                 title: "3/8, 7/16, and 1/2 in",
-                body: "Stock production diameters we run — frames, grids, and trays.",
-              },
-              {
-                href: "/materials",
-                title: "Coil materials",
-                body: "1010, 1018, spring steels, 300-series including 330, brass, and copper.",
-              },
-              {
-                href: "/processes/3d-cnc-wire-forming",
-                title: "3D CNC wire forming",
-                body: "Spatial bends in 4–14 mm, and what the print should say.",
-              },
-              {
-                href: "/guide/design-for-wire-forming",
-                title: "Design for wire forming",
-                body: "Bend radius, min legs, springback, and datums.",
-              },
-              {
-                href: "/industries",
-                title: "Industries",
-                body: "Named sectors we actually form for. Each one is its own directory.",
+                body: "Stock production diameters on this cell.",
               },
               {
                 href: "/products",
                 title: "USA made wire forms",
-                body: "USA made D-rings, USA made wire racks, USA made cable trays, USA made security fencing, USA made wire baskets, USA made heat treat baskets, USA made ground staples, USA made ground samples, USA made wire stakes.",
-              },
-              {
-                href: "/processes/mesh-grids-and-cable-trays",
-                title: "USA made cable trays",
-                body: "USA made cable trays, USA made wire baskets, USA made security fencing — resistance, MIG, and TIG.",
+                body: "Hooks, baskets, trays, guards, and hardware from this floor.",
               },
               {
                 href: "/blog",
                 title: "Blog",
-                body: "Wire forming articles, structures, and a daily briefing.",
+                body: "Articles, structures, and a daily briefing.",
               },
               {
                 href: "/models",
                 title: "3D STEP viewer",
-                body: "Orbit shop models of hooks, baskets, trays, and guards. Drop a STEP from the print.",
-              },
-              {
-                href: "/past-projects",
-                title: "Our past projects",
-                body: "Shop files from jobs we formed. Autodesk streams the latest version.",
-              },
-              {
-                href: "/videos",
-                title: "Shop video",
-                body: "Numalliance CNC on the floor — Robomac 214TF and the named machines.",
+                body: "Orbit shop models. Drop a STEP from the print.",
               },
             ]}
           />

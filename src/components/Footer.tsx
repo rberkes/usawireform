@@ -40,6 +40,19 @@ const library = [
   { href: "/guide/design-for-wire-forming", label: "Design guide" },
 ];
 
+const factories = [
+  { href: "/directory", label: "Company Directory" },
+  { href: "/wire-form-factories-in-usa", label: "Wire form factories in the USA" },
+  { href: "/find-factories-by-machine", label: "Find factories by machine" },
+  { href: "/source", label: "Find a wire form shop" },
+  { href: "/source/shops", label: "Add a machine cell" },
+  { href: "/source/upgrade", label: "Source plans" },
+  { href: "/directory/new", label: "Newest Source shops" },
+  { href: "/directory/areas", label: "Wire forming cities" },
+  { href: "/ohio", label: "Ohio cities" },
+  { href: "/architecture", label: "Site architecture" },
+];
+
 const shop = [
   { href: "/industries", label: "Industries" },
   { href: "/products", label: "Products" },
@@ -48,25 +61,11 @@ const shop = [
   { href: "/equipment", label: "Equipment" },
   { href: "/equipment/cnc-manufacturers", label: "CNC machine catalog" },
   { href: "/equipment/machine-comparison", label: "Machine comparison" },
-  { href: "/directory", label: "Company Directory" },
-  { href: "/wire-form-factories-in-usa", label: "Wire form factories in the USA" },
-  { href: "/find-factories-by-machine", label: "Find factories by machine" },
-  { href: "/architecture", label: "Site architecture" },
-  { href: "/directory/new", label: "Newest Source shops" },
-  { href: "/directory/areas", label: "Wire forming cities" },
-  { href: "/ohio", label: "Ohio cities" },
-  { href: "/products/carts-and-trolleys", label: "Carts and trolleys" },
-  { href: "/products/dunnage-inserts", label: "Dunnage inserts" },
-  { href: "/products/bread-racks", label: "Bread racks" },
-  { href: "/products/design-and-prototyping", label: "Design and prototyping" },
   { href: "/models", label: "3D models" },
   { href: "/past-projects", label: "Our past projects" },
   { href: "/videos", label: "Videos" },
   { href: "/blog", label: "Blog" },
   { href: "/instant-quote", label: "Instant quote" },
-  { href: "/source", label: "Find a wire form shop" },
-  { href: "/source/shops", label: "Add a machine cell" },
-  { href: "/source/upgrade", label: "Source plans" },
   { href: "/quoting", label: "Tooling & coil" },
   { href: "/about", label: "About" },
   { href: "/cleveland", label: "Northeast Ohio" },
@@ -143,6 +142,7 @@ export function Footer() {
 
         <div className="flex flex-wrap gap-10 text-sm sm:gap-16">
           <NavCol title="Library" links={library} />
+          <NavCol title="Factories" links={factories} />
           <NavCol title="Headquarters" links={shop} />
           <ExternalNavCol title="Associations" links={industryAssociations} />
           <ExternalNavCol title="Wire Suppliers" links={wireSuppliers} />

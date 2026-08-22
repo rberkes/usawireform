@@ -6,92 +6,17 @@ import { useState, useEffect, useRef, type ReactNode } from "react";
 import { BrandLockup } from "./WireMark";
 import { SearchButton } from "./Search";
 import { btn, Container } from "./ui";
-import { industries } from "@/lib/site";
-import { catalogGroups, catalog } from "@/lib/catalog";
-import { processesByCategory } from "@/lib/processes";
 import { cx } from "@/lib/cx";
+import {
+  navSectionLinks,
+  navSections,
+  type NavSection,
+} from "@/lib/nav";
 
 const SearchDialog = dynamic(
   () => import("./Search").then((mod) => ({ default: mod.SearchDialog })),
   { ssr: false }
 );
-
-const navSections = [
-  {
-    label: "Products",
-    href: "/products",
-    groups: catalogGroups.map((group) => ({
-      title: group,
-      items: catalog
-        .filter((item) => item.group === group)
-        .slice(0, 5)
-        .map((item) => ({
-          href: `/products/${item.slug}`,
-          label: item.title,
-        })),
-    })),
-  },
-  {
-    label: "Industries",
-    href: "/industries",
-    items: industries.slice(0, 8).map((item) => ({
-      href: `/industries/${item.slug}`,
-      label: item.title,
-    })),
-  },
-  {
-    label: "Processes",
-    href: "/processes",
-    items: [
-      { href: "/processes/3d-cnc-wire-forming", label: "3D CNC Wire Forming" },
-      { href: "/processes/2d-cnc-wire-forming", label: "2D CNC Wire Forming" },
-      { href: "/processes/resistance-welding", label: "Resistance Welding" },
-      { href: "/wire-mesh", label: "Wire Mesh" },
-      { href: "/processes/mesh-grids-and-cable-trays", label: "Mesh Grids & Trays" },
-      { href: "/processes/plating-and-coating", label: "Plating & Coating" },
-      { href: "/processes/heat-treating", label: "Heat Treating" },
-    ],
-  },
-  {
-    label: "Resources",
-    href: "/guide/design-for-wire-forming",
-    items: [
-      { href: "https://www.wireformingtech.com", label: "Wire Forming Tech" },
-      { href: "/guide/design-for-wire-forming", label: "Design Guide" },
-      { href: "/materials", label: "Materials" },
-      { href: "/330-stainless-wire-bending-usa-parts", label: "330 Stainless" },
-      { href: "/custom-wire-forming", label: "Custom Wire Forming" },
-      { href: "/custom-cnc-wire-forming-services", label: "Custom CNC Wire Forming Services" },
-      { href: "/powder-coating-hooks", label: "Powder Coating Hooks" },
-      { href: "/powder-coating-v-hooks", label: "Powder Coating V-Hooks" },
-      { href: "/heavy-duty-v-hooks", label: "Heavy-Duty Powder Coat V-Hooks" },
-      { href: "/custom-powder-coating-hooks", label: "Custom Hook Builder" },
-      { href: "/guide/s-hooks-vs-v-hooks-vs-c-hooks", label: "S vs V vs C Hooks" },
-      { href: "/wire-forming-companies-near-me", label: "Companies Near Me" },
-      { href: "/sizes", label: "Wire Sizes" },
-      { href: "/equipment", label: "Equipment" },
-      { href: "/equipment/cnc-manufacturers", label: "CNC Machine Catalog" },
-      { href: "/equipment/machine-comparison", label: "Machine Comparison" },
-      { href: "/directory", label: "Company Directory" },
-      { href: "/wire-form-factories-in-usa", label: "Wire Form Factories in the USA" },
-      { href: "/find-factories-by-machine", label: "Find Factories by Machine" },
-      { href: "/architecture", label: "Site Architecture" },
-      { href: "/directory/new", label: "Newest Source Shops" },
-      { href: "/directory/areas", label: "Wire Forming Cities" },
-      { href: "/ohio", label: "Ohio Cities" },
-      { href: "/products/carts-and-trolleys", label: "Carts and Trolleys" },
-      { href: "/products/dunnage-inserts", label: "Dunnage Inserts" },
-      { href: "/products/bread-racks", label: "Bread Racks" },
-      { href: "/products/design-and-prototyping", label: "Design and Prototyping" },
-      { href: "/models", label: "3D models" },
-      { href: "/past-projects", label: "Our past projects" },
-      { href: "/videos", label: "Videos" },
-      { href: "/blog", label: "Blog" },
-      { href: "/about", label: "About Us" },
-      { href: "/careers", label: "Careers" },
-    ],
-  },
-];
 
 export function Header({ account }: { account: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -99,7 +24,6 @@ export function Header({ account }: { account: ReactNode }) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle keyboard shortcut for search
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -111,7 +35,6 @@ export function Header({ account }: { account: ReactNode }) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -122,7 +45,6 @@ export function Header({ account }: { account: ReactNode }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
     setActiveDropdown(null);
@@ -136,7 +58,6 @@ export function Header({ account }: { account: ReactNode }) {
             <BrandLockup />
           </Link>
 
-          {/* Desktop navigation */}
           <nav className="hidden items-center gap-1 lg:flex" ref={dropdownRef}>
             {navSections.map((section) => (
               <div key={section.label} className="relative">
@@ -166,10 +87,18 @@ export function Header({ account }: { account: ReactNode }) {
                 </button>
                 {activeDropdown === section.label && (
                   <div
-                    className="absolute left-0 top-full pt-2"
+                    className={cx(
+                      "absolute top-full pt-2",
+                      section.label === "Learn" || section.label === "Factories"
+                        ? "right-0"
+                        : "left-0"
+                    )}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <DropdownMenu section={section} onClose={() => setActiveDropdown(null)} />
+                    <DropdownMenu
+                      section={section}
+                      onClose={() => setActiveDropdown(null)}
+                    />
                   </div>
                 )}
               </div>
@@ -192,7 +121,6 @@ export function Header({ account }: { account: ReactNode }) {
               Instant quote
             </Link>
 
-            {/* Mobile menu button */}
             <button
               type="button"
               className="flex h-10 w-10 items-center justify-center text-foreground lg:hidden"
@@ -222,13 +150,9 @@ export function Header({ account }: { account: ReactNode }) {
           </div>
         </Container>
 
-        {/* Mobile navigation */}
-        {mobileOpen && (
-          <MobileMenu onClose={() => setMobileOpen(false)} />
-        )}
+        {mobileOpen && <MobileMenu onClose={() => setMobileOpen(false)} />}
       </header>
 
-      {/* Sticky mobile CTA */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-background p-3 sm:hidden">
         <Link
           href="/instant-quote"
@@ -238,7 +162,6 @@ export function Header({ account }: { account: ReactNode }) {
         </Link>
       </div>
 
-      {/* Search dialog */}
       <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
@@ -248,15 +171,21 @@ function DropdownMenu({
   section,
   onClose,
 }: {
-  section: (typeof navSections)[number];
+  section: NavSection;
   onClose: () => void;
 }) {
-  // Check if this section has groups (Products) or items (others)
-  const hasGroups = "groups" in section && section.groups;
-
-  if (hasGroups) {
+  const groups = section.groups;
+  if (groups?.length) {
+    const cols =
+      groups.length === 3 || groups.length >= 5 ? "grid-cols-3" : "grid-cols-2";
     return (
-      <div className="min-w-[600px] rounded-lg border border-line bg-background p-4 shadow-xl">
+      <div
+        className={cx(
+          "rounded-lg border border-line bg-background p-4 shadow-xl",
+          groups.length >= 3 ? "min-w-[540px]" : "min-w-[420px]",
+          groups.length >= 5 && "min-w-[720px]"
+        )}
+      >
         <div className="mb-3 flex items-center justify-between border-b border-line pb-3">
           <Link
             href={section.href}
@@ -266,8 +195,8 @@ function DropdownMenu({
             View all {section.label.toLowerCase()} →
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-6">
-          {section.groups.map((group) => (
+        <div className={cx("grid gap-6", cols)}>
+          {groups.map((group) => (
             <div key={group.title}>
               <h3 className="mb-2 font-mono text-[10px] font-medium uppercase tracking-widest text-muted">
                 {group.title}
@@ -293,7 +222,7 @@ function DropdownMenu({
   }
 
   return (
-    <div className="min-w-[200px] rounded-lg border border-line bg-background p-2 shadow-xl">
+    <div className="min-w-[220px] rounded-lg border border-line bg-background p-2 shadow-xl">
       <Link
         href={section.href}
         className="mb-2 block rounded px-3 py-2 text-sm font-medium text-copper hover:bg-inset"
@@ -323,48 +252,50 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
   return (
     <nav className="border-t border-line bg-background px-5 py-4 lg:hidden">
       <div className="mx-auto flex max-w-6xl flex-col gap-2">
-        {navSections.map((section) => (
-          <div key={section.label}>
-            <button
-              type="button"
-              className="flex w-full items-center justify-between py-2 text-base text-foreground"
-              onClick={() =>
-                setExpandedSection(
-                  expandedSection === section.label ? null : section.label
-                )
-              }
-            >
-              {section.label}
-              <ChevronIcon
-                className={cx(
-                  "transition-transform",
-                  expandedSection === section.label && "rotate-180"
-                )}
-              />
-            </button>
-            {expandedSection === section.label && (
-              <div className="ml-4 border-l border-line pl-4">
-                <Link
-                  href={section.href}
-                  className="block py-2 text-sm text-copper"
-                  onClick={onClose}
-                >
-                  View all →
-                </Link>
-                {section.items?.slice(0, 6).map((item) => (
+        {navSections.map((section) => {
+          const links = navSectionLinks(section);
+          const shown =
+            section.label === "Products" ? links.slice(0, 10) : links;
+          const open = expandedSection === section.label;
+          return (
+            <div key={section.label}>
+              <button
+                type="button"
+                className="flex w-full items-center justify-between py-2 text-base text-foreground"
+                onClick={() =>
+                  setExpandedSection(open ? null : section.label)
+                }
+                aria-expanded={open}
+              >
+                {section.label}
+                <ChevronIcon
+                  className={cx("transition-transform", open && "rotate-180")}
+                />
+              </button>
+              {open ? (
+                <div className="ml-4 border-l border-line pl-4">
                   <Link
-                    key={item.href}
-                    href={item.href}
-                    className="block py-2 text-sm text-muted"
+                    href={section.href}
+                    className="block py-2 text-sm text-copper"
                     onClick={onClose}
                   >
-                    {item.label}
+                    View all →
                   </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+                  {shown.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="block py-2 text-sm text-muted"
+                      onClick={onClose}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
         <Link
           href="/contact"
           className="py-2 text-base text-foreground"
