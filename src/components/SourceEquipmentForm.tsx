@@ -137,9 +137,8 @@ export function SourceEquipmentForm({
           Equipment on the floor
         </p>
         <p className="text-sm leading-6 text-muted">
-          Pick the OEM, then the model. Numalliance, WAFIOS, and AIM names and
-          wire bands come from their published machine pages — confirm the
-          plate on the cell.
+          Pick the OEM, then the model. Type and wire band come from that
+          catalog row — confirm the plate on the cell.
         </p>
         {machines.map((row, index) => {
           const catalog = machinesForOem(row.oem);
@@ -241,19 +240,25 @@ export function SourceEquipmentForm({
               </label>
               <label className="block text-sm">
                 Type
-                <select
-                  className={`mt-1.5 ${fieldClass}`}
-                  value={row.kind}
-                  onChange={(event) =>
-                    patch(index, { ...row, kind: event.target.value })
-                  }
-                >
-                  {SOURCE_KINDS.map((kind) => (
-                    <option key={kind} value={kind}>
-                      {kind}
-                    </option>
-                  ))}
-                </select>
+                {listed && !otherModel ? (
+                  <p className={`mt-1.5 ${fieldClass} text-muted`}>
+                    {row.kind || "From the model"}
+                  </p>
+                ) : (
+                  <select
+                    className={`mt-1.5 ${fieldClass}`}
+                    value={row.kind}
+                    onChange={(event) =>
+                      patch(index, { ...row, kind: event.target.value })
+                    }
+                  >
+                    {SOURCE_KINDS.map((kind) => (
+                      <option key={kind} value={kind}>
+                        {kind}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </label>
               <label className="block text-sm">
                 City

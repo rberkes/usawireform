@@ -1,6 +1,7 @@
 import { get, list, put } from "@vercel/blob";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { SITE_URL } from "@/lib/company";
+import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import type {
   SourceFiling,
   SourceFilingRow,
@@ -29,14 +30,16 @@ export function parseSourceMachines(raw: string): SourceMachine[] {
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
     return parsed
-      .map((row) => ({
-        oem: String((row as SourceMachine).oem ?? "").trim().slice(0, 80),
-        model: String((row as SourceMachine).model ?? "").trim().slice(0, 80),
-        kind: String((row as SourceMachine).kind ?? "").trim().slice(0, 40),
-        minMm: String((row as SourceMachine).minMm ?? "").trim().slice(0, 16),
-        maxMm: String((row as SourceMachine).maxMm ?? "").trim().slice(0, 16),
-        city: String((row as SourceMachine).city ?? "").trim().slice(0, 80),
-      }))
+      .map((row) =>
+        hydrateMachineFromCatalog({
+          oem: String((row as SourceMachine).oem ?? "").trim().slice(0, 80),
+          model: String((row as SourceMachine).model ?? "").trim().slice(0, 80),
+          kind: String((row as SourceMachine).kind ?? "").trim().slice(0, 40),
+          minMm: String((row as SourceMachine).minMm ?? "").trim().slice(0, 16),
+          maxMm: String((row as SourceMachine).maxMm ?? "").trim().slice(0, 16),
+          city: String((row as SourceMachine).city ?? "").trim().slice(0, 80),
+        }),
+      )
       .filter((row) => row.oem || row.model || row.minMm || row.maxMm);
   } catch {
     return [];
@@ -136,7 +139,9 @@ export async function listSourceFilings(): Promise<SourceFilingRow[]> {
         city: String(payload.city ?? ""),
         state: String(payload.state ?? ""),
         website: String(payload.website ?? ""),
-        machines: Array.isArray(payload.machines) ? payload.machines : [],
+        machines: Array.isArray(payload.machines)
+          ? payload.machines.map(hydrateMachineFromCatalog)
+          : [],
         notes: String(payload.notes ?? ""),
         fileName: payload.fileName,
         timestamp:

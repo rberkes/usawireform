@@ -1,3 +1,4 @@
+import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import { type SourceFiling, type SourceInternalMatch } from "@/lib/source-types";
 
 const BAND_SLACK_MM = 0.05;
@@ -104,7 +105,8 @@ export function matchFilingsToJob(
       continue;
     }
     let best: (SourceInternalMatch & { score: number }) | null = null;
-    for (const machine of filing.machines) {
+    for (const filed of filing.machines) {
+      const machine = hydrateMachineFromCatalog(filed);
       if (!machineFitsJob(machine, job)) continue;
       const min = parseBandMm(machine.minMm) ?? 0;
       const max = parseBandMm(machine.maxMm) ?? 0;

@@ -1,4 +1,4 @@
-import { SOURCE_KINDS } from "@/lib/source-types";
+import { SOURCE_KINDS, type SourceMachine } from "@/lib/source-types";
 
 export type SourceIronPick = {
   name: string;
@@ -169,7 +169,20 @@ export function ironPickByName(
   oem: string,
   model: string,
 ): SourceIronPick | undefined {
-  return machinesForOem(oem).find((row) => row.name === model);
+  const want = model.trim().toLowerCase();
+  if (!want) return undefined;
+  return machinesForOem(oem).find((row) => row.name.toLowerCase() === want);
+}
+
+export function hydrateMachineFromCatalog(machine: SourceMachine): SourceMachine {
+  const pick = ironPickByName(machine.oem, machine.model);
+  if (!pick) return machine;
+  return {
+    ...machine,
+    kind: pick.kind,
+    minMm: machine.minMm.trim() || pick.minMm,
+    maxMm: machine.maxMm.trim() || pick.maxMm,
+  };
 }
 
 export function ironSeries(machines: SourceIronPick[]): string[] {
