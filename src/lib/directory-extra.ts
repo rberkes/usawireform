@@ -71,12 +71,13 @@ export const extraDirectoryCompanies: DirectoryCompany[] = [
   {
     slug: "cook-spring",
     name: "Cook Spring Company",
-    location: "Southington, CT",
-    state: "CT",
+    location: "Sarasota, FL",
+    state: "FL",
     country: "USA",
-    region: "Northeast",
-    description: "Cook Spring Company in Southington, CT. Springs and related coil work.",
-    capabilities: ["Springs", "Wire forms", "Fourslide"],
+    region: "Southeast",
+    description:
+      "Cook Spring Company in Sarasota, FL. Medical-industry springs and wire forms. Plant is Sarasota — not Southington, CT.",
+    capabilities: ["Springs", "Wire forms", "Medical coil"],
     website: "https://cookspring.com",
   },
   {

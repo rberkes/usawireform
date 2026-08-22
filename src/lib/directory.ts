@@ -6,6 +6,7 @@
 import type { DirectoryCompany } from "./directory-types";
 import { extraDirectoryCompanies } from "./directory-extra";
 import { applyDirectoryIron } from "./directory-iron";
+import { stateBoostCompanies } from "./directory-state-boost";
 import { STATE_SHOPS } from "./state-shops";
 
 export type { DirectoryCompany } from "./directory-types";
@@ -1209,6 +1210,21 @@ function hostOf(url?: string) {
   }
 }
 
+/** Host, or host+path for plant pages so Corry and Farmington are not the same listing. */
+function listingKey(url?: string) {
+  if (!url) return "";
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, "").toLowerCase();
+    const path = u.pathname.replace(/\/$/, "").toLowerCase();
+    const hash = u.hash.replace(/^#/, "").toLowerCase();
+    if (path || hash) return `${host}${path}${hash ? `#${hash}` : ""}`;
+    return host;
+  } catch {
+    return "";
+  }
+}
+
 function slugify(name: string) {
   return name
     .toLowerCase()
@@ -1253,7 +1269,7 @@ function mergeDirectory(groups: DirectoryCompany[][]) {
   for (const group of groups) {
     for (const company of group) {
       const nameKey = normName(company.name);
-      const host = hostOf(company.website);
+      const host = listingKey(company.website);
       if (seenSlug.has(company.slug) || seenName.has(nameKey)) continue;
       if (host && seenHost.has(host)) continue;
       seenSlug.add(company.slug);
@@ -1268,6 +1284,7 @@ function mergeDirectory(groups: DirectoryCompany[][]) {
 export const directoryCompanies = mergeDirectory([
   CORE_DIRECTORY_COMPANIES,
   extraDirectoryCompanies,
+  stateBoostCompanies,
   fromStateShops(),
 ]).map(applyDirectoryIron);
 
