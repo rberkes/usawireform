@@ -178,6 +178,13 @@ export default async function DirectoryPage({ searchParams }: Props) {
                   key={company.slug}
                   className="flex flex-col bg-background p-4 hover:bg-inset transition-colors"
                 >
+                  {company.logoUrl ? (
+                    <img
+                      src={company.logoUrl}
+                      alt=""
+                      className="mb-3 h-10 w-auto max-w-[8rem] object-contain"
+                    />
+                  ) : null}
                   <Link
                     href={`/directory/${company.slug}`}
                     className="font-medium hover:text-copper transition-colors line-clamp-1"

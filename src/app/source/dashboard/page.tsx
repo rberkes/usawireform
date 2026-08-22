@@ -22,7 +22,7 @@ import {
   uniqueSourceSlug,
 } from "@/lib/source";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
-import { normalizeShopWebsite } from "@/lib/source-directory";
+import { normalizeShopWebsite, sourceAccountLocksClaim } from "@/lib/source-directory";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -69,6 +69,7 @@ async function ensureProfile({
     secondaries: [],
     listedAt: now,
     updatedAt: now,
+    logoPath: undefined,
   };
   await saveSourceProfile(profile);
   return profile;
@@ -114,7 +115,11 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
       <PageHero
         kicker="Source"
         title="Shop dashboard"
-        lede="Shop listing, cells, and the plan. Account is email and password."
+        lede={
+          shop?.company
+            ? `Signed in as ${shop.company}. One shop per account.`
+            : "Shop listing, cells, and the plan. Account is email and password."
+        }
       />
       <div className="mt-8 flex flex-wrap gap-3">
         <ButtonLink href="/source/upgrade" variant="ghost">
@@ -176,6 +181,12 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           website={shop?.website ?? ""}
           blurb={profile?.blurb ?? ""}
           slug={profile?.slug}
+          claimedDirectory={sourceAccountLocksClaim(profile)}
+          logoUrl={
+            profile?.logoPath && profile.slug
+              ? `/directory/logo/${profile.slug}?v=${encodeURIComponent(profile.updatedAt)}`
+              : undefined
+          }
         />
       </section>
 

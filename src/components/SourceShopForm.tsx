@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updateSourceShop, type SourceFormState } from "@/app/actions/source";
 import { Button, ButtonLink, fieldClass, Panel } from "@/components/ui";
+import { ReleaseDirectoryClaimForm } from "@/components/ReleaseDirectoryClaimForm";
 
 const initial: SourceFormState = { success: false, message: "" };
 
@@ -15,6 +16,8 @@ export function SourceShopForm({
   website,
   blurb,
   slug,
+  claimedDirectory = false,
+  logoUrl,
 }: {
   company: string;
   name: string;
@@ -24,6 +27,8 @@ export function SourceShopForm({
   website: string;
   blurb: string;
   slug?: string;
+  claimedDirectory?: boolean;
+  logoUrl?: string;
 }) {
   const [formState, action, pending] = useActionState(updateSourceShop, initial);
 
@@ -108,6 +113,32 @@ export function SourceShopForm({
           />
         </label>
         <label className="block text-sm">
+          Logo
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt=""
+              className="mt-1.5 h-16 w-auto max-w-[12rem] object-contain"
+            />
+          ) : null}
+          <input
+            className="mt-1.5 block text-sm"
+            name="logo"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+          />
+        </label>
+        {logoUrl ? (
+          <label className="flex items-center gap-2 text-sm text-muted">
+            <input type="checkbox" name="removeLogo" value="1" />
+            Remove logo
+          </label>
+        ) : (
+          <p className="text-sm leading-6 text-muted">
+            PNG, JPG, WebP, or GIF. Under 2 MB. Shows on the public listing.
+          </p>
+        )}
+        <label className="block text-sm">
           Public note
           <textarea
             className={`${fieldClass} mt-1.5 min-h-24`}
@@ -134,6 +165,11 @@ export function SourceShopForm({
           >
             {formState.message}
           </p>
+        ) : null}
+        {claimedDirectory && company ? (
+          <div className="border-t border-line pt-4">
+            <ReleaseDirectoryClaimForm company={company} />
+          </div>
         ) : null}
       </Panel>
     </form>

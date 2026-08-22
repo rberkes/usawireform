@@ -1,9 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DirectoryClaimForm } from "@/components/DirectoryClaimForm";
+import { ReleaseDirectoryClaimForm } from "@/components/ReleaseDirectoryClaimForm";
 import { ButtonLink, Page, PageHero } from "@/components/ui";
 import { getDirectoryCompany } from "@/lib/directory";
 import { SOURCE_PLAN_LINE } from "@/lib/source-plans";
+import { sourceAccountLocksClaim } from "@/lib/source-directory";
 import { findSourceProfileBySlug, getSourceProfile } from "@/lib/source";
 
 export const dynamic = "force-dynamic";
@@ -44,10 +46,40 @@ export default async function SourceClaimPage({ searchParams }: Props) {
   }
 
   const alreadyMine =
-    Boolean(mine?.slug) &&
+    Boolean(mine?.company) &&
     mine?.slug !== listed.slug &&
-    Boolean(mine?.claimedDirectory || (mine?.slug && getDirectoryCompany(mine.slug)));
+    sourceAccountLocksClaim(mine);
   const usaShop = listed.country === "USA";
+
+  if (alreadyMine && mine) {
+    return (
+      <Page>
+        <PageHero
+          kicker="Source"
+          title={`Signed in as ${mine.company}`}
+          lede={`This login cannot claim ${listed.name}. One shop per account. Sign out to use a different company.`}
+        />
+        <div className="mt-8 max-w-xl space-y-4 text-sm leading-6 text-muted">
+          <p>
+            File cells for {mine.company} from the shop dashboard.{" "}
+            {listed.name} is for that shop’s own login.
+          </p>
+          <ReleaseDirectoryClaimForm company={mine.company} />
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink href="/source/dashboard">Shop dashboard</ButtonLink>
+            {mine.slug ? (
+              <ButtonLink href={`/directory/${mine.slug}`} variant="ghost">
+                Open {mine.company}
+              </ButtonLink>
+            ) : null}
+            <ButtonLink href={`/directory/${listed.slug}`} variant="ghost">
+              Back to {listed.name}
+            </ButtonLink>
+          </div>
+        </div>
+      </Page>
+    );
+  }
 
   return (
     <Page>
@@ -70,11 +102,6 @@ export default async function SourceClaimPage({ searchParams }: Props) {
           <p>This listing is outside the US Source floor.</p>
         ) : owner ? (
           <p>This page is already claimed.</p>
-        ) : alreadyMine ? (
-          <p>
-            This account already claimed {mine?.company}. One listing per
-            account.
-          </p>
         ) : (
           <DirectoryClaimForm slug={listed.slug} company={listed.name} />
         )}

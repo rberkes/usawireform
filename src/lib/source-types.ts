@@ -63,6 +63,8 @@ export type SourceProfile = {
   claimedDirectory?: boolean;
   listedAt?: string;
   updatedAt: string;
+  /** Private blob path for the public shop logo. */
+  logoPath?: string;
 };
 
 export type SourceJob = {

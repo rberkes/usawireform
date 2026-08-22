@@ -61,6 +61,13 @@ export default async function NewestSourceShopsPage() {
         <ul className="mt-10 divide-y divide-line border border-line">
           {shops.map((shop) => (
             <li key={shop.slug} className="px-4 py-4 sm:px-5">
+              {shop.logoUrl ? (
+                <img
+                  src={shop.logoUrl}
+                  alt=""
+                  className="mb-3 h-10 w-auto max-w-[8rem] object-contain"
+                />
+              ) : null}
               <Link
                 href={`/directory/${shop.slug}`}
                 className="font-medium hover:text-copper"

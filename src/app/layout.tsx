@@ -4,6 +4,7 @@ import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { SourceAccountBar } from "@/components/SourceAccountBar";
 import { JsonLd } from "@/components/JsonLd";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BackToTop } from "@/components/BackToTop";
@@ -96,7 +97,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
           <SkipToContent />
           <JsonLd />
-          <Header />
+          <Header account={<SourceAccountBar />} />
           <div id="main-content" className="flex-1">
             {children}
           </div>

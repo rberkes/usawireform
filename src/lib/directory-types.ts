@@ -23,4 +23,6 @@ export interface DirectoryCompany {
   listedAt?: string;
   /** Paid Source secondaries the shop listed. */
   secondaries?: string[];
+  /** Public shop logo from Source. */
+  logoUrl?: string;
 }

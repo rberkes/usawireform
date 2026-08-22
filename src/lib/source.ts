@@ -228,6 +228,11 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
     secondaries: parseSourceSecondaries(payload.secondaries),
     published: payload.published !== false,
     claimedDirectory: payload.claimedDirectory === true,
+    logoPath:
+      typeof payload.logoPath === "string" &&
+      payload.logoPath.startsWith("source/logos/")
+        ? payload.logoPath
+        : undefined,
     listedAt: String(
       payload.listedAt ?? payload.updatedAt ?? new Date().toISOString(),
     ),
@@ -285,9 +290,13 @@ export async function listSourceProfiles(): Promise<SourceProfile[]> {
   return rows;
 }
 
-export async function uniqueSourceSlug(name: string, userId: string) {
+export async function uniqueSourceSlug(
+  name: string,
+  userId: string,
+  { keepExisting = true }: { keepExisting?: boolean } = {},
+) {
   const existing = await getSourceProfile(userId);
-  if (existing?.slug) return existing.slug;
+  if (keepExisting && existing?.slug) return existing.slug;
 
   const base = slugifyShopName(name) || `shop-${userId.slice(-6).toLowerCase()}`;
   const taken = new Set(directoryCompanies.map((company) => company.slug));
@@ -310,6 +319,45 @@ export async function saveSourceProfile(profile: SourceProfile) {
     ...(await blobAuth()),
   });
   return true;
+}
+
+const LOGO_TYPES: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/webp": "webp",
+  "image/gif": "gif",
+};
+
+export async function storeSourceLogo(userId: string, file: File) {
+  const ext =
+    LOGO_TYPES[file.type] ||
+    (file.name.split(".").pop()?.toLowerCase() === "png"
+      ? "png"
+      : file.name.split(".").pop()?.toLowerCase() === "jpg" ||
+          file.name.split(".").pop()?.toLowerCase() === "jpeg"
+        ? "jpg"
+        : file.name.split(".").pop()?.toLowerCase() === "webp"
+          ? "webp"
+          : file.name.split(".").pop()?.toLowerCase() === "gif"
+            ? "gif"
+            : "");
+  if (!ext) {
+    return { ok: false as const, message: "Logo must be PNG, JPG, WebP, or GIF." };
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    return { ok: false as const, message: "Logo must be under 2 MB." };
+  }
+  const safeId = userId.replace(/[^a-zA-Z0-9_-]/g, "");
+  const pathname = `source/logos/${safeId}.${ext}`;
+  await put(pathname, file, {
+    access: BLOB_ACCESS,
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    contentType: file.type || `image/${ext === "jpg" ? "jpeg" : ext}`,
+    ...(await blobAuth()),
+  });
+  return { ok: true as const, path: pathname };
 }
 
 export async function setSourceProfileSecondaries(

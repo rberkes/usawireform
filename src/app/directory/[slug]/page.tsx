@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DirectoryLeadForm } from "@/components/DirectoryLeadForm";
@@ -19,9 +20,14 @@ import {
   publicHost,
 } from "@/lib/directory";
 import { pageMeta } from "@/lib/seo";
-import { overlaySourceOnDirectory, sourceClaimPath, sourceClaimable } from "@/lib/source-directory";
+import {
+  overlaySourceOnDirectory,
+  sourceAccountLocksClaim,
+  sourceClaimPath,
+  sourceClaimable,
+} from "@/lib/source-directory";
 import { secondaryHref, secondaryLabel } from "@/lib/source-secondaries";
-import { getSourceDirectoryCompany } from "@/lib/source";
+import { getSourceDirectoryCompany, getSourceProfile } from "@/lib/source";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -79,6 +85,12 @@ export default async function DirectoryCompanyPage({ params }: Props) {
   const resolved = await resolveDirectoryCompany(slug);
   if (!resolved) notFound();
   const { company, source, claimable } = resolved;
+  const { userId } = await auth();
+  const mine = userId ? await getSourceProfile(userId) : null;
+  const signedInAsOther =
+    Boolean(mine?.company) &&
+    mine?.slug !== company.slug &&
+    sourceAccountLocksClaim(mine);
 
   const relatedCompanies = getCompaniesByRegion(company.region)
     .filter((c) => c.slug !== slug)
@@ -131,7 +143,18 @@ export default async function DirectoryCompanyPage({ params }: Props) {
           ]}
         />
 
-        {claimable ? (
+        {claimable && signedInAsOther && mine ? (
+          <div className="mb-8 max-w-xl space-y-3">
+            <p className="text-sm leading-6 text-muted">
+              Signed in as <strong className="font-medium text-foreground">{mine.company}</strong>.
+              This login cannot claim {company.name}. One shop per account. Sign
+              out to use a different company.
+            </p>
+            <ButtonLink href="/source/dashboard" variant="ghost">
+              Shop dashboard
+            </ButtonLink>
+          </div>
+        ) : claimable ? (
           <div className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2">
             <ButtonLink href={sourceClaimPath(company.slug)}>
               Claim this page
@@ -149,6 +172,13 @@ export default async function DirectoryCompanyPage({ params }: Props) {
               title={company.name}
               lede={company.location}
             />
+            {company.logoUrl ? (
+              <img
+                src={company.logoUrl}
+                alt={`${company.name} logo`}
+                className="mt-6 h-16 w-auto max-w-[14rem] object-contain"
+              />
+            ) : null}
 
             <p className="mt-6 text-sm leading-7 text-muted">
               {company.description}

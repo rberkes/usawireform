@@ -27,6 +27,7 @@ import { planById } from "@/lib/source-plans";
 import {
   directoryCity,
   normalizeShopWebsite,
+  sourceAccountLocksClaim,
   sourceClaimable,
   sourceClaimPath,
 } from "@/lib/source-directory";
@@ -44,6 +45,7 @@ import {
   saveSourceJob,
   saveSourceProfile,
   sourceInviteHref,
+  storeSourceLogo,
   uniqueSourceSlug,
 } from "@/lib/source";
 
@@ -86,6 +88,7 @@ async function upsertShopProfile({
   state,
   website,
   blurb,
+  logoPath,
 }: {
   userId: string;
   company: string;
@@ -95,6 +98,7 @@ async function upsertShopProfile({
   state: string;
   website: string;
   blurb?: string;
+  logoPath?: string | null;
 }) {
   const existing = await getSourceProfile(userId);
   const slug = existing?.slug || (await uniqueSourceSlug(company, userId));
@@ -114,6 +118,8 @@ async function upsertShopProfile({
     secondaries: existing?.secondaries ?? [],
     listedAt: existing?.listedAt || existing?.updatedAt || now,
     updatedAt: now,
+    logoPath:
+      logoPath === null ? undefined : logoPath ?? existing?.logoPath,
   });
   return slug;
 }
@@ -236,6 +242,7 @@ export async function claimDirectoryListing(
       secondaries: existing?.secondaries ?? [],
       listedAt: existing?.listedAt || existing?.updatedAt || now,
       updatedAt: now,
+      logoPath: existing?.logoPath,
     });
   } catch (error) {
     console.error("[Source claim store]", error);
@@ -251,6 +258,51 @@ export async function claimDirectoryListing(
       company: listed.name,
       slug: listed.slug,
     });
+  }
+
+  redirect("/source/dashboard");
+}
+
+export async function releaseDirectoryClaim(
+  _prev: SourceFormState,
+  _formData: FormData,
+): Promise<SourceFormState> {
+  const signedIn = await signedInShop();
+  if (!signedIn) {
+    return { success: false, message: "Sign in to release a listing." };
+  }
+
+  const existing = await getSourceProfile(signedIn.userId);
+  if (!existing || !sourceAccountLocksClaim(existing)) {
+    return {
+      success: false,
+      message: "This account has not claimed a directory page.",
+    };
+  }
+
+  if (!(await blobReady())) {
+    return { success: false, message: "Could not release the listing." };
+  }
+
+  try {
+    const slug = await uniqueSourceSlug(
+      `shop ${signedIn.userId.slice(-6)}`,
+      signedIn.userId,
+      { keepExisting: false },
+    );
+    await saveSourceProfile({
+      ...existing,
+      slug,
+      claimedDirectory: false,
+      published: false,
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("[Source claim release]", error);
+    return {
+      success: false,
+      message: `Could not release the listing (${blobErrorMessage(error)}).`,
+    };
   }
 
   redirect("/source/dashboard");
@@ -483,6 +535,19 @@ export async function updateSourceShop(
     return { success: false, message: "Enter the shop name." };
   }
 
+  const removeLogo = String(formData.get("removeLogo") ?? "") === "1";
+  const logo = formData.get("logo");
+  const logoFile = logo instanceof File && logo.size > 0 ? logo : null;
+  let logoPath: string | null | undefined;
+  if (removeLogo && !logoFile) logoPath = null;
+  if (logoFile) {
+    const stored = await storeSourceLogo(signedIn.userId, logoFile);
+    if (!stored.ok) {
+      return { success: false, message: stored.message };
+    }
+    logoPath = stored.path;
+  }
+
   try {
     if (!(await blobReady())) {
       return { success: false, message: "Could not store the shop." };
@@ -496,6 +561,7 @@ export async function updateSourceShop(
       state,
       website,
       blurb,
+      logoPath,
     });
     return {
       success: true,

@@ -1,4 +1,4 @@
-import { directoryRegionForState } from "@/lib/directory";
+import { directoryRegionForState, getDirectoryCompany } from "@/lib/directory";
 import type { DirectoryCompany } from "@/lib/directory-types";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import type { SourceMachine, SourceProfile } from "@/lib/source-types";
@@ -54,6 +54,13 @@ export function sourceClaimable(
   return company.country === "USA" && !company.filedOnSource;
 }
 
+export function sourceAccountLocksClaim(
+  profile: Pick<SourceProfile, "slug" | "claimedDirectory"> | null | undefined,
+) {
+  if (!profile?.slug) return false;
+  return Boolean(profile.claimedDirectory || getDirectoryCompany(profile.slug));
+}
+
 export function overlaySourceOnDirectory(
   listed: DirectoryCompany,
   sourced?: DirectoryCompany | null,
@@ -75,6 +82,7 @@ export function overlaySourceOnDirectory(
     secondaries: sourced.secondaries?.length
       ? sourced.secondaries
       : listed.secondaries,
+    logoUrl: sourced.logoUrl || listed.logoUrl,
   };
 }
 
@@ -124,5 +132,8 @@ export function sourceProfileToDirectoryCompany(
     filedOnSource: true,
     listedAt: profile.listedAt || profile.updatedAt,
     secondaries: parseSourceSecondaries(profile.secondaries),
+    logoUrl: profile.logoPath
+      ? `/directory/logo/${profile.slug}?v=${encodeURIComponent(profile.updatedAt)}`
+      : undefined,
   };
 }

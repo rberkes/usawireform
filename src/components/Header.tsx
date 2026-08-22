@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { BrandLockup } from "./WireMark";
 import { SearchButton } from "./Search";
-import { SourceAccountNav } from "./SourceAccountNav";
 import { btn, Container } from "./ui";
 import { industries } from "@/lib/site";
 import { catalogGroups, catalog } from "@/lib/catalog";
@@ -91,7 +90,7 @@ const navSections = [
   },
 ];
 
-export function Header() {
+export function Header({ account }: { account: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -182,7 +181,7 @@ export function Header() {
 
           <div className="flex items-center gap-3">
             <SearchButton onClick={() => setSearchOpen(true)} />
-            <SourceAccountNav />
+            {account}
             <Link href="/instant-quote" className={cx(btn.quote, "hidden sm:inline-flex")}>
               Instant quote
             </Link>

@@ -2,6 +2,93 @@ import type { BlogPost } from "./types";
 
 export const articles: BlogPost[] = [
   {
+    slug: "fall-shows-for-wire-forming-shops",
+    title: "Fall shows for a wire forming shop",
+    description:
+      "IMTS Chicago Sept 14–19. FABTECH Las Vegas Oct 21–23. Assembly Show Rosemont Oct 27–29. Interwire Atlanta May 4–6, 2027. Walk the iron. We do not sell machines.",
+    date: "2026-08-22",
+    kind: "article",
+    tags: ["shows", "wire forming"],
+    related: [
+      { href: "/equipment/cnc-manufacturers", label: "CNC manufacturers" },
+      { href: "/equipment/machine-comparison", label: "Machine comparison" },
+      { href: "/directory", label: "Shop directory" },
+      { href: "/source", label: "Source" },
+    ],
+    blocks: [
+      {
+        type: "p",
+        text: "A show is not a quote. It is a floor walk: cells, coil, weld, powder. This shop runs a Numalliance Robomac 214TF in Northeast Ohio. We form 4–14 mm. We do not sell machines or leftover coil. Wire Forming Technology International is a magazine, not this plant.",
+      },
+      {
+        type: "p",
+        text: "Wire Expo already ran May 6–7 in Milwaukee with the Electrical Wire Processing Technology Expo. If a calendar still has it, skip it. The next dedicated Americas wire show is Interwire 2027.",
+      },
+      {
+        type: "h2",
+        id: "imts",
+        text: "IMTS — Chicago, Sept 14–19",
+      },
+      {
+        type: "p",
+        text: "McCormick Place. Even-year IMTS is the Western Hemisphere manufacturing show. Fabricating and forming sit in the mix with mills, automation, and inspection. WAFIOS lists Chicago on their 2026 schedule. Confirm the plate on any cell you like — OEM, model, 2D or 3D, wire min and max. Catalog pages on this site are for that homework, not a booth map.",
+      },
+      {
+        type: "p",
+        text: "Bring a print in the 4–14 mm band if you are shopping a cell. Springs belong on a coiler. Cut-to-length is a different class than a 3D former. Fourslide is not a 3D CNC. The comparison page exists so you do not buy the wrong iron because a demo was loud.",
+      },
+      {
+        type: "h2",
+        id: "fabtech",
+        text: "FABTECH — Las Vegas, Oct 21–23",
+      },
+      {
+        type: "p",
+        text: "Las Vegas Convention Center. First FABTECH there in a decade. Forming, fabricating, welding, finishing. Wire structures live here on the secondary side: resistance vs TIG, powder after weld, zinc after weld. The cell bends the member. The booth that plates or powders is how a grid leaves the building.",
+      },
+      {
+        type: "p",
+        text: "We form powder-coating hooks in 3/8, 7/16, and 1/2 in. We do not run a powder line for customer parts. Ask the coater what pretreat they actually run. Do not buy a finish from a brochure.",
+      },
+      {
+        type: "h2",
+        id: "assembly",
+        text: "The Assembly Show — Rosemont, Oct 27–29",
+      },
+      {
+        type: "p",
+        text: "Donald E. Stephens Convention Center, with The Quality Show in the same hall. Joining, fixtures, inspection. A welded wire frame is an assembly: nugget vs TIG, then the gauge that checks the interface, not ±0.005 on every leg.",
+      },
+      {
+        type: "h2",
+        id: "interwire",
+        text: "Interwire — Atlanta, May 4–6, 2027",
+      },
+      {
+        type: "p",
+        text: "Georgia World Congress Center. WAI’s biennial wire and cable show plus the annual convention. Coil, drawers, formers, fasteners. Abstracts for the conference close November 2, 2026. Mark it now. Europe’s Wire & Tube Düsseldorf already ran in April 2026; the next Düsseldorf cycle is 2028. Source on this site is USA shops for now.",
+      },
+      {
+        type: "h2",
+        id: "walk",
+        text: "What to bring back",
+      },
+      {
+        type: "ul",
+        items: [
+          "OEM, model, type, and wire band copied from the plate — not the brochure.",
+          "Whether the demo was 2D, 3D, coiler, or cut-to-length.",
+          "Weld and finish names that match the print: resistance, TIG, powder, zinc.",
+          "Nothing about this shop exhibiting. Production stays the 214TF in Northeast Ohio.",
+        ],
+      },
+      {
+        type: "p",
+        text: "Shops that already run cells can file them on Source. Buyers match diameter and 2D or 3D to that list. Instant estimate on this site is still this floor.",
+      },
+    ],
+  },
+  {
     slug: "what-is-a-wire-form-structure",
     title: "What is a wire form structure?",
     description:
