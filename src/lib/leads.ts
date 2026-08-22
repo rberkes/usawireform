@@ -314,7 +314,7 @@ export async function sendSourceInviteEmails({
     sendResendMail({
       to,
       replyTo: QUOTE_EMAIL,
-      subject: `Invite: file your equipment — ${COMPANY} Source`,
+      subject: `Wire forming leads to your inbox — ${COMPANY}`,
       html: sourceInviteHtml({ company, href }),
     }),
   ]);

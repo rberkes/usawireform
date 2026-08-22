@@ -112,6 +112,23 @@ function ctaButtonRow(href: string, label: string, hint: string) {
   </tr>`;
 }
 
+function ctaBannerRow(href: string, label: string, hint: string) {
+  return `<tr>
+    <td style="padding:28px 32px 0">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center" style="background:#0b6bcb">
+            <a href="${escapeHtml(href)}" style="display:block;padding:18px 24px;font-family:${FONT};font-size:18px;font-weight:600;line-height:1.3;color:#ffffff;text-decoration:none;text-align:center">
+              ${escapeHtml(label)}
+            </a>
+          </td>
+        </tr>
+      </table>
+      <p style="margin:12px 0 0;font-family:${FONT};font-size:13px;line-height:1.5;color:#5c5c5c;text-align:center">${escapeHtml(hint)}</p>
+    </td>
+  </tr>`;
+}
+
 function estimateForwardMailto(estimate: EstimateMailCopy) {
   const part = estimate.hookType ?? "wire form";
   const lines = [
@@ -328,20 +345,23 @@ export function sourceInviteHtml({
   company?: string;
   href: string;
 }) {
-  const who = company?.trim()
-    ? `We are asking ${escapeHtml(company.trim())} to file the equipment on the floor.`
-    : "We are asking you to file the equipment on the floor.";
+  const shop = company?.trim()
+    ? escapeHtml(company.trim())
+    : "";
+  const hello = shop
+    ? `This is for ${shop}.`
+    : "This is for your shop.";
   return shell(
-    "File your equipment so jobs that fit your cells can reach you.",
+    "Wire forming leads to your inbox — jobs that fit your machines.",
     `${kickerRow()}
-     ${headingRow("You're invited to Source")}
-     ${copyRow(`${who} Jobs on Source match by machine — diameter, 2D or 3D, OEM, locale — not by a directory blurb.`)}
-     ${copyRow("Register the shop and upload the list. One row per cell: OEM, model, 2D or 3D, wire min and max, city.")}
-     ${ctaButtonRow(
+     ${headingRow("Wire forming leads to your inbox")}
+     ${copyRow(`${hello} We send RFQs by the iron on the floor — wire size, 2D or 3D, brand, and city. Not a directory listing.`)}
+     ${ctaBannerRow(
        href,
-       "Register and upload equipment",
-       "Opens the Source equipment form. Use the email this invite was sent to.",
-     )}`,
+       "Add your machines",
+       "Takes a few minutes. Use the email this was sent to.",
+     )}
+     ${copyRow(`<span style="color:#5c5c5c">For each machine: brand, model, 2D or 3D, smallest and largest wire (mm), city. That list is how a job finds you.</span>`)}`,
   );
 }
 
