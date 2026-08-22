@@ -131,6 +131,17 @@ export default async function DirectoryCompanyPage({ params }: Props) {
           ]}
         />
 
+        {claimable ? (
+          <div className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <ButtonLink href={sourceClaimPath(company.slug)}>
+              Claim this page
+            </ButtonLink>
+            <p className="text-sm leading-6 text-muted">
+              US shops: file CNC cells on this listing. One cell free.
+            </p>
+          </div>
+        ) : null}
+
         <div className="grid gap-12 lg:grid-cols-[1fr,400px] lg:gap-16">
           <div>
             <PageHero
@@ -142,17 +153,6 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             <p className="mt-6 text-sm leading-7 text-muted">
               {company.description}
             </p>
-            {claimable ? (
-              <div className="mt-6 space-y-3">
-                <ButtonLink href={sourceClaimPath(company.slug)}>
-                  Claim this page
-                </ButtonLink>
-                <p className="max-w-xl text-sm leading-6 text-muted">
-                  This is your US shop? Claim the listing, then file CNC cells
-                  on Source. One cell free. Europe later, on its own platform.
-                </p>
-              </div>
-            ) : null}
 
             {company.website && (
               <p className="mt-4">
@@ -296,28 +296,10 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                   </Link>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  {claimable ? (
-                    <div className="space-y-3 border-b border-line pb-6">
-                      <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
-                        This shop
-                      </p>
-                      <p className="text-sm leading-6 text-muted">
-                        Claim this US listing and file the cells on the floor.
-                      </p>
-                      <Link
-                        href={sourceClaimPath(company.slug)}
-                        className="inline-flex items-center justify-center rounded-sm bg-copper px-5 py-2.5 text-sm font-medium text-white hover:bg-copper-dim"
-                      >
-                        Claim this page
-                      </Link>
-                    </div>
-                  ) : null}
-                  <DirectoryLeadForm
-                    companyName={company.name}
-                    companySlug={company.slug}
-                  />
-                </div>
+                <DirectoryLeadForm
+                  companyName={company.name}
+                  companySlug={company.slug}
+                />
               )}
             </div>
           </div>

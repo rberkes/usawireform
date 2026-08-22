@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Page, PageHero, Section, Kicker, btn } from "@/components/ui";
+import { Page, PageHero, Section, Kicker } from "@/components/ui";
 import { cx } from "@/lib/cx";
 import {
   directoryCompanies,
@@ -16,7 +16,7 @@ import {
 import { CNC_COMPARE } from "@/lib/cnc-oems";
 import { pageMeta } from "@/lib/seo";
 import { listPublishedSourceDirectoryCompanies } from "@/lib/source";
-import { mergeDirectoryList, sourceClaimPath, sourceClaimable } from "@/lib/source-directory";
+import { mergeDirectoryList } from "@/lib/source-directory";
 import type { DirectoryCompany } from "@/lib/directory-types";
 
 export const dynamic = "force-dynamic";
@@ -210,14 +210,6 @@ export default async function DirectoryPage({ searchParams }: Props) {
                       ))}
                     </div>
                   )}
-                  {sourceClaimable(company) ? (
-                    <Link
-                      href={sourceClaimPath(company.slug)}
-                      className={cx(btn.compact, "mt-4 self-start")}
-                    >
-                      Claim this page
-                    </Link>
-                  ) : null}
                 </div>
               ))}
             </div>

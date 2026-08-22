@@ -6,6 +6,7 @@ import {
   slugifyShopName,
   sourceProfileToDirectoryCompany,
 } from "@/lib/source-directory";
+import { filedSourceMachines } from "@/lib/source-account";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import type {
@@ -48,7 +49,7 @@ export function parseSourceMachines(raw: string): SourceMachine[] {
           city: String((row as SourceMachine).city ?? "").trim().slice(0, 80),
         }),
       )
-      .filter((row) => row.oem || row.model || row.minMm || row.maxMm);
+      .filter((row) => row.model);
   } catch {
     return [];
   }
@@ -149,9 +150,11 @@ export async function listSourceFilings(): Promise<SourceFilingRow[]> {
         city: String(payload.city ?? ""),
         state: String(payload.state ?? ""),
         website: String(payload.website ?? ""),
-        machines: Array.isArray(payload.machines)
-          ? payload.machines.map(hydrateMachineFromCatalog)
-          : [],
+        machines: filedSourceMachines(
+          Array.isArray(payload.machines)
+            ? payload.machines.map(hydrateMachineFromCatalog)
+            : [],
+        ),
         notes: String(payload.notes ?? ""),
         fileName: payload.fileName,
         timestamp:

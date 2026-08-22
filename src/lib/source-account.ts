@@ -1,8 +1,16 @@
-import type { SourceFilingRow } from "@/lib/source-types";
+import type { SourceFilingRow, SourceMachine } from "@/lib/source-types";
 import { planById, type SourcePlan } from "@/lib/source-plans";
 
 export function normalizeShopEmail(email: string | undefined | null) {
   return email?.trim().toLowerCase() ?? "";
+}
+
+export function isFiledSourceMachine(row: Pick<SourceMachine, "model">) {
+  return Boolean(row.model?.trim());
+}
+
+export function filedSourceMachines(rows: SourceMachine[] | undefined) {
+  return (rows ?? []).filter(isFiledSourceMachine);
 }
 
 export function sourceFilingsForShop(
@@ -16,15 +24,19 @@ export function sourceFilingsForShop(
   },
 ) {
   const needle = normalizeShopEmail(email);
-  return rows.filter(
-    (row) =>
-      (userId && row.userId === userId) ||
-      (needle && normalizeShopEmail(row.email) === needle),
-  );
+  if (userId) {
+    return rows.filter(
+      (row) =>
+        row.userId === userId ||
+        (!row.userId && needle && normalizeShopEmail(row.email) === needle),
+    );
+  }
+  if (!needle) return [];
+  return rows.filter((row) => normalizeShopEmail(row.email) === needle);
 }
 
 export function countSourceCells(rows: Pick<SourceFilingRow, "machines">[]) {
-  return rows.reduce((sum, row) => sum + row.machines.length, 0);
+  return rows.reduce((sum, row) => sum + filedSourceMachines(row.machines).length, 0);
 }
 
 export function remainingSourceCells(plan: SourcePlan, used: number) {

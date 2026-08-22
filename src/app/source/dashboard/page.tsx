@@ -8,6 +8,7 @@ import { SourceShopForm } from "@/components/SourceShopForm";
 import { Button, ButtonLink, Page, PageHero, Panel } from "@/components/ui";
 import {
   countSourceCells,
+  filedSourceMachines,
   remainingSourceCells,
   shopFromFilings,
   sourceFilingsForShop,
@@ -104,7 +105,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
     website: fromFiling?.website ?? "",
   });
   const shop = profile ?? fromFiling;
-  const cells = shopRows.flatMap((row) => row.machines);
+  const cells = shopRows.flatMap((row) => filedSourceMachines(row.machines));
   const customerId = await getStripeCustomerId(userId);
   const location = [shop?.city, shop?.state].filter(Boolean).join(", ");
 
@@ -147,9 +148,11 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             {used} / {plan.cells}
           </p>
           <p className="mt-1 text-sm text-muted">
-            {remaining === 0
-              ? "This plan is full."
-              : `${remaining} left on this plan.`}
+            {used > plan.cells
+              ? `You filed ${used}. This plan holds ${plan.cells}. Existing cells stay.`
+              : remaining === 0
+                ? "This plan is full."
+                : `${remaining} left on this plan.`}
           </p>
         </Panel>
         <Panel className="p-5">
