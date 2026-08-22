@@ -238,7 +238,7 @@ export function SourceEquipmentForm({
                   />
                 ) : null}
               </label>
-              <label className="block text-sm">
+              <label className="block text-sm sm:col-span-2">
                 Type
                 {listed && !otherModel ? (
                   <p className={`mt-1.5 ${fieldClass} text-muted`}>
@@ -260,17 +260,7 @@ export function SourceEquipmentForm({
                   </select>
                 )}
               </label>
-              <label className="block text-sm">
-                City
-                <input
-                  className={`mt-1.5 ${fieldClass}`}
-                  value={row.city}
-                  onChange={(event) =>
-                    patch(index, { ...row, city: event.target.value })
-                  }
-                />
-              </label>
-              <label className="block text-sm">
+              <label className="block text-sm sm:col-span-3">
                 Min mm
                 <input
                   className={`mt-1.5 ${fieldClass}`}
@@ -282,7 +272,7 @@ export function SourceEquipmentForm({
                   placeholder="4"
                 />
               </label>
-              <label className="block text-sm">
+              <label className="block text-sm sm:col-span-3">
                 Max mm
                 <input
                   className={`mt-1.5 ${fieldClass}`}

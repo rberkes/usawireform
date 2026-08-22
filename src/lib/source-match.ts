@@ -110,7 +110,7 @@ export function matchFilingsToJob(
       if (!machineFitsJob(machine, job)) continue;
       const min = parseBandMm(machine.minMm) ?? 0;
       const max = parseBandMm(machine.maxMm) ?? 0;
-      const city = machine.city || filing.city;
+      const city = filing.city;
       const score =
         100 +
         oemScore(job.oem, machine.oem) +
