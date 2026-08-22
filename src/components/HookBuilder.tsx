@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useActionState, useMemo, useState, type ReactNode } from "react";
 import { submitInstantQuote, type QuoteFormState } from "@/app/actions/quote";
-import { Button, fieldClass, Panel } from "@/components/ui";
+import { Button, EstimateMailNotice, fieldClass, Panel } from "@/components/ui";
 import {
   HOOK_MATERIALS,
   HOOK_TYPES,
@@ -346,21 +346,17 @@ export function HookBuilder({
             />
           </label>
           <p className="text-sm leading-6 text-muted">
-            You get a receipt to save. We get a lead with your email so we can
-            follow up.
+            Two emails go out: a receipt to the address you type, and a LEAD to
+            the shop with that email so we can follow up.
           </p>
           <Button type="submit" disabled={!built.ok || pending}>
             {pending ? "Sending..." : "Email this estimate"}
           </Button>
-          {state.message ? (
-            <p
-              className={`text-sm leading-6 ${
-                state.success ? "text-foreground" : "text-copper"
-              }`}
-            >
-              {state.message}
-            </p>
-          ) : null}
+          <EstimateMailNotice
+            success={state.success}
+            message={state.message}
+            receiptTo={state.receiptTo}
+          />
           {!wireRow?.stock && wireId !== "other" ? (
             <p className="text-sm leading-6 text-muted">
               Non-stock diameter: new tooling in {TOOLING.newLead},{" "}

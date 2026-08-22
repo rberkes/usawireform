@@ -12,6 +12,7 @@ export type QuoteFormState = {
   success: boolean;
   message: string;
   errors?: Record<string, string>;
+  receiptTo?: string;
 };
 
 export type ContactFormData = {
@@ -620,6 +621,7 @@ export async function submitInstantQuote(
 
   return {
     success: true,
-    message: `Sent to ${input.email} and to the shop. ${piece} / piece, ${lot} for ${input.quantity.toLocaleString("en-US")} pcs. We'll follow up. ${QUOTE_REVIEW}`,
+    receiptTo: input.email,
+    message: `${piece} / piece, ${lot} for ${input.quantity.toLocaleString("en-US")} pcs. ${QUOTE_REVIEW}`,
   };
 }

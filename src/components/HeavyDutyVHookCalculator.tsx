@@ -3,7 +3,7 @@
 import { useActionState, useMemo, useState } from "react";
 import { submitInstantQuote, type QuoteFormState } from "@/app/actions/quote";
 import { HookFigure } from "@/components/VHookFigure";
-import { Button, fieldClass, Panel } from "@/components/ui";
+import { Button, EstimateMailNotice, fieldClass, Panel } from "@/components/ui";
 import { buildHookQuote } from "@/lib/hook-builder";
 import {
   HEAVY_DUTY_V_SIZES,
@@ -261,8 +261,8 @@ export function HeavyDutyVHookCalculator() {
               />
             </label>
             <p className="mt-2 text-sm leading-6 text-muted">
-              You get a receipt to save. We get a lead with your email so we can
-              follow up.
+              Two emails go out: a receipt to the address you type, and a LEAD to
+              the shop with that email so we can follow up.
             </p>
             <Button
               type="submit"
@@ -271,15 +271,12 @@ export function HeavyDutyVHookCalculator() {
             >
               {pending ? "Sending..." : `Email ${selected.label} estimate`}
             </Button>
-            {state.message ? (
-              <p
-                className={`mt-3 text-sm leading-6 ${
-                  state.success ? "text-foreground" : "text-copper"
-                }`}
-              >
-                {state.message}
-              </p>
-            ) : null}
+            <EstimateMailNotice
+              className="mt-3"
+              success={state.success}
+              message={state.message}
+              receiptTo={state.receiptTo}
+            />
           </Panel>
         </div>
       </div>

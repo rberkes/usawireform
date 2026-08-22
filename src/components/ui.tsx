@@ -379,3 +379,56 @@ export function TextLink({
     </Link>
   );
 }
+
+export function EstimateMailNotice({
+  success,
+  message,
+  receiptTo,
+  className,
+}: {
+  success: boolean;
+  message: string;
+  receiptTo?: string;
+  className?: string;
+}) {
+  if (!message) return null;
+  if (!success || !receiptTo) {
+    return (
+      <p
+        className={cx(
+          "text-sm leading-6",
+          success ? "text-foreground" : "text-copper",
+          className,
+        )}
+      >
+        {message}
+      </p>
+    );
+  }
+  return (
+    <div
+      className={cx(
+        "space-y-3 border border-line p-4 text-sm leading-6",
+        className,
+      )}
+    >
+      <p>
+        <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-copper">
+          Receipt
+        </span>
+        <span className="mt-1 block text-foreground">
+          Sent to {receiptTo}. That email is theirs to save.
+        </span>
+      </p>
+      <p>
+        <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-copper">
+          Lead
+        </span>
+        <span className="mt-1 block text-foreground">
+          Sent to the shop with {receiptTo} so we can follow up.
+        </span>
+      </p>
+      <p className="text-muted">{message}</p>
+    </div>
+  );
+}

@@ -11,7 +11,7 @@ import {
   type EstimateMaterialId,
 } from "@/lib/quoting";
 import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
-import { Button, fieldClass, Panel } from "./ui";
+import { Button, EstimateMailNotice, fieldClass, Panel } from "./ui";
 import { VolumeComparison } from "./VolumeComparison";
 
 const stockOptions = COMMON_SIZES.map((size) => ({
@@ -257,8 +257,8 @@ export function InstantQuote() {
                 />
               </label>
               <p className="mt-2 text-sm leading-6 text-muted">
-                You get a receipt to save. We get a lead with your email so we
-                can follow up.
+                Two emails go out: a receipt to the address you type, and a LEAD
+                to the shop with that email so we can follow up.
               </p>
               <Button
                 type="submit"
@@ -267,15 +267,12 @@ export function InstantQuote() {
               >
                 {pending ? "Sending..." : "Email this estimate"}
               </Button>
-              {state.message ? (
-                <p
-                  className={`mt-3 text-sm leading-6 ${
-                    state.success ? "text-foreground" : "text-copper"
-                  }`}
-                >
-                  {state.message}
-                </p>
-              ) : null}
+              <EstimateMailNotice
+                className="mt-3"
+                success={state.success}
+                message={state.message}
+                receiptTo={state.receiptTo}
+              />
               <button
                 type="button"
                 onClick={() => setShowComparison(!showComparison)}
