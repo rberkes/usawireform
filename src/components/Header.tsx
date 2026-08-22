@@ -75,6 +75,7 @@ const navSections = [
       { href: "/directory", label: "Company Directory" },
       { href: "/wire-form-factories-in-usa", label: "Wire Form Factories in the USA" },
       { href: "/find-factories-by-machine", label: "Find Factories by Machine" },
+      { href: "/architecture", label: "Site Architecture" },
       { href: "/directory/new", label: "Newest Source Shops" },
       { href: "/directory/areas", label: "Wire Forming Cities" },
       { href: "/ohio", label: "Ohio Cities" },

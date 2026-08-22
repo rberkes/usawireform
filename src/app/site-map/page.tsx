@@ -44,6 +44,11 @@ export default function SiteMapPage() {
               body: "The map and a shop — learning, machines, factories, coil, and this floor.",
             },
             {
+              href: "/architecture",
+              title: "Site architecture",
+              body: "One-page tree of every branch. Repeat templates show as [slug].",
+            },
+            {
               href: "/cleveland",
               title: "Northeast Ohio",
               body: "Mills, wire drawers, short-haul coil.",

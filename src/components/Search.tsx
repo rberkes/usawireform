@@ -105,6 +105,7 @@ const searchItems: SearchItem[] = [
   { title: "Company Directory", href: "/directory", category: "Resources", description: "Wire forming shops. Filter fourslide, 3D CNC, 2D CNC, multi-slide, spring CNC." },
   { title: "Wire Form Factories in the USA", href: "/wire-form-factories-in-usa", category: "Resources", description: "U.S. wire form factories as company cards. CNC, fourslide, multi-slide, spring shops." },
   { title: "Find factories by machine", href: "/find-factories-by-machine", category: "Resources", description: "Type fourslide, Robomac, Baird, Bihler. Three or four plants drop as you type." },
+  { title: "Site architecture", href: "/architecture", category: "Resources", description: "One-page directory of the whole site — folders, [slug] templates, and the desk." },
   { title: "Find a wire form shop", href: "/source", category: "Pages", description: "Send the print. We introduce shops that listed a machine that can run it." },
   { title: "Add a machine cell", href: "/source/shops", category: "Pages", description: "Add one machine cell free. Claim the listing or file a cell. Jobs that fit those machines come to you." },
   { title: "Upload equipment", href: "/source/equipment", category: "Pages", description: "Register the shop and file one row per CNC cell." },

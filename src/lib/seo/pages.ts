@@ -691,6 +691,15 @@ export const staticSeoPages: SeoRecord[] = [
     keywords: ["sitemap"],
     priority: 0.4,
   }),
+  record({
+    path: "/architecture",
+    title: "Site Architecture",
+    description:
+      "One-page directory of USA Wire Form: this floor, products, factories, Source, states, and the desk.",
+    section: "company",
+    keywords: ["site architecture", "USA Wire Form sitemap"],
+    priority: 0.4,
+  }),
 ];
 
 function processPages(): SeoRecord[] {

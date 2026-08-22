@@ -51,6 +51,7 @@ const shop = [
   { href: "/directory", label: "Company Directory" },
   { href: "/wire-form-factories-in-usa", label: "Wire form factories in the USA" },
   { href: "/find-factories-by-machine", label: "Find factories by machine" },
+  { href: "/architecture", label: "Site architecture" },
   { href: "/directory/new", label: "Newest Source shops" },
   { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/ohio", label: "Ohio cities" },
@@ -124,6 +125,12 @@ export function Footer() {
               className="text-foreground/90 hover:text-copper"
             >
               Sitemap
+            </Link>
+            <Link
+              href="/architecture"
+              className="text-foreground/90 hover:text-copper"
+            >
+              Architecture
             </Link>
             <Link
               href="/privacy"
