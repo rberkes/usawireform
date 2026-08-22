@@ -6,7 +6,7 @@ import {
   type SourceFormState,
 } from "@/app/actions/source";
 import { Button, fieldClass, Panel } from "@/components/ui";
-import { SOURCE_KINDS, type SourceMachine } from "@/lib/source";
+import { SOURCE_KINDS, type SourceMachine } from "@/lib/source-types";
 
 const initial: SourceFormState = { success: false, message: "" };
 
