@@ -25,7 +25,7 @@ export default function InstantQuotePage() {
       <PageHero
         kicker="Quote"
         title="Instant estimate"
-        lede={`$1.00 per cut, $0.50 per bend, $0.05 per inch. ${QUOTE_REVIEW}`}
+        lede={`$1.00 per cut, $0.50 per bend, $0.05 per inch. Email yourself the number. ${QUOTE_REVIEW}`}
       />
       <PricePromise titled={false} className="mt-10" />
       <div className="mt-10">

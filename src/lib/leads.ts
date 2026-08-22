@@ -1,7 +1,13 @@
 import { get, list, put } from "@vercel/blob";
 import { Resend } from "resend";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
-import { COMPANY, SITE_URL } from "@/lib/company";
+import { COMPANY, QUOTE_EMAIL, SITE_HOST, SITE_URL } from "@/lib/company";
+import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
+import {
+  customerThanksHtml,
+  shopLeadHtml,
+  type MailRow,
+} from "@/lib/lead-mail";
 
 export const LEADS_NOTIFY_EMAIL =
   process.env.LEADS_NOTIFY_EMAIL?.trim() || "rberkes@gmail.com";
@@ -27,37 +33,260 @@ export type DirectoryLeadRecord = {
   timestamp: string;
 };
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+export type LeadMailAttachment = {
+  filename: string;
+  content: Buffer;
+  contentType?: string;
+  contentId?: string;
+};
+
+const PREVIEW_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const MAX_PREVIEW_BYTES = 3 * 1024 * 1024;
+
+export async function previewAttachmentFromForm(formData: FormData) {
+  const file = formData.get("preview");
+  if (file instanceof File && file.size >= 80 && file.size <= MAX_PREVIEW_BYTES) {
+    const type = file.type || "image/jpeg";
+    if (PREVIEW_TYPES.has(type) || /\.(jpe?g|png|webp)$/i.test(file.name)) {
+      return {
+        filename: file.name.replace(/[^\w.-]+/g, "_") || "drawing.jpg",
+        content: Buffer.from(await file.arrayBuffer()),
+        contentType: type,
+        contentId: "drawing",
+      } satisfies LeadMailAttachment;
+    }
+  }
+
+  const dataUrl = String(formData.get("previewData") ?? "");
+  const match = dataUrl.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=\s]+)$/);
+  if (!match) return undefined;
+  const content = Buffer.from(match[2].replace(/\s/g, ""), "base64");
+  if (content.length < 80 || content.length > MAX_PREVIEW_BYTES) return undefined;
+  return {
+    filename: "drawing.jpg",
+    content,
+    contentType: match[1],
+    contentId: "drawing",
+  } satisfies LeadMailAttachment;
+}
+
 function resendClient() {
   return process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 }
 
-export async function sendLeadEmail({
+async function sendResendMail({
+  to,
   subject,
   html,
   replyTo,
+  attachments,
 }: {
+  to: string;
   subject: string;
   html: string;
   replyTo?: string;
+  attachments?: LeadMailAttachment[];
 }) {
   const resend = resendClient();
   if (!resend || !process.env.RESEND_API_KEY) return false;
   const { error } = await resend.emails.send({
     from: resendFromEmail(),
-    to: LEADS_NOTIFY_EMAIL,
+    to,
     replyTo,
     subject,
-    html: `${html}
-      <hr />
-      <p><a href="${SITE_URL}/admin">Open quote files</a>
-      · <a href="${SITE_URL}/admin/leads">Open directory</a></p>
-    `,
+    html,
+    ...(attachments?.length
+      ? {
+          attachments: attachments.map((item) => ({
+            filename: item.filename,
+            content: item.content,
+            contentType: item.contentType,
+            contentId: item.contentId,
+          })),
+        }
+      : {}),
   });
   if (error) {
     console.error("[Lead email]", error);
     return false;
   }
   return true;
+}
+
+export async function sendLeadEmail({
+  subject,
+  html,
+  replyTo,
+  heading,
+  fileName,
+  preview,
+}: {
+  subject: string;
+  html: string;
+  replyTo?: string;
+  heading?: string;
+  fileName?: string;
+  preview?: LeadMailAttachment;
+}) {
+  return sendResendMail({
+    to: LEADS_NOTIFY_EMAIL,
+    replyTo,
+    subject,
+    html: shopLeadHtml({
+      heading: heading ?? "New lead",
+      fileName,
+      hasPreview: Boolean(preview),
+      bodyHtml: html,
+    }),
+    attachments: preview ? [preview] : undefined,
+  });
+}
+
+export async function sendLeadThanksEmail({
+  to,
+  name,
+  kind,
+  fileName,
+  preview,
+}: {
+  to: string;
+  name?: string;
+  kind: "quote" | "quick" | "directory" | "machine";
+  fileName?: string;
+  preview?: LeadMailAttachment;
+}) {
+  return sendResendMail({
+    to,
+    replyTo: QUOTE_EMAIL,
+    subject:
+      kind === "quote" || kind === "quick"
+        ? `We have your drawing — ${COMPANY}`
+        : `We received your note — ${COMPANY}`,
+    html: customerThanksHtml({
+      name,
+      fileName,
+      hasPreview: Boolean(preview),
+      kind,
+    }),
+    attachments: preview ? [preview] : undefined,
+  });
+}
+
+export async function sendDrawingLeadEmails({
+  to,
+  name,
+  subject,
+  heading,
+  intro,
+  fileName,
+  preview,
+  rows,
+}: {
+  to: string;
+  name?: string;
+  subject: string;
+  heading: string;
+  intro?: string;
+  fileName?: string;
+  preview?: LeadMailAttachment;
+  rows: MailRow[];
+}) {
+  const attachments = preview ? [preview] : undefined;
+  const [shop] = await Promise.all([
+    sendResendMail({
+      to: LEADS_NOTIFY_EMAIL,
+      replyTo: to,
+      subject,
+      html: shopLeadHtml({
+        heading,
+        intro,
+        fileName,
+        hasPreview: Boolean(preview),
+        rows,
+      }),
+      attachments,
+    }),
+    sendLeadThanksEmail({
+      to,
+      name,
+      kind: "quote",
+      fileName,
+      preview,
+    }),
+  ]);
+  return shop;
+}
+
+export type InstantEstimateMail = {
+  to: string;
+  diameterLabel: string;
+  materialLabel: string;
+  cuts: number;
+  bends: number;
+  lengthIn: number;
+  quantity: number;
+  piece: string;
+  lot: string;
+  forming: string;
+  cut: string;
+  bend: string;
+  discount?: string;
+  stock: boolean;
+};
+
+function instantEstimateHtml(estimate: InstantEstimateMail) {
+  const qty = estimate.quantity.toLocaleString("en-US");
+  const tooling = estimate.stock
+    ? ""
+    : `<p>Non-stock diameter: new tooling in ${TOOLING.newLead}, ${TOOLING.newCostLabel}. Not in the piece price.</p>`;
+  return `
+    <p>USA Wire Form — instant estimate from the numbers you entered.</p>
+    <p style="font-size:28px;margin:8px 0 0"><strong>${escapeHtml(estimate.piece)}</strong> / piece</p>
+    <p>${escapeHtml(estimate.lot)} for ${qty} pcs</p>
+    <p>
+      ${escapeHtml(estimate.diameterLabel)}<br />
+      Coil: ${escapeHtml(estimate.materialLabel)} — you buy it and bring it in. Alloy is not in this number.
+    </p>
+    <ul>
+      <li>Forming · ${estimate.lengthIn} in — ${escapeHtml(estimate.forming)}</li>
+      <li>${estimate.cuts} cut${estimate.cuts === 1 ? "" : "s"} — ${escapeHtml(estimate.cut)}</li>
+      <li>${estimate.bends} bend${estimate.bends === 1 ? "" : "s"} — ${escapeHtml(estimate.bend)}</li>
+      ${estimate.discount ? `<li>${escapeHtml(estimate.discount)}</li>` : ""}
+    </ul>
+    ${tooling}
+    <p>${QUOTE_REVIEW} This is not a production quote. Weld, finish, and a print still go through <a href="${SITE_URL}/contact">contact</a>.</p>
+    <p>Reply to this email with a STEP if you want the shop to look at the form.<br />
+    ${COMPANY} · Northeast Ohio · <a href="${SITE_URL}">${SITE_HOST}</a></p>
+  `;
+}
+
+export async function sendInstantEstimateEmails(estimate: InstantEstimateMail) {
+  const html = instantEstimateHtml(estimate);
+  const [shop, customer] = await Promise.all([
+    sendLeadEmail({
+      replyTo: estimate.to,
+      heading: "Instant estimate",
+      subject: `Instant estimate: ${estimate.piece}/pc · ${estimate.quantity.toLocaleString("en-US")} pcs`,
+      html: `<h2>Instant estimate emailed to the customer</h2>
+        <p><strong>To:</strong> <a href="mailto:${escapeHtml(estimate.to)}">${escapeHtml(estimate.to)}</a></p>
+        ${html}`,
+    }),
+    sendResendMail({
+      to: estimate.to,
+      replyTo: QUOTE_EMAIL,
+      subject: `Your estimate — ${COMPANY}`,
+      html,
+    }),
+  ]);
+  return shop && customer;
 }
 
 export async function storeDirectoryLead(lead: DirectoryLeadRecord) {
@@ -77,6 +306,7 @@ export async function storeDirectoryLead(lead: DirectoryLeadRecord) {
 
 export async function emailDirectoryLead(lead: DirectoryLeadRecord) {
   return sendLeadEmail({
+    heading: "Directory intro",
     subject: `Directory lead: ${lead.referredCompany} — ${lead.name}`,
     replyTo: lead.email,
     html: `

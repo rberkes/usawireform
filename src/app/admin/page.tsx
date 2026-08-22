@@ -16,6 +16,7 @@ export const metadata = {
 function kindLabel(kind: string) {
   if (kind === "contact") return "Contact quote";
   if (kind === "quick") return "Page drawing";
+  if (kind === "instant") return "Instant estimate";
   return "File only";
 }
 
@@ -108,6 +109,10 @@ export default async function AdminQuotesPage({
                   </Link>
                   <AdminStepPreview src={row.drawingUrl} name={row.fileName} />
                 </div>
+              ) : row.kind === "instant" ? (
+                <p className="mt-2 text-muted">
+                  Numbers only — no STEP on this estimate.
+                </p>
               ) : (
                 <p className="mt-2 text-muted">No file URL on this record.</p>
               )}

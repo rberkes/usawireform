@@ -70,13 +70,17 @@ export function StepUpload({
 }) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
+  const previewRef = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewData, setPreviewData] = useState("");
 
   function take(next: File | null) {
     if (!next) {
       setError(null);
       assignFile(inputRef.current, null);
+      assignFile(previewRef.current, null);
+      setPreviewData("");
       onChange(null);
       return;
     }
@@ -84,12 +88,25 @@ export function StepUpload({
     if (message) {
       setError(message);
       assignFile(inputRef.current, null);
+      assignFile(previewRef.current, null);
+      setPreviewData("");
       onChange(null);
       return;
     }
     setError(null);
+    assignFile(previewRef.current, null);
+    setPreviewData("");
     assignFile(inputRef.current, next);
     onChange(next);
+  }
+
+  function takeStill(blob: Blob) {
+    const base = (file?.name ?? "drawing").replace(/\.[^.]+$/, "") || "drawing";
+    const still = new File([blob], `${base}.jpg`, { type: "image/jpeg" });
+    assignFile(previewRef.current, still);
+    const reader = new FileReader();
+    reader.onload = () => setPreviewData(String(reader.result ?? ""));
+    reader.readAsDataURL(blob);
   }
 
   return (
@@ -146,7 +163,8 @@ export function StepUpload({
                 {file.name}
               </span>
               <span className="mt-0.5 block font-mono text-[11px] text-muted">
-                {formatBytes(file.size)} · STEP preferred
+                {formatBytes(file.size)} · preview below is emailed with your
+                thank-you
               </span>
             </>
           ) : (
@@ -177,6 +195,18 @@ export function StepUpload({
       </label>
       {error ? (
         <p className="mt-2 text-xs text-copper">{error}</p>
+      ) : null}
+      <input
+        ref={previewRef}
+        className="sr-only"
+        type="file"
+        name="preview"
+        tabIndex={-1}
+        aria-hidden
+      />
+      <input type="hidden" name="previewData" value={previewData} />
+      {file ? (
+        <UploadedDrawingPreview file={file} onStill={takeStill} />
       ) : null}
     </div>
   );

@@ -14,10 +14,12 @@ export function UploadedDrawingPreview({
   file,
   src,
   name,
+  onStill,
 }: {
   file?: File | null;
   src?: string;
   name?: string;
+  onStill?: (blob: Blob) => void;
 }) {
   const [meshes, setMeshes] = useState<OcctMesh[] | null>(null);
   const [failed, setFailed] = useState(false);
@@ -68,6 +70,7 @@ export function UploadedDrawingPreview({
         <StepCanvas
           source={source}
           autoRotate
+          onStill={onStill}
           className="relative h-[min(50vh,24rem)] min-h-[16rem] w-full overflow-hidden bg-inset"
         />
         {!meshes && !failed ? (

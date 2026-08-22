@@ -3,7 +3,7 @@ import { adminFileHref, blobAuth, blobReady } from "@/lib/blob";
 
 export type QuoteSubmission = {
   id: string;
-  kind: "contact" | "quick" | "drawing";
+  kind: "contact" | "quick" | "drawing" | "instant";
   timestamp: string;
   email?: string;
   name?: string;
@@ -58,7 +58,12 @@ function fromRecord(
   pathname: string,
   payload: Record<string, unknown>,
 ): QuoteSubmission {
-  const kind = payload.kind === "contact" ? "contact" : "quick";
+  const kind =
+    payload.kind === "contact"
+      ? "contact"
+      : payload.kind === "instant"
+        ? "instant"
+        : "quick";
   const fileName = asString(payload.fileName);
   const drawingPath = asString(payload.drawingPath);
   return {
@@ -88,25 +93,27 @@ function fromRecord(
 
 export async function countQuoteSubmissions() {
   if (!(await blobReady())) return 0;
-  const [contactRecords, quickRecords] = await Promise.all([
+  const [contactRecords, quickRecords, instantRecords] = await Promise.all([
     listPrefix("leads/contact/"),
     listPrefix("leads/quick/"),
+    listPrefix("leads/instant/"),
   ]);
-  return contactRecords.length + quickRecords.length;
+  return contactRecords.length + quickRecords.length + instantRecords.length;
 }
 
 export async function listQuoteSubmissions(): Promise<QuoteSubmission[]> {
   if (!(await blobReady())) return [];
 
-  const [contactRecords, quickRecords, quoteFiles, quickFiles] =
+  const [contactRecords, quickRecords, instantRecords, quoteFiles, quickFiles] =
     await Promise.all([
       listPrefix("leads/contact/"),
       listPrefix("leads/quick/"),
+      listPrefix("leads/instant/"),
       listPrefix("quotes/"),
       listPrefix("quick-quotes/"),
     ]);
 
-  const records = [...contactRecords, ...quickRecords].sort(
+  const records = [...contactRecords, ...quickRecords, ...instantRecords].sort(
     (a, b) => +new Date(b.uploadedAt) - +new Date(a.uploadedAt),
   );
 

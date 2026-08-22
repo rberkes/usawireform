@@ -97,15 +97,19 @@ export function StepCanvas({
   source,
   autoRotate,
   className,
+  onStill,
 }: {
   source: ViewerSource;
   autoRotate: boolean;
   className?: string;
+  onStill?: (blob: Blob) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const applyRef = useRef<(next: ViewerSource) => void>(() => {});
   const sourceRef = useRef(source);
   const rotateRef = useRef(autoRotate);
+  const stillRef = useRef(onStill);
+  stillRef.current = onStill;
 
   useEffect(() => {
     sourceRef.current = source;
@@ -120,9 +124,11 @@ export function StepCanvas({
     const host = hostRef.current;
     if (!host) return;
 
-    let disposed = false;
+      let disposed = false;
     let resizeObserver: ResizeObserver | null = null;
     let frame = 0;
+    let stillPending = false;
+    let stillWait = 0;
     let renderer: { dispose: () => void; domElement: HTMLCanvasElement } | null =
       null;
 
@@ -338,10 +344,14 @@ export function StepCanvas({
         try {
           if (next.type === "empty") {
             clearContent();
+            stillPending = false;
           } else if (next.type === "wire") {
             drawWire(next.id, next.diameterIn, next.finish);
+            stillPending = false;
           } else {
             drawStep(next.meshes, next.finish);
+            stillPending = Boolean(stillRef.current && next.meshes.length);
+            stillWait = 0;
           }
         } catch (error) {
           console.error("Model viewer failed to draw", error);
@@ -351,17 +361,37 @@ export function StepCanvas({
       gl.domElement.style.width = "100%";
       gl.domElement.style.height = "100%";
       applyRef.current(sourceRef.current);
+      resize();
       gl.render(scene, camera);
 
       const tick = () => {
         if (disposed) return;
-        controls.autoRotate = rotateRef.current;
-        controls.update();
-        gl.render(scene, camera);
+        const sized = (hostRef.current?.clientWidth ?? 0) >= 160;
+        if (stillPending && stillRef.current && sized) {
+          stillWait += 1;
+          controls.autoRotate = false;
+          controls.update();
+          gl.render(scene, camera);
+          if (stillWait >= 2) {
+            stillPending = false;
+            stillWait = 0;
+            const hook = stillRef.current;
+            gl.domElement.toBlob(
+              (blob) => {
+                if (blob && hook) hook(blob);
+              },
+              "image/jpeg",
+              0.84,
+            );
+          }
+        } else {
+          controls.autoRotate = rotateRef.current;
+          controls.update();
+          gl.render(scene, camera);
+        }
         frame = requestAnimationFrame(tick);
       };
       tick();
-      resize();
       resizeObserver = new ResizeObserver(resize);
       resizeObserver.observe(canvasHost);
     };

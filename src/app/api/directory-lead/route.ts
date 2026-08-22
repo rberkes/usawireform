@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import {
   emailDirectoryLead,
+  sendLeadThanksEmail,
   storeDirectoryLead,
   type DirectoryLeadRecord,
 } from "@/lib/leads";
@@ -41,7 +42,15 @@ export async function POST(request: NextRequest) {
       console.error("[Directory lead store]", error);
     }
     try {
-      emailed = await emailDirectoryLead(lead);
+      const [shop] = await Promise.all([
+        emailDirectoryLead(lead),
+        sendLeadThanksEmail({
+          to: lead.email,
+          name: lead.name,
+          kind: "directory",
+        }),
+      ]);
+      emailed = shop;
     } catch (error) {
       console.error("[Directory lead email]", error);
     }

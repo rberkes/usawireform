@@ -1,0 +1,176 @@
+import { COMPANY, SITE_HOST, SITE_URL } from "@/lib/company";
+
+export function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+export type MailRow = { label: string; value: string; href?: string };
+
+const FONT =
+  "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+
+function shell(preheader: string, innerRows: string) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#f4f4f2">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0">${escapeHtml(preheader)}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f2">
+    <tr>
+      <td align="center" style="padding:32px 16px">
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;background:#ffffff;border:1px solid #eceae6">
+          <tr>
+            <td style="height:6px;background:#9a4f1f;font-size:0;line-height:0">&nbsp;</td>
+          </tr>
+          ${innerRows}
+          <tr>
+            <td style="padding:4px 32px 28px;font-family:${FONT};font-size:13px;line-height:1.55;color:#5c5c5c">
+              ${COMPANY} · Northeast Ohio · 4–14 mm CNC<br />
+              <a href="${SITE_URL}" style="color:#9a4f1f;text-decoration:none">${SITE_HOST}</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+function kickerRow() {
+  return `<tr>
+    <td style="padding:24px 32px 0;font-family:${FONT}">
+      <p style="margin:0;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#9a4f1f">${COMPANY}</p>
+    </td>
+  </tr>`;
+}
+
+function headingRow(heading: string) {
+  return `<tr>
+    <td style="padding:10px 32px 0;font-family:${FONT};font-size:26px;line-height:1.25;color:#111111;font-weight:500">
+      ${escapeHtml(heading)}
+    </td>
+  </tr>`;
+}
+
+function copyRow(html: string) {
+  return `<tr>
+    <td style="padding:14px 32px 0;font-family:${FONT};font-size:15px;line-height:1.65;color:#111111">
+      ${html}
+    </td>
+  </tr>`;
+}
+
+function drawingRow(fileName: string | undefined, hasPreview: boolean) {
+  if (!hasPreview && !fileName) return "";
+  const caption = fileName
+    ? `<p style="margin:10px 0 0;font-family:${FONT};font-size:12px;letter-spacing:0.04em;color:#5c5c5c">${escapeHtml(fileName)}</p>`
+    : "";
+  const image = hasPreview
+    ? `<img src="cid:drawing" alt="${escapeHtml(fileName || "Uploaded drawing")}" width="496" style="display:block;width:100%;max-width:496px;height:auto;border:0;background:#f4f4f2" />`
+    : "";
+  return `<tr>
+    <td style="padding:20px 32px 0">
+      <p style="margin:0 0 10px;font-family:${FONT};font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9a4f1f">The form you sent</p>
+      ${image}
+      ${caption}
+    </td>
+  </tr>`;
+}
+
+export function mailRowsHtml(rows: MailRow[]) {
+  const cells = rows
+    .map((row) => {
+      const value = row.href
+        ? `<a href="${escapeHtml(row.href)}" style="color:#9a4f1f;text-decoration:none">${escapeHtml(row.value)}</a>`
+        : escapeHtml(row.value);
+      return `<tr>
+        <td style="padding:9px 0;border-bottom:1px solid #eceae6;font-family:${FONT};font-size:13px;color:#5c5c5c;width:36%;vertical-align:top">${escapeHtml(row.label)}</td>
+        <td style="padding:9px 0;border-bottom:1px solid #eceae6;font-family:${FONT};font-size:13px;color:#111111;vertical-align:top">${value}</td>
+      </tr>`;
+    })
+    .join("");
+  return `<tr>
+    <td style="padding:20px 32px 0">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${cells}</table>
+    </td>
+  </tr>`;
+}
+
+export function customerThanksHtml({
+  name,
+  fileName,
+  hasPreview,
+  kind,
+}: {
+  name?: string;
+  fileName?: string;
+  hasPreview: boolean;
+  kind: "quote" | "quick" | "directory" | "machine";
+}) {
+  const who = name?.trim() ? escapeHtml(name.trim()) : "";
+  const hello = who ? `Hi ${who},` : "Hi,";
+  const drawing = kind === "quote" || kind === "quick";
+  const heading = drawing ? "We have your drawing" : "We received your note";
+  const intro = drawing
+    ? `${hello}<br /><br />Thank you for your time, and for the upload. USA Wire Form has ${fileName ? `<strong>${escapeHtml(fileName)}</strong>` : "the file"}. We'll be with you shortly — usually within 1–2 business days.`
+    : kind === "directory"
+      ? `${hello}<br /><br />Thank you for your time. We received the intro and will follow up if we can help.`
+      : `${hello}<br /><br />Thank you for your time. We received the machine note and will route it.`;
+  const follow = drawing
+    ? `If this isn't the part, reply with the right STEP. We'll look at the form and write back.`
+    : `Reply to this email if you need to add a note.`;
+
+  return shell(
+    drawing
+      ? "Thank you for the upload. We'll be with you shortly."
+      : "Thank you for your time. We'll be with you shortly.",
+    `${kickerRow()}
+     ${headingRow(heading)}
+     ${copyRow(intro)}
+     ${drawing ? drawingRow(fileName, hasPreview) : ""}
+     ${copyRow(`<span style="color:#5c5c5c">${follow}</span>`)}`,
+  );
+}
+
+export function shopLeadHtml({
+  heading,
+  intro,
+  fileName,
+  hasPreview,
+  rows,
+  bodyHtml,
+}: {
+  heading: string;
+  intro?: string;
+  fileName?: string;
+  hasPreview: boolean;
+  rows?: MailRow[];
+  bodyHtml?: string;
+}) {
+  const body = bodyHtml
+    ? `<tr>
+        <td style="padding:16px 32px 0;font-family:${FONT};font-size:14px;line-height:1.6;color:#111111">
+          ${bodyHtml}
+        </td>
+      </tr>`
+    : "";
+  const links = `<tr>
+    <td style="padding:20px 32px 0;font-family:${FONT};font-size:14px">
+      <a href="${SITE_URL}/admin" style="color:#9a4f1f;text-decoration:none">Open quote files</a>
+      &nbsp;·&nbsp;
+      <a href="${SITE_URL}/admin/leads" style="color:#9a4f1f;text-decoration:none">Open directory</a>
+    </td>
+  </tr>`;
+
+  return shell(heading, `${kickerRow()}
+    ${headingRow(heading)}
+    ${intro ? copyRow(intro) : ""}
+    ${drawingRow(fileName, hasPreview)}
+    ${rows?.length ? mailRowsHtml(rows) : ""}
+    ${body}
+    ${links}`);
+}

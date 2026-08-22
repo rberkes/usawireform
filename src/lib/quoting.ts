@@ -1,4 +1,5 @@
 import { FORMING_RATES } from "@/lib/price";
+import { COMMON_SIZES, WIRE } from "@/lib/range";
 
 export const QUOTE = {
   year: 2026,
@@ -104,3 +105,97 @@ export const toolingRange = `${usd(QUOTE.toolingMin)}–${usd(QUOTE.toolingMax)}
 export const programmingFee = usd(QUOTE.programming);
 export const coilMinRange = `${QUOTE.coilMinLbs.toLocaleString("en-US")}–${QUOTE.coilMaxLbs.toLocaleString("en-US")} lb`;
 export const qtyBreakCopy = `${ESTIMATE.qtyMin} pc min. −5% at 1,000. −10% at 10,000.`;
+
+export type InstantQuoteFields = {
+  email: string;
+  stockId: string;
+  customMm: string;
+  cuts: string;
+  bends: string;
+  lengthIn: string;
+  materialId: string;
+  qty: string;
+};
+
+export type InstantQuoteReady = {
+  email: string;
+  stock: boolean;
+  diameterIn: number;
+  diameterLabel: string;
+  cuts: number;
+  bends: number;
+  lengthIn: number;
+  materialId: EstimateMaterialId;
+  materialLabel: string;
+  quantity: number;
+};
+
+export function parseInstantQuote(
+  fields: InstantQuoteFields,
+): { ok: true; value: InstantQuoteReady } | { ok: false; message: string } {
+  const email = fields.email.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, message: "Enter a valid email to send the estimate." };
+  }
+
+  let stock = true;
+  let diameterIn = 0;
+  let diameterLabel = "";
+  if (fields.stockId === "other") {
+    const mm = Number(fields.customMm);
+    if (!Number.isFinite(mm)) {
+      return { ok: false, message: `Enter a diameter in ${WIRE.short}.` };
+    }
+    stock = false;
+    diameterIn = mm / 25.4;
+    diameterLabel = `${mm} mm`;
+  } else {
+    const size = COMMON_SIZES.find((row) => row.fraction === fields.stockId);
+    if (!size) {
+      return { ok: false, message: "Pick a wire diameter." };
+    }
+    diameterIn = Number.parseFloat(size.decimal);
+    diameterLabel = `${size.fraction} (${size.mm}) — stock`;
+  }
+  if (diameterIn < WIRE.minIn || diameterIn > WIRE.maxIn) {
+    return { ok: false, message: `${WIRE.short} only.` };
+  }
+
+  const cuts = Number(fields.cuts);
+  const bends = Number(fields.bends);
+  const lengthIn = Number(fields.lengthIn);
+  const quantity = Number(fields.qty);
+  if (!Number.isFinite(cuts) || cuts < 0) {
+    return { ok: false, message: "Enter number of cuts." };
+  }
+  if (!Number.isFinite(bends) || bends < 0) {
+    return { ok: false, message: "Enter number of bends." };
+  }
+  if (!Number.isFinite(lengthIn) || lengthIn <= 0) {
+    return { ok: false, message: "Enter developed length in inches." };
+  }
+  if (!Number.isFinite(quantity) || quantity < ESTIMATE.qtyMin) {
+    return { ok: false, message: `Quantity starts at ${ESTIMATE.qtyMin}.` };
+  }
+
+  const material = ESTIMATE_MATERIALS.find((row) => row.id === fields.materialId);
+  if (!material) {
+    return { ok: false, message: "Pick a material." };
+  }
+
+  return {
+    ok: true,
+    value: {
+      email,
+      stock,
+      diameterIn,
+      diameterLabel,
+      cuts,
+      bends,
+      lengthIn,
+      materialId: material.id,
+      materialLabel: material.label,
+      quantity,
+    },
+  };
+}

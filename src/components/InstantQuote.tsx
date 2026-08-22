@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
+import { submitInstantQuote, type QuoteFormState } from "@/app/actions/quote";
 import { COMMON_SIZES, WIRE } from "@/lib/range";
 import {
   ESTIMATE,
@@ -10,7 +11,7 @@ import {
   type EstimateMaterialId,
 } from "@/lib/quoting";
 import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
-import { fieldClass, Panel } from "./ui";
+import { Button, fieldClass, Panel } from "./ui";
 import { VolumeComparison } from "./VolumeComparison";
 
 const stockOptions = COMMON_SIZES.map((size) => ({
@@ -19,7 +20,13 @@ const stockOptions = COMMON_SIZES.map((size) => ({
   inches: Number.parseFloat(size.decimal),
 }));
 
+const initialState: QuoteFormState = { success: false, message: "" };
+
 export function InstantQuote() {
+  const [state, formAction, pending] = useActionState(
+    submitInstantQuote,
+    initialState,
+  );
   const [stockId, setStockId] = useState<string>(stockOptions[0].id);
   const [customMm, setCustomMm] = useState("");
   const [cuts, setCuts] = useState("1");
@@ -69,19 +76,21 @@ export function InstantQuote() {
   const lotReady = Boolean(result && qtyOk);
 
   return (
-    <div className="space-y-8">
+    <form action={formAction} className="space-y-8">
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <Panel>
           <p className="mb-5 text-sm font-medium text-copper">
             $1.00 per cut, $0.50 per bend, $0.05 per inch. Material is not
             in the price — you buy coil and bring it in. The estimate
-            updates as you type.
+            updates as you type. Email it to yourself when the number looks
+            right.
           </p>
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block text-sm">
               Wire diameter
               <select
                 className={`mt-1.5 ${fieldClass}`}
+                name="stockId"
                 value={stockId}
                 onChange={(event) => setStockId(event.target.value)}
               >
@@ -103,6 +112,7 @@ export function InstantQuote() {
                 Diameter, mm
                 <input
                   className={`mt-1.5 ${fieldClass}`}
+                  name="customMm"
                   type="number"
                   min={WIRE.minMm}
                   max={WIRE.maxMm}
@@ -117,6 +127,7 @@ export function InstantQuote() {
               Number of cuts
               <input
                 className={`mt-1.5 ${fieldClass}`}
+                name="cuts"
                 type="number"
                 min="0"
                 step="1"
@@ -128,6 +139,7 @@ export function InstantQuote() {
               Number of bends
               <input
                 className={`mt-1.5 ${fieldClass}`}
+                name="bends"
                 type="number"
                 min="0"
                 step="1"
@@ -139,6 +151,7 @@ export function InstantQuote() {
               Total part length, inches
               <input
                 className={`mt-1.5 ${fieldClass}`}
+                name="lengthIn"
                 type="number"
                 min="0.1"
                 step="0.1"
@@ -150,6 +163,7 @@ export function InstantQuote() {
               Material
               <select
                 className={`mt-1.5 ${fieldClass}`}
+                name="materialId"
                 value={materialId}
                 onChange={(event) =>
                   setMaterialId(event.target.value as EstimateMaterialId)
@@ -169,6 +183,7 @@ export function InstantQuote() {
               Quantity ({ESTIMATE.qtyMin} min)
               <input
                 className={`mt-1.5 ${fieldClass}`}
+                name="qty"
                 type="number"
                 min={ESTIMATE.qtyMin}
                 step="1"
@@ -230,6 +245,33 @@ export function InstantQuote() {
                   />
                 ) : null}
               </dl>
+              <label className="mt-6 block text-sm">
+                Email this estimate
+                <input
+                  className={`mt-1.5 ${fieldClass}`}
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="you@company.com"
+                />
+              </label>
+              <Button
+                type="submit"
+                className="mt-4"
+                disabled={!ready || pending}
+              >
+                {pending ? "Sending..." : "Email this estimate"}
+              </Button>
+              {state.message ? (
+                <p
+                  className={`mt-3 text-sm leading-6 ${
+                    state.success ? "text-foreground" : "text-copper"
+                  }`}
+                >
+                  {state.message}
+                </p>
+              ) : null}
               <button
                 type="button"
                 onClick={() => setShowComparison(!showComparison)}
@@ -249,7 +291,6 @@ export function InstantQuote() {
         </Panel>
       </div>
 
-      {/* Volume comparison table */}
       {ready && result && showComparison && material && (
         <Panel>
           <VolumeComparison
@@ -259,7 +300,7 @@ export function InstantQuote() {
           />
         </Panel>
       )}
-    </div>
+    </form>
   );
 }
 

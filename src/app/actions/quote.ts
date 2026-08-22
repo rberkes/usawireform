@@ -3,7 +3,9 @@
 import { put } from "@vercel/blob";
 import { blobAuth, blobErrorMessage, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
-import { sendLeadEmail } from "@/lib/leads";
+import { sendDrawingLeadEmails, previewAttachmentFromForm, sendLeadEmail, sendLeadThanksEmail, sendInstantEstimateEmails } from "@/lib/leads";
+import { estimatePiece, parseInstantQuote, usd2 } from "@/lib/quoting";
+import { QUOTE_REVIEW } from "@/lib/price";
 
 export type QuoteFormState = {
   success: boolean;
@@ -181,32 +183,31 @@ export async function submitContactForm(
 
   if (emailConfigured()) {
     try {
-      emailed = await sendLeadEmail({
-        replyTo: data.email,
-        subject: `Quote Request: ${data.company} - ${data.material} ${data.diameter}`,
-        html: `
-          <h2>New Quote Request</h2>
-          <p><strong>Contact:</strong> ${data.name}</p>
-          <p><strong>Company:</strong> ${data.company}</p>
-          <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
-          <p><strong>LinkedIn:</strong> ${
-            data.linkedin
-              ? `<a href="${data.linkedin}">${data.linkedin}</a>`
-              : "—"
-          }</p>
-          <p><strong>Phone:</strong> ${data.phone}</p>
-          <hr />
-          <h3>Part Details</h3>
-          <p><strong>Material:</strong> ${data.material}</p>
-          <p><strong>Wire Diameter:</strong> ${data.diameter}</p>
-          <p><strong>Target Price:</strong> ${data.targetPrice}</p>
-          <p><strong>Timeline:</strong> ${data.timeline}</p>
-          <p><strong>Quality Standard:</strong> ${data.quality}</p>
-          <h4>Notes:</h4>
-          <p>${data.notes.replace(/\n/g, "<br />")}</p>
-          <hr />
-          <p><strong>Drawing:</strong> ${data.fileName || "Not uploaded"}</p>
-        `,
+      const preview = await previewAttachmentFromForm(formData);
+      emailed = await sendDrawingLeadEmails({
+        to: data.email,
+        name: data.name,
+        subject: `Quote request: ${data.company} — ${data.fileName ?? "drawing"}`,
+        heading: "New drawing",
+        intro: `${data.name} at ${data.company} sent a STEP. We'll be with them shortly.`,
+        fileName: data.fileName,
+        preview,
+        rows: [
+          { label: "Name", value: data.name },
+          { label: "Company", value: data.company },
+          { label: "Email", value: data.email, href: `mailto:${data.email}` },
+          ...(data.linkedin
+            ? [{ label: "LinkedIn", value: data.linkedin, href: data.linkedin }]
+            : []),
+          { label: "Phone", value: data.phone },
+          { label: "Material", value: data.material },
+          { label: "Diameter", value: data.diameter },
+          { label: "Target price", value: data.targetPrice },
+          { label: "Timeline", value: data.timeline },
+          { label: "Quality", value: data.quality },
+          { label: "Notes", value: data.notes || "—" },
+          { label: "Drawing", value: data.fileName || "Not uploaded" },
+        ],
       });
     } catch (error) {
       console.error("[Email Send Error]", error);
@@ -316,25 +317,25 @@ export async function submitQuickQuote(
 
   if (emailConfigured()) {
     try {
-      emailed = await sendLeadEmail({
-        replyTo: data.email,
-        subject: `Quick Quote${data.source ? ` (${data.source})` : ""}: ${data.timeline} - ${data.quality}`,
-        html: `
-          <h2>Quick Quote Request</h2>
-          <p><strong>Page:</strong> ${data.source || "unknown"}</p>
-          <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
-          <p><strong>LinkedIn:</strong> ${
-            data.linkedin
-              ? `<a href="${data.linkedin}">${data.linkedin}</a>`
-              : "—"
-          }</p>
-          <hr />
-          <p><strong>Target Price:</strong> ${data.targetPrice}</p>
-          <p><strong>Timeline:</strong> ${data.timeline}</p>
-          <p><strong>Quality Standard:</strong> ${data.quality}</p>
-          <hr />
-          <p><strong>Drawing:</strong> ${data.fileName || "Not uploaded"}</p>
-        `,
+      const preview = await previewAttachmentFromForm(formData);
+      emailed = await sendDrawingLeadEmails({
+        to: data.email,
+        subject: `Drawing: ${data.fileName ?? "STEP"}${data.source ? ` (${data.source})` : ""}`,
+        heading: "New drawing",
+        intro: "Someone sent a STEP from the site. We'll be with them shortly.",
+        fileName: data.fileName,
+        preview,
+        rows: [
+          { label: "Email", value: data.email, href: `mailto:${data.email}` },
+          ...(data.linkedin
+            ? [{ label: "LinkedIn", value: data.linkedin, href: data.linkedin }]
+            : []),
+          { label: "Page", value: data.source || "—" },
+          { label: "Target price", value: data.targetPrice },
+          { label: "Timeline", value: data.timeline },
+          { label: "Quality", value: data.quality },
+          { label: "Drawing", value: data.fileName || "Not uploaded" },
+        ],
       });
     } catch (error) {
       console.error("[Email Send Error]", error);
@@ -423,10 +424,12 @@ export async function submitMachineLead(
 
   if (emailConfigured()) {
     try {
-      emailed = await sendLeadEmail({
-        replyTo: data.email,
-        subject: `Machine lead: ${data.oem} ${data.model} — ${data.company}`,
-        html: `
+      const [shop] = await Promise.all([
+        sendLeadEmail({
+          replyTo: data.email,
+          heading: "Machine inquiry",
+          subject: `Machine lead: ${data.oem} ${data.model} — ${data.company}`,
+          html: `
           <h2>CNC machine inquiry</h2>
           <p><strong>OEM / model:</strong> ${data.oem} / ${data.model}</p>
           <p><strong>Page:</strong> ${data.source}</p>
@@ -437,7 +440,10 @@ export async function submitMachineLead(
           <p><strong>Phone:</strong> ${data.phone || "—"}</p>
           <p><strong>Notes:</strong> ${data.notes.replace(/\n/g, "<br />") || "—"}</p>
         `,
-      });
+        }),
+        sendLeadThanksEmail({ to: data.email, name: data.name, kind: "machine" }),
+      ]);
+      emailed = shop;
     } catch (error) {
       console.error("[Machine Lead Email Error]", error);
     }
@@ -455,5 +461,111 @@ export async function submitMachineLead(
   return {
     success: true,
     message: `${COMPANY} received the ${data.model} inquiry. We route dealer and OEM leads from this form.`,
+  };
+}
+
+export async function submitInstantQuote(
+  _prevState: QuoteFormState,
+  formData: FormData,
+): Promise<QuoteFormState> {
+  const parsed = parseInstantQuote({
+    email: String(formData.get("email") ?? ""),
+    stockId: String(formData.get("stockId") ?? ""),
+    customMm: String(formData.get("customMm") ?? ""),
+    cuts: String(formData.get("cuts") ?? ""),
+    bends: String(formData.get("bends") ?? ""),
+    lengthIn: String(formData.get("lengthIn") ?? ""),
+    materialId: String(formData.get("materialId") ?? ""),
+    qty: String(formData.get("qty") ?? ""),
+  });
+
+  if (!parsed.ok) {
+    return { success: false, message: parsed.message };
+  }
+
+  const input = parsed.value;
+  const result = estimatePiece({
+    bends: input.bends,
+    lengthIn: input.lengthIn,
+    quantity: input.quantity,
+    cuts: input.cuts,
+  });
+  const piece = usd2(result.piece);
+  const lot = usd2(result.lot);
+  const payload = {
+    kind: "instant",
+    ...input,
+    piece,
+    lot,
+    forming: usd2(result.forming),
+    cut: usd2(result.cut),
+    bend: usd2(result.bendCost),
+    discountRate: result.discountRate,
+    targetPrice: piece,
+    notes: `${input.cuts} cuts · ${input.bends} bends · ${input.lengthIn} in · ${lot} lot`,
+    material: input.materialLabel,
+    diameter: input.diameterLabel,
+    timestamp: new Date().toISOString(),
+  };
+
+  let stored = false;
+  let emailed = false;
+  let storeError: string | undefined;
+
+  if (await blobConfigured()) {
+    try {
+      await storeLeadRecord("leads/instant", payload);
+      stored = true;
+    } catch (error) {
+      console.error("[Instant Quote Store Error]", error);
+      storeError = blobErrorMessage(error);
+    }
+  }
+
+  if (emailConfigured()) {
+    try {
+      emailed = await sendInstantEstimateEmails({
+        to: input.email,
+        diameterLabel: input.diameterLabel,
+        materialLabel: input.materialLabel,
+        cuts: input.cuts,
+        bends: input.bends,
+        lengthIn: input.lengthIn,
+        quantity: input.quantity,
+        piece,
+        lot,
+        forming: usd2(result.forming),
+        cut: usd2(result.cut),
+        bend: usd2(result.bendCost),
+        discount:
+          result.discountRate > 0
+            ? `Qty break · −${Math.round(result.discountRate * 100)}%`
+            : undefined,
+        stock: input.stock,
+      });
+    } catch (error) {
+      console.error("[Instant Quote Email Error]", error);
+    }
+  }
+
+  console.log("[Instant Quote]", {
+    email: input.email,
+    piece,
+    lot,
+    stored,
+    emailed,
+    storeError,
+  });
+
+  if (!emailed) {
+    return {
+      success: false,
+      message: `Could not send the estimate${storeError ? ` (${storeError})` : ""}. Copy the number on this page, or email ${QUOTE_EMAIL}.`,
+    };
+  }
+
+  return {
+    success: true,
+    message: `Sent to ${input.email}: ${piece} / piece, ${lot} for ${input.quantity.toLocaleString("en-US")} pcs. ${QUOTE_REVIEW}`,
   };
 }
