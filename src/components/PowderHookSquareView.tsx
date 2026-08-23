@@ -1,26 +1,14 @@
 import Link from "next/link";
+import { PowderHookBranchNav } from "@/components/PowderHookBranchNav";
 import { SquareHangPriceTable } from "@/components/SquareHangPriceTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema } from "@/components/SeoSchemas";
 import { POWDER_HOOK_HUB } from "@/lib/powder-coating-hooks";
 import { WIRE } from "@/lib/range";
-import { pageMeta } from "@/lib/seo";
 import { SQUARE_HANG_LINE } from "@/lib/square-hanging-hooks";
 
-export const metadata = pageMeta({
-  title: "Square Hanging Hooks — 5% Under Catalog Bags",
-  description: `${SQUARE_HANG_LINE} 0.180, 0.250, and 0.375 in. CNC from coil in Northeast Ohio.`,
-  path: "/square-hanging-hooks",
-  keywords: [
-    "square hanging hooks",
-    "HSQV hooks",
-    "powder coating square hooks",
-    "0.180 square hanging hook",
-    "0.250 square hanging hook",
-    "0.375 square hanging hook",
-  ],
-});
+const PATH = "/powder-coating-hooks/square-hanging-hooks";
 
 const faqs = [
   {
@@ -31,7 +19,7 @@ const faqs = [
   {
     question: "Why 5% under the published bags?",
     answer:
-      "1-lot and 10-lot prices are 5% under the published HSQV cards at the same length. Carbon. Steel in the lot. SH375-24 is 100 pcs — their 50-pc bag doubled, then 5% off.",
+      "1-lot and 10-lot prices are 5% under the published square-hanging cards at the same length. Carbon. Steel in the lot. USAWF-SH-375-24 is 100 pcs — their 50-pc bag doubled, then 5% off.",
   },
   {
     question: "Do you run 0.120 in square hanging hooks?",
@@ -39,14 +27,14 @@ const faqs = [
   },
 ];
 
-export default function SquareHangingHooksPage() {
+export function PowderHookSquareView() {
   return (
     <>
       <FAQSchema questions={faqs} />
       <BreadcrumbJsonLd
         items={[
           { name: POWDER_HOOK_HUB.title, url: POWDER_HOOK_HUB.path },
-          { name: "Square hanging hooks", url: "/square-hanging-hooks" },
+          { name: "Square hanging hooks", url: PATH },
         ]}
       />
       <DocPage
@@ -66,9 +54,7 @@ export default function SquareHangingHooksPage() {
         <p>
           Same length grid as the published square-hanging bags. We do not run
           0.120 in. Round V, S, and C stay on{" "}
-          <Link href="/powder-coating-hook-prices">
-            4–10 mm hook prices
-          </Link>
+          <Link href="/powder-coating-hooks/prices">4–10 mm hook prices</Link>
           . 3/8 in dual-V calculator:{" "}
           <Link href="/heavy-duty-v-hooks">heavy-duty V-hooks</Link>.
         </p>
@@ -84,6 +70,7 @@ export default function SquareHangingHooksPage() {
           </div>
         ))}
 
+        <PowderHookBranchNav slug={["square-hanging-hooks"]} />
         <QuoteBand title="Need a square hang that is not on the card?" />
       </DocPage>
     </>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PowderHookKeywordCloud } from "@/components/PowderHookKeywordCloud";
 import { HookFigure } from "@/components/VHookFigure";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
@@ -10,6 +11,10 @@ import {
   POWDER_HOOK_HUB,
   POWDER_HOOK_STYLES,
 } from "@/lib/powder-coating-hooks";
+import {
+  POWDER_HOOK_PLAYERS,
+  POWDER_HOOK_TREE,
+} from "@/lib/powder-hook-tree";
 import { STOCK } from "@/lib/catalog";
 import { WIRE } from "@/lib/range";
 import { pageMeta } from "@/lib/seo";
@@ -29,7 +34,7 @@ const faqs = [
   },
   {
     question: "What wire sizes do you form powder coating hooks in?",
-    answer: `Production is ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog hooks are under 4 mm — no. 0.180 in and 0.250 in are in the band: /powder-coating-hook-prices, 2% under published bags.`,
+    answer: `Production is ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog hooks are under 4 mm — no. 0.180 in and 0.250 in are in the band: /powder-coating-hooks/prices, 2% under published bags.`,
   },
   {
     question: "Can you make custom powder coating hooks?",
@@ -61,7 +66,9 @@ export default function PowderCoatingHooksPage() {
         lede={`${PRICE_LINE} ${COMPANY} forms powder coating hooks from coil: S-hooks, V-hooks, C-hooks, CV-hooks, 90° hooks, and custom heavy-duty wire hooks for finishing shops, coating lines, racks, and curing ovens. ${WIRE.short}. Northeast Ohio.`}
         toc={[
           { id: "styles", label: "Hook styles" },
+          { id: "cloud", label: "Keyword cloud" },
           { id: "prices", label: "4–10 mm prices" },
+          { id: "market", label: "The market" },
           { id: "steel", label: "Steel" },
           { id: "stainless", label: "Stainless" },
           { id: "heavy", label: "Heavy-duty" },
@@ -88,11 +95,23 @@ export default function PowderCoatingHooksPage() {
             </li>
           ))}
           <li>
+            <Link href="/powder-coating-hooks/square-hanging-hooks">
+              Square hanging hooks
+            </Link>{" "}
+            — squared corners on the hang. 5% under published HSQV bags.
+          </li>
+          <li>
             <Link href="/powder-coating-v-hooks">Powder coating V-hooks</Link>{" "}
             — finishing, paint line, e-coat, rack, and curing oven V-hooks, with
             a live builder.
           </li>
         </ul>
+        <p>
+          Deeper branches off this hub: stainless, steel, heavy-duty, paint
+          hooks, e-coat, racks, conveyors, grounding, wash, oven, 4–10 mm, 3/8
+          in, specialty catalog names, and the market map.{" "}
+          {POWDER_HOOK_TREE.length} pages sit under this root.
+        </p>
         <p>
           Compare styles:{" "}
           <Link href="/guide/s-hooks-vs-v-hooks-vs-c-hooks">
@@ -101,18 +120,47 @@ export default function PowderCoatingHooksPage() {
           .
         </p>
 
+        <h2 id="cloud">Keyword cloud</h2>
+        <p>
+          Names finishing shops actually type. Size is how central the term is
+          here — not a purchased search-volume number.
+        </p>
+        <div className="not-prose my-8">
+          <PowderHookKeywordCloud />
+        </div>
+
         <h2 id="prices">4–10 mm bag prices</h2>
         <p>
           0.180 in and 0.250 in are in this cell (4.57 mm and 6.35 mm). We list
           those lengths — plus 4, 5, 6, 8, and 10 mm — at 2% under the published
           bag prices, same bag counts. Carbon, steel in the lot.{" "}
-          <Link href="/powder-coating-hook-prices">
+          <Link href="/powder-coating-hooks/prices">
             Full V, S, and C price list
           </Link>
           . Squared hang:{" "}
-          <Link href="/square-hanging-hooks">square hanging hooks</Link>
+          <Link href="/powder-coating-hooks/square-hanging-hooks">
+            square hanging hooks
+          </Link>
           , 5% under the published HSQV bags (0.180, 0.250, 0.375 in).
         </p>
+
+        <h2 id="market">Who else sells these</h2>
+        <p>
+          The finishing-hook market is catalogs, rack OEMs, and masking houses.
+          This floor is a 4–14 mm CNC cell. Instant estimate is this cell.{" "}
+          <Link href="/powder-coating-hooks/market">Full market map</Link>.
+        </p>
+        <ul>
+          {POWDER_HOOK_PLAYERS.map((player) => (
+            <li key={player.url}>
+              <a href={player.url} rel="nofollow noopener noreferrer" target="_blank">
+                {player.name}
+              </a>
+              {" — "}
+              {player.vsUs}
+            </li>
+          ))}
+        </ul>
 
         <h2 id="steel">Steel powder coating hooks</h2>
         <p>
@@ -143,7 +191,7 @@ export default function PowderCoatingHooksPage() {
           </Link>
           . Light line hooks at 0.044–0.120 in are not a quote here. 0.180 in
           and 0.250 in are —{" "}
-          <Link href="/powder-coating-hook-prices">bag prices</Link>.
+          <Link href="/powder-coating-hooks/prices">bag prices</Link>.
         </p>
 
         <h2 id="custom">Custom powder coating hooks</h2>
@@ -181,12 +229,17 @@ export default function PowderCoatingHooksPage() {
         <h2 id="next">Related</h2>
         <ul>
           <li>
-            <Link href="/powder-coating-hook-prices">
+            <Link href="/powder-coating-hooks/prices">
               4–10 mm hook bag prices
             </Link>
           </li>
           <li>
-            <Link href="/square-hanging-hooks">Square hanging hooks</Link>
+            <Link href="/powder-coating-hooks/square-hanging-hooks">
+              Square hanging hooks
+            </Link>
+          </li>
+          <li>
+            <Link href="/powder-coating-hooks/market">Hook market</Link>
           </li>
           <li>
             <Link href="/products/powder-coating-hooks">

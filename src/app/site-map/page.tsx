@@ -231,7 +231,7 @@ export default function SiteMapPage() {
               body: "S, V, C, CV, and 90° hooks from coil. Heavy 4–14 mm.",
             },
             {
-              href: "/square-hanging-hooks",
+              href: "/powder-coating-hooks/square-hanging-hooks",
               title: "Square hanging hooks",
               body: "0.180, 0.250, 0.375 in. 5% under published HSQV bags.",
             },
@@ -271,22 +271,22 @@ export default function SiteMapPage() {
               body: "Builder: length, leg ID, live estimate.",
             },
             {
-              href: "/v-hooks",
+              href: "/powder-coating-hooks/v-hooks",
               title: "V-hooks",
               body: "Centered hang for powder coating and paint lines.",
             },
             {
-              href: "/c-hooks",
+              href: "/powder-coating-hooks/c-hooks",
               title: "C-hooks",
               body: "Open C hang for rack clearance and fast load.",
             },
             {
-              href: "/cv-hooks",
+              href: "/powder-coating-hooks/cv-hooks",
               title: "CV-hooks",
               body: "C clearance plus a V locate on one form.",
             },
             {
-              href: "/s-hooks",
+              href: "/powder-coating-hooks/s-hooks",
               title: "S-hooks",
               body: "Powder coating and plant S-hooks from coil.",
             },
@@ -301,7 +301,7 @@ export default function SiteMapPage() {
               body: "Trailer hitch pins from coil. 1/2 in stock on this cell.",
             },
             {
-              href: "/90-degree-hooks",
+              href: "/powder-coating-hooks/90-degree-hooks",
               title: "90 degree hooks",
               body: "90° V, C, and CV for tight racks.",
             },

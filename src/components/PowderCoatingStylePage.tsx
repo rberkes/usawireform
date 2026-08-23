@@ -1,5 +1,6 @@
 import { HookBuilder } from "@/components/HookBuilder";
 import { HookBagPriceTable } from "@/components/HookBagPriceTable";
+import { PowderHookBranchNav } from "@/components/PowderHookBranchNav";
 import { HookFigure } from "@/components/VHookFigure";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
@@ -89,7 +90,7 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
               Same diameter and length steps as the published 0.180 in / 0.250
               in finishing-hook bags, plus metric sizes in between. Two percent
               under those bag prices.{" "}
-              <Link href="/powder-coating-hook-prices">All three styles</Link>.
+              <Link href="/powder-coating-hooks/prices">All three styles</Link>.
             </p>
             <div className="not-prose my-8">
               <HookBagPriceTable
@@ -185,6 +186,7 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
           ) : null}
         </ul>
 
+        <PowderHookBranchNav slug={[style.id]} />
         <QuoteBand title={`Have a ${style.title.toLowerCase()} print?`} />
       </DocPage>
     </>

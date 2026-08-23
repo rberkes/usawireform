@@ -75,7 +75,7 @@ export function VHookLanderPage({ lander }: { lander: VHookLander }) {
               <Link href={POWDER_HOOK_HUB.path}>{POWDER_HOOK_HUB.title}</Link>
             </li>
             <li>
-              <Link href="/v-hooks">V-hooks</Link>
+              <Link href="/powder-coating-hooks/v-hooks">V-hooks</Link>
             </li>
             {others.slice(0, 6).map((item) => (
               <li key={item.path}>

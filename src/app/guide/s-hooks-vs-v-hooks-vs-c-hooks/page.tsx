@@ -74,7 +74,7 @@ export default function HookStyleGuidePage() {
         <h2 id="s">S-hooks</h2>
         <p>
           Two opposite curves. Fast to load, easy to strip. Powder coating{" "}
-          <Link href="/s-hooks">S-hooks</Link> are the general hang. They move
+          <Link href="/powder-coating-hooks/s-hooks">S-hooks</Link> are the general hang. They move
           more than a V if the part can swing. Closed eyes when the hook has to
           stay on a bar or a D-ring.
         </p>
@@ -86,7 +86,7 @@ export default function HookStyleGuidePage() {
         <p>
           Dual V: rack crotch on top, part trough on the bottom, sharp 45°
           bends.{" "}
-          <Link href="/v-hooks">V-hooks</Link> center the part and keep contact
+          <Link href="/powder-coating-hooks/v-hooks">V-hooks</Link> center the part and keep contact
           consistent through wash, coat, and cure. Use them when orientation
           matters more than load speed.
         </p>
@@ -97,7 +97,7 @@ export default function HookStyleGuidePage() {
         <h2 id="c">C-hooks</h2>
         <p>
           Open throat.{" "}
-          <Link href="/c-hooks">C-hooks</Link> give clearance and a simple hang.
+          <Link href="/powder-coating-hooks/c-hooks">C-hooks</Link> give clearance and a simple hang.
           Better for wide parts and racks that fight a V. Less locate than a V.
           Pointed ends when the spec wants a bite.
         </p>
@@ -107,7 +107,7 @@ export default function HookStyleGuidePage() {
 
         <h2 id="cv">CV-hooks</h2>
         <p>
-          <Link href="/cv-hooks">CV-hooks</Link> mix C clearance and V locate.
+          <Link href="/powder-coating-hooks/cv-hooks">CV-hooks</Link> mix C clearance and V locate.
           One opening for load, one for a settled hang. Common when a shop runs
           mixed part families on one rack style.
         </p>
@@ -117,7 +117,7 @@ export default function HookStyleGuidePage() {
 
         <h2 id="ninety">90° hooks</h2>
         <p>
-          <Link href="/90-degree-hooks">90° hooks</Link> rotate V, C, or CV off
+          <Link href="/powder-coating-hooks/90-degree-hooks">90° hooks</Link> rotate V, C, or CV off
           the bar. Use them for tight centers and a different face to the gun.
         </p>
         <div className="not-prose my-8">

@@ -1,4 +1,6 @@
 export const COMPANY = "USA Wire Form";
+/** House catalog prefix. Our part numbers, not a competitor SKU. */
+export const PART_PREFIX = "USAWF";
 export const SITE_HOST = "usawireform.com";
 export const SITE_URL = `https://${SITE_HOST}`;
 export const QUOTE_EMAIL = `info@${SITE_HOST}`;

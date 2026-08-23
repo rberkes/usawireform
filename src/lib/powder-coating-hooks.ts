@@ -32,7 +32,7 @@ export type PowderHookStyleId =
 
 export type PowderHookStyle = {
   id: PowderHookStyleId;
-  path: `/${PowderHookStyleId}`;
+  path: `/powder-coating-hooks/${PowderHookStyleId}`;
   title: string;
   h1: string;
   kicker: string;
@@ -49,7 +49,7 @@ export type PowderHookStyle = {
 export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
   {
     id: "v-hooks",
-    path: "/v-hooks",
+    path: "/powder-coating-hooks/v-hooks",
     title: "V-Hooks",
     h1: "V-hooks",
     kicker: "Powder coating hooks",
@@ -69,7 +69,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
     hang: "The crotch locates. Legs spread load. Opening and included angle are the print.",
     body: [
       "V-hooks are 2D CNC: feed, two sharp 45° Vs, a shank, cutoff. Rack Λ on top, part V on the bottom, same side of the shank. Length, opening, and point or blunt ends belong on the drawing. Carbon for everyday powder coating hooks. 304 or 316 when the washer or the chemistry eats bright basic.",
-      `This shop forms V-hooks in ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog V-hooks sit under 4 mm — no. 0.180 in (4.57 mm) and 0.250 in (6.35 mm) are in the band: bag prices 2% under the published cards on /powder-coating-hook-prices.`,
+      `This shop forms V-hooks in ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog V-hooks sit under 4 mm — no. 0.180 in (4.57 mm) and 0.250 in (6.35 mm) are in the band: bag prices 2% under the published cards on /powder-coating-hooks/prices.`,
     ],
     jobs: [
       "Powder coating V-hooks for rack and conveyor lines",
@@ -91,7 +91,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
   },
   {
     id: "c-hooks",
-    path: "/c-hooks",
+    path: "/powder-coating-hooks/c-hooks",
     title: "C-Hooks",
     h1: "C-hooks",
     kicker: "Powder coating hooks",
@@ -132,7 +132,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
   },
   {
     id: "cv-hooks",
-    path: "/cv-hooks",
+    path: "/powder-coating-hooks/cv-hooks",
     title: "CV-Hooks",
     h1: "CV-hooks",
     kicker: "Powder coating hooks",
@@ -173,7 +173,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
   },
   {
     id: "s-hooks",
-    path: "/s-hooks",
+    path: "/powder-coating-hooks/s-hooks",
     title: "S-Hooks",
     h1: "S-hooks",
     kicker: "Powder coating hooks",
@@ -214,7 +214,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
   },
   {
     id: "90-degree-hooks",
-    path: "/90-degree-hooks",
+    path: "/powder-coating-hooks/90-degree-hooks",
     title: "90 Degree Hooks",
     h1: "90° hooks",
     kicker: "Powder coating hooks",

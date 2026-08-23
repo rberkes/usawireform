@@ -224,7 +224,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
         body: [
           "Three stock columns. We buy the steel. 3/8 in (0.375 in) is $1.00 per cut and $0.09 per developed inch, plus the wire, then 5% under boxed 0.375 in. Bends are in the drawing, not billed.",
           "7/16 in and 1/2 in are stock on this cell — not a boxed 0.375 catalog size. The inch rate is the 3/8 in rate times (d ÷ 3/8)², plus more steel, then the same 5% off.",
-          `Catalog 0.044–0.120 in V-hooks are below this cell. 0.180 in and 0.250 in are 4.57 mm and 6.35 mm — bag prices on /powder-coating-hook-prices. Production is ${WIRE.label}. Steel is in the estimate.`,
+          `Catalog 0.044–0.120 in V-hooks are below this cell. 0.180 in and 0.250 in are 4.57 mm and 6.35 mm — bag prices on /powder-coating-hooks/prices. Production is ${WIRE.label}. Steel is in the estimate.`,
         ],
       },
       {

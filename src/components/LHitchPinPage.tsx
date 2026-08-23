@@ -80,7 +80,7 @@ export function LHitchPinPage({ lander }: { lander: LHitchPinLander }) {
           <Link href="/products/l-pins">L hitch pins in the catalog</Link>
           {", "}
           <Link href="/products/trailer-latches">trailer latches</Link>, and{" "}
-          <Link href="/s-hooks">S-hooks</Link>. Instant estimate stays this
+          <Link href="/powder-coating-hooks/s-hooks">S-hooks</Link>. Instant estimate stays this
           floor.
         </p>
 

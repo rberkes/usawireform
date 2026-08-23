@@ -21,7 +21,7 @@ export function SquareHangPriceTable() {
             <table className="mt-2 w-full min-w-[36rem] text-sm">
               <thead>
                 <tr className="border-b border-line text-left">
-                  <th className="py-2 pr-3 font-medium">SKU</th>
+                  <th className="py-2 pr-3 font-medium">Part no.</th>
                   <th className="py-2 pr-3 font-medium">Length</th>
                   <th className="py-2 pr-3 font-medium">Qty</th>
                   <th className="py-2 pr-3 font-medium">1 lot</th>

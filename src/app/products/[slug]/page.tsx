@@ -169,11 +169,11 @@ export default async function CatalogProductPage({ params }: Props) {
         {slug === "powder-coating-hooks" ? (
           <p>
             Styles:{" "}
-            <TextLink href="/v-hooks">V-hooks</TextLink>,{" "}
-            <TextLink href="/c-hooks">C-hooks</TextLink>,{" "}
-            <TextLink href="/cv-hooks">CV-hooks</TextLink>,{" "}
-            <TextLink href="/s-hooks">S-hooks</TextLink>,{" "}
-            <TextLink href="/90-degree-hooks">90° hooks</TextLink>. Hub:{" "}
+            <TextLink href="/powder-coating-hooks/v-hooks">V-hooks</TextLink>,{" "}
+            <TextLink href="/powder-coating-hooks/c-hooks">C-hooks</TextLink>,{" "}
+            <TextLink href="/powder-coating-hooks/cv-hooks">CV-hooks</TextLink>,{" "}
+            <TextLink href="/powder-coating-hooks/s-hooks">S-hooks</TextLink>,{" "}
+            <TextLink href="/powder-coating-hooks/90-degree-hooks">90° hooks</TextLink>. Hub:{" "}
             <TextLink href="/powder-coating-hooks">
               powder coating hooks
             </TextLink>

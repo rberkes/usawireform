@@ -85,7 +85,7 @@ export default function WireFormShapesPage() {
       <h3>S</h3>
       <p>
         Two bends, opposite ways.{" "}
-        <Link href="/s-hooks">S-hooks</Link>. Eyes even or offset.
+        <Link href="/powder-coating-hooks/s-hooks">S-hooks</Link>. Eyes even or offset.
         Closed eyes when the print wants them to stay on a ring.
       </p>
 
@@ -93,7 +93,7 @@ export default function WireFormShapesPage() {
       <p>
         An open ring.{" "}
         <Link href="/products/hog-rings">Hog rings</Link>, powder-line{" "}
-        <Link href="/c-hooks">C-hooks</Link>, keepers.
+        <Link href="/powder-coating-hooks/c-hooks">C-hooks</Link>, keepers.
         Open gap and whether the ends are pointed.
       </p>
 
@@ -101,7 +101,7 @@ export default function WireFormShapesPage() {
       <p>
         Dual V: rack crotch on top, part trough on the bottom, sharp 45° bends.
         Line{" "}
-        <Link href="/v-hooks">V-hooks</Link>. Opening and overall on the print —
+        <Link href="/powder-coating-hooks/v-hooks">V-hooks</Link>. Opening and overall on the print —
         not a Z and not a radiused crotch.
       </p>
 

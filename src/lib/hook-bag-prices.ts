@@ -1,4 +1,5 @@
 import { usd2 } from "@/lib/quoting";
+import { usawfPart } from "@/lib/part-numbers";
 
 /** 2% under published 0.180 in / 0.250 in bag prices. */
 export const HOOK_BAG_UNDERCUT = 0.02;
@@ -68,19 +69,19 @@ const PUBLISHED_BAGS: PublishedBag[] = [
 ];
 
 export const HOOK_BAG_WIRES = [
-  { mm: 4, dIn: 4 / 25.4, label: "4 mm", inch: "0.157 in" },
-  { mm: 4.57, dIn: 0.18, label: "4.57 mm", inch: "0.180 in" },
-  { mm: 5, dIn: 5 / 25.4, label: "5 mm", inch: "0.197 in" },
-  { mm: 6, dIn: 6 / 25.4, label: "6 mm", inch: "0.236 in" },
-  { mm: 6.35, dIn: 0.25, label: "6.35 mm", inch: "0.250 in" },
-  { mm: 8, dIn: 8 / 25.4, label: "8 mm", inch: "0.315 in" },
-  { mm: 10, dIn: 10 / 25.4, label: "10 mm", inch: "0.394 in" },
+  { mm: 4, dIn: 4 / 25.4, code: "4", label: "4 mm", inch: "0.157 in" },
+  { mm: 4.57, dIn: 0.18, code: "180", label: "4.57 mm", inch: "0.180 in" },
+  { mm: 5, dIn: 5 / 25.4, code: "5", label: "5 mm", inch: "0.197 in" },
+  { mm: 6, dIn: 6 / 25.4, code: "6", label: "6 mm", inch: "0.236 in" },
+  { mm: 6.35, dIn: 0.25, code: "250", label: "6.35 mm", inch: "0.250 in" },
+  { mm: 8, dIn: 8 / 25.4, code: "8", label: "8 mm", inch: "0.315 in" },
+  { mm: 10, dIn: 10 / 25.4, code: "10", label: "10 mm", inch: "0.394 in" },
 ] as const;
 
 export const HOOK_BAG_ARCH_IN = 1.5;
 
 export const HOOK_BAG_LINE =
-  "4–10 mm powder coating hooks, 2% under published 0.180 in and 0.250 in bag prices. Same lengths and bag counts. Carbon. Steel in the lot. 100-piece minimum. 0.044–0.120 in is not this cell.";
+  "USA Wire Form part numbers (USAWF-). 4–10 mm powder coating hooks, 2% under published 0.180 in and 0.250 in bag prices. Same lengths and bag counts. Carbon. Steel in the lot. 100-piece minimum. Nothing under 4 mm — 0.044–0.120 in is not this cell.";
 
 function cents(n: number) {
   return Math.round(n * 100) / 100;
@@ -146,19 +147,11 @@ export type HookBagRow = {
   pieceUsd: number;
 };
 
-const STYLE_SKU: Record<HookBagStyle, string> = {
-  v: "HV",
-  s: "HS",
-  c: "HC",
+const STYLE_FAMILY: Record<HookBagStyle, "V" | "S" | "C"> = {
+  v: "V",
+  s: "S",
+  c: "C",
 };
-
-function sku(style: HookBagStyle, mm: number, lengthIn: number) {
-  const wire = Number.isInteger(mm) ? String(mm) : mm.toFixed(2).replace(".", "");
-  const len = Number.isInteger(lengthIn)
-    ? String(lengthIn).padStart(2, "0")
-    : String(lengthIn).replace(".", "");
-  return `${STYLE_SKU[style]}${wire}-${len}`;
-}
 
 export function hookBagRows(style?: HookBagStyle): HookBagRow[] {
   const styles: HookBagStyle[] = style ? [style] : ["v", "s", "c"];
@@ -170,7 +163,7 @@ export function hookBagRows(style?: HookBagStyle): HookBagRow[] {
         if (!priced) continue;
         rows.push({
           style: kind,
-          sku: sku(kind, wire.mm, lengthIn),
+          sku: usawfPart(STYLE_FAMILY[kind], wire.code, lengthIn),
           mm: wire.mm,
           wireLabel: wire.label,
           inch: wire.inch,

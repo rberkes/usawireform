@@ -12,6 +12,7 @@ import { industries, shopLines } from "@/lib/site";
 import { US_STATES } from "@/lib/states";
 import { allPosts, postPath } from "@/lib/blog";
 import { L_HITCH_PIN_LANDERS } from "@/lib/l-hitch-pins";
+import { POWDER_HOOK_TREE, powderHookHref } from "@/lib/powder-hook-tree";
 import { V_HOOK_LANDERS } from "@/lib/v-hook-landers";
 
 export type SeoSection =
@@ -199,7 +200,7 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.9,
   }),
   record({
-    path: "/powder-coating-hook-prices",
+    path: "/powder-coating-hooks/prices",
     title: "Powder Coating Hook Prices — 4–10 mm",
     description:
       "V-hook, S-hook, and C-hook bag prices in 4–10 mm. 2% under published 0.180 in and 0.250 in bags. Same lengths and counts. Carbon. 100-piece minimum.",
@@ -213,7 +214,7 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.85,
   }),
   record({
-    path: "/square-hanging-hooks",
+    path: "/powder-coating-hooks/square-hanging-hooks",
     title: "Square Hanging Hooks — 5% Under Catalog Bags",
     description:
       "Square hanging hooks in 0.180, 0.250, and 0.375 in. 5% under published HSQV 1-bag and 10-bag cards. Same lengths. Carbon. 100-piece minimum.",
@@ -227,7 +228,7 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.85,
   }),
   record({
-    path: "/v-hooks",
+    path: "/powder-coating-hooks/v-hooks",
     title: "V-Hooks",
     description:
       "V-hooks for powder coating, paint, and finishing lines. CNC from coil in 4–14 mm. Stock 3/8, 7/16, and 1/2 in. Custom length and included angle.",
@@ -236,7 +237,7 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.8,
   }),
   record({
-    path: "/c-hooks",
+    path: "/powder-coating-hooks/c-hooks",
     title: "C-Hooks",
     description:
       "C-hooks for powder coating and finishing racks. Open C hang for load, unload, and clearance. CNC from coil in 4–14 mm.",
@@ -245,7 +246,7 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.8,
   }),
   record({
-    path: "/cv-hooks",
+    path: "/powder-coating-hooks/cv-hooks",
     title: "CV-Hooks",
     description:
       "CV-hooks for powder coating lines: C clearance plus a V locate. CNC from coil in 4–14 mm. Custom CV and 90° CV.",
@@ -254,7 +255,7 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.8,
   }),
   record({
-    path: "/s-hooks",
+    path: "/powder-coating-hooks/s-hooks",
     title: "S-Hooks",
     description:
       "S-hooks for powder coating, plant hang, and lift. CNC from coil in 4–14 mm. Stock 3/8, 7/16, and 1/2 in. Open or closed eyes.",
@@ -263,7 +264,7 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.8,
   }),
   record({
-    path: "/90-degree-hooks",
+    path: "/powder-coating-hooks/90-degree-hooks",
     title: "90 Degree Hooks",
     description:
       "90° powder coating hooks: 90 degree V-hooks, C-hooks, and CV-hooks. Rotate the hang for rack clearance. CNC from coil in 4–14 mm.",
@@ -972,11 +973,25 @@ export function seoDirectory(): Record<SeoSection, SeoRecord[]> {
   return grouped;
 }
 
+function powderHookSeoPages(): SeoRecord[] {
+  return POWDER_HOOK_TREE.map((node) =>
+    record({
+      path: powderHookHref(node.slug),
+      title: node.title,
+      description: node.description,
+      section: "products" as const,
+      keywords: node.keywords,
+      priority: node.slug.length === 1 ? 0.85 : 0.7,
+    }),
+  );
+}
+
 export function allSeoPages(): SeoRecord[] {
   const seen = new Set<string>();
   const out: SeoRecord[] = [];
   for (const page of [
     ...staticSeoPages,
+    ...powderHookSeoPages(),
     ...processPages(),
     ...industryPages(),
     ...productPages(),

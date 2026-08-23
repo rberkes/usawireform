@@ -46,9 +46,10 @@ export const NAV_PRODUCTS: NavSection = {
       title: "Finishing hooks",
       items: [
         { href: "/powder-coating-hooks", label: "Powder coating hooks" },
-        { href: "/powder-coating-hook-prices", label: "4–10 mm hook prices" },
-        { href: "/square-hanging-hooks", label: "Square hanging hooks" },
-        { href: "/v-hooks", label: "V-hooks" },
+        { href: "/powder-coating-hooks/prices", label: "4–10 mm hook prices" },
+        { href: "/powder-coating-hooks/square-hanging-hooks", label: "Square hanging hooks" },
+        { href: "/powder-coating-hooks/v-hooks", label: "V-hooks" },
+        { href: "/powder-coating-hooks/market", label: "Hook market" },
         { href: "/heavy-duty-v-hooks", label: "Heavy-duty V-hooks" },
         { href: "/custom-powder-coating-hooks", label: "Custom hook builder" },
         { href: "/guide/s-hooks-vs-v-hooks-vs-c-hooks", label: "S vs V vs C" },

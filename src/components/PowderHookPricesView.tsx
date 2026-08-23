@@ -1,26 +1,14 @@
 import Link from "next/link";
 import { HookBagPriceTable } from "@/components/HookBagPriceTable";
+import { PowderHookBranchNav } from "@/components/PowderHookBranchNav";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema } from "@/components/SeoSchemas";
 import { HOOK_BAG_LINE } from "@/lib/hook-bag-prices";
 import { POWDER_HOOK_HUB } from "@/lib/powder-coating-hooks";
 import { WIRE } from "@/lib/range";
-import { pageMeta } from "@/lib/seo";
 
-export const metadata = pageMeta({
-  title: "Powder Coating Hook Prices — 4–10 mm",
-  description: `${HOOK_BAG_LINE} V-hooks, S-hooks, and C-hooks. CNC from coil in Northeast Ohio.`,
-  path: "/powder-coating-hook-prices",
-  keywords: [
-    "powder coating hook prices",
-    "V-hook prices",
-    "S-hook prices",
-    "C-hook prices",
-    "0.180 powder coating hooks",
-    "0.250 powder coating hooks",
-  ],
-});
+const PRICE_PATH = "/powder-coating-hooks/prices";
 
 const faqs = [
   {
@@ -39,17 +27,14 @@ const faqs = [
   },
 ];
 
-export default function PowderCoatingHookPricesPage() {
+export function PowderHookPricesView() {
   return (
     <>
       <FAQSchema questions={faqs} />
       <BreadcrumbJsonLd
         items={[
           { name: POWDER_HOOK_HUB.title, url: POWDER_HOOK_HUB.path },
-          {
-            name: "4–10 mm prices",
-            url: "/powder-coating-hook-prices",
-          },
+          { name: "4–10 mm prices", url: PRICE_PATH },
         ]}
       />
       <DocPage
@@ -69,12 +54,15 @@ export default function PowderCoatingHookPricesPage() {
         <p>
           Compare the 0.180 in and 0.250 in rows to the published bag cards.
           Ours are 2% less at the same qty.{" "}
-          <Link href="/v-hooks">V-hooks</Link>,{" "}
-          <Link href="/s-hooks">S-hooks</Link>,{" "}
-          <Link href="/c-hooks">C-hooks</Link>. Heavy 3/8–1/2 in V stays on{" "}
+          <Link href="/powder-coating-hooks/v-hooks">V-hooks</Link>,{" "}
+          <Link href="/powder-coating-hooks/s-hooks">S-hooks</Link>,{" "}
+          <Link href="/powder-coating-hooks/c-hooks">C-hooks</Link>. Heavy
+          3/8–1/2 in V stays on{" "}
           <Link href="/heavy-duty-v-hooks">heavy-duty V-hooks</Link>. Squared
           hang bags:{" "}
-          <Link href="/square-hanging-hooks">square hanging hooks</Link>
+          <Link href="/powder-coating-hooks/square-hanging-hooks">
+            square hanging hooks
+          </Link>
           , 5% under the published HSQV cards.
         </p>
         <div className="not-prose my-8">
@@ -89,6 +77,7 @@ export default function PowderCoatingHookPricesPage() {
           </div>
         ))}
 
+        <PowderHookBranchNav slug={["prices"]} />
         <QuoteBand title="Need a length that is not on the card?" />
       </DocPage>
     </>
