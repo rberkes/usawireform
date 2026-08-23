@@ -286,6 +286,16 @@ export default function SiteMapPage() {
               body: "Powder coating and plant S-hooks from coil.",
             },
             {
+              href: "/l-hitch-pins",
+              title: "L hitch pins",
+              body: "Trailer and implement L pins. 3/8, 7/16, 1/2 in. Not 5/8 in.",
+            },
+            {
+              href: "/heavy-duty-l-hitch-pins",
+              title: "Heavy-duty L hitch pins",
+              body: "Trailer hitch pins from coil. 1/2 in stock on this cell.",
+            },
+            {
               href: "/90-degree-hooks",
               title: "90 degree hooks",
               body: "90° V, C, and CV for tight racks.",

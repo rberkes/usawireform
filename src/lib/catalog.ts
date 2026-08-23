@@ -615,7 +615,7 @@ export const catalog: CatalogItem[] = [
     lede: "A grip formed from stock coil. Offset, return, or welded to a frame.",
     body: [
       "Handles are 2D or 3D CNC with a specified offset and grip length. 3/8 in for carts and furniture; 7/16 and 1/2 in for equipment and trailer pulls. Ends welded, flattened, or left as a butt.",
-      "1018 zinc, powder, or 304. Trailer latches and L-pins sit next to this SKU when the gate needs a catch as well as a grip.",
+      "1018 zinc, powder, or 304. Trailer latches and L hitch pins sit next to this SKU when the gate needs a catch as well as a grip.",
     ],
     jobs: [
       "Cart and basket handles",
@@ -629,22 +629,22 @@ export const catalog: CatalogItem[] = [
   },
   {
     slug: "l-pins",
-    title: "L-pins",
+    title: "L hitch pins",
     group: "Frames and hardware",
     summary:
-      "L-pins in 3/8, 7/16, and 1/2 in — hitch, implement, and trailer lock pins. A 90° bend, a length, a wire size.",
-    lede: "An L formed from stock coil. One leg through the hitch, the short leg as the stop. Not a 1/8 in implement pin.",
+      "Heavy-duty L hitch pins in 3/8, 7/16, and 1/2 in for trailers, implements, and receivers. A 90° stop, a length, a wire size — not a 5/8 in catalog pin.",
+    lede: "An L formed from stock coil. Long leg through the hitch, short leg as the stop. Trailer and implement pins in 4–14 mm — not a 1/8 in linch pin.",
     body: [
-      "An L-pin is 2D CNC: feed, 90°, cutoff. Name the long-leg length, the short-leg length, and the diameter. 3/8 and 7/16 in for implements and lighter hitches; 1/2 in when the receiver wants it. A hole for a clip is drilled or formed when it is on the print. Galvanized 1018 or 304.",
-      "5/8 in hitch pins sit above the 14 mm ceiling. The clip that retains the pin is a separate SKU — hitch pin clips. Typical clip wire is under 4 mm; we will name that.",
+      "A heavy-duty L hitch pin is 2D CNC: feed, 90°, cutoff. Name the long-leg length, the short-leg length, and the diameter. 3/8 and 7/16 in for implements and lighter receivers; 1/2 in when the trailer hitch wants it. A hole for a clip is drilled or formed when it is on the print. Galvanized 1018 or 304.",
+      "5/8 in and 9/16 in hitch pins sit above the 14 mm ceiling. The clip that retains the pin is a separate SKU — hitch pin clips. Typical clip wire is under 4 mm; we will name that. Top-level pages: /l-hitch-pins and /heavy-duty-l-hitch-pins.",
     ],
     jobs: [
-      "Trailer and hitch L-pins in 1/2 in",
+      "Trailer L hitch pins in 1/2 in",
       "Implement and ag L-pins in 3/8 and 7/16 in",
-      "L-pins with a clip hole",
-      "Galvanized or 304 outdoor L-pins",
+      "L hitch pins with a clip hole",
+      "Galvanized or 304 outdoor hitch pins",
     ],
-    quote: "Have an L-pin length and a wire size?",
+    quote: "Have an L hitch pin length and a wire size?",
     processHref: "/processes/2d-cnc-wire-forming",
     related: ["hitch-pin-clips", "trailer-latches", "handles"],
   },
@@ -656,7 +656,7 @@ export const catalog: CatalogItem[] = [
       "Hitch pins, linch-style pins, and heavy retainers in 3/8, 7/16, and 1/2 in. Hairpin and R-clips have their own page.",
     lede: "A pin that holds a hitch, a gate, or an implement. Stock diameters.",
     body: [
-      "Pins in this directory are formed round wire in 3/8, 7/16, and 1/2 in: hitch pins, straight lock pins, and linch-style pins with a formed head or ring when that ring is in band. 2D CNC. Zinc or 304. L-pins are the same cell with a 90° stop — they have their own directory page.",
+      "Pins in this directory are formed round wire in 3/8, 7/16, and 1/2 in: hitch pins, straight lock pins, and linch-style pins with a formed head or ring when that ring is in band. 2D CNC. Zinc or 304. L hitch pins are the same cell with a 90° stop — /l-hitch-pins.",
       "The clip that retains the pin is a separate SKU: hitch pin clips. A 5/8 in hitch pin is over 14 mm. Send the size; the quote will say which side of the band it sits on.",
     ],
     jobs: [

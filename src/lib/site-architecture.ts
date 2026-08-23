@@ -2,6 +2,7 @@ import { allPosts } from "@/lib/blog";
 import { catalog, catalogByGroup } from "@/lib/catalog";
 import { CNC_OEMS, allCncModels } from "@/lib/cnc-oems";
 import { directoryCompanies, getCompaniesByCountry } from "@/lib/directory";
+import { L_HITCH_PIN_LANDERS } from "@/lib/l-hitch-pins";
 import { machines } from "@/lib/machines";
 import { WIRE_FORMING_METROS } from "@/lib/metros";
 import { OHIO_CITIES } from "@/lib/ohio-cities";
@@ -172,6 +173,9 @@ export function siteArchitectureTree(): ArchNode[] {
             leaf("/stainless-steel-powder-coating-hooks", "304 / 316 hooks"),
             leaf("/stainless-steel-wire-basket", "Stainless baskets"),
             leaf("/stainless-steel-wire-shelf", "Stainless shelves"),
+            ...L_HITCH_PIN_LANDERS.map((lander) =>
+              leaf(lander.path, lander.title),
+            ),
           ],
         },
       ],

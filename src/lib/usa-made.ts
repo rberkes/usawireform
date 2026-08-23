@@ -47,6 +47,11 @@ export const USA_MADE: UsaMadeEntry[] = [
     phrases: ["USA made wire stakes"],
   },
   {
+    slug: "l-pins",
+    href: "/l-hitch-pins",
+    phrases: ["USA made L hitch pins", "USA made hitch pins"],
+  },
+  {
     slug: "heavy-duty-v-hooks",
     href: "/heavy-duty-v-hooks",
     phrases: [

@@ -91,6 +91,8 @@ const searchItems: SearchItem[] = [
   { title: "C-Hooks", href: "/c-hooks", category: "Products", description: "Powder coating C-hooks. Open hang for rack clearance." },
   { title: "CV-Hooks", href: "/cv-hooks", category: "Products", description: "Powder coating CV-hooks. C clearance plus a V locate." },
   { title: "S-Hooks", href: "/s-hooks", category: "Products", description: "Powder coating and plant S-hooks from coil in 4–14 mm." },
+  { title: "L hitch pins", href: "/l-hitch-pins", category: "Products", description: "Heavy-duty L hitch pins for trailers and implements. 3/8, 7/16, 1/2 in. Not 5/8 in." },
+  { title: "Heavy-duty L hitch pins", href: "/heavy-duty-l-hitch-pins", category: "Products", description: "Trailer L hitch pins in 1/2 in stock. CNC from coil. 100-piece minimum." },
   { title: "90 Degree Hooks", href: "/90-degree-hooks", category: "Products", description: "90° V, C, and CV powder coating hooks." },
   { title: "Custom Powder Coating Hooks", href: "/custom-powder-coating-hooks", category: "Products", description: "Custom V, C, CV, S, and 90° hooks from coil." },
   { title: "Stainless Steel Powder Coating Hooks", href: "/stainless-steel-powder-coating-hooks", category: "Products", description: "304 / 316 finishing hooks from coil." },

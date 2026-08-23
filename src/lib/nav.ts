@@ -34,6 +34,15 @@ export const NAV_PRODUCTS: NavSection = {
         })),
     })),
     {
+      title: "Trailer hardware",
+      items: [
+        { href: "/l-hitch-pins", label: "L hitch pins" },
+        { href: "/heavy-duty-l-hitch-pins", label: "Heavy-duty L hitch pins" },
+        { href: "/products/hitch-pin-clips", label: "Hitch pin clips" },
+        { href: "/products/trailer-latches", label: "Trailer latches" },
+      ],
+    },
+    {
       title: "Finishing hooks",
       items: [
         { href: "/powder-coating-hooks", label: "Powder coating hooks" },

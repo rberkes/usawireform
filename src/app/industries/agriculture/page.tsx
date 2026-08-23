@@ -48,7 +48,7 @@ export default function AgriculturePage() {
           <li>
             Equipment guards,{" "}
             <TextLink href="/products/handles">handles</TextLink>,{" "}
-            <TextLink href="/products/l-pins">L-pins</TextLink>,{" "}
+            <TextLink href="/l-hitch-pins">L hitch pins</TextLink>,{" "}
             <TextLink href="/products/pins-and-clips">
               implement pins
             </TextLink>

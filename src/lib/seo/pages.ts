@@ -11,6 +11,7 @@ import { publishedProcesses } from "@/lib/processes";
 import { industries, shopLines } from "@/lib/site";
 import { US_STATES } from "@/lib/states";
 import { allPosts, postPath } from "@/lib/blog";
+import { L_HITCH_PIN_LANDERS } from "@/lib/l-hitch-pins";
 import { V_HOOK_LANDERS } from "@/lib/v-hook-landers";
 
 export type SeoSection =
@@ -286,6 +287,16 @@ export const staticSeoPages: SeoRecord[] = [
     ],
     priority: 0.8,
   }),
+  ...L_HITCH_PIN_LANDERS.map((lander) =>
+    record({
+      path: lander.path,
+      title: lander.title,
+      description: lander.description,
+      section: "products" as const,
+      keywords: lander.keywords,
+      priority: 0.8,
+    }),
+  ),
   ...V_HOOK_LANDERS.map((lander) =>
     record({
       path: lander.path,

@@ -33,7 +33,7 @@ export const industries = [
     slug: "automotive",
     title: "Automotive",
     summary:
-      "Seat frames, trailer latches, handles, L-pins, plant guards, and tie-down hardware in 3/8, 7/16, and 1/2 in — not music-wire clips.",
+      "Seat frames, trailer latches, handles, L hitch pins, plant guards, and tie-down hardware in 3/8, 7/16, and 1/2 in — not music-wire clips.",
   },
   {
     slug: "architectural",

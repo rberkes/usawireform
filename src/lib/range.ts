@@ -31,6 +31,6 @@ export const COMMON_SIZES = [
     decimal: "0.500 in",
     mm: "12.7 mm",
     mmValue: 12.7,
-    typical: "Structural wire, heavy trays, D-rings, rod frames, furnace fixtures",
+    typical: "Structural wire, heavy trays, D-rings, L hitch pins, rod frames, furnace fixtures",
   },
 ] as const;

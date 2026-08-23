@@ -6,7 +6,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Automotive Wire Forming",
-  description: "Automotive wire forming in 3/8, 7/16, and 1/2 in: seat frames, USA made D-rings, trailer latches, handles, L-pins, plant guards — not music-wire clips.",
+  description: "Automotive wire forming in 3/8, 7/16, and 1/2 in: seat frames, USA made D-rings, trailer latches, handles, L hitch pins, plant guards — not music-wire clips.",
   path: '/industries/automotive',
   keywords: [
     "USA made D-rings",
@@ -35,7 +35,7 @@ export default function AutomotivePage() {
       <PageHero
         kicker="Industries"
         title="Automotive"
-        lede="Heavy wire on the vehicle and in the plant. Seat frames, trailer latches, handles, L-pins, guards, and tie-down hardware in 3/8, 7/16, and 1/2 in — not a clip cell."
+        lede="Heavy wire on the vehicle and in the plant. Seat frames, trailer latches, handles, L hitch pins, guards, and tie-down hardware in 3/8, 7/16, and 1/2 in — not a clip cell."
       />
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
@@ -92,7 +92,7 @@ export default function AutomotivePage() {
             </TextLink>
             ,{" "}
             <TextLink href="/products/handles">handles</TextLink>,{" "}
-            <TextLink href="/products/l-pins">L-pins</TextLink>,{" "}
+            <TextLink href="/l-hitch-pins">L hitch pins</TextLink>,{" "}
             <TextLink href="/products/pins-and-clips">
               hitch pins
             </TextLink>

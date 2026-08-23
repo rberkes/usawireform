@@ -59,7 +59,7 @@ export default function WireFormShapesPage() {
       <h3>L</h3>
       <p>
         One 90°.{" "}
-        <Link href="/products/l-pins">L-pins</Link>, offsets, and simple
+        <Link href="/l-hitch-pins">L hitch pins</Link>, offsets, and simple
         brackets. Name both leg lengths and the inside radius.
       </p>
 

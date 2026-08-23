@@ -45,7 +45,7 @@ export default function ManufacturingOemPage() {
             <TextLink href="/products/eye-forms">eye forms</TextLink>
           </li>
           <li>
-            <TextLink href="/products/l-pins">L-pins</TextLink>,{" "}
+            <TextLink href="/l-hitch-pins">L hitch pins</TextLink>,{" "}
             <TextLink href="/products/pins-and-clips">pins</TextLink>, and{" "}
             <TextLink href="/products/trailer-latches">latches</TextLink>
           </li>

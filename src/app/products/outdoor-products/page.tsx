@@ -71,7 +71,7 @@ export default function OutdoorProductsPage() {
             </TextLink>
             ,{" "}
             <TextLink href="/products/handles">handles</TextLink>,{" "}
-            <TextLink href="/products/l-pins">L-pins</TextLink>,{" "}
+            <TextLink href="/l-hitch-pins">L hitch pins</TextLink>,{" "}
             <TextLink href="/products/pins-and-clips">pins</TextLink>,{" "}
             <TextLink href="/products/hitch-pin-clips">
               hitch pin clips
