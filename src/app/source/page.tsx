@@ -9,6 +9,7 @@ import {
 } from "@/components/ui";
 import { SourceJobForm } from "@/components/SourceJobForm";
 import { SourceNewestMembers } from "@/components/SourceNewestMembers";
+import { SourcePathCompare } from "@/components/SourcePathCompare";
 import { pageMeta } from "@/lib/seo";
 import { listNewestSourceDirectoryCompanies } from "@/lib/source";
 
@@ -86,6 +87,8 @@ export default async function SourcePage() {
           { value: "Desk", label: "Emails stay here" },
         ]}
       />
+
+      <SourcePathCompare />
 
       <Section kicker="How it works" title="The job finds the machine.">
         <ol className="mt-10 grid gap-px bg-line sm:grid-cols-3">
