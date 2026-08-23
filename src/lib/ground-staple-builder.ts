@@ -11,6 +11,54 @@ export const STAPLE_RADIUS = {
   stepIn: 0.0625,
 } as const;
 
+/** Stock pins on this cell. Inside R is the pin wrap, not a sharp square. */
+export const STAPLE_PINS = [
+  {
+    id: "3/8 in" as const,
+    inches: 0.375,
+    pinIn: 0.4,
+    insideRIn: 0.2,
+    label: "0.400 in pin",
+  },
+  {
+    id: "7/16 in" as const,
+    inches: 0.4375,
+    pinIn: 0.5,
+    insideRIn: 0.25,
+    label: "1/2 in bending pin",
+  },
+  {
+    id: "1/2 in" as const,
+    inches: 0.5,
+    insideRIn: 0.624,
+    label: "0.624 in inside R",
+  },
+] as const;
+
+export type StaplePin = (typeof STAPLE_PINS)[number];
+
+export function staplePinForWire(wireIn: number) {
+  if (!Number.isFinite(wireIn)) return undefined;
+  return STAPLE_PINS.find((row) => Math.abs(row.inches - wireIn) < 0.01);
+}
+
+export function staplePinForId(id: string) {
+  return STAPLE_PINS.find((row) => row.id === id);
+}
+
+export function stapleCenterlineRadius(insideRIn: number, wireIn: number) {
+  const wire = Number.isFinite(wireIn) && wireIn > 0 ? wireIn : 0;
+  return insideRIn + wire / 2;
+}
+
+export function minCrownForStaple(insideRIn: number, wireIn: number) {
+  return stapleCenterlineRadius(insideRIn, wireIn) * 2;
+}
+
+export function roundCrownIn(value: number) {
+  return Math.ceil(value * 4) / 4;
+}
+
 export function stapleRadiusMax(crownIn: number) {
   if (!Number.isFinite(crownIn) || crownIn <= 0) return STAPLE_RADIUS.minIn;
   return Math.max(STAPLE_RADIUS.minIn, crownIn / 2 - STAPLE_RADIUS.minIn);
@@ -47,7 +95,7 @@ export const STAPLE_WIRES = [
     mm: 9.53,
     inches: 0.375,
     stock: true,
-    note: "Stock tooling. Heavy-duty U. Shop steel + V-hook mill math.",
+    note: "Stock tooling. 0.400 in bending pin. Inside R 0.200 in.",
   },
   {
     id: "7/16 in",
@@ -55,7 +103,7 @@ export const STAPLE_WIRES = [
     mm: 11.11,
     inches: 0.4375,
     stock: true,
-    note: "Stock tooling. Heavy-duty U.",
+    note: "Stock tooling. 1/2 in bending pin. Inside R 0.250 in.",
   },
   {
     id: "1/2 in",
@@ -63,7 +111,7 @@ export const STAPLE_WIRES = [
     mm: 12.7,
     inches: 0.5,
     stock: true,
-    note: "Stock tooling. Heavy-duty U.",
+    note: "Stock tooling. Inside R 0.624 in.",
   },
   {
     id: "other",
@@ -101,11 +149,11 @@ function polylineLength(pts: Vec2[]) {
 export function staplePoints(
   legIn: number,
   crownIn: number,
-  radiusIn: number,
+  centerlineRIn: number,
 ): Vec2[] {
-  const half = crownIn / 2;
-  const r = clampStapleRadius(radiusIn, crownIn);
-  const segs = 10;
+  const r = Math.max(centerlineRIn, STAPLE_RADIUS.minIn);
+  const half = Math.max(crownIn, 2 * r) / 2;
+  const segs = 12;
   const pts: Vec2[] = [
     { x: -half, y: 0 },
     { x: -half, y: Math.max(legIn - r, 0.25) },
@@ -146,6 +194,7 @@ export type StapleBuildOk = {
   developedIn: number;
   points: Vec2[];
   radiusIn: number;
+  pinLabel?: string;
   title: string;
   bag: boolean;
   estimate: ReturnType<typeof priceVHook> & { bagQty?: number };
@@ -163,10 +212,14 @@ export function buildStapleQuote(input: {
 }): StapleBuildOk | StapleBuildErr {
   const { wireIn, legIn, crownIn, quantity } = input;
   const materialId = input.materialId ?? "galvanized";
-  const radiusIn = clampStapleRadius(
-    input.radiusIn ?? STAPLE_RADIUS.defaultIn,
-    crownIn,
-  );
+  const pin = staplePinForWire(wireIn);
+  const radiusIn = pin
+    ? pin.insideRIn
+    : clampStapleRadius(input.radiusIn ?? STAPLE_RADIUS.defaultIn, crownIn);
+  const centerlineRIn = stapleCenterlineRadius(radiusIn, wireIn);
+  const usedCrownIn = pin
+    ? Math.max(crownIn, roundCrownIn(minCrownForStaple(radiusIn, wireIn)))
+    : crownIn;
 
   if (!Number.isFinite(wireIn) || wireIn < WIRE.minIn || wireIn > WIRE.maxIn) {
     return {
@@ -187,7 +240,7 @@ export function buildStapleQuote(input: {
     return { ok: false, message: `Quantity starts at ${ESTIMATE.qtyMin}.` };
   }
 
-  const points = staplePoints(legIn, crownIn, radiusIn);
+  const points = staplePoints(legIn, usedCrownIn, centerlineRIn);
   const developedIn = Math.round(polylineLength(points) * 100) / 100;
   const cuts = 1;
   const bends = 2;
@@ -211,6 +264,7 @@ export function buildStapleQuote(input: {
       developedIn,
       points,
       radiusIn,
+      pinLabel: pin?.label,
       title,
       bag: true,
       estimate: {
@@ -251,6 +305,7 @@ export function buildStapleQuote(input: {
     developedIn,
     points,
     radiusIn,
+    pinLabel: pin?.label,
     title,
     bag: false,
     estimate: priced,

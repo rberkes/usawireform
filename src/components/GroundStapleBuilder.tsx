@@ -10,6 +10,10 @@ import {
   buildStapleQuote,
   clampStapleRadius,
   formatInches,
+  minCrownForStaple,
+  roundCrownIn,
+  stapleCenterlineRadius,
+  staplePinForId,
   stapleRadiusMax,
   type StapleMaterialId,
   type StapleWireId,
@@ -43,8 +47,19 @@ export function GroundStapleBuilder({
   const [wireId, setWireId] = useState<StapleWireId>(defaultWire);
   const [customMm, setCustomMm] = useState("4");
   const [leg, setLeg] = useState(String(defaultLeg));
-  const [crown, setCrown] = useState(String(defaultCrown));
-  const [radius, setRadius] = useState(String(defaultRadius));
+  const [crown, setCrown] = useState(() => {
+    const startPin = staplePinForId(defaultWire);
+    const startWire = STAPLE_WIRES.find((row) => row.id === defaultWire);
+    if (!startPin || !startWire) return String(defaultCrown);
+    const minC = roundCrownIn(
+      minCrownForStaple(startPin.insideRIn, startWire.inches),
+    );
+    return String(Math.max(defaultCrown, minC));
+  });
+  const [radius, setRadius] = useState(() => {
+    const startPin = staplePinForId(defaultWire);
+    return String(startPin?.insideRIn ?? defaultRadius);
+  });
   const [qty, setQty] = useState(String(defaultQty));
   const [materialId, setMaterialId] = useState<StapleMaterialId>(defaultMaterial);
   const [notes, setNotes] = useState("");
@@ -59,10 +74,17 @@ export function GroundStapleBuilder({
       : (wireRow?.inches ?? 0);
   const legN = Number(leg);
   const crownN = Number(crown);
-  const radiusN = clampStapleRadius(Number(radius), crownN);
   const qtyN = Number(qty);
   const material = STAPLE_MATERIALS.find((row) => row.id === materialId);
+  const pin = staplePinForId(wireId);
   const radiusMax = stapleRadiusMax(crownN);
+  const radiusN = pin
+    ? pin.insideRIn
+    : clampStapleRadius(Number(radius), crownN);
+  const minCrownN = pin
+    ? roundCrownIn(minCrownForStaple(pin.insideRIn, wireIn))
+    : 0.5;
+  const pinIn = pin && "pinIn" in pin ? pin.pinIn : undefined;
 
   const built = useMemo(
     () =>
@@ -124,12 +146,15 @@ export function GroundStapleBuilder({
               crownIn={crownN}
               legIn={legN}
               radiusIn={drawnRadius}
+              pinIn={pinIn}
+              pinLabel={pin?.label}
               ready={built.ok}
             />
             <p className="mt-3 font-mono text-[11px] tracking-widest text-muted uppercase">
               Qty: {Number.isFinite(qtyN) ? qtyN : "—"} pcs · {WIRE.short} · shop
               steel{built.ok && built.bag ? " · 8 ga bag" : ""} · R{" "}
               {formatInches(drawnRadius)}
+              {pin ? ` · ${pin.label}` : ""}
             </p>
           </Panel>
           <Panel className="p-4 sm:p-5">
@@ -140,7 +165,14 @@ export function GroundStapleBuilder({
               <dl className="mt-4 space-y-2 text-sm">
                 <SumRow label="Part no." value={built.sku} />
                 <SumRow label="Top" value="Square-top" />
-                <SumRow label="Radius" value={formatInches(built.radiusIn)} />
+                <SumRow
+                  label="Inside R"
+                  value={
+                    pin
+                      ? `${formatInches(built.radiusIn)} · ${pin.label}`
+                      : formatInches(built.radiusIn)
+                  }
+                />
                 <SumRow
                   label="Wire"
                   value={
@@ -150,7 +182,10 @@ export function GroundStapleBuilder({
                   }
                 />
                 <SumRow label="Leg" value={formatInches(legN)} />
-                <SumRow label="Crown" value={formatInches(crownN)} />
+                <SumRow
+                  label="Crown"
+                  value={formatInches(pin ? Math.max(crownN, minCrownN) : crownN)}
+                />
                 <SumRow
                   label="Developed"
                   value={formatInches(built.developedIn)}
@@ -180,7 +215,20 @@ export function GroundStapleBuilder({
             <select
               className={fieldClass}
               value={wireId}
-              onChange={(event) => setWireId(event.target.value as StapleWireId)}
+              onChange={(event) => {
+                const id = event.target.value as StapleWireId;
+                setWireId(id);
+                const nextPin = staplePinForId(id);
+                const nextWire = STAPLE_WIRES.find((row) => row.id === id);
+                if (!nextPin || !nextWire) return;
+                setRadius(String(nextPin.insideRIn));
+                const minC = roundCrownIn(
+                  minCrownForStaple(nextPin.insideRIn, nextWire.inches),
+                );
+                setCrown((current) =>
+                  Number(current) < minC ? String(minC) : current,
+                );
+              }}
             >
               {STAPLE_WIRES.map((row) => (
                 <option key={row.id} value={row.id}>
@@ -219,27 +267,35 @@ export function GroundStapleBuilder({
             <input
               className={fieldClass}
               type="number"
-              min="0.5"
+              min={minCrownN}
               max="6"
               step="0.25"
               value={crown}
               onChange={(event) => setCrown(event.target.value)}
             />
-            <Hint>1 in is the published 8 ga crown.</Hint>
+            <Hint>
+              {pin
+                ? `Opened for the ${pin.label}. Min ${formatInches(minCrownN)}.`
+                : "1 in is the published 8 ga crown."}
+            </Hint>
           </Field>
-          <Field label="Corner radius, inches">
+          <Field label="Inside corner R, inches">
             <input
               className={fieldClass}
               type="number"
               min={STAPLE_RADIUS.minIn}
               max={Number.isFinite(radiusMax) ? radiusMax : STAPLE_RADIUS.minIn}
               step={STAPLE_RADIUS.stepIn}
-              value={radius}
+              value={pin ? String(pin.insideRIn) : radius}
+              disabled={Boolean(pin)}
               onChange={(event) => setRadius(event.target.value)}
             />
             <Hint>
-              Inside corner. Keeps a flat on the crown. Max{" "}
-              {formatInches(radiusMax)} on this crown. Drawn as R on the top.
+              {pin
+                ? pinIn
+                  ? `Locked to the ${pin.label}. Inside R ${formatInches(pin.insideRIn)}.`
+                  : `Locked to stock tooling. Inside R ${formatInches(pin.insideRIn)}.`
+                : `Inside corner. Keeps a flat on the crown. Max ${formatInches(radiusMax)} on this crown. Drawn as R on the top.`}
             </Hint>
           </Field>
           <Field label="Material">
@@ -305,7 +361,11 @@ export function GroundStapleBuilder({
           <input
             type="hidden"
             name="hookType"
-            value={`Square-top · R ${formatInches(drawnRadius)}`}
+            value={
+              pin
+                ? `Square-top · R ${formatInches(drawnRadius)} · ${pin.label}`
+                : `Square-top · R ${formatInches(drawnRadius)}`
+            }
           />
           <input type="hidden" name="overallIn" value={leg} />
           <input type="hidden" name="legIdIn" value={crown} />
@@ -376,6 +436,8 @@ function StapleDrawing({
   crownIn,
   legIn,
   radiusIn,
+  pinIn,
+  pinLabel,
   ready,
 }: {
   points: { x: number; y: number }[];
@@ -383,13 +445,16 @@ function StapleDrawing({
   crownIn: number;
   legIn: number;
   radiusIn: number;
+  pinIn?: number;
+  pinLabel?: string;
   ready: boolean;
 }) {
-  const r = Math.max(radiusIn, 0.06);
-  const half = Number.isFinite(crownIn) ? crownIn / 2 : 0.5;
+  const insideR = Math.max(radiusIn, 0.06);
+  const rCl = stapleCenterlineRadius(insideR, wireIn);
+  const half = Math.max(Number.isFinite(crownIn) ? crownIn : 0.5, 2 * rCl) / 2;
   const top = Number.isFinite(legIn) ? legIn : 6;
-  const cx = -half + r;
-  const cy = top - r;
+  const left = { x: -half + rCl, y: top - rCl };
+  const right = { x: half - rCl, y: top - rCl };
 
   let minX = -1;
   let maxX = 1;
@@ -402,7 +467,7 @@ function StapleDrawing({
     maxY = Math.max(maxY, p.y);
   }
   const padX = 1.4;
-  const padTop = 1.8;
+  const padTop = pinLabel ? 2.2 : 1.8;
   const padBot = 1.1;
   const w = maxX - minX + padX * 2;
   const h = maxY - minY + padTop + padBot;
@@ -411,17 +476,50 @@ function StapleDrawing({
     .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${-p.y}`)
     .join(" ");
   const stroke = Math.max(wireIn, 0.12);
-  const label = `R ${formatInches(r)}`;
+  const label = `R ${formatInches(insideR)}`;
+  const pinNote = pinIn && pinLabel ? pinLabel : undefined;
 
   return (
     <svg
       viewBox={vb}
       className="mt-4 h-[min(22rem,55vw)] w-full bg-background"
       role="img"
-      aria-label={`Square-top ground staple, corner radius ${label}`}
+      aria-label={`Square-top ground staple, inside radius ${label}${pinNote ? `, ${pinNote}` : ""}`}
     >
       {ready && d ? (
         <>
+          <circle
+            cx={left.x}
+            cy={-left.y}
+            r={insideR}
+            fill="currentColor"
+            className="text-copper/20"
+          />
+          <circle
+            cx={right.x}
+            cy={-right.y}
+            r={insideR}
+            fill="currentColor"
+            className="text-copper/20"
+          />
+          <circle
+            cx={left.x}
+            cy={-left.y}
+            r={insideR}
+            fill="none"
+            stroke="currentColor"
+            className="text-copper"
+            strokeWidth="0.035"
+          />
+          <circle
+            cx={right.x}
+            cy={-right.y}
+            r={insideR}
+            fill="none"
+            stroke="currentColor"
+            className="text-copper"
+            strokeWidth="0.035"
+          />
           <path
             d={d}
             fill="none"
@@ -431,26 +529,26 @@ function StapleDrawing({
             strokeLinejoin="round"
           />
           <path
-            d={`M ${cx - r} ${-cy} A ${r} ${r} 0 0 1 ${cx} ${-(cy + r)}`}
+            d={`M ${left.x - insideR} ${-left.y} A ${insideR} ${insideR} 0 0 1 ${left.x} ${-(left.y + insideR)}`}
             fill="none"
             stroke="currentColor"
             className="text-copper"
             strokeWidth="0.045"
           />
           <line
-            x1={cx}
-            y1={-cy}
-            x2={cx - r}
-            y2={-cy}
+            x1={left.x}
+            y1={-left.y}
+            x2={left.x - insideR}
+            y2={-left.y}
             stroke="currentColor"
             className="text-copper"
             strokeWidth="0.035"
           />
           <line
-            x1={cx}
-            y1={-cy}
-            x2={cx}
-            y2={-(cy + r)}
+            x1={left.x}
+            y1={-left.y}
+            x2={left.x}
+            y2={-(left.y + insideR)}
             stroke="currentColor"
             className="text-copper"
             strokeWidth="0.035"
@@ -465,6 +563,17 @@ function StapleDrawing({
           >
             {label}
           </text>
+          {pinNote ? (
+            <text
+              x={0}
+              y={-(top + 1.05)}
+              textAnchor="middle"
+              className="fill-copper"
+              fontSize="0.32"
+            >
+              {pinNote}
+            </text>
+          ) : null}
         </>
       ) : (
         <text
