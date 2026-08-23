@@ -109,7 +109,7 @@ const searchItems: SearchItem[] = [
   { title: "Find a wire form shop", href: "/source", category: "Pages", description: "Send the print. We introduce shops that listed a machine that can run it." },
   { title: "Add a machine cell", href: "/source/shops", category: "Pages", description: "Add one machine cell free. File how the plant operates free. Claim the listing or file a cell." },
   { title: "Upload equipment", href: "/source/equipment", category: "Pages", description: "Register the shop and file one row per CNC cell." },
-  { title: "Source plans", href: "/source/upgrade", category: "Pages", description: "One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Secondaries $5/mo each." },
+  { title: "Source plans", href: "/source/upgrade", category: "Pages", description: "One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Three secondaries $19/mo. Six maximum $49/mo." },
   { title: "Newest Source shops", href: "/directory/new", category: "Pages", description: "Shops that just filed CNC cells on Source." },
   { title: "Claim a directory page", href: "/directory", category: "Pages", description: "US shops claim their listing and file CNC cells. Source is USA for now." },
   { title: "How the factory operates", href: "/source/dashboard", category: "Pages", description: "Registered shops file min order, setup, stock, and lead free. Buyers see it on the public listing." },

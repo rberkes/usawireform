@@ -56,7 +56,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
 export const SOURCE_PAID_PLANS = SOURCE_PLANS.filter((plan) => plan.priceCents > 0);
 
 export const SOURCE_PLAN_LINE =
-  "One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Secondaries $5/mo each.";
+  "One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Up to 3 secondaries $19/mo. Six maximum $49/mo.";
 
 export const SOURCE_FIT_LINE =
   "Min order, setup, stocked materials, and lead are free on the listing so a buyer can see how the factory operates.";

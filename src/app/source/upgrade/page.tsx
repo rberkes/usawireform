@@ -4,13 +4,14 @@ import { ButtonLink, Page, PageHero, Panel } from "@/components/ui";
 import { getSourcePlanForUser } from "@/lib/source-billing";
 import { pageMeta } from "@/lib/seo";
 import { formatPlanPrice, SOURCE_PLANS } from "@/lib/source-plans";
+import { SOURCE_SECONDARY_LINE } from "@/lib/source-secondaries";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = pageMeta({
   title: "Source plans — shop dashboard",
-  description:
-    "File CNC cells on Source. One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Secondaries $5/mo each. Stripe checkout.",
+    description:
+      "File CNC cells on Source. One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Up to 3 secondaries $19/mo. Six maximum $49/mo. Stripe checkout.",
   path: "/source/upgrade",
   keywords: [
     "wire forming capacity",
@@ -29,7 +30,7 @@ export default async function SourceUpgradePage() {
       <PageHero
         kicker="Source"
         title="Shop plans"
-        lede="The dashboard is where you add cells. One cell is free. How the factory operates — min, setup, stock, lead — is free on the listing. Extra cells are $30 a month for four. Secondaries are $5 a month each."
+        lede="The dashboard is where you add cells. One cell is free. How the factory operates — min, setup, stock, lead — is free on the listing. Extra cells are $30 a month for four. Top secondaries: 3 for $19 a month, 6 maximum for $49 a month."
       />
 
       <Panel className="mt-10 max-w-xl p-5 sm:p-6">
@@ -53,6 +54,10 @@ export default async function SourceUpgradePage() {
       </Panel>
 
       <SourceUpgradePlans currentPlanId={plan.id} />
+
+      <p className="mt-8 max-w-xl text-sm leading-6 text-muted">
+        {SOURCE_SECONDARY_LINE} File them from the dashboard.
+      </p>
 
       <p className="mt-10 max-w-xl text-sm leading-6 text-muted">
         Instant estimate on this site is still this cell. Source is the

@@ -76,7 +76,7 @@ export default function SiteMapPage() {
             {
               href: "/source/upgrade",
               title: "Source plans",
-              body: "One cell free. How the plant operates is free. $30 / $49 / $99 a month. Secondaries $5 each.",
+              body: "One cell free. How the plant operates is free. $30 / $49 / $99 a month. Three secondaries $19. Six maximum $49.",
             },
             {
               href: "/source/dashboard",

@@ -7,15 +7,18 @@ import {
   checkoutUrls,
   ensureBillingPortal,
   ensurePaidPriceId,
-  ensureSecondaryPriceId,
+  ensureSecondaryPackPriceId,
   getLiveSourceSubscription,
   getSourceSecondaryQtyForUser,
   getStripeCustomerId,
-  setSubscriptionSecondaryQuantity,
+  setSubscriptionSecondaryPack,
 } from "@/lib/source-billing";
 import { isSourcePlanId, planById } from "@/lib/source-plans";
 import {
+  SOURCE_SECONDARY_MAX,
   formatSecondaryPrice,
+  isSourceSecondaryPrice,
+  packForCount,
   parseSourceSecondaries,
 } from "@/lib/source-secondaries";
 import { getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
@@ -56,10 +59,10 @@ export async function startSourceCheckout(formData: FormData) {
       const cell = live.items.data.find((item) => {
         const price = item.price;
         if (!price || typeof price === "string") return true;
-        return (
-          price.lookup_key !== "source_secondary" &&
-          price.metadata?.source_addon !== "secondary"
-        );
+        return !isSourceSecondaryPrice({
+          lookup_key: price.lookup_key,
+          metadata: price.metadata,
+        });
       });
       const metadata = {
         ...live.metadata,
@@ -143,6 +146,13 @@ export async function saveSourceSecondaries(
   if (!profile?.company) {
     return { success: false, message: "Save the shop first." };
   }
+  if (ids.length > SOURCE_SECONDARY_MAX) {
+    return {
+      success: false,
+      message: `Six secondaries maximum. Uncheck down to ${SOURCE_SECONDARY_MAX}.`,
+    };
+  }
+  const pack = packForCount(ids.length);
 
   if (!stripeConfigured()) {
     await setSourceProfileSecondaries(userId, ids);
@@ -151,19 +161,18 @@ export async function saveSourceSecondaries(
       message:
         ids.length === 0
           ? "Secondaries cleared."
-          : `Listed ${ids.length} ${ids.length === 1 ? "secondary" : "secondaries"}.`,
+          : `Listed ${ids.length} ${ids.length === 1 ? "secondary" : "secondaries"}. ${formatSecondaryPrice(ids.length)}.`,
     };
   }
 
   const billed = await getSourceSecondaryQtyForUser(userId);
   const customerId = await getStripeCustomerId(userId);
+  const needed = pack?.slots ?? 0;
+  const alreadyOnPack = Boolean(pack) && billed === needed;
 
-  if (ids.length <= billed) {
-    if (customerId && ids.length !== billed) {
-      await setSubscriptionSecondaryQuantity({
-        customerId,
-        quantity: ids.length,
-      });
+  if (ids.length === 0 || alreadyOnPack) {
+    if (customerId && billed !== needed) {
+      await setSubscriptionSecondaryPack({ customerId, pack });
     }
     await setSourceProfileSecondaries(userId, ids);
     return {
@@ -176,9 +185,9 @@ export async function saveSourceSecondaries(
   }
 
   if (customerId) {
-    const result = await setSubscriptionSecondaryQuantity({
+    const result = await setSubscriptionSecondaryPack({
       customerId,
-      quantity: ids.length,
+      pack,
     });
     if (result.ok && !result.needsCheckout) {
       await setSourceProfileSecondaries(userId, ids);
@@ -189,21 +198,34 @@ export async function saveSourceSecondaries(
     }
   }
 
+  if (!pack) {
+    await setSourceProfileSecondaries(userId, ids);
+    return { success: true, message: "Secondaries cleared." };
+  }
+
   const stripe = getStripe();
-  const priceId = await ensureSecondaryPriceId();
+  const priceId = await ensureSecondaryPackPriceId(pack);
   const urls = checkoutUrls();
   const joined = ids.join(",");
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     client_reference_id: userId,
     ...(customerId ? { customer: customerId } : { customer_email: email }),
-    line_items: [{ price: priceId, quantity: ids.length }],
+    line_items: [{ price: priceId, quantity: 1 }],
     success_url: urls.success,
     cancel_url: urls.cancelDashboard,
     allow_promotion_codes: true,
-    metadata: { userId, source_secondaries: joined },
+    metadata: {
+      userId,
+      source_secondaries: joined,
+      source_secondary_pack: pack.id,
+    },
     subscription_data: {
-      metadata: { userId, source_secondaries: joined },
+      metadata: {
+        userId,
+        source_secondaries: joined,
+        source_secondary_pack: pack.id,
+      },
     },
   });
   if (!session.url) {

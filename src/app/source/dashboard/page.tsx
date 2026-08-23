@@ -23,7 +23,7 @@ import {
   saveSourceProfile,
   uniqueSourceSlug,
 } from "@/lib/source";
-import { parseSourceSecondaries } from "@/lib/source-secondaries";
+import { secondariesForForm } from "@/lib/source-secondaries";
 import { normalizeShopWebsite, sourceAccountLocksClaim } from "@/lib/source-directory";
 
 export const dynamic = "force-dynamic";
@@ -204,7 +204,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
       {shop?.company ? (
         <section className="mt-12">
           <SourceSecondariesForm
-            selected={parseSourceSecondaries(profile?.secondaries)}
+            selected={secondariesForForm(profile?.secondaries)}
             billedQty={billedSecondaries}
           />
         </section>

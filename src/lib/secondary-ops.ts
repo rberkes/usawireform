@@ -1,4 +1,4 @@
-import { secondaryLabel, type SourceSecondaryId } from "@/lib/source-secondaries";
+import { secondarySearchHay } from "@/lib/source-secondaries";
 import type { DirectoryCompany } from "@/lib/directory-types";
 
 type SecondaryTerm = {
@@ -7,16 +7,6 @@ type SecondaryTerm = {
   aliases: string[];
   requireTokens?: string[];
   hint?: boolean;
-};
-
-/** Tokens injected when a shop filed that Source secondary. Not a floor walk. */
-const SOURCE_SECONDARY_HAY: Record<SourceSecondaryId, string> = {
-  "end-forming": "end forming endform chamfer swage",
-  "resistance-welding": "resistance weld projection weld spot weld",
-  "mig-tig-assembly": "mig weld tig weld gmaw gtaw",
-  "plating-and-coating": "plating coating",
-  "heat-treating": "heat treat heat treating",
-  inspection: "inspection cmm fixture",
 };
 
 /**
@@ -205,11 +195,7 @@ function stripProductNoise(text: string) {
 
 export function shopSecondaryHay(company: DirectoryCompany) {
   const filed = (company.secondaries ?? [])
-    .map((id) =>
-      id in SOURCE_SECONDARY_HAY
-        ? SOURCE_SECONDARY_HAY[id as SourceSecondaryId]
-        : secondaryLabel(id),
-    )
+    .map((id) => secondarySearchHay(id))
     .join(" ");
   const publicText = stripProductNoise(
     [

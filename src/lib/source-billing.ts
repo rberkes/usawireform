@@ -4,9 +4,11 @@ import { clerkClient } from "@clerk/nextjs/server";
 import type Stripe from "stripe";
 import { SOURCE_PAID_PLANS, planById, planByLookupKey, type SourcePlan, type SourcePlanId } from "@/lib/source-plans";
 import {
-  SOURCE_SECONDARY_CENTS,
   SOURCE_SECONDARY_LOOKUP,
+  isSourceSecondaryPrice,
+  packByLookupKey,
   parseSourceSecondaries,
+  type SourceSecondaryPack,
 } from "@/lib/source-secondaries";
 import { getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
 import { appOrigin, getStripe, stripeConfigured } from "@/lib/stripe";
@@ -19,18 +21,18 @@ function subscriptionIsLive(status: Stripe.Subscription.Status) {
 
 function isSecondaryPrice(price?: Stripe.Price | Stripe.DeletedPrice | string | null) {
   if (!price || typeof price === "string" || !("lookup_key" in price)) return false;
-  return (
-    price.lookup_key === SOURCE_SECONDARY_LOOKUP ||
-    price.metadata?.source_addon === "secondary"
-  );
+  return isSourceSecondaryPrice({
+    lookup_key: price.lookup_key,
+    metadata: price.metadata,
+  });
+}
+
+function secondaryItems(subscription: Stripe.Subscription) {
+  return subscription.items.data.filter((item) => isSecondaryPrice(item.price));
 }
 
 function cellPlanItem(subscription: Stripe.Subscription) {
   return subscription.items.data.find((item) => !isSecondaryPrice(item.price));
-}
-
-function secondaryPlanItem(subscription: Stripe.Subscription) {
-  return subscription.items.data.find((item) => isSecondaryPrice(item.price));
 }
 
 export function planFromSubscription(subscription: Stripe.Subscription): SourcePlan {
@@ -51,7 +53,24 @@ export function planFromSubscription(subscription: Stripe.Subscription): SourceP
 
 export function secondaryQtyFromSubscription(subscription: Stripe.Subscription) {
   if (!subscriptionIsLive(subscription.status)) return 0;
-  return secondaryPlanItem(subscription)?.quantity ?? 0;
+  const items = secondaryItems(subscription);
+  let cap = 0;
+  for (const item of items) {
+    const price = item.price;
+    if (!price || typeof price === "string") continue;
+    const pack = packByLookupKey(price.lookup_key);
+    if (pack) {
+      cap = Math.max(cap, pack.slots);
+      continue;
+    }
+    if (
+      price.lookup_key === SOURCE_SECONDARY_LOOKUP ||
+      price.metadata?.source_addon === "secondary"
+    ) {
+      cap = Math.max(cap, item.quantity ?? 0);
+    }
+  }
+  return cap;
 }
 
 export async function ensurePaidPriceId(plan: SourcePlan) {
@@ -90,36 +109,36 @@ export async function ensurePaidPriceId(plan: SourcePlan) {
   return price.id;
 }
 
-export async function ensureSecondaryPriceId() {
-  const cached = PRICE_CACHE.get(SOURCE_SECONDARY_LOOKUP);
+export async function ensureSecondaryPackPriceId(pack: SourceSecondaryPack) {
+  const cached = PRICE_CACHE.get(pack.lookupKey);
   if (cached) return cached;
 
   const stripe = getStripe();
   const existing = await stripe.prices.list({
-    lookup_keys: [SOURCE_SECONDARY_LOOKUP],
+    lookup_keys: [pack.lookupKey],
     active: true,
     limit: 1,
   });
   if (existing.data[0]?.id) {
-    PRICE_CACHE.set(SOURCE_SECONDARY_LOOKUP, existing.data[0].id);
+    PRICE_CACHE.set(pack.lookupKey, existing.data[0].id);
     return existing.data[0].id;
   }
 
   const product = await stripe.products.create({
-    name: "Source — secondary operation",
-    description: "List one main secondary on the public Source shop page.",
-    metadata: { source_addon: "secondary" },
+    name: `Source — ${pack.name.toLowerCase()}`,
+    description: pack.blurb,
+    metadata: { source_addon: "secondary", source_secondary_pack: pack.id },
   });
   const price = await stripe.prices.create({
     product: product.id,
     currency: "usd",
-    unit_amount: SOURCE_SECONDARY_CENTS,
+    unit_amount: pack.priceCents,
     recurring: { interval: "month" },
-    lookup_key: SOURCE_SECONDARY_LOOKUP,
+    lookup_key: pack.lookupKey,
     transfer_lookup_key: true,
-    metadata: { source_addon: "secondary" },
+    metadata: { source_addon: "secondary", source_secondary_pack: pack.id },
   });
-  PRICE_CACHE.set(SOURCE_SECONDARY_LOOKUP, price.id);
+  PRICE_CACHE.set(pack.lookupKey, price.id);
   return price.id;
 }
 
@@ -138,45 +157,52 @@ export async function getLiveSourceSubscription(customerId: string) {
   return liveSubscriptionForCustomer(customerId);
 }
 
-export async function setSubscriptionSecondaryQuantity({
+export async function setSubscriptionSecondaryPack({
   customerId,
-  quantity,
+  pack,
 }: {
   customerId: string;
-  quantity: number;
+  pack: SourceSecondaryPack | undefined;
 }) {
   const stripe = getStripe();
   const live = await liveSubscriptionForCustomer(customerId);
   if (!live) return { ok: false as const, needsCheckout: true as const };
-  const priceId = await ensureSecondaryPriceId();
-  const existing = secondaryPlanItem(live);
-  const qty = Math.max(0, quantity);
+  const existing = secondaryItems(live);
+  const metadata = {
+    ...live.metadata,
+    source_secondary_pack: pack?.id ?? "",
+  };
 
-  if (qty === 0) {
-    if (!existing) return { ok: true as const, needsCheckout: false as const };
+  if (!pack) {
+    if (existing.length === 0) {
+      return { ok: true as const, needsCheckout: false as const };
+    }
     const cell = cellPlanItem(live);
     if (!cell) {
       await stripe.subscriptions.cancel(live.id);
       return { ok: true as const, needsCheckout: false as const };
     }
     await stripe.subscriptions.update(live.id, {
-      items: [{ id: existing.id, deleted: true }],
+      items: existing.map((item) => ({ id: item.id, deleted: true })),
       proration_behavior: "create_prorations",
+      metadata,
     });
     return { ok: true as const, needsCheckout: false as const };
   }
 
-  if (existing) {
-    await stripe.subscriptions.update(live.id, {
-      items: [{ id: existing.id, quantity: qty }],
-      proration_behavior: "create_prorations",
-    });
-    return { ok: true as const, needsCheckout: false as const };
-  }
+  const priceId = await ensureSecondaryPackPriceId(pack);
+  const [keep, ...drop] = existing;
+  const items: Stripe.SubscriptionUpdateParams.Item[] = keep
+    ? [
+        { id: keep.id, price: priceId, quantity: 1 },
+        ...drop.map((item) => ({ id: item.id, deleted: true as const })),
+      ]
+    : [{ price: priceId, quantity: 1 }];
 
   await stripe.subscriptions.update(live.id, {
-    items: [{ price: priceId, quantity: qty }],
+    items,
     proration_behavior: "create_prorations",
+    metadata,
   });
   return { ok: true as const, needsCheckout: false as const };
 }
