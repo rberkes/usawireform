@@ -1,4 +1,5 @@
 import { HookBuilder } from "@/components/HookBuilder";
+import { HookBagPriceTable } from "@/components/HookBagPriceTable";
 import { HookFigure } from "@/components/VHookFigure";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
@@ -60,6 +61,11 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
         ]}
         toc={[
           { id: "hang", label: "How they hang" },
+          ...(style.id === "v-hooks" ||
+          style.id === "s-hooks" ||
+          style.id === "c-hooks"
+            ? [{ id: "prices", label: "4–10 mm prices" }]
+            : []),
           { id: "builder", label: "Builder" },
           { id: "form", label: "How we form them" },
           { id: "jobs", label: "Typical jobs" },
@@ -73,6 +79,28 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
         <div className="not-prose my-8">
           <HookFigure type={hookType} label={STYLE_LABEL[style.id]} />
         </div>
+
+        {style.id === "v-hooks" ||
+        style.id === "s-hooks" ||
+        style.id === "c-hooks" ? (
+          <>
+            <h2 id="prices">4–10 mm bag prices</h2>
+            <p>
+              Same diameter and length steps as the published 0.180 in / 0.250
+              in finishing-hook bags, plus metric sizes in between. Two percent
+              under those bag prices.{" "}
+              <Link href="/powder-coating-hook-prices">All three styles</Link>.
+            </p>
+            <div className="not-prose my-8">
+              <HookBagPriceTable
+                style={
+                  style.id === "v-hooks" ? "v" : style.id === "s-hooks" ? "s" : "c"
+                }
+                heading="h3"
+              />
+            </div>
+          </>
+        ) : null}
 
         <h2 id="builder">Custom {style.title.toLowerCase()} builder</h2>
         <div className="not-prose my-8">
@@ -94,8 +122,10 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
           </Link>
           . Band: {WIRE.label}.{" "}
           {style.id === "v-hooks"
-            ? "We buy the steel — it is in the price."
-            : style.id === "90-degree-hooks"
+            ? "Listed 4–10 mm V lots include carbon. Custom V: we still buy the steel."
+            : style.id === "s-hooks" || style.id === "c-hooks"
+              ? "Listed 4–10 mm lots include carbon. Custom C, CV, and S outside the grid: you buy the coil."
+              : style.id === "90-degree-hooks"
               ? "90° V: we buy the steel. 90° C and CV: you buy the coil."
               : "You buy the coil."}
         </p>

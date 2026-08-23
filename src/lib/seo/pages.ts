@@ -199,6 +199,34 @@ export const staticSeoPages: SeoRecord[] = [
     priority: 0.9,
   }),
   record({
+    path: "/powder-coating-hook-prices",
+    title: "Powder Coating Hook Prices — 4–10 mm",
+    description:
+      "V-hook, S-hook, and C-hook bag prices in 4–10 mm. 2% under published 0.180 in and 0.250 in bags. Same lengths and counts. Carbon. 100-piece minimum.",
+    section: "products",
+    keywords: [
+      "powder coating hook prices",
+      "V-hook prices",
+      "S-hook prices",
+      "C-hook prices",
+    ],
+    priority: 0.85,
+  }),
+  record({
+    path: "/square-hanging-hooks",
+    title: "Square Hanging Hooks — 5% Under Catalog Bags",
+    description:
+      "Square hanging hooks in 0.180, 0.250, and 0.375 in. 5% under published HSQV 1-bag and 10-bag cards. Same lengths. Carbon. 100-piece minimum.",
+    section: "products",
+    keywords: [
+      "square hanging hooks",
+      "HSQV hooks",
+      "powder coating square hooks",
+      "square hanging hook prices",
+    ],
+    priority: 0.85,
+  }),
+  record({
     path: "/v-hooks",
     title: "V-Hooks",
     description:

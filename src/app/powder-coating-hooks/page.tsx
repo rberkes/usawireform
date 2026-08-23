@@ -25,20 +25,20 @@ const faqs = [
   {
     question: "What kind of hooks do powder coating shops use?",
     answer:
-      "Powder coating shops commonly use V-hooks, C-hooks, CV-hooks, S-hooks, and 90° hooks to hang parts during washing, coating, curing, and production handling.",
+      "Powder coating shops commonly use V-hooks, C-hooks, CV-hooks, S-hooks, 90° hooks, and square hanging hooks to hang parts during washing, coating, curing, and production handling.",
   },
   {
     question: "What wire sizes do you form powder coating hooks in?",
-    answer: `Production is ${WIRE.label}. Stock tooling is ${STOCK}. Light catalog hooks under ${WIRE.minMm} mm are a different cell — the quote says no.`,
+    answer: `Production is ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog hooks are under 4 mm — no. 0.180 in and 0.250 in are in the band: /powder-coating-hook-prices, 2% under published bags.`,
   },
   {
     question: "Can you make custom powder coating hooks?",
-    answer: `Yes. Style, length, openings, 90° rotation, and alloy are the print. 100-piece minimum. V-hooks and 90° V: we buy the steel. C, CV, and S: you buy the coil. Send a STEP or PDF on /contact.`,
+    answer: `Yes. Style, length, openings, 90° rotation, and alloy are the print. 100-piece minimum. Listed 4–10 mm V, S, and C bags include carbon. Custom V and 90° V: we buy the steel. Custom C, CV, and S outside the grid: you buy the coil. Send a STEP or PDF on /contact.`,
   },
   {
     question: "Do you make stainless steel powder coating hooks?",
     answer:
-      "Yes. 304 or 316 for wash chemistry and corrosion. Carbon for everyday steel powder coating hooks. V-hooks: we buy the steel. Other styles: you supply the coil.",
+      "Yes. 304 or 316 for wash chemistry and corrosion. Carbon for everyday steel powder coating hooks. Listed 4–10 mm bags are carbon. Stainless is a print.",
   },
 ];
 
@@ -61,6 +61,7 @@ export default function PowderCoatingHooksPage() {
         lede={`${PRICE_LINE} ${COMPANY} forms powder coating hooks from coil: S-hooks, V-hooks, C-hooks, CV-hooks, 90° hooks, and custom heavy-duty wire hooks for finishing shops, coating lines, racks, and curing ovens. ${WIRE.short}. Northeast Ohio.`}
         toc={[
           { id: "styles", label: "Hook styles" },
+          { id: "prices", label: "4–10 mm prices" },
           { id: "steel", label: "Steel" },
           { id: "stainless", label: "Stainless" },
           { id: "heavy", label: "Heavy-duty" },
@@ -100,6 +101,19 @@ export default function PowderCoatingHooksPage() {
           .
         </p>
 
+        <h2 id="prices">4–10 mm bag prices</h2>
+        <p>
+          0.180 in and 0.250 in are in this cell (4.57 mm and 6.35 mm). We list
+          those lengths — plus 4, 5, 6, 8, and 10 mm — at 2% under the published
+          bag prices, same bag counts. Carbon, steel in the lot.{" "}
+          <Link href="/powder-coating-hook-prices">
+            Full V, S, and C price list
+          </Link>
+          . Squared hang:{" "}
+          <Link href="/square-hanging-hooks">square hanging hooks</Link>
+          , 5% under the published HSQV bags (0.180, 0.250, 0.375 in).
+        </p>
+
         <h2 id="steel">Steel powder coating hooks</h2>
         <p>
           Everyday steel powder coating hooks are carbon coil — 1018 or the
@@ -127,7 +141,9 @@ export default function PowderCoatingHooksPage() {
           <Link href="/heavy-duty-v-hooks">
             USA made heavy-duty powder coat V-hooks
           </Link>
-          . Light line hooks at 0.080–0.250 in are not a quote here.
+          . Light line hooks at 0.044–0.120 in are not a quote here. 0.180 in
+          and 0.250 in are —{" "}
+          <Link href="/powder-coating-hook-prices">bag prices</Link>.
         </p>
 
         <h2 id="custom">Custom powder coating hooks</h2>
@@ -138,8 +154,8 @@ export default function PowderCoatingHooksPage() {
             Custom powder coating hooks
           </Link>
           : builder on this site — style, wire in {WIRE.short}, overall length,
-          leg ID. V-hooks include steel. C, CV, and S are forming only — you buy
-          the coil.
+          leg ID. Listed 4–10 mm V, S, and C bags include carbon. Custom V: we
+          buy the steel. Custom C, CV, and S outside the grid: you buy the coil.
         </p>
 
         <h2 id="choose">How to choose</h2>
@@ -165,7 +181,12 @@ export default function PowderCoatingHooksPage() {
         <h2 id="next">Related</h2>
         <ul>
           <li>
-            <Link href="/powder-coating-v-hooks">Powder coating V-hooks</Link>
+            <Link href="/powder-coating-hook-prices">
+              4–10 mm hook bag prices
+            </Link>
+          </li>
+          <li>
+            <Link href="/square-hanging-hooks">Square hanging hooks</Link>
           </li>
           <li>
             <Link href="/products/powder-coating-hooks">

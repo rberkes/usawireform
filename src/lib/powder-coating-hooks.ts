@@ -69,7 +69,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
     hang: "The crotch locates. Legs spread load. Opening and included angle are the print.",
     body: [
       "V-hooks are 2D CNC: feed, two sharp 45° Vs, a shank, cutoff. Rack Λ on top, part V on the bottom, same side of the shank. Length, opening, and point or blunt ends belong on the drawing. Carbon for everyday powder coating hooks. 304 or 316 when the washer or the chemistry eats bright basic.",
-      `This shop forms V-hooks in ${WIRE.label}. Stock tooling is ${STOCK}. Light catalog V-hooks at 0.080–0.250 in are a different cell — the quote says no under ${WIRE.minMm} mm.`,
+      `This shop forms V-hooks in ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog V-hooks sit under 4 mm — no. 0.180 in (4.57 mm) and 0.250 in (6.35 mm) are in the band: bag prices 2% under the published cards on /powder-coating-hook-prices.`,
     ],
     jobs: [
       "Powder coating V-hooks for rack and conveyor lines",

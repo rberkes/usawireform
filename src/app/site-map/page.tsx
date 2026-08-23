@@ -231,6 +231,11 @@ export default function SiteMapPage() {
               body: "S, V, C, CV, and 90° hooks from coil. Heavy 4–14 mm.",
             },
             {
+              href: "/square-hanging-hooks",
+              title: "Square hanging hooks",
+              body: "0.180, 0.250, 0.375 in. 5% under published HSQV bags.",
+            },
+            {
               href: "/powder-coating-v-hooks",
               title: "Powder coating V-hooks",
               body: "Wash, coat, cure, paint, e-coat. Live builder.",
