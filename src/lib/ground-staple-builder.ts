@@ -4,12 +4,25 @@ import { ESTIMATE } from "@/lib/quoting";
 import { WIRE } from "@/lib/range";
 import { priceVHook, V_HOOK_SUPPLY } from "@/lib/v-hook-price";
 
-export type StapleTopId = "square" | "round";
+/** Inside corner radius. Still a square-top U — not a round-top pin. */
+export const STAPLE_RADIUS = {
+  minIn: 0.0625,
+  defaultIn: 0.125,
+  stepIn: 0.0625,
+} as const;
 
-export const STAPLE_TOPS = [
-  { id: "square" as const, label: "Square top" },
-  { id: "round" as const, label: "Round top" },
-];
+export function stapleRadiusMax(crownIn: number) {
+  if (!Number.isFinite(crownIn) || crownIn <= 0) return STAPLE_RADIUS.minIn;
+  return Math.max(STAPLE_RADIUS.minIn, crownIn / 2 - STAPLE_RADIUS.minIn);
+}
+
+export function clampStapleRadius(radiusIn: number, crownIn: number) {
+  const max = stapleRadiusMax(crownIn);
+  if (!Number.isFinite(radiusIn)) {
+    return Math.min(STAPLE_RADIUS.defaultIn, max);
+  }
+  return Math.min(max, Math.max(STAPLE_RADIUS.minIn, radiusIn));
+}
 
 export const STAPLE_WIRES = [
   {
@@ -86,30 +99,33 @@ function polylineLength(pts: Vec2[]) {
 }
 
 export function staplePoints(
-  top: StapleTopId,
   legIn: number,
   crownIn: number,
+  radiusIn: number,
 ): Vec2[] {
   const half = crownIn / 2;
-  if (top === "round") {
-    const r = Math.max(half, 0.15);
-    const segs = 16;
-    const pts: Vec2[] = [{ x: -r, y: 0 }];
-    pts.push({ x: -r, y: Math.max(legIn - r, 0.25) });
-    for (let i = 0; i <= segs; i++) {
-      const a = Math.PI + (Math.PI * i) / segs;
-      pts.push({ x: r * Math.cos(a), y: legIn - r + r * Math.sin(a) + r });
-    }
-    pts.push({ x: r, y: Math.max(legIn - r, 0.25) });
-    pts.push({ x: r, y: 0 });
-    return pts;
-  }
-  return [
+  const r = clampStapleRadius(radiusIn, crownIn);
+  const segs = 10;
+  const pts: Vec2[] = [
     { x: -half, y: 0 },
-    { x: -half, y: legIn },
-    { x: half, y: legIn },
-    { x: half, y: 0 },
+    { x: -half, y: Math.max(legIn - r, 0.25) },
   ];
+  for (let i = 1; i <= segs; i++) {
+    const a = Math.PI - (Math.PI / 2) * (i / segs);
+    pts.push({
+      x: -half + r + r * Math.cos(a),
+      y: legIn - r + r * Math.sin(a),
+    });
+  }
+  for (let i = 1; i <= segs; i++) {
+    const a = Math.PI / 2 - (Math.PI / 2) * (i / segs);
+    pts.push({
+      x: half - r + r * Math.cos(a),
+      y: legIn - r + r * Math.sin(a),
+    });
+  }
+  pts.push({ x: half, y: 0 });
+  return pts;
 }
 
 function isEightGaBag(wireIn: number, crownIn: number, legIn: number, materialId: string) {
@@ -129,6 +145,7 @@ export type StapleBuildOk = {
   bends: number;
   developedIn: number;
   points: Vec2[];
+  radiusIn: number;
   title: string;
   bag: boolean;
   estimate: ReturnType<typeof priceVHook> & { bagQty?: number };
@@ -137,15 +154,19 @@ export type StapleBuildOk = {
 export type StapleBuildErr = { ok: false; message: string };
 
 export function buildStapleQuote(input: {
-  top: StapleTopId;
   wireIn: number;
   legIn: number;
   crownIn: number;
+  radiusIn?: number;
   quantity: number;
   materialId?: string;
 }): StapleBuildOk | StapleBuildErr {
-  const { top, wireIn, legIn, crownIn, quantity } = input;
+  const { wireIn, legIn, crownIn, quantity } = input;
   const materialId = input.materialId ?? "galvanized";
+  const radiusIn = clampStapleRadius(
+    input.radiusIn ?? STAPLE_RADIUS.defaultIn,
+    crownIn,
+  );
 
   if (!Number.isFinite(wireIn) || wireIn < WIRE.minIn || wireIn > WIRE.maxIn) {
     return {
@@ -166,13 +187,13 @@ export function buildStapleQuote(input: {
     return { ok: false, message: `Quantity starts at ${ESTIMATE.qtyMin}.` };
   }
 
-  const points = staplePoints(top, legIn, crownIn);
+  const points = staplePoints(legIn, crownIn, radiusIn);
   const developedIn = Math.round(polylineLength(points) * 100) / 100;
   const cuts = 1;
-  const bends = top === "square" ? 2 : 1;
+  const bends = 2;
   const mm = wireIn * 25.4;
   const sku = usawfPart("GS", hookWireCode(mm, wireIn), legIn);
-  const title = `${top === "square" ? "Square-top" : "Round-top"} ground staple`;
+  const title = "Square-top ground staple";
 
   if (isEightGaBag(wireIn, crownIn, legIn, materialId)) {
     const bag = nearest8GaBag(legIn as 6 | 12, quantity);
@@ -189,6 +210,7 @@ export function buildStapleQuote(input: {
       bends,
       developedIn,
       points,
+      radiusIn,
       title,
       bag: true,
       estimate: {
@@ -228,6 +250,7 @@ export function buildStapleQuote(input: {
     bends,
     developedIn,
     points,
+    radiusIn,
     title,
     bag: false,
     estimate: priced,

@@ -37,7 +37,7 @@ const faqs = [
   {
     question: "Can you make custom ground staples?",
     answer:
-      "Yes. Leg, crown, square or round top, diameter, and alloy on the print. We buy the steel. 100-piece minimum. Builder: /custom-ground-staples.",
+      "Yes. Leg, crown, corner radius, diameter, and alloy on the print. Square-top only. We buy the steel. 100-piece minimum. Builder: /custom-ground-staples.",
   },
   {
     question: "Do you make stainless ground staples?",
@@ -175,7 +175,7 @@ export default function GroundStaplesHubPage() {
 
         <h2 id="custom">Custom</h2>
         <p>
-          Leg, crown, top, diameter, alloy.{" "}
+          Leg, crown, corner radius, diameter, alloy. Square-top only.{" "}
           <Link href="/custom-ground-staples">Custom ground staples</Link>:
           live drawing and estimate. 8 ga 6/12 in carbon bags use the card.
           Other prints: shop steel.

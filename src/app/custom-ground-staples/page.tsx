@@ -13,7 +13,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Custom Ground Staples",
-  description: `${COMPANY} custom ground staples from coil: 8 ga landscape U-pins plus heavy 1/4, 3/8, 7/16, and 1/2 in. Leg, crown, and top on the print. ${WIRE.short}. 100-piece minimum.`,
+  description: `${COMPANY} custom square-top ground staples from coil: 8 ga landscape U-pins plus heavy 1/4, 3/8, 7/16, and 1/2 in. Leg, crown, and corner radius on the print. ${WIRE.short}. 100-piece minimum.`,
   path: "/custom-ground-staples",
   keywords: [
     "custom ground staples",
@@ -27,12 +27,12 @@ export const metadata = pageMeta({
 const faqs = [
   {
     question: "Can you make custom ground staples?",
-    answer: `Yes. Leg, crown, square or round top, diameter, and alloy. ${WIRE.short}. Stock ${STOCK}. 100-piece minimum.`,
+    answer: `Yes. Leg, crown, corner radius, diameter, and alloy. Square-top only — the radius is on the print so it is not a sharp square. ${WIRE.short}. Stock ${STOCK}. 100-piece minimum.`,
   },
   {
     question: "Do you have an online staple builder?",
     answer:
-      "Yes. 8 ga with a 1 in crown and 6 or 12 in legs on carbon uses the published USA 8 ga bag, 5% under. Other sizes: $1 per cut, $0.09 per developed inch on 3/8 in (heavier wire scales by section), plus the steel we buy, then 5% off. 100-piece minimum. Instant quotes are subject to quote department review.",
+      "Yes. 8 ga with a 1 in crown and 6 or 12 in legs on carbon uses the published USA 8 ga bag, 5% under. Other sizes: $1 per cut, $0.09 per developed inch on 3/8 in (heavier wire scales by section), plus the steel we buy, then 5% off. Square-top with a set corner radius. 100-piece minimum. Instant quotes are subject to quote department review.",
   },
   {
     question: "Do you form 11 gauge sod staples?",
@@ -66,7 +66,7 @@ export default function CustomGroundStaplesPage() {
         <PageHero
           kicker="Custom"
           title="Custom ground staples"
-          lede={`${PRICE_LINE} Build a U. Live drawing and estimate. ${WIRE.short}. We buy the steel.`}
+          lede={`${PRICE_LINE} Build a square-top U. Set the corner radius. Live drawing and estimate. ${WIRE.short}. We buy the steel.`}
         />
         <div className="mt-12">
           <GroundStapleBuilder />

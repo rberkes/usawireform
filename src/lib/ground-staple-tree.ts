@@ -987,7 +987,7 @@ export const GROUND_STAPLE_TREE: GroundStapleNode[] = [
     "style",
     4,
     {
-      description: `Custom ground staples from coil. Leg, crown, square or round top, ${WIRE.short}. 100-piece minimum.`,
+      description: `Custom square-top ground staples from coil. Leg, crown, corner radius, ${WIRE.short}. 100-piece minimum.`,
       lede: "The print is the pin. Builder on this site.",
       keywords: ["custom ground staples", "custom landscape staples", "custom U-pins"],
       alsoCalled: ["made-to-print staples", "custom sod pins"],
@@ -996,7 +996,7 @@ export const GROUND_STAPLE_TREE: GroundStapleNode[] = [
           id: "builder",
           heading: "Builder",
           body: [
-            "Live estimate on /custom-ground-staples. 8 ga + 1 in crown + 6 or 12 in legs + carbon uses the bag card. Everything else: shop steel, $1/cut, 3/8 in inch rate scaled by section, then 5% off.",
+            "Live estimate on /custom-ground-staples. Square-top with a corner radius. 8 ga + 1 in crown + 6 or 12 in legs + carbon uses the bag card. Everything else: shop steel, $1/cut, 3/8 in inch rate scaled by section, then 5% off.",
           ],
         },
       ],
