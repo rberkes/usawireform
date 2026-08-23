@@ -12,6 +12,7 @@ import { industries, shopLines } from "@/lib/site";
 import { US_STATES } from "@/lib/states";
 import { allPosts, postPath } from "@/lib/blog";
 import { L_HITCH_PIN_LANDERS } from "@/lib/l-hitch-pins";
+import { GROUND_STAPLE_TREE, groundStapleHref } from "@/lib/ground-staple-tree";
 import { POWDER_HOOK_TREE, powderHookHref } from "@/lib/powder-hook-tree";
 import { V_HOOK_LANDERS } from "@/lib/v-hook-landers";
 
@@ -274,6 +275,43 @@ export const staticSeoPages: SeoRecord[] = [
       "90° hooks",
       "90 degree V-hooks",
       "90 degree C-hooks",
+    ],
+    priority: 0.8,
+  }),
+  record({
+    path: "/ground-staples",
+    title: "Ground Staples",
+    description:
+      "USA made ground staples from coil: 8 gauge landscape U-pins plus heavy 1/4, 3/8, 7/16, and 1/2 in. CNC in 4–14 mm. 100-piece minimum. 11 gauge and 9 gauge are under 4 mm — no.",
+    section: "products",
+    keywords: [
+      "ground staples",
+      "landscape staples",
+      "sod staples",
+      "8 gauge landscape staples",
+      "heavy-duty ground staples",
+    ],
+    priority: 0.9,
+  }),
+  record({
+    path: "/ground-staples/prices",
+    title: "Ground Staple Prices — 8 Gauge",
+    description:
+      "8 gauge landscape staple bag prices. 5% under published USA 8 ga 6 in and 12 in cards. Same counts. Carbon. 100-piece minimum.",
+    section: "products",
+    keywords: ["ground staple prices", "8 gauge staple prices", "landscape staple prices"],
+    priority: 0.85,
+  }),
+  record({
+    path: "/custom-ground-staples",
+    title: "Custom Ground Staples",
+    description:
+      "Custom ground staples from coil: 8 ga landscape U-pins plus heavy 1/4, 3/8, 7/16, and 1/2 in. Leg, crown, and top on the print. 4–14 mm. 100-piece minimum.",
+    section: "products",
+    keywords: [
+      "custom ground staples",
+      "custom landscape staples",
+      "custom sod staples",
     ],
     priority: 0.8,
   }),
@@ -986,12 +1024,26 @@ function powderHookSeoPages(): SeoRecord[] {
   );
 }
 
+function groundStapleSeoPages(): SeoRecord[] {
+  return GROUND_STAPLE_TREE.map((node) =>
+    record({
+      path: groundStapleHref(node.slug),
+      title: node.title,
+      description: node.description,
+      section: "products" as const,
+      keywords: node.keywords,
+      priority: node.slug.length === 1 ? 0.85 : 0.7,
+    }),
+  );
+}
+
 export function allSeoPages(): SeoRecord[] {
   const seen = new Set<string>();
   const out: SeoRecord[] = [];
   for (const page of [
     ...staticSeoPages,
     ...powderHookSeoPages(),
+    ...groundStapleSeoPages(),
     ...processPages(),
     ...industryPages(),
     ...productPages(),

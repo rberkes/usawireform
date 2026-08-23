@@ -4,6 +4,7 @@ import { put } from "@vercel/blob";
 import { blobAuth, blobErrorMessage, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
 import { sendDrawingLeadEmails, previewAttachmentFromForm, sendLeadEmail, sendLeadThanksEmail, sendInstantEstimateEmails } from "@/lib/leads";
+import { nearest8GaBag } from "@/lib/ground-staple-prices";
 import { estimatePiece, parseInstantQuote, usd2 } from "@/lib/quoting";
 import { priceVHook } from "@/lib/v-hook-price";
 import { QUOTE_REVIEW } from "@/lib/price";
@@ -501,22 +502,41 @@ export async function submitInstantQuote(
   const hookType = String(formData.get("hookType") ?? "").trim().slice(0, 80);
   const overallIn = String(formData.get("overallIn") ?? "").trim().slice(0, 16);
   const legIdIn = String(formData.get("legIdIn") ?? "").trim().slice(0, 16);
+  const stapleBag = pricing === "staple-bag";
   const shopSteel =
-    pricing === "heavy-duty-v" || pricing === "v-hook-supplied";
-  const result = shopSteel
-    ? priceVHook({
-        developedIn: input.lengthIn,
-        diameterIn: input.diameterIn,
-        quantity: input.quantity,
-        materialId: input.materialId,
-        cuts: input.cuts,
-      })
-    : estimatePiece({
-        bends: input.bends,
-        lengthIn: input.lengthIn,
-        quantity: input.quantity,
-        cuts: input.cuts,
-      });
+    pricing === "heavy-duty-v" ||
+    pricing === "v-hook-supplied" ||
+    stapleBag;
+  const bag =
+    stapleBag && (overallIn === "6" || overallIn === "12")
+      ? nearest8GaBag(Number(overallIn), input.quantity)
+      : null;
+  const result = bag
+    ? {
+        piece: bag.ourEach,
+        lot: Math.round(bag.ourEach * input.quantity * 100) / 100,
+        forming: 0,
+        cut: 0,
+        bendCost: 0,
+        discountRate: 0,
+        steelUsd: 0,
+        steelLb: 0,
+        beatUsd: Math.round((bag.listEach - bag.ourEach) * input.quantity * 100) / 100,
+      }
+    : shopSteel
+      ? priceVHook({
+          developedIn: input.lengthIn,
+          diameterIn: input.diameterIn,
+          quantity: input.quantity,
+          materialId: input.materialId,
+          cuts: input.cuts,
+        })
+      : estimatePiece({
+          bends: input.bends,
+          lengthIn: input.lengthIn,
+          quantity: input.quantity,
+          cuts: input.cuts,
+        });
   const piece = usd2(result.piece);
   const lot = usd2(result.lot);
   const payload = {
@@ -534,9 +554,11 @@ export async function submitInstantQuote(
       hookType
         ? `${hookType}${overallIn ? ` · ${overallIn} in overall` : ""}${legIdIn ? ` · ${legIdIn} in leg ID` : ""}`
         : "",
-      shopSteel && "steelUsd" in result
-        ? `V-hook shop steel · ${input.diameterLabel} · ${result.steelLb.toFixed(3)} lb · ${usd2(result.steelUsd)} steel · forming ${usd2(result.forming)} · 5% beat −${usd2(result.beatUsd)}`
-        : "",
+      bag
+        ? `8 ga bag card · USAWF-GS-8-${overallIn.padStart(2, "0")} · 5% under published USA 8 ga · −${usd2(Math.round((bag.listEach - bag.ourEach) * input.quantity * 100) / 100)}`
+        : shopSteel && "steelUsd" in result
+          ? `V-hook shop steel · ${input.diameterLabel} · ${result.steelLb.toFixed(3)} lb · ${usd2(result.steelUsd)} steel · forming ${usd2(result.forming)} · 5% beat −${usd2(result.beatUsd)}`
+          : "",
       hookNotes,
     ]
       .filter(Boolean)

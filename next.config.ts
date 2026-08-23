@@ -182,6 +182,26 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/ground-samples",
+        destination: "/ground-staples",
+        permanent: true,
+      },
+      {
+        source: "/ground-sample",
+        destination: "/ground-staples",
+        permanent: true,
+      },
+      {
+        source: "/sod-staples",
+        destination: "/ground-staples/sod-staples",
+        permanent: true,
+      },
+      {
+        source: "/landscape-staples",
+        destination: "/ground-staples/landscape-staples",
+        permanent: true,
+      },
+      {
         source: "/wire-forming-cities",
         destination: "/directory/areas",
         permanent: true,

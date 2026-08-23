@@ -885,10 +885,10 @@ export const catalog: CatalogItem[] = [
     group: "Frames and hardware",
     summary:
       "U-staples in 3/8, 7/16, and 1/2 in for fabric, cable, erosion, and agriculture. Lighter sod sizes named if they fall below 4 mm.",
-    lede: "USA made ground staples: a U that holds fabric, cable, or soil. Heavy production on the three stock diameters.",
+    lede: "USA made ground staples: a U that holds fabric, cable, or soil. 8 ga bags plus heavy stock on the three stock diameters.",
     body: [
-      "USA made ground staples are 2D CNC plus cutoff. Volume is high, geometry is simple, finish is usually galvanized 1018. 3/8 in and neighbors for erosion, agriculture, and cable that a light sod staple will not hold. Buyers searching USA made ground samples land here — the part is a U-staple from coil, not a soil lab coupon.",
-      "If the print is 9-gauge landscape wire under 4 mm, we will say so. Production is Northeast Ohio.",
+      "USA made ground staples are 2D CNC plus cutoff. The SEO hub is /ground-staples: 8 ga landscape bags 5% under published USA 8 ga cards, plus heavy 3/8, 7/16, and 1/2 in on mill math. Buyers searching USA made ground samples land here — the part is a U-staple from coil, not a soil lab coupon.",
+      "If the print is 11-gauge or 9-gauge landscape wire under 4 mm, we will say so. Production is Northeast Ohio.",
     ],
     jobs: [
       "USA made ground staples for erosion and landscape fabric",

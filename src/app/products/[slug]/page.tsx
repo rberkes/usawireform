@@ -180,6 +180,16 @@ export default async function CatalogProductPage({ params }: Props) {
             .
           </p>
         ) : null}
+        {slug === "ground-staples" ? (
+          <p>
+            Hub:{" "}
+            <TextLink href="/ground-staples">ground staples</TextLink>. 8 ga
+            bags:{" "}
+            <TextLink href="/ground-staples/prices">prices</TextLink>. Custom:{" "}
+            <TextLink href="/custom-ground-staples">staple builder</TextLink>.
+            11 ga and 9 ga are under 4 mm — no.
+          </p>
+        ) : null}
         {item.body.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}

@@ -67,7 +67,7 @@ export default function WireFormShapesPage() {
       <p>
         Two legs, one radius.{" "}
         <Link href="/products/u-hangers">U-hangers</Link> and clamp Us,{" "}
-        <Link href="/products/ground-staples">ground staples</Link>,{" "}
+        <Link href="/ground-staples">ground staples</Link>,{" "}
         <Link href="/products/u-anchors">concrete lifting U-anchors</Link>.
         Inside width, leg length, wire size. A forged headed U-anchor is
         not this cell.

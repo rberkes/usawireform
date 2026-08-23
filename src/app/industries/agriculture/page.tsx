@@ -40,7 +40,7 @@ export default function AgriculturePage() {
       <Section title="What we form">
         <ul className="mt-6 max-w-2xl list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
           <li>
-            <TextLink href="/products/ground-staples">USA made ground staples</TextLink>
+            <TextLink href="/ground-staples">USA made ground staples</TextLink>
             {" "}
             (also searched as USA made ground samples) for fabric, erosion,
             irrigation lines, and fencing underlay

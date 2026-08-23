@@ -13,7 +13,7 @@ export type UsaMadeEntry = {
 export const USA_MADE: UsaMadeEntry[] = [
   {
     slug: "ground-staples",
-    href: "/products/ground-staples",
+    href: "/ground-staples",
     phrases: ["USA made ground staples", "USA made ground samples"],
   },
   {

@@ -66,7 +66,7 @@ export default function ConstructionPage() {
             <TextLink href="/products/cable-hangers">cable hangers</TextLink>
           </li>
           <li>
-            <TextLink href="/products/ground-staples">USA made ground staples</TextLink>{" "}
+            <TextLink href="/ground-staples">USA made ground staples</TextLink>{" "}
             (also searched as USA made ground samples) for fabric, cable, and site erosion
           </li>
           <li>

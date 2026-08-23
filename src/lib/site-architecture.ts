@@ -182,6 +182,23 @@ export function siteArchitectureTree(): ArchNode[] {
             ),
           ],
         },
+        {
+          id: "staples",
+          name: "staple-landers/",
+          note: "Top-level ground-staple URLs",
+          kind: "branch" as const,
+          children: [
+            leaf("/ground-staples", "Staple family hub + keyword cloud"),
+            leaf("/ground-staples/sod-staples", "Sod staples"),
+            leaf("/ground-staples/landscape-staples", "Landscape staples"),
+            leaf("/ground-staples/8-gauge", "8 gauge bags"),
+            leaf("/ground-staples/heavy-duty", "Heavy-duty stock Us"),
+            leaf("/ground-staples/prices", "8 ga bags"),
+            leaf("/ground-staples/market", "Named pin mills"),
+            leaf("/ground-staples/[...slug]", "Keyword branches"),
+            leaf("/custom-ground-staples", "Custom builder"),
+          ],
+        },
       ],
     },
     {

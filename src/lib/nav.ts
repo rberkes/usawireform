@@ -43,6 +43,17 @@ export const NAV_PRODUCTS: NavSection = {
       ],
     },
     {
+      title: "Ground staples",
+      items: [
+        { href: "/ground-staples", label: "Ground staples" },
+        { href: "/ground-staples/prices", label: "8 ga staple prices" },
+        { href: "/ground-staples/heavy-duty", label: "Heavy-duty staples" },
+        { href: "/ground-staples/8-gauge", label: "8 gauge" },
+        { href: "/ground-staples/market", label: "Staple market" },
+        { href: "/custom-ground-staples", label: "Custom staple builder" },
+      ],
+    },
+    {
       title: "Finishing hooks",
       items: [
         { href: "/powder-coating-hooks", label: "Powder coating hooks" },

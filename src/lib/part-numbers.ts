@@ -2,7 +2,7 @@ import { PART_PREFIX } from "@/lib/company";
 
 export { PART_PREFIX };
 
-export type HookPartFamily = "V" | "S" | "C" | "SH";
+export type HookPartFamily = "V" | "S" | "C" | "SH" | "GS";
 
 /** USAWF-V-180-12 — family, wire code, length in inches. */
 export function usawfPart(
@@ -20,7 +20,10 @@ export function usawfPart(
 export function hookWireCode(mm: number, dIn: number) {
   if (Math.abs(dIn - 0.18) < 1e-9) return "180";
   if (Math.abs(dIn - 0.25) < 1e-9) return "250";
+  if (Math.abs(dIn - 0.162) < 1e-3) return "8";
   if (Math.abs(dIn - 0.375) < 1e-9) return "375";
+  if (Math.abs(dIn - 0.4375) < 1e-9) return "438";
+  if (Math.abs(dIn - 0.5) < 1e-9) return "500";
   if (Number.isInteger(mm)) return String(mm);
   return String(mm).replace(".", "");
 }

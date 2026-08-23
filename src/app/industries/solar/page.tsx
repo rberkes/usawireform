@@ -51,7 +51,7 @@ export default function SolarPage() {
             and management grids along the row
           </li>
           <li>
-            <TextLink href="/products/ground-staples">USA made ground staples</TextLink>{" "}
+            <TextLink href="/ground-staples">USA made ground staples</TextLink>{" "}
             (also searched as USA made ground samples) for fabric, cable, and erosion
           </li>
           <li>

@@ -63,7 +63,7 @@ export default function OutdoorProductsPage() {
             </TextLink>
           </li>
           <li>
-            <TextLink href="/products/ground-staples">USA made ground staples</TextLink>
+            <TextLink href="/ground-staples">USA made ground staples</TextLink>
           </li>
           <li>
             <TextLink href="/products/trailer-latches">

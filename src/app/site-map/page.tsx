@@ -231,6 +231,21 @@ export default function SiteMapPage() {
               body: "S, V, C, CV, and 90° hooks from coil. Heavy 4–14 mm.",
             },
             {
+              href: "/ground-staples",
+              title: "Ground staples",
+              body: "8 ga landscape U-pins plus heavy 3/8, 7/16, and 1/2 in.",
+            },
+            {
+              href: "/ground-staples/prices",
+              title: "8 ga staple prices",
+              body: "6 in and 12 in bags. 5% under published USA 8 ga cards.",
+            },
+            {
+              href: "/custom-ground-staples",
+              title: "Custom ground staples",
+              body: "Live U-pin builder. Shop steel. 100-piece minimum.",
+            },
+            {
               href: "/powder-coating-hooks/square-hanging-hooks",
               title: "Square hanging hooks",
               body: "0.180, 0.250, 0.375 in. 5% under published HSQV bags.",
