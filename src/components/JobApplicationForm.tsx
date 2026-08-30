@@ -200,7 +200,16 @@ export function JobApplicationForm({ positions }: { positions: string[] }) {
         </Button>
 
         <p className="mt-4 text-xs text-muted">
-          * Required fields. Your information will only be used for employment consideration.
+          * Required fields. Your information will only be used for employment
+          consideration. See the{" "}
+          <a href="/privacy" className="underline hover:text-copper">
+            Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a href="/terms" className="underline hover:text-copper">
+            User Agreement
+          </a>
+          .
         </p>
       </Panel>
     </form>

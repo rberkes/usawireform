@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { submitMachineLead, type QuoteFormState } from "@/app/actions/quote";
+import { FormLegalNotice } from "./LegalDoc";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
 
 const initial: QuoteFormState = { success: false, message: "" };
@@ -98,6 +99,7 @@ export function MachineLeadForm({
         <Button type="submit" className="mt-5" disabled={pending}>
           {pending ? "Sending..." : "Send machine inquiry"}
         </Button>
+        <FormLegalNotice />
       </Panel>
     </form>
   );
