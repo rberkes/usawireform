@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AskBox } from "@/components/AskBox";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
-import { ClientCtaBand } from "@/components/client/ClientLanding";
-import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
+import { ClientCtaBand, ClientHero } from "@/components/client/ClientLanding";
 import { CLIENT_CTA_LEDE } from "@/lib/client-landing";
 import { PricePromise } from "@/components/PricePromise";
 import { SocialProof } from "@/components/SocialProof";
@@ -12,7 +11,6 @@ import { ZipLookup } from "@/components/ZipLookup";
 import {
   LinkList,
   Page,
-  PageHero,
   Section,
   StatRow,
 } from "@/components/ui";
@@ -50,29 +48,24 @@ export const metadata = pageMeta({
 export default function Home() {
   return (
     <>
+      <ClientHero
+        kicker="United States and beyond"
+        title={<BrandLockup size="hero" tone="onDark" />}
+        lede={SITE_PITCH}
+      />
       <Page>
-        <div className="grid items-start gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
-          <PageHero
-            large
-            kicker="United States and beyond"
-            title={<BrandLockup size="hero" />}
-            lede={SITE_PITCH}
-          >
-            <ClientQuoteCtas />
-          </PageHero>
-          <div className="overflow-hidden bg-inset">
-            <Image
-              src="/shop/hero-forms.jpg"
-              alt="3D CNC wire forms: nested hooks and frames in 4–14 mm steel"
-              width={1024}
-              height={687}
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              fetchPriority="high"
-              loading="eager"
-              decoding="async"
-              className="h-auto w-full object-contain"
-            />
-          </div>
+        <div className="overflow-hidden bg-inset">
+          <Image
+            src="/shop/hero-forms.jpg"
+            alt="3D CNC wire forms: nested hooks and frames in 4–14 mm steel"
+            width={1024}
+            height={687}
+            sizes="(min-width: 1152px) 1152px, 100vw"
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
+            className="h-auto w-full object-contain"
+          />
         </div>
 
         <AskBox />

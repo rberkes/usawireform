@@ -21,8 +21,10 @@ export function WireMark({ className = "h-8 w-8" }: { className?: string }) {
 
 export function BrandLockup({
   size = "nav",
+  tone = "default",
 }: {
   size?: "nav" | "hero";
+  tone?: "default" | "onDark";
 }) {
   const hero = size === "hero";
   return (
@@ -47,7 +49,8 @@ export function BrandLockup({
         </span>
         <span
           className={cx(
-            "block font-mono font-medium uppercase text-foreground",
+            "block font-mono font-medium uppercase",
+            tone === "onDark" ? "text-white" : "text-foreground",
             hero
               ? "text-4xl tracking-[0.12em] sm:text-6xl"
               : "text-[13px] tracking-[0.14em]",

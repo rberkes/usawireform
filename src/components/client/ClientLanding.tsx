@@ -14,7 +14,7 @@ export function ClientHero({
   children,
 }: {
   kicker: string;
-  title: string;
+  title: ReactNode;
   lede: string;
   children?: ReactNode;
 }) {
@@ -24,7 +24,13 @@ export function ClientHero({
         <p className="font-mono text-[12px] tracking-[0.22em] text-white/55 uppercase">
           {kicker}
         </p>
-        <h1 className="mt-4 max-w-4xl text-4xl leading-[1.08] font-medium tracking-tight sm:text-5xl lg:text-6xl">
+        <h1
+          className={cx(
+            "mt-4 max-w-4xl font-medium tracking-tight",
+            typeof title === "string" &&
+              "text-4xl leading-[1.08] sm:text-5xl lg:text-6xl",
+          )}
+        >
           {title}
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">{lede}</p>
