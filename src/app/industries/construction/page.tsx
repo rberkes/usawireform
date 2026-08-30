@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -19,12 +19,11 @@ export const metadata = pageMeta({
 
 export default function ConstructionPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Construction"
-        lede="USA made D-rings, USA made ground staples, USA made security fencing, plus supports and hangers in 4–14 mm. Not a light masonry-clip cell."
-      />
+    <IndustryQuotePage
+      title="Construction"
+      lede="USA made D-rings, USA made ground staples, USA made security fencing, plus supports and hangers in 4–14 mm. Not a light masonry-clip cell."
+      ctaTitle="Have a construction form or a hook spec?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Construction wire here is the heavy end of the band.{" "}
@@ -81,7 +80,6 @@ export default function ConstructionPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a construction form or a hook spec?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

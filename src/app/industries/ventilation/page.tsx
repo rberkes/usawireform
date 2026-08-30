@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -16,12 +16,11 @@ export const metadata = pageMeta({
 
 export default function VentilationPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Ventilation"
-        lede="Fan and HVAC guards in 4–14 mm. A heavy frame in stock coil. Light 9-gauge register wire is named, not quoted as production."
-      />
+    <IndustryQuotePage
+      title="Ventilation"
+      lede="Fan and HVAC guards in 4–14 mm. A heavy frame in stock coil. Light 9-gauge register wire is named, not quoted as production."
+      ctaTitle="Have a fan-guard print, a pitch, and a wire size?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Ventilation forms here are guards: a{" "}
@@ -55,7 +54,6 @@ export default function VentilationPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a fan-guard print, a pitch, and a wire size?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

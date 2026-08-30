@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -18,12 +18,11 @@ export const metadata = pageMeta({
 
 export default function ArchitecturalPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Architectural"
-        lede="USA made security fencing, USA made wire stakes, screens, and frames in 4–14 mm — not a 9-gauge railing catalog."
-      />
+    <IndustryQuotePage
+      title="Architectural"
+      lede="USA made security fencing, USA made wire stakes, screens, and frames in 4–14 mm — not a 9-gauge railing catalog."
+      ctaTitle="Have an architectural screen or frame print?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Architectural wire here is stock coil on the rim:{" "}
@@ -70,7 +69,6 @@ export default function ArchitecturalPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have an architectural screen or frame print?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -18,12 +18,11 @@ export const metadata = pageMeta({
 
 export default function InteriorDesignPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Interior design"
-        lede="Furniture frames, USA made wire racks, USA made wire baskets, and display wire in stock coil. The furniture line and contract interiors — not a 9-gauge decorator catalog."
-      />
+    <IndustryQuotePage
+      title="Interior design"
+      lede="Furniture frames, USA made wire racks, USA made wire baskets, and display wire in stock coil. The furniture line and contract interiors — not a 9-gauge decorator catalog."
+      ctaTitle="Have a furniture frame or a rack print?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Interior wire here is 3/8 in for most furniture and display, 7/16
@@ -61,7 +60,6 @@ export default function InteriorDesignPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a furniture frame or a rack print?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

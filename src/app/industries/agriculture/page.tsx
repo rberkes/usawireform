@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -21,12 +21,11 @@ export const metadata = pageMeta({
 
 export default function AgriculturePage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Agriculture"
-        lede="USA made ground staples, USA made wire stakes, USA made wire baskets, and galvanized frames in 4–14 mm — not indoor clip wire."
-      />
+    <IndustryQuotePage
+      title="Agriculture"
+      lede="USA made ground staples, USA made wire stakes, USA made wire baskets, and galvanized frames in 4–14 mm — not indoor clip wire."
+      ctaTitle="Have an ag print or a staple spec?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Agriculture is outdoor service plus impact. Coil is usually{" "}
@@ -82,7 +81,6 @@ export default function AgriculturePage() {
           <li>Galvanized frames, racks, and simple welded grids</li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have an ag print or a staple spec?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

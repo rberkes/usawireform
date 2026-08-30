@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -18,12 +18,11 @@ export const metadata = pageMeta({
 
 export default function MiningPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Mining"
-        lede="Impact, abrasion, and long spans. 7/16 and 1/2 in: guards, USA made cable trays, USA made wire baskets, hangers — not a light clip cell."
-      />
+    <IndustryQuotePage
+      title="Mining"
+      lede="Impact, abrasion, and long spans. 7/16 and 1/2 in: guards, USA made cable trays, USA made wire baskets, hangers — not a light clip cell."
+      ctaTitle="Have a heavy guard, grid, or hanger?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Mining hardware in this shop is the top of the{" "}
@@ -69,7 +68,6 @@ export default function MiningPage() {
           <li>Screens and welded mesh panels with a real rim</li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a heavy guard, grid, or hanger?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

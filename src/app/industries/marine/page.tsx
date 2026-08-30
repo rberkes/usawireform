@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -18,12 +18,11 @@ export const metadata = pageMeta({
 
 export default function MarinePage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Marine"
-        lede="Wet service in 4–14 mm. 304 and 316 frames, USA made wire baskets, USA made D-rings, and guards. Coil and finish named — we do not invent a class certificate."
-      />
+    <IndustryQuotePage
+      title="Marine"
+      lede="Wet service in 4–14 mm. 304 and 316 frames, USA made wire baskets, USA made D-rings, and guards. Coil and finish named — we do not invent a class certificate."
+      ctaTitle="Have a marine frame or a 316 print?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Marine work in this shop is stainless first.{" "}
@@ -65,7 +64,6 @@ export default function MarinePage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a marine frame or a 316 print?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

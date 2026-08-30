@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -18,12 +18,11 @@ export const metadata = pageMeta({
 
 export default function RailroadPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Railroad"
-        lede="Yards and shops in 7/16 and 1/2 in. Guards, hangers, USA made security fencing, USA made wire baskets. We form the geometry — not an AAR stamp."
-      />
+    <IndustryQuotePage
+      title="Railroad"
+      lede="Yards and shops in 7/16 and 1/2 in. Guards, hangers, USA made security fencing, USA made wire baskets. We form the geometry — not an AAR stamp."
+      ctaTitle="Have a yard guard, hanger, or partition?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Railroad work in this shop is the top of the band. Impact and
@@ -64,7 +63,6 @@ export default function RailroadPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a yard guard, hanger, or partition?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -19,12 +19,11 @@ export const metadata = pageMeta({
 
 export default function SolarPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Solar"
-        lede="USA made cable trays and USA made ground staples for array fields. Galvanized carbon or 300-series, formed and welded so cable and fabric stay put."
-      />
+    <IndustryQuotePage
+      title="Solar"
+      lede="USA made cable trays and USA made ground staples for array fields. Galvanized carbon or 300-series, formed and welded so cable and fabric stay put."
+      ctaTitle="Have a solar hanger, form, or staple?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Solar is weather plus volume plus running changes on tracker
@@ -62,7 +61,6 @@ export default function SolarPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a solar hanger, form, or staple?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

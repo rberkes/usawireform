@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -18,12 +18,11 @@ export const metadata = pageMeta({
 
 export default function DataCentersPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="AI and data centers"
-        lede="USA made cable trays, USA made wire baskets, and guards that change when the row changes. CNC plus weld — not a twelve-week cam tool."
-      />
+    <IndustryQuotePage
+      title="AI and data centers"
+      lede="USA made cable trays, USA made wire baskets, and guards that change when the row changes. CNC plus weld — not a twelve-week cam tool."
+      ctaTitle="Have a tray or wire basket for a hall?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           AI halls and colocation builds eat{" "}
@@ -65,7 +64,6 @@ export default function DataCentersPage() {
           <li>Grounding and routing forms in the 4–14 mm band</li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a tray or wire basket for a hall?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -20,12 +20,11 @@ export const metadata = pageMeta({
 
 export default function IndustrialPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Industrial"
-        lede="USA made cable trays, USA made wire baskets, USA made wire racks, USA made security fencing, plus guards and hangers in stock coil."
-      />
+    <IndustryQuotePage
+      title="Industrial"
+      lede="USA made cable trays, USA made wire baskets, USA made wire racks, USA made security fencing, plus guards and hangers in stock coil."
+      ctaTitle="Have a plant guard, tray, or basket?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Industrial here means the floor: parts that stay in the building.
@@ -76,7 +75,6 @@ export default function IndustrialPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a plant guard, tray, or basket?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

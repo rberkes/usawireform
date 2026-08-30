@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -18,12 +18,11 @@ export const metadata = pageMeta({
 
 export default function ChemicalPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Chemical"
-        lede="Washdown and corrosion in 4–14 mm. 304 and 316 USA made wire baskets, USA made wire racks, and guards. We name the alloy and the finish — not a coatings-lab rating."
-      />
+    <IndustryQuotePage
+      title="Chemical"
+      lede="Washdown and corrosion in 4–14 mm. 304 and 316 USA made wire baskets, USA made wire racks, and guards. We name the alloy and the finish — not a coatings-lab rating."
+      ctaTitle="Have a 304 basket, rack, or guard print?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Chemical service in this shop is stainless or a named plate.{" "}
@@ -64,7 +63,6 @@ export default function ChemicalPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a 304 basket, rack, or guard print?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

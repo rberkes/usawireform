@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -18,12 +18,11 @@ export const metadata = pageMeta({
 
 export default function PetroleumPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Petroleum"
-        lede="Outdoor pad hardware in 4–14 mm. Hangers, guards, USA made cable trays. Galvanized, 304, or USA made heat treat baskets in 330 when heat is the spec — not a wellhead catalog."
-      />
+    <IndustryQuotePage
+      title="Petroleum"
+      lede="Outdoor pad hardware in 4–14 mm. Hangers, guards, USA made cable trays. Galvanized, 304, or USA made heat treat baskets in 330 when heat is the spec — not a wellhead catalog."
+      ctaTitle="Have a pad hanger, guard, or tray?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Petroleum forms here live outside: weather, heat, and long
@@ -62,7 +61,6 @@ export default function PetroleumPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a pad hanger, guard, or tray?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -16,12 +16,11 @@ export const metadata = pageMeta({
 
 export default function ManufacturingOemPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Manufacturing / OEM"
-        lede="We form the piece that goes into your assembly. Frames, handles, guards, and hardware to the print — not a boxed finished good with our name on it."
-      />
+    <IndustryQuotePage
+      title="Manufacturing / OEM"
+      lede="We form the piece that goes into your assembly. Frames, handles, guards, and hardware to the print — not a boxed finished good with our name on it."
+      ctaTitle="Have an OEM frame or a component print?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           OEM work is 2D and 3D CNC in{" "}
@@ -54,7 +53,6 @@ export default function ManufacturingOemPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have an OEM frame or a component print?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

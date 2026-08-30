@@ -1,14 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AskBox } from "@/components/AskBox";
-import { StepQuoteBlock } from "@/components/StepUpload";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
+import { ClientCtaBand } from "@/components/client/ClientLanding";
+import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
+import { CLIENT_CTA_LEDE } from "@/lib/client-landing";
 import { PricePromise } from "@/components/PricePromise";
 import { SocialProof } from "@/components/SocialProof";
 import { StateGrid } from "@/components/StateGrid";
 import { ZipLookup } from "@/components/ZipLookup";
 import {
-  ButtonLink,
   LinkList,
   Page,
   PageHero,
@@ -57,12 +58,7 @@ export default function Home() {
             title={<BrandLockup size="hero" />}
             lede={SITE_PITCH}
           >
-            <ButtonLink href="/instant-quote" variant="quote">
-              Get instant quote
-            </ButtonLink>
-            <ButtonLink href="/contact" variant="ghost">
-              Send a STEP
-            </ButtonLink>
+            <ClientQuoteCtas />
           </PageHero>
           <div className="overflow-hidden bg-inset">
             <Image
@@ -248,9 +244,12 @@ export default function Home() {
           </div>
           <StateGrid />
         </Section>
-
-        <StepQuoteBlock className="mt-16" title="Drop a STEP" />
       </Page>
+
+      <ClientCtaBand
+        title="Quote the print"
+        lede={CLIENT_CTA_LEDE}
+      />
 
       <SocialProof className="mt-8" />
     </>

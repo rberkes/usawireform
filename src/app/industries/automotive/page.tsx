@@ -1,7 +1,7 @@
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -24,19 +24,22 @@ export default function AutomotivePage() {
   ];
 
   return (
-    <Page>
-      <BreadcrumbJsonLd
-        items={[
-          { name: "Industries", url: "/industries" },
-          { name: "Automotive", url: "/industries/automotive" },
-        ]}
-      />
-      <Breadcrumbs items={breadcrumbItems} />
-      <PageHero
-        kicker="Industries"
-        title="Automotive"
-        lede="Heavy wire on the vehicle and in the plant. Seat frames, trailer latches, handles, L hitch pins, guards, and tie-down hardware in 3/8, 7/16, and 1/2 in — not a clip cell."
-      />
+    <IndustryQuotePage
+      title="Automotive"
+      lede="Heavy wire on the vehicle and in the plant. Seat frames, trailer latches, handles, L hitch pins, guards, and tie-down hardware in 3/8, 7/16, and 1/2 in — not a clip cell."
+      ctaTitle="Have an automotive frame or a guard print?"
+      top={
+        <>
+          <BreadcrumbJsonLd
+            items={[
+              { name: "Industries", url: "/industries" },
+              { name: "Automotive", url: "/industries/automotive" },
+            ]}
+          />
+          <Breadcrumbs items={breadcrumbItems} />
+        </>
+      }
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Automotive here is 4–14 mm CNC and weld.{" "}
@@ -106,7 +109,6 @@ export default function AutomotivePage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have an automotive frame or a guard print?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

@@ -1,5 +1,5 @@
-import { StepQuoteBlock } from "@/components/StepUpload";
-import { Page, PageHero, Section, TextLink } from "@/components/ui";
+import { IndustryQuotePage } from "@/components/client/IndustryQuotePage";
+import { Section, TextLink } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -17,12 +17,11 @@ export const metadata = pageMeta({
 
 export default function ElectricalPage() {
   return (
-    <Page>
-      <PageHero
-        kicker="Industries"
-        title="Electrical"
-        lede="USA made cable trays, J-hooks, and hangers in 4–14 mm — not a light clip cell, and not a data-hall slogan."
-      />
+    <IndustryQuotePage
+      title="Electrical"
+      lede="USA made cable trays, J-hooks, and hangers in 4–14 mm — not a light clip cell, and not a data-hall slogan."
+      ctaTitle="Have a tray, a J-hook, or a hanger spec?"
+    >
       <div className="mt-10 max-w-2xl space-y-5 text-base leading-7 text-muted">
         <p>
           Electrical forms here carry cable, not current. Stock diameters{" "}
@@ -60,7 +59,6 @@ export default function ElectricalPage() {
           </li>
         </ul>
       </Section>
-      <StepQuoteBlock className="mt-16" title="Have a tray, a J-hook, or a hanger spec?" />
-    </Page>
+    </IndustryQuotePage>
   );
 }

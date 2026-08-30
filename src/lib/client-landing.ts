@@ -20,6 +20,8 @@ export const CLIENT_STEPS = [
   },
 ] as const;
 
+export const CLIENT_CTA_LEDE = `Get instant quote for cuts, bends, and inches. Start production quote when you have a STEP. ${PRICE_LINE}`;
+
 export const CUT_TO_LENGTH_MM = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] as const;
 
 export const CUT_TO_LENGTH_STOCK = [
