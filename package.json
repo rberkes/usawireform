@@ -1,0 +1,41 @@
+{
+  "name": "wire-forming",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/copy-occt.mjs && next dev",
+    "build": "node scripts/copy-occt.mjs && npm run validate && next build",
+    "postinstall": "node scripts/copy-occt.mjs",
+    "export-step": "npx tsx scripts/dump-wire-paths.ts | python3 scripts/export-wire-step.py",
+    "start": "next start",
+    "lint": "eslint",
+    "validate": "npx tsx src/lib/catalog-validation.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^7.8.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/blob": "^2.8.0",
+    "ai": "^6.0.260",
+    "fuse.js": "^7.5.0",
+    "next": "16.3.0",
+    "occt-import-js": "^0.0.23",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "resend": "^6.20.0",
+    "stripe": "^22.5.0",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.185.4",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.12",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,133 @@
+import type { DirectoryCompany } from "./directory-types";
+
+/**
+ * Verified fourslide / multi-slide plants not already in the directory.
+ * USA and Canada only. No Mexico. Unique slug + name. Keats El Paso
+ * uses a hash so it does not collapse into Wheeling.
+ */
+
+function shop(
+  slug: string,
+  name: string,
+  city: string,
+  state: string,
+  country: DirectoryCompany["country"],
+  region: DirectoryCompany["region"],
+  description: string,
+  capabilities: string[],
+  website?: string,
+): DirectoryCompany {
+  return {
+    slug,
+    name,
+    location: `${city}, ${state}`,
+    state,
+    country,
+    region,
+    description,
+    capabilities,
+    ...(website ? { website } : {}),
+  };
+}
+
+export const fourslideDirectoryCompanies: DirectoryCompany[] = [
+  shop(
+    "metco-fourslide",
+    "Metco Fourslide Mfg.",
+    "Gardena",
+    "CA",
+    "USA",
+    "West",
+    "Fourslide stampings, miniature formed parts, punch-press stampings, and stamped wire forms. Gardena, CA. ISO 9001 / AS9100D.",
+    ["Fourslide", "Stampings", "Wire forms"],
+    "https://metcofourslide.com",
+  ),
+  shop(
+    "southington-tool-manufacturing",
+    "Southington Tool & Manufacturing",
+    "Plantsville",
+    "CT",
+    "USA",
+    "Northeast",
+    "20+ fourslide machines on strip and wire to 0.187 in, plus 3D CNC wire forming and progressive power-press work. 300 Atwater Street, Plantsville, CT.",
+    ["Fourslide", "3D CNC", "Wire forms", "Stampings"],
+    "https://www.stmc.com",
+  ),
+  shop(
+    "dynamic-manufacturing-bristol",
+    "Dynamic Manufacturing Co.",
+    "Bristol",
+    "CT",
+    "USA",
+    "Northeast",
+    "Four-slide and power-press stampings with in-house tooling. 95 Valley Street, Bristol, CT.",
+    ["Fourslide", "Stampings"],
+    "https://www.dymco.com",
+  ),
+  shop(
+    "northwest-fourslide",
+    "Northwest Fourslide",
+    "Lewiston",
+    "ID",
+    "USA",
+    "West",
+    "Thin-gauge fourslide stampings and wire forms since 1979. Lewiston, ID plant. Strip under 0.062 in / 2.125 in wide, wire under 0.188 in. AS9100D.",
+    ["Fourslide", "Wire forms", "Stampings"],
+    "https://nw4s.com",
+  ),
+  shop(
+    "bel-air-manufacturing",
+    "Bel-Air Manufacturing",
+    "Chicago",
+    "IL",
+    "USA",
+    "Midwest",
+    "Family fourslide and metal stampings since 1956. 3525 W. Potomac Ave, Chicago, IL. ISO 9001:2015.",
+    ["Fourslide", "Stampings"],
+    "https://belairmfg.com",
+  ),
+  shop(
+    "william-dudek-manufacturing",
+    "William Dudek Manufacturing",
+    "Chicago",
+    "IL",
+    "USA",
+    "Midwest",
+    "Fourslide and multi-slide clips, brackets, and flat springs. 4901 W Armitage Ave, Chicago, IL. Separate from Dudek & Bock. ISO 9001:2015.",
+    ["Fourslide", "Multi-slide", "Stampings", "Wire forms"],
+    "https://www.dudekmfg.com",
+  ),
+  shop(
+    "formco-metal-products",
+    "Formco Metal Products",
+    "Wood Dale",
+    "IL",
+    "USA",
+    "Midwest",
+    "Four-slide and multi-slide stampings and wire forms. Wood Dale, IL, near O'Hare. ISO 9001, IATF 16949, AS9100.",
+    ["Fourslide", "Multi-slide", "Stampings", "Wire forms"],
+    "https://formcometal.com",
+  ),
+  shop(
+    "forward-metal-craft",
+    "Forward Metal Craft",
+    "Grand Rapids",
+    "MI",
+    "USA",
+    "Midwest",
+    "Fourslide and multislide stampings plus CNC wire forms to 1/2 in. 329 Summer Ave NW, Grand Rapids, MI. ISO 9001:2015. Veteran-owned.",
+    ["Fourslide", "Multi-slide", "CNC wire forming", "Wire forms"],
+    "https://forwardmetalcraft.com",
+  ),
+  shop(
+    "keats-southwest",
+    "Keats Southwest",
+    "El Paso",
+    "TX",
+    "USA",
+    "Southwest",
+    "Keats four-slide / multi-slide plant at 11425 Rojas Drive, El Paso, TX. Their page names 40 slide machines plus Baird, Nilson, and power presses. Wheeling, IL is listed separately. Querétaro is not listed.",
+    ["Fourslide", "Multi-slide", "Stampings"],
+    "https://www.keatsmfg.com/#el-paso",
+  ),
+];

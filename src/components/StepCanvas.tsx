@@ -1,0 +1,474 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import type { WireFinishId } from "@/lib/models";
+import { WIRE_FINISHES } from "@/lib/models";
+import { polylinesForModel, type Polyline, type Vec3 } from "@/lib/wire-geometry";
+
+export type OcctMesh = {
+  name?: string;
+  color?: number[];
+  attributes: {
+    position: { array: number[] | Float32Array };
+    normal?: { array: number[] | Float32Array };
+  };
+  index: { array: number[] };
+};
+
+export type ViewerSource =
+  | { type: "empty" }
+  | { type: "wire"; id: string; diameterIn: number; finish: WireFinishId }
+  | { type: "step"; meshes: OcctMesh[]; name: string; finish: WireFinishId };
+
+function flatNumbers(input: ArrayLike<number>): number[] {
+  const out: number[] = [];
+  for (let i = 0; i < input.length; i++) {
+    const value = Number(input[i]);
+    if (Number.isFinite(value)) out.push(value);
+  }
+  return out;
+}
+
+/** OCCT leaves cylinder generators as one long triangle. Split them so the tube does not draw as a sail. */
+function refineLongEdges(
+  positions: number[],
+  indices: number[],
+  maxEdge: number,
+): { positions: number[]; indices: number[] } {
+  const verts = positions.slice();
+  let tris = indices.slice();
+  const mids = new Map<string, number>();
+
+  function dist(i: number, j: number) {
+    const dx = verts[i * 3] - verts[j * 3];
+    const dy = verts[i * 3 + 1] - verts[j * 3 + 1];
+    const dz = verts[i * 3 + 2] - verts[j * 3 + 2];
+    return Math.hypot(dx, dy, dz);
+  }
+
+  function midpoint(i: number, j: number) {
+    const key = i < j ? `${i}_${j}` : `${j}_${i}`;
+    const hit = mids.get(key);
+    if (hit !== undefined) return hit;
+    const n = verts.length / 3;
+    verts.push(
+      (verts[i * 3] + verts[j * 3]) / 2,
+      (verts[i * 3 + 1] + verts[j * 3 + 1]) / 2,
+      (verts[i * 3 + 2] + verts[j * 3 + 2]) / 2,
+    );
+    mids.set(key, n);
+    return n;
+  }
+
+  for (let pass = 0; pass < 14; pass++) {
+    const next: number[] = [];
+    let split = false;
+    for (let t = 0; t < tris.length; t += 3) {
+      const a = tris[t];
+      const b = tris[t + 1];
+      const c = tris[t + 2];
+      const ab = dist(a, b);
+      const bc = dist(b, c);
+      const ca = dist(c, a);
+      const longest = Math.max(ab, bc, ca);
+      if (longest <= maxEdge) {
+        next.push(a, b, c);
+        continue;
+      }
+      split = true;
+      if (ab >= bc && ab >= ca) {
+        const m = midpoint(a, b);
+        next.push(a, m, c, m, b, c);
+      } else if (bc >= ca) {
+        const m = midpoint(b, c);
+        next.push(a, b, m, a, m, c);
+      } else {
+        const m = midpoint(c, a);
+        next.push(a, b, m, b, c, m);
+      }
+    }
+    tris = next;
+    if (!split) break;
+  }
+  return { positions: verts, indices: tris };
+}
+
+export function StepCanvas({
+  source,
+  autoRotate,
+  className,
+  onStill,
+}: {
+  source: ViewerSource;
+  autoRotate: boolean;
+  className?: string;
+  onStill?: (blob: Blob) => void;
+}) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const applyRef = useRef<(next: ViewerSource) => void>(() => {});
+  const sourceRef = useRef(source);
+  const rotateRef = useRef(autoRotate);
+  const stillRef = useRef(onStill);
+  stillRef.current = onStill;
+
+  useEffect(() => {
+    sourceRef.current = source;
+    applyRef.current(source);
+  }, [source]);
+
+  useEffect(() => {
+    rotateRef.current = autoRotate;
+  }, [autoRotate]);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+
+      let disposed = false;
+    let resizeObserver: ResizeObserver | null = null;
+    let frame = 0;
+    let stillPending = false;
+    let stillWait = 0;
+    let renderer: { dispose: () => void; domElement: HTMLCanvasElement } | null =
+      null;
+    let envDispose: (() => void) | null = null;
+
+    const start = async () => {
+      const THREE = await import("three");
+      const { OrbitControls } = await import(
+        "three/addons/controls/OrbitControls.js"
+      );
+      if (disposed || !hostRef.current) return;
+      const canvasHost = hostRef.current;
+
+      const { RoomEnvironment } = await import(
+        "three/addons/environments/RoomEnvironment.js"
+      );
+      const gl = new THREE.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      renderer = gl;
+      gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      gl.setClearColor(0xf4f4f2, 1);
+      gl.outputColorSpace = THREE.SRGBColorSpace;
+      gl.toneMapping = THREE.ACESFilmicToneMapping;
+      gl.toneMappingExposure = 1.05;
+      canvasHost.appendChild(gl.domElement);
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf4f4f2);
+      const pmrem = new THREE.PMREMGenerator(gl);
+      const env = pmrem.fromScene(new RoomEnvironment(), 0.04);
+      scene.environment = env.texture;
+      scene.environmentIntensity = 0.9;
+      envDispose = () => {
+        env.dispose();
+        pmrem.dispose();
+      };
+
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.05, 4000);
+      camera.position.set(12, 10, 16);
+
+      const controls = new OrbitControls(camera, gl.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.autoRotateSpeed = 0.6;
+      controls.target.set(0, 3, 0);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+      scene.add(new THREE.HemisphereLight(0xf7f4ee, 0x7a7670, 0.55));
+      const key = new THREE.DirectionalLight(0xffffff, 1.55);
+      key.position.set(8, 14, 10);
+      scene.add(key);
+      const fill = new THREE.DirectionalLight(0xe8e4dc, 0.45);
+      fill.position.set(-10, 6, -8);
+      scene.add(fill);
+      const rim = new THREE.DirectionalLight(0xffffff, 0.7);
+      rim.position.set(0, 8, -12);
+      scene.add(rim);
+
+      const content = new THREE.Group();
+      scene.add(content);
+
+      const ground = new THREE.GridHelper(40, 20, 0xd5d2cc, 0xe8e6e1);
+      ground.position.y = -0.01;
+      scene.add(ground);
+
+      function resize() {
+        const node = hostRef.current;
+        if (!node) return;
+        const w = node.clientWidth || 1;
+        const h = Math.max(node.clientHeight, 240);
+        gl.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+
+      const RADIAL = 64;
+
+      function steelMaterial(finish: WireFinishId, color?: number[]) {
+        const swatch =
+          WIRE_FINISHES.find((item) => item.id === finish)?.color ?? "#8d939a";
+        const metal =
+          finish === "stainless" ? 0.92 : finish === "copper" ? 0.88 : 0.78;
+        const rough =
+          finish === "stainless" ? 0.16 : finish === "copper" ? 0.26 : 0.3;
+        return new THREE.MeshStandardMaterial({
+          color: color
+            ? new THREE.Color(color[0], color[1], color[2])
+            : swatch,
+          metalness: metal,
+          roughness: rough,
+          envMapIntensity: 1.2,
+        });
+      }
+
+      function addSphere(
+        group: InstanceType<typeof THREE.Group>,
+        p: Vec3,
+        radius: number,
+        material: InstanceType<typeof THREE.MeshStandardMaterial>,
+      ) {
+        const geo = new THREE.SphereGeometry(radius, RADIAL, RADIAL / 2);
+        const mesh = new THREE.Mesh(geo, material);
+        mesh.position.set(p[0], p[1], p[2]);
+        group.add(mesh);
+      }
+
+      function addCylinder(
+        group: InstanceType<typeof THREE.Group>,
+        a: Vec3,
+        b: Vec3,
+        radius: number,
+        material: InstanceType<typeof THREE.MeshStandardMaterial>,
+      ) {
+        const start = new THREE.Vector3(...a);
+        const end = new THREE.Vector3(...b);
+        const dir = end.clone().sub(start);
+        const length = dir.length();
+        if (length < 1e-4) return;
+        const geo = new THREE.CylinderGeometry(
+          radius,
+          radius,
+          length,
+          RADIAL,
+          1,
+          true,
+        );
+        const mesh = new THREE.Mesh(geo, material);
+        mesh.position.copy(start).add(end).multiplyScalar(0.5);
+        mesh.quaternion.setFromUnitVectors(
+          new THREE.Vector3(0, 1, 0),
+          dir.normalize(),
+        );
+        group.add(mesh);
+      }
+
+      function addPolyline(
+        group: InstanceType<typeof THREE.Group>,
+        pts: Polyline,
+        radius: number,
+        material: InstanceType<typeof THREE.MeshStandardMaterial>,
+      ) {
+        if (pts.length < 2) return;
+        const first = pts[0];
+        const last = pts[pts.length - 1];
+        const closed =
+          pts.length > 8 &&
+          Math.hypot(first[0] - last[0], first[1] - last[1], first[2] - last[2]) <
+            radius * 0.4;
+
+        if (pts.length <= 12 && !closed) {
+          addSphere(group, pts[0], radius, material);
+          for (let i = 1; i < pts.length; i++) {
+            addCylinder(group, pts[i - 1], pts[i], radius, material);
+            addSphere(group, pts[i], radius, material);
+          }
+          return;
+        }
+
+        const path = pts.map((p) => new THREE.Vector3(...p));
+        const curve = new THREE.CatmullRomCurve3(path, closed, "centripetal");
+        const tubular = Math.min(320, Math.max(64, pts.length * 5));
+        const geo = new THREE.TubeGeometry(
+          curve,
+          tubular,
+          radius,
+          RADIAL,
+          closed,
+        );
+        group.add(new THREE.Mesh(geo, material));
+      }
+
+      function fit(object: InstanceType<typeof THREE.Object3D>) {
+        const box = new THREE.Box3().setFromObject(object);
+        if (box.isEmpty()) return;
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z, 1);
+        ground.position.y = box.min.y - 0.02;
+        camera.near = Math.max(0.02, maxDim / 200);
+        camera.far = maxDim * 80;
+        camera.updateProjectionMatrix();
+        camera.position.set(
+          center.x + maxDim * 1.35,
+          center.y + maxDim * 0.75,
+          center.z + maxDim * 1.55,
+        );
+        controls.target.copy(center);
+        controls.minDistance = maxDim * 0.4;
+        controls.maxDistance = maxDim * 12;
+        controls.update();
+      }
+
+      function clearContent() {
+        while (content.children.length) {
+          const child = content.children[0];
+          content.remove(child);
+          child.traverse((node) => {
+            const mesh = node as InstanceType<typeof THREE.Mesh>;
+            if (mesh.geometry) mesh.geometry.dispose();
+            const material = mesh.material;
+            if (Array.isArray(material))
+              material.forEach((item) => item.dispose());
+            else if (material) material.dispose();
+          });
+        }
+      }
+
+      function drawWire(id: string, diameterIn: number, finish: WireFinishId) {
+        clearContent();
+        const material = steelMaterial(finish);
+        const radius = diameterIn / 2;
+        for (const poly of polylinesForModel(id)) {
+          addPolyline(content, poly, radius, material);
+        }
+        fit(content);
+      }
+
+      function drawStep(meshes: OcctMesh[], finish: WireFinishId) {
+        clearContent();
+        const fallback = steelMaterial(finish);
+        for (const mesh of meshes) {
+          const rawPos = flatNumbers(mesh.attributes.position.array);
+          const rawIdx = flatNumbers(mesh.index.array);
+          if (rawPos.length < 9 || rawIdx.length < 3) continue;
+
+          let minX = Infinity;
+          let minY = Infinity;
+          let minZ = Infinity;
+          let maxX = -Infinity;
+          let maxY = -Infinity;
+          let maxZ = -Infinity;
+          for (let i = 0; i < rawPos.length; i += 3) {
+            minX = Math.min(minX, rawPos[i]);
+            maxX = Math.max(maxX, rawPos[i]);
+            minY = Math.min(minY, rawPos[i + 1]);
+            maxY = Math.max(maxY, rawPos[i + 1]);
+            minZ = Math.min(minZ, rawPos[i + 2]);
+            maxZ = Math.max(maxZ, rawPos[i + 2]);
+          }
+          const span = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1);
+          const refined = refineLongEdges(rawPos, rawIdx, span * 0.05);
+
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute(
+            "position",
+            new THREE.Float32BufferAttribute(refined.positions, 3),
+          );
+          geometry.setIndex(
+            new THREE.BufferAttribute(Uint32Array.from(refined.indices), 1),
+          );
+          geometry.computeVertexNormals();
+          const material = mesh.color
+            ? steelMaterial(finish, mesh.color)
+            : fallback;
+          const threeMesh = new THREE.Mesh(geometry, material);
+          threeMesh.name = mesh.name ?? "step";
+          content.add(threeMesh);
+        }
+        fit(content);
+      }
+
+      applyRef.current = (next: ViewerSource) => {
+        try {
+          if (next.type === "empty") {
+            clearContent();
+            stillPending = false;
+          } else if (next.type === "wire") {
+            drawWire(next.id, next.diameterIn, next.finish);
+            stillPending = false;
+          } else {
+            drawStep(next.meshes, next.finish);
+            stillPending = Boolean(stillRef.current && next.meshes.length);
+            stillWait = 0;
+          }
+        } catch (error) {
+          console.error("Model viewer failed to draw", error);
+        }
+      };
+      gl.domElement.style.display = "block";
+      gl.domElement.style.width = "100%";
+      gl.domElement.style.height = "100%";
+      applyRef.current(sourceRef.current);
+      resize();
+      gl.render(scene, camera);
+
+      const tick = () => {
+        if (disposed) return;
+        const sized = (hostRef.current?.clientWidth ?? 0) >= 160;
+        if (stillPending && stillRef.current && sized) {
+          stillWait += 1;
+          controls.autoRotate = false;
+          controls.update();
+          gl.render(scene, camera);
+          if (stillWait >= 2) {
+            stillPending = false;
+            stillWait = 0;
+            const hook = stillRef.current;
+            gl.domElement.toBlob(
+              (blob) => {
+                if (blob && hook) hook(blob);
+              },
+              "image/jpeg",
+              0.84,
+            );
+          }
+        } else {
+          controls.autoRotate = rotateRef.current;
+          controls.update();
+          gl.render(scene, camera);
+        }
+        frame = requestAnimationFrame(tick);
+      };
+      tick();
+      resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(canvasHost);
+    };
+
+    void start();
+
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(frame);
+      resizeObserver?.disconnect();
+      applyRef.current = () => {};
+      renderer?.dispose();
+      renderer?.domElement.remove();
+      envDispose?.();
+    };
+  }, []);
+
+  return (
+    <div
+      ref={hostRef}
+      className={
+        className ??
+        "relative h-[min(70vh,36rem)] min-h-[22rem] w-full overflow-hidden bg-inset"
+      }
+      role="img"
+      aria-label="3D model of a wire form"
+    />
+  );
+}
