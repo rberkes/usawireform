@@ -15,8 +15,8 @@ export const CLIENT_STEPS = [
     body: `We program the Robomac in ${WIRE.short}, then weld, plate, or powder if the print calls it.`,
   },
   {
-    title: "Parts ship from Ohio",
-    body: "Production leaves the Northeast Ohio floor. Quotes are nationwide. 100-piece minimum.",
+    title: "Parts ship from Ohio or your local state",
+    body: "The forming cell is Northeast Ohio. Finished parts ship from that floor, or we arrange delivery in your state. Quotes are nationwide. 100-piece minimum.",
   },
 ] as const;
 
