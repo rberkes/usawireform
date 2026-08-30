@@ -20,6 +20,20 @@ export const CLIENT_STEPS = [
   },
 ] as const;
 
+export const CUT_TO_LENGTH_MM = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] as const;
+
+export const CUT_TO_LENGTH_STOCK = [
+  { fraction: "3/8 in", mm: "9.53 mm", note: "Stock. Frames, trays, medium pins." },
+  { fraction: "7/16 in", mm: "11.11 mm", note: "Stock. Heavier frames and basket rims." },
+  { fraction: "1/2 in", mm: "12.7 mm", note: "Stock. Structural rod and heavy blanks." },
+] as const;
+
+export function cutToLengthNote(mm: number): string {
+  if (mm <= 8) return "In-line shear is typical. End smile is small.";
+  if (mm <= 11) return "Shear still wins on cycle. Call out weld or hole-entry ends.";
+  return "Shear shows on the face. Ask for saw if the end is inspected.";
+}
+
 export const CLIENT_SERVICES = [
   {
     href: "/work-with-us/cnc-wire-forming",
@@ -29,6 +43,16 @@ export const CLIENT_SERVICES = [
       `${WIRE.label} production band`,
       "Stock diameters 3/8, 7/16, and 1/2 in",
       "100-piece minimum. Volume breaks at 1,000 and 10,000",
+    ],
+  },
+  {
+    href: "/work-with-us/cut-to-length",
+    title: "Cut-to-length straight wire",
+    body: "Straight blanks from coil, 4–14 mm. No bend required. Length, diameter, and end condition are the quote.",
+    points: [
+      "Every millimeter from 4 to 14 mm",
+      "Stock 3/8, 7/16, and 1/2 in on the floor",
+      "Shear or saw cutoff. Chamfer and end work as a secondary",
     ],
   },
   {

@@ -54,6 +54,11 @@ export default function SiteMapPage() {
               body: "Purchasing brief for the 4–14 mm cell.",
             },
             {
+              href: "/work-with-us/cut-to-length",
+              title: "Cut-to-length straight wire",
+              body: "4 mm to 14 mm blanks from coil. Diameter, length, end.",
+            },
+            {
               href: "/about",
               title: "About",
               body: "The map and a shop — learning, machines, factories, coil, and this floor.",

@@ -788,6 +788,19 @@ export const staticSeoPages: SeoRecord[] = [
     changeFrequency: "weekly",
   }),
   record({
+    path: "/work-with-us/cut-to-length",
+    title: "Cut-to-Length Straight Wire 4–14 mm",
+    description: `${COMPANY} cut-to-length straight wire from coil, every diameter from 4 mm to 14 mm. ${PRICE_LINE}`,
+    section: "company",
+    keywords: [
+      "cut to length wire",
+      "straight wire 4mm to 14mm",
+      "cut to length steel wire",
+    ],
+    priority: 0.7,
+    changeFrequency: "weekly",
+  }),
+  record({
     path: "/privacy",
     title: "Privacy Policy",
     description: `How ${COMPANY} collects, uses, and protects quote files, accounts, and contact details.`,

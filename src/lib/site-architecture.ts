@@ -302,6 +302,7 @@ export function siteArchitectureTree(): ArchNode[] {
       children: [
         leaf("/work-with-us", "Client landers"),
         leaf("/work-with-us/cnc-wire-forming", "CNC for buyers"),
+        leaf("/work-with-us/cut-to-length", "Cut-to-length 4–14 mm"),
         leaf("/production-quote", "Production quote"),
         leaf("/about", "The map and a shop"),
         leaf("/site-map", "Every public page, listed"),
