@@ -56,6 +56,8 @@ const factories = [
 ];
 
 const shop = [
+  { href: "/work-with-us", label: "Work with us" },
+  { href: "/production-quote", label: "Production quote" },
   { href: "/industries", label: "Industries" },
   { href: "/products", label: "Products" },
   { href: "/capabilities", label: "Capabilities" },

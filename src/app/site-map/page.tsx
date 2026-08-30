@@ -39,6 +39,21 @@ export default function SiteMapPage() {
           items={[
             { href: "/", title: "Home", body: "The resource for wire forming in the United States and beyond." },
             {
+              href: "/work-with-us",
+              title: "Work with us",
+              body: "Buyer landers: instant quote or start a production quote.",
+            },
+            {
+              href: "/production-quote",
+              title: "Production quote",
+              body: "Send a STEP. The desk opens the print.",
+            },
+            {
+              href: "/work-with-us/cnc-wire-forming",
+              title: "CNC wire forming for buyers",
+              body: "Purchasing brief for the 4–14 mm cell.",
+            },
+            {
               href: "/about",
               title: "About",
               body: "The map and a shop — learning, machines, factories, coil, and this floor.",

@@ -300,6 +300,9 @@ export function siteArchitectureTree(): ArchNode[] {
       note: "Map, legal, indexes",
       kind: "branch",
       children: [
+        leaf("/work-with-us", "Client landers"),
+        leaf("/work-with-us/cnc-wire-forming", "CNC for buyers"),
+        leaf("/production-quote", "Production quote"),
         leaf("/about", "The map and a shop"),
         leaf("/site-map", "Every public page, listed"),
         leaf("/architecture", "This tree"),

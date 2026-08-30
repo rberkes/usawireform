@@ -226,6 +226,16 @@ const nextConfig: NextConfig = {
         destination: "/terms",
         permanent: true,
       },
+      {
+        source: "/get-a-quote",
+        destination: "/work-with-us",
+        permanent: false,
+      },
+      {
+        source: "/start-production-quote",
+        destination: "/production-quote",
+        permanent: false,
+      },
     ];
   },
 };
