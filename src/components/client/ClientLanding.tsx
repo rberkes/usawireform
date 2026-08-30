@@ -108,7 +108,12 @@ export function ClientHowItWorks({
 export function ClientServiceCards({
   items,
 }: {
-  items: { href: string; title: string; body: string; points: string[] }[];
+  items: {
+    href: string;
+    title: string;
+    body: string;
+    points: readonly string[];
+  }[];
 }) {
   return (
     <div className="grid gap-5 md:grid-cols-2">
