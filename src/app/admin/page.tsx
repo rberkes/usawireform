@@ -3,7 +3,8 @@ import { isAdmin } from "./actions";
 import { AdminLogin } from "./login-form";
 import { listQuoteSubmissions } from "@/lib/quotes";
 import { countDirectoryLeads } from "@/lib/leads";
-import { countSourceFilings } from "@/lib/source";
+import { countSourceFilings, countSourceProfiles } from "@/lib/source";
+import { countBuyerAccounts } from "@/lib/source-buyer";
 import { countSourceSubscribers } from "@/lib/source-leads";
 import { AdminStepPreview } from "@/components/UploadedDrawingPreview";
 import { AdminInboxNav } from "@/components/AdminInboxNav";
@@ -38,12 +39,16 @@ export default async function AdminQuotesPage({
     return <AdminLogin next="/admin" error={error} title="Quote files" />;
   }
 
-  const [rows, directoryCount, sourceCount, subscriberCount] = await Promise.all([
-    listQuoteSubmissions(),
-    countDirectoryLeads(),
-    countSourceFilings(),
-    countSourceSubscribers(),
-  ]);
+  const [rows, directoryCount, sourceCount, subscriberCount, accountCount] =
+    await Promise.all([
+      listQuoteSubmissions(),
+      countDirectoryLeads(),
+      countSourceFilings(),
+      countSourceSubscribers(),
+      Promise.all([countSourceProfiles(), countBuyerAccounts()]).then(
+        ([a, b]) => a + b,
+      ),
+    ]);
 
   return (
     <Page>
@@ -58,6 +63,7 @@ export default async function AdminQuotesPage({
         directoryCount={directoryCount}
         sourceCount={sourceCount}
         subscriberCount={subscriberCount}
+        accountCount={accountCount}
       />
       {rows.length === 0 ? (
         <p className="mt-8 max-w-xl text-sm leading-6 text-muted">

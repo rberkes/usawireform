@@ -73,7 +73,6 @@ export const config = {
   // Social/certifications
   certifications: [
     { name: "ISO 9001:2015", description: "Quality Management" },
-    { name: "ITAR Registered", description: "Defense & Aerospace" },
     { name: "RoHS Compliant", description: "Environmental Standards" },
   ],
   

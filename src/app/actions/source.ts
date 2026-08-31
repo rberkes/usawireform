@@ -41,8 +41,9 @@ import {
 } from "@/lib/plant-verify";
 import { parseOpenSlots, SOURCE_SLOT_CAP } from "@/lib/source-capacity";
 import { readSourceFitForm, type SourceBuyerFit } from "@/lib/source-fit";
-import { isSourceJobClass, type SourcePublicMatch } from "@/lib/source-types";
+import { isSourceJobClass, parseDrawingPrivacy, type SourcePublicMatch } from "@/lib/source-types";
 import { partitionLeadMatches } from "@/lib/source-leads";
+import { getSourceRole } from "@/lib/source-role";
 import {
   applyProfilesToFilings,
   findSourceProfileBySlug,
@@ -56,10 +57,12 @@ import {
   saveSourceJob,
   saveSourceProfile,
   sourceInviteHref,
+  sourceJobPrivacyHref,
   storeSourceJobDrawing,
   storeSourceLogo,
   uniqueSourceSlug,
   replaceSourceFilingsForShop,
+  setSourceJobDrawingPrivacy,
 } from "@/lib/source";
 
 export type SourceFormState = {
@@ -147,6 +150,9 @@ async function upsertShopProfile({
     plantVerifiedAt: plantVerifiedAt ?? existing?.plantVerifiedAt,
     fit: fit === null ? undefined : (fit ?? existing?.fit),
     leadsAccess: existing?.leadsAccess,
+    ndaAcceptedAt: existing?.ndaAcceptedAt,
+    ndaVersion: existing?.ndaVersion,
+    ndaName: existing?.ndaName,
   });
   return slug;
 }
@@ -807,6 +813,10 @@ export async function submitSourceJob(
   const oem = String(formData.get("oem") ?? "").trim().slice(0, 80);
   const qty = String(formData.get("qty") ?? "").trim().slice(0, 24);
   const notes = String(formData.get("notes") ?? "").trim().slice(0, 2000);
+  const drawingPrivacy = parseDrawingPrivacy(
+    String(formData.get("drawingPrivacy") ?? ""),
+  );
+  const privacyToken = randomUUID().replace(/-/g, "");
   const drawing = formData.get("drawing") as File | null;
   const drawingName =
     drawing && drawing.size > 0 ? drawing.name.replace(/[^\w.-]+/g, "_") : undefined;
@@ -867,6 +877,20 @@ export async function submitSourceJob(
   const matches: SourcePublicMatch[] = mailed.map(
     ({ email: _email, ...row }) => row,
   );
+  const signedIn = await signedInShop();
+  const role = signedIn ? await getSourceRole() : null;
+  const mailedTo = mailed.map((row) => {
+    const filing = filings.find(
+      (item) =>
+        item.email.trim().toLowerCase() === row.email.trim().toLowerCase() &&
+        item.company.trim().toLowerCase() === row.company.trim().toLowerCase(),
+    );
+    return {
+      email: row.email,
+      company: row.company,
+      userId: filing?.userId,
+    };
+  });
 
   const job = {
     company,
@@ -885,6 +909,10 @@ export async function submitSourceJob(
     timestamp: new Date().toISOString(),
     fileName: drawingName,
     drawingPath: undefined as string | undefined,
+    drawingPrivacy,
+    privacyToken,
+    mailedTo,
+    buyerUserId: role === "buyer" && signedIn ? signedIn.userId : undefined,
   };
 
   try {
@@ -918,9 +946,12 @@ export async function submitSourceJob(
     notes,
     matches: internal,
     mailed,
+    drawingPrivacy,
+    privacyHref: sourceJobPrivacyHref(privacyToken),
   });
   void sendSourceShopLeadEmails({
     mailed,
+    drawingPrivacy,
     buyer: {
       company,
       name,
@@ -961,4 +992,17 @@ export async function submitSourceJob(
     matches,
     diameterMm: parsed.spec.diameterMm,
   };
+}
+
+export async function updateSourceJobPrivacy(formData: FormData) {
+  const token = String(formData.get("t") ?? "").trim();
+  const drawingPrivacy = parseDrawingPrivacy(
+    String(formData.get("drawingPrivacy") ?? ""),
+  );
+  if (!token) redirect("/source/privacy?error=1");
+  const row = await setSourceJobDrawingPrivacy(token, drawingPrivacy);
+  if (!row) redirect("/source/privacy?error=1");
+  redirect(
+    `/source/privacy?t=${encodeURIComponent(token)}&saved=1`,
+  );
 }

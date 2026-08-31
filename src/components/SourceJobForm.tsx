@@ -13,7 +13,16 @@ import { SOURCE_OEM_NAMES } from "@/lib/source-iron";
 
 const initial: SourceFormState = { success: false, message: "" };
 
-export function SourceJobForm() {
+export function SourceJobForm({
+  defaults,
+}: {
+  defaults?: {
+    company?: string;
+    name?: string;
+    email?: string;
+    phone?: string;
+  };
+}) {
   const [state, action, pending] = useActionState(submitSourceJob, initial);
   const [file, setFile] = useState<File | null>(null);
 
@@ -45,11 +54,17 @@ export function SourceJobForm() {
               className={`mt-1.5 ${fieldClass}`}
               name="company"
               autoComplete="organization"
+              defaultValue={defaults?.company}
             />
           </label>
           <label className="block text-sm">
             Your name
-            <input className={`mt-1.5 ${fieldClass}`} name="name" autoComplete="name" />
+            <input
+              className={`mt-1.5 ${fieldClass}`}
+              name="name"
+              autoComplete="name"
+              defaultValue={defaults?.name}
+            />
           </label>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -61,11 +76,17 @@ export function SourceJobForm() {
               type="email"
               required
               autoComplete="email"
+              defaultValue={defaults?.email}
             />
           </label>
           <label className="block text-sm">
             Phone
-            <input className={`mt-1.5 ${fieldClass}`} name="phone" autoComplete="tel" />
+            <input
+              className={`mt-1.5 ${fieldClass}`}
+              name="phone"
+              autoComplete="tel"
+              defaultValue={defaults?.phone}
+            />
           </label>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -138,6 +159,39 @@ export function SourceJobForm() {
             placeholder="3/8 3D V-hook, 5k pcs, Midwest."
           />
         </label>
+        <fieldset className="space-y-3">
+          <legend className="text-sm">The drawing</legend>
+          <p className="text-sm leading-6 text-muted">
+            Matched shops always get the spec and your contact. You choose
+            whether the STEP itself is released.
+          </p>
+          <label className="flex items-start gap-2 text-sm leading-6">
+            <input
+              className="mt-1"
+              type="radio"
+              name="drawingPrivacy"
+              value="desk"
+              defaultChecked
+            />
+            <span>
+              Keep the STEP at the desk. Shops quote from wire, cell, and
+              notes. You can change this from the receipt.
+            </span>
+          </label>
+          <label className="flex items-start gap-2 text-sm leading-6">
+            <input
+              className="mt-1"
+              type="radio"
+              name="drawingPrivacy"
+              value="matched"
+            />
+            <span>
+            Release the STEP to matched paid shops. They can open it in the
+            shop dashboard only after they signed the Source NDA. It is never
+            attached to email and not posted publicly.
+            </span>
+          </label>
+        </fieldset>
       </Panel>
 
       <Button type="submit" disabled={pending}>

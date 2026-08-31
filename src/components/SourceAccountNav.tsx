@@ -84,13 +84,17 @@ function shopStamp(name: string) {
 export function SourceAccountNav({
   shopName,
   shopSlug,
+  role,
 }: {
   shopName?: string;
   shopSlug?: string;
+  role?: "supplier" | "buyer";
 }) {
   const listingHref =
-    shopName && shopSlug ? `/directory/${shopSlug}` : "/source/dashboard";
+    shopName && shopSlug ? `/directory/${shopSlug}` : "/source/enter";
   const stamp = shopName ? shopStamp(shopName) : null;
+  const dashHref = role === "buyer" ? "/buyer/dashboard" : "/source/dashboard";
+  const dashLabel = role === "buyer" ? "Buyer dashboard" : "Shop dashboard";
 
   return (
     <div className="flex items-center">
@@ -98,7 +102,7 @@ export function SourceAccountNav({
         when="signed-in"
         fallback={
           <Link
-            href="/sign-in?redirect_url=/source/dashboard"
+            href="/sign-in?redirect_url=/source/enter"
             className="px-2 py-2 text-sm text-muted transition-colors hover:text-foreground"
           >
             Source
@@ -112,23 +116,37 @@ export function SourceAccountNav({
           }}
         >
           <UserButton.MenuItems>
-            <UserButton.Link
-              label={shopName ? `Claimed: ${shopName}` : "No shop claimed"}
-              labelIcon={<ShopGlyph />}
-              href={listingHref}
-            />
-            <UserButton.Link
-              label="Shop dashboard"
-              labelIcon={<DashGlyph />}
-              href="/source/dashboard"
-            />
+            {role === "buyer" ? (
+              <UserButton.Link
+                label="Buyer dashboard"
+                labelIcon={<DashGlyph />}
+                href="/buyer/dashboard"
+              />
+            ) : (
+              <>
+                <UserButton.Link
+                  label={shopName ? `Claimed: ${shopName}` : "No shop claimed"}
+                  labelIcon={<ShopGlyph />}
+                  href={listingHref}
+                />
+                <UserButton.Link
+                  label={dashLabel}
+                  labelIcon={<DashGlyph />}
+                  href={dashHref}
+                />
+              </>
+            )}
           </UserButton.MenuItems>
         </UserButton>
         {stamp ? (
           <Link
-            href={listingHref}
+            href={role === "buyer" ? "/buyer/dashboard" : listingHref}
             title={shopName}
-            aria-label={`Claimed shop: ${shopName}`}
+            aria-label={
+              role === "buyer"
+                ? `Buyer: ${shopName}`
+                : `Claimed shop: ${shopName}`
+            }
             className="ml-1.5 hidden font-mono text-[11px] font-medium tracking-wide text-muted hover:text-copper sm:inline"
           >
             {stamp}

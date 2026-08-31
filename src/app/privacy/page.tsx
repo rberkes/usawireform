@@ -145,8 +145,8 @@ export default function PrivacyPage() {
           <p>
             Questions typed into Ask the resource are sent to our answer
             service so the model can match them to this site’s pages. Do not
-            paste secrets, ITAR-controlled data, or a customer’s confidential
-            print into the box. Use the{" "}
+            paste secrets or a customer’s confidential print into the box.
+            This site is not set up for export-controlled drawings. Use the{" "}
             <TextLink href="/contact">quote form</TextLink> for a drawing.
           </p>
         </LegalSection>

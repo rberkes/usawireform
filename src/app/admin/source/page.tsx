@@ -5,9 +5,11 @@ import { AdminInboxNav } from "@/components/AdminInboxNav";
 import { Page, PageHero } from "@/components/ui";
 import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
-import { listSourceFilings, listSourceInvites, listSourceJobs } from "@/lib/source";
+import { listSourceFilings, listSourceInvites, listSourceJobs, countSourceProfiles } from "@/lib/source";
+import { countBuyerAccounts } from "@/lib/source-buyer";
 import { listSourceSubscribers } from "@/lib/source-leads";
 import { adminFileHref } from "@/lib/blob";
+import { drawingPrivacyLabel, parseDrawingPrivacy } from "@/lib/source-types";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -27,7 +29,7 @@ export default async function AdminSourcePage({
     return <AdminLogin next="/admin/source" error={error} title="Source" />;
   }
 
-  const [invites, filings, jobs, quoteCount, directoryCount, subscribers] =
+  const [invites, filings, jobs, quoteCount, directoryCount, subscribers, accountCount] =
     await Promise.all([
       listSourceInvites(),
       listSourceFilings(),
@@ -35,6 +37,9 @@ export default async function AdminSourcePage({
       countQuoteSubmissions(),
       countDirectoryLeads(),
       listSourceSubscribers(),
+      Promise.all([countSourceProfiles(), countBuyerAccounts()]).then(
+        ([a, b]) => a + b,
+      ),
     ]);
 
   return (
@@ -42,7 +47,7 @@ export default async function AdminSourcePage({
       <PageHero
         kicker="Admin"
         title="Source"
-        lede="Send an invite. The shop lists equipment free. Buyer leads go to paid subscribers — manage them under Subscribers."
+        lede="Send an invite. Equipment JSON lives here. Shops, buyers, and STEP files are under Accounts."
       />
       <AdminInboxNav
         current="source"
@@ -50,6 +55,7 @@ export default async function AdminSourcePage({
         directoryCount={directoryCount}
         sourceCount={filings.length}
         subscriberCount={subscribers.length}
+        accountCount={accountCount}
       />
       <div className="mt-10">
         <SourceInviteForm />
@@ -154,6 +160,12 @@ export default async function AdminSourcePage({
                 {row.notes ? (
                   <p className="mt-1 max-w-2xl text-foreground/90">{row.notes}</p>
                 ) : null}
+                <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
+                  {drawingPrivacyLabel(parseDrawingPrivacy(row.drawingPrivacy))}
+                  {row.mailedTo && row.mailedTo.length > 0
+                    ? ` · ${row.mailedTo.length === 1 ? "1 shop mailed" : `${row.mailedTo.length} shops mailed`}`
+                    : ""}
+                </p>
                 <p className="mt-1 font-mono text-[11px] text-muted">
                   {row.timestamp
                     ? new Date(row.timestamp).toLocaleString("en-US", {

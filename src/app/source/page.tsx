@@ -11,7 +11,10 @@ import { SourceJobForm } from "@/components/SourceJobForm";
 import { SourceNewestMembers } from "@/components/SourceNewestMembers";
 import { SourcePathCompare } from "@/components/SourcePathCompare";
 import { pageMeta } from "@/lib/seo";
+import { getBuyerAccount } from "@/lib/source-buyer";
 import { listNewestSourceDirectoryCompanies } from "@/lib/source";
+import { sourceBuyerSignUpHref } from "@/lib/source-plans";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +51,23 @@ const STEPS = [
 
 export default async function SourcePage() {
   const newest = await listNewestSourceDirectoryCompanies(6);
+  const { userId } = await auth();
+  const [buyer, user] = userId
+    ? await Promise.all([getBuyerAccount(userId), currentUser()])
+    : [null, null];
+  const defaults = buyer
+    ? {
+        company: buyer.company,
+        name: buyer.name,
+        email: buyer.email,
+        phone: buyer.phone,
+      }
+    : user
+      ? {
+          email: user.primaryEmailAddress?.emailAddress ?? "",
+          name: user.fullName ?? "",
+        }
+      : undefined;
 
   return (
     <Page className="py-10 sm:py-20">
@@ -64,6 +84,13 @@ export default async function SourcePage() {
             className="w-full justify-center whitespace-nowrap sm:w-auto"
           >
             Send the print
+          </ButtonLink>
+          <ButtonLink
+            href={sourceBuyerSignUpHref()}
+            variant="ghost"
+            className="w-full justify-center whitespace-nowrap sm:w-auto"
+          >
+            Buyer account
           </ButtonLink>
         </PageHero>
         <div className="border border-line bg-inset p-5 sm:p-8">
@@ -115,7 +142,7 @@ export default async function SourcePage() {
           Upload a STEP. We match the shops.
         </h2>
         <div className="mt-8">
-          <SourceJobForm />
+          <SourceJobForm defaults={defaults} />
         </div>
       </section>
 
@@ -129,7 +156,7 @@ export default async function SourcePage() {
           <TextLink href="/source/equipment">
             File machine, year, capacity, and stocked sizes
           </TextLink>
-          .
+          . After sign-up the shop accepts an NDA before any STEP opens.
         </p>
       </section>
     </Page>

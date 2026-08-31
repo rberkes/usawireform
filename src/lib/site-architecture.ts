@@ -261,6 +261,7 @@ export function siteArchitectureTree(): ArchNode[] {
           children: [
             leaf("/source", "Buyer — pick cell, then wire size"),
             leaf("/source/job", "Redirects to /source"),
+            leaf("/source/privacy", "Buyer drawing privacy", "desk"),
             leaf("/source/shops", "Claim listing · cell and operating notes free"),
             leaf("/source/equipment", "Register plant · file cells"),
             leaf("/source/upgrade", "1 / 4 / 10 / 20 cells · operating notes free"),
@@ -319,10 +320,15 @@ export function siteArchitectureTree(): ArchNode[] {
       children: [
         leaf("/sign-in", "Clerk", "desk"),
         leaf("/sign-up", "Clerk", "desk"),
+        leaf("/source/nda", "Supplier NDA", "desk"),
+        leaf("/source/enter", "Post-login router", "desk"),
+        leaf("/buyer/dashboard", "Buyer dashboard", "desk"),
         leaf("/admin", "Leads inbox", "desk"),
         leaf("/admin/leads", "Directory leads", "desk"),
         leaf("/admin/source", "Source filings", "desk"),
         leaf("/admin/subscribers", "Source subscribers", "desk"),
+        leaf("/admin/accounts", "Shops, buyers, Source STEPs", "desk"),
+        leaf("/admin/live", "Live page checklist", "desk"),
         leaf("/api/ask", "Header Q&A", "desk"),
         leaf("/api/machine-factories", "Machine typeahead", "desk"),
         leaf("/api/directory-lead", "Listing RFQ", "desk"),

@@ -1,4 +1,4 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
 import { openSourceBillingPortal } from "@/app/actions/source-billing";
@@ -23,13 +23,21 @@ import {
   shopGetsLeads,
 } from "@/lib/source-leads";
 import {
+  jobsMailedToShop,
+  shopDrawingHref,
+  shopMayViewDrawing,
+} from "@/lib/source-access";
+import { requireSignedIn, requireSupplier } from "@/lib/source-gate";
+import {
   getSourceProfile,
   listSourceFilings,
+  listSourceJobs,
   saveSourceProfile,
   uniqueSourceSlug,
 } from "@/lib/source";
 import { secondariesForForm } from "@/lib/source-secondaries";
 import { normalizeShopWebsite, sourceAccountLocksClaim } from "@/lib/source-directory";
+import { parseDrawingPrivacy } from "@/lib/source-types";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -82,14 +90,17 @@ async function ensureProfile({
     plantVerifiedAt: undefined,
     fit: undefined,
     leadsAccess: undefined,
+    ndaAcceptedAt: undefined,
+    ndaVersion: undefined,
+    ndaName: undefined,
   };
   await saveSourceProfile(profile);
   return profile;
 }
 
 export default async function SourceDashboardPage({ searchParams }: Props) {
-  const { userId } = await auth();
-  if (!userId) redirect("/sign-in?redirect_url=/source/dashboard");
+  const userId = await requireSignedIn("/source/enter");
+  await requireSupplier(userId);
 
   const { session_id: sessionId } = await searchParams;
   if (sessionId) {
@@ -97,11 +108,12 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
     redirect("/source/dashboard");
   }
 
-  const [user, plan, filings, billedSecondaries] = await Promise.all([
+  const [user, plan, filings, billedSecondaries, jobs] = await Promise.all([
     currentUser(),
     getSourcePlanForUser(userId),
     listSourceFilings(),
     getSourceSecondaryQtyForUser(userId),
+    listSourceJobs(),
   ]);
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const shopRows = sourceFilingsForShop(filings, { userId, email });
@@ -123,6 +135,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
   const location = [shop?.city, shop?.state].filter(Boolean).join(", ");
   const leads = leadsStatus(plan, profile);
   const getsLeads = shopGetsLeads(leads);
+  const inbox = jobsMailedToShop(jobs, email);
 
   return (
     <Page>
@@ -196,8 +209,9 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         <p className="mt-2 text-xl font-medium">{leadsStatusLabel(leads)}</p>
         {getsLeads ? (
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            Matched RFQs land in this shop email. Listing equipment stays
-            free; this is what the plan pays for.
+            Matched RFQs land in this shop email and in the inbox below.
+            A STEP opens here only if the buyer released it. Listing
+            equipment stays free; this is what the plan pays for.
           </p>
         ) : (
           <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
@@ -211,6 +225,67 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           </div>
         )}
       </Panel>
+
+      <section className="mt-4">
+        <Panel className="p-5">
+          <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
+            Job inbox
+          </p>
+          {inbox.length === 0 ? (
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+              {getsLeads
+                ? "No matched buyer jobs yet. When a print fits a cell on a paid plan, the RFQ lands here. The STEP stays off email."
+                : "Subscribe to receive matched RFQs in this inbox."}
+            </p>
+          ) : (
+            <ul className="mt-4 divide-y divide-line border border-line">
+              {inbox.map((job) => {
+                const released = shopMayViewDrawing(job, {
+                  email,
+                  profile,
+                });
+                const privacy = parseDrawingPrivacy(job.drawingPrivacy);
+                return (
+                  <li key={job.pathname} className="px-4 py-4 text-sm">
+                    <p className="font-medium">
+                      {job.company || job.email}
+                      <span className="ml-2 font-normal text-muted">
+                        {job.kind || "job"}
+                        {job.diameterMm != null ? ` · ${job.diameterMm} mm` : ""}
+                      </span>
+                    </p>
+                    <p className="mt-1 text-muted">
+                      {[job.name, job.email, job.phone]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                    {job.notes ? (
+                      <p className="mt-1 max-w-2xl text-foreground/90">{job.notes}</p>
+                    ) : null}
+                    <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
+                      {privacy === "matched"
+                        ? released
+                          ? "Drawing released — open in this dashboard"
+                          : "Buyer released the STEP — wait for NDA or match"
+                        : "STEP held at the desk"}
+                    </p>
+                    {released && job.drawingPath ? (
+                      <p className="mt-2">
+                        <a
+                          href={shopDrawingHref(job.drawingPath, job.fileName)}
+                          className="text-copper hover:underline"
+                        >
+                          Open {job.fileName || "drawing"}
+                        </a>
+                      </p>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </Panel>
+      </section>
 
       <section className="mt-12">
         <SourceShopForm

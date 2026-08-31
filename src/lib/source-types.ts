@@ -133,6 +133,33 @@ export type SourceProfile = {
    * Stripe paid plans also receive leads. Listing equipment stays free.
    */
   leadsAccess?: "comp";
+  /** When the shop accepted the current Source NDA. */
+  ndaAcceptedAt?: string;
+  /** Version string from SOURCE_NDA_VERSION. */
+  ndaVersion?: string;
+  /** Name typed on the NDA form. */
+  ndaName?: string;
+};
+
+export const SOURCE_DRAWING_PRIVACY = ["desk", "matched"] as const;
+export type SourceDrawingPrivacy = (typeof SOURCE_DRAWING_PRIVACY)[number];
+
+export function parseDrawingPrivacy(
+  value: string | undefined | null,
+): SourceDrawingPrivacy {
+  return value === "matched" ? "matched" : "desk";
+}
+
+export function drawingPrivacyLabel(value: SourceDrawingPrivacy) {
+  return value === "matched"
+    ? "Released to matched shops"
+    : "Held at the desk";
+}
+
+export type SourceJobMailedTo = {
+  email: string;
+  company: string;
+  userId?: string;
 };
 
 export type SourceJob = {
@@ -152,7 +179,17 @@ export type SourceJob = {
   timestamp: string;
   fileName?: string;
   drawingPath?: string;
+  /** Who may receive the STEP. Default desk. */
+  drawingPrivacy?: SourceDrawingPrivacy;
+  /** Unguessable token so the buyer can change privacy without an account. */
+  privacyToken?: string;
+  /** Paid shops that received this RFQ. */
+  mailedTo?: SourceJobMailedTo[];
+  /** Clerk user when a signed-in buyer sent the job. */
+  buyerUserId?: string;
 };
+
+export type SourceJobRow = SourceJob & { pathname: string };
 
 export type SourcePublicMatch = {
   company: string;

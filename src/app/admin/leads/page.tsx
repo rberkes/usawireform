@@ -2,7 +2,8 @@ import { isAdmin } from "../actions";
 import { AdminLogin } from "../login-form";
 import { listDirectoryLeadRows } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
-import { countSourceFilings } from "@/lib/source";
+import { countSourceFilings, countSourceProfiles } from "@/lib/source";
+import { countBuyerAccounts } from "@/lib/source-buyer";
 import { countSourceSubscribers } from "@/lib/source-leads";
 import { AdminInboxNav } from "@/components/AdminInboxNav";
 import { Page, PageHero } from "@/components/ui";
@@ -27,12 +28,16 @@ export default async function AdminLeadsPage({
     );
   }
 
-  const [rows, quoteCount, sourceCount, subscriberCount] = await Promise.all([
-    listDirectoryLeadRows(),
-    countQuoteSubmissions(),
-    countSourceFilings(),
-    countSourceSubscribers(),
-  ]);
+  const [rows, quoteCount, sourceCount, subscriberCount, accountCount] =
+    await Promise.all([
+      listDirectoryLeadRows(),
+      countQuoteSubmissions(),
+      countSourceFilings(),
+      countSourceSubscribers(),
+      Promise.all([countSourceProfiles(), countBuyerAccounts()]).then(
+        ([a, b]) => a + b,
+      ),
+    ]);
 
   return (
     <Page>
@@ -47,6 +52,7 @@ export default async function AdminLeadsPage({
         directoryCount={rows.length}
         sourceCount={sourceCount}
         subscriberCount={subscriberCount}
+        accountCount={accountCount}
       />
       {rows.length === 0 ? (
         <p className="mt-8 max-w-xl text-sm leading-6 text-muted">

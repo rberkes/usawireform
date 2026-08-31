@@ -235,9 +235,14 @@ async function writePlanToClerk({
   subscriptionId?: string;
 }) {
   const client = await clerkClient();
+  const user = await client.users.getUser(userId);
   await client.users.updateUserMetadata(userId, {
-    publicMetadata: { sourcePlan: planId },
+    publicMetadata: {
+      ...user.publicMetadata,
+      sourcePlan: planId,
+    },
     privateMetadata: {
+      ...user.privateMetadata,
       stripeCustomerId: customerId ?? "",
       stripeSubscriptionId: subscriptionId ?? "",
     },

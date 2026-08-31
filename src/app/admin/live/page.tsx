@@ -1,0 +1,177 @@
+import { isAdmin } from "../actions";
+import { AdminLogin } from "../login-form";
+import { AdminInboxNav } from "@/components/AdminInboxNav";
+import { Page, PageHero } from "@/components/ui";
+import { countDirectoryLeads } from "@/lib/leads";
+import { countQuoteSubmissions } from "@/lib/quotes";
+import { countSourceFilings, countSourceProfiles } from "@/lib/source";
+import { countBuyerAccounts } from "@/lib/source-buyer";
+import { countSourceSubscribers } from "@/lib/source-leads";
+
+export const dynamic = "force-dynamic";
+export const metadata = {
+  title: "Live pages",
+  robots: { index: false, follow: false },
+};
+
+const GROUPS = [
+  {
+    title: "Public — no login",
+    note: "Open these in a private window. They should load without the admin cookie or Clerk.",
+    rows: [
+      {
+        href: "/source",
+        label: "Send a print",
+        check: "Buyer account button. Desk vs release radios on the drawing. NDA copy on the shop line.",
+      },
+      {
+        href: "/source/shops",
+        label: "Shop join",
+        check: "Step 03 names the NDA. Claim and file a cell still work unsigned.",
+      },
+      {
+        href: "/sign-up?as=buyer",
+        label: "Buyer sign-up",
+        check: "Title is Confirm a buyer account. Clerk form. Link over to supplier sign-up.",
+      },
+      {
+        href: "/sign-up?as=supplier",
+        label: "Supplier sign-up",
+        check: "Title is Confirm the shop account. Copy says NDA is next.",
+      },
+      {
+        href: "/sign-in",
+        label: "Sign in",
+        check: "Falls through to /source/enter so buyers and shops split after login.",
+      },
+    ],
+  },
+  {
+    title: "Signed-in shop",
+    note: "Use a supplier Clerk user. First visit must hit the NDA before the dashboard.",
+    rows: [
+      {
+        href: "/source/enter",
+        label: "Post-login router",
+        check: "Sends buyers to /buyer/dashboard, unsigned shops to /source/nda, signed shops to the dashboard.",
+      },
+      {
+        href: "/source/nda",
+        label: "Supplier NDA",
+        check: "Name, shop, checkbox. Accept lands on the shop dashboard. Buyers bounce away.",
+      },
+      {
+        href: "/source/dashboard",
+        label: "Shop dashboard",
+        check: "Job inbox under Buyer leads. A STEP link appears only if the buyer released it and this shop was mailed.",
+      },
+    ],
+  },
+  {
+    title: "Signed-in buyer",
+    note: "Use a buyer Clerk user from /sign-up?as=buyer.",
+    rows: [
+      {
+        href: "/buyer/dashboard",
+        label: "Buyer dashboard",
+        check: "Company form. Jobs list. Change drawing privacy. Download own STEP. Shops cannot open it unless released + NDA.",
+      },
+      {
+        href: "/source",
+        label: "Send another print",
+        check: "Form prefills from the buyer account. New jobs attach to this user.",
+      },
+    ],
+  },
+  {
+    title: "Master admin — this password",
+    note: "Shops, buyers, and Source STEPs live under Accounts. This-floor Contact STEPs stay on Quote files.",
+    rows: [
+      {
+        href: "/admin/accounts",
+        label: "Accounts",
+        check: "Jump Shops, Buyers, STEP files. NDA status on each shop. Download a Source drawing.",
+      },
+      {
+        href: "/admin/source",
+        label: "Source",
+        check: "Invites, equipment JSON, and the same buyer jobs.",
+      },
+      {
+        href: "/admin/subscribers",
+        label: "Subscribers",
+        check: "Who receives leads (paid or comp). Listing-only shops stay listed.",
+      },
+      {
+        href: "/admin",
+        label: "Quote files",
+        check: "Contact and product-page STEPs for this floor — not Source jobs.",
+      },
+    ],
+  },
+] as const;
+
+export default async function AdminLivePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
+  const ok = await isAdmin();
+
+  if (!ok) {
+    return <AdminLogin next="/admin/live" error={error} title="Live pages" />;
+  }
+
+  const [quoteCount, directoryCount, sourceCount, subscriberCount, accountCount] =
+    await Promise.all([
+      countQuoteSubmissions(),
+      countDirectoryLeads(),
+      countSourceFilings(),
+      countSourceSubscribers(),
+      Promise.all([countSourceProfiles(), countBuyerAccounts()]).then(
+        ([a, b]) => a + b,
+      ),
+    ]);
+
+  return (
+    <Page>
+      <PageHero
+        kicker="Admin"
+        title="Live pages"
+        lede="What shipped with the NDA, buyer desk, and shop desk. Click each path. The check is what should be true on that page."
+      />
+      <AdminInboxNav
+        current="live"
+        quoteCount={quoteCount}
+        directoryCount={directoryCount}
+        sourceCount={sourceCount}
+        subscriberCount={subscriberCount}
+        accountCount={accountCount}
+      />
+      {GROUPS.map((group) => (
+        <section key={group.title} className="mt-12">
+          <h2 className="text-lg font-medium">{group.title}</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+            {group.note}
+          </p>
+          <ul className="mt-4 divide-y divide-line border border-line">
+            {group.rows.map((row) => (
+              <li key={row.href} className="px-4 py-4 text-sm">
+                <p className="font-medium">
+                  <a href={row.href} className="text-copper hover:underline">
+                    {row.label}
+                  </a>
+                  <span className="ml-2 font-mono text-[11px] font-normal tracking-widest text-muted uppercase">
+                    {row.href}
+                  </span>
+                </p>
+                <p className="mt-1 max-w-2xl text-muted">{row.check}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </Page>
+  );
+}

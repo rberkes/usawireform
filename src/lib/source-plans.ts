@@ -94,12 +94,17 @@ export function formatPlanPrice(cents: number) {
 
 export function sourceAccountHref(email?: string) {
   const params = new URLSearchParams({
-    redirect_url: "/source/dashboard",
+    as: "supplier",
+    redirect_url: "/source/enter",
   });
   if (email) params.set("email_address", email);
   return `/sign-up?${params.toString()}`;
 }
 
 export function sourceSignInHref() {
-  return "/sign-in?redirect_url=/source/dashboard";
+  return "/sign-in?redirect_url=/source/enter";
+}
+
+export function sourceBuyerSignUpHref() {
+  return "/sign-up?as=buyer&redirect_url=/source/enter";
 }

@@ -391,7 +391,7 @@ export function sourceFiledReceiptHtml({
   const who = company?.trim() ? escapeHtml(company.trim()) : "your shop";
   const n =
     machineCount === 1 ? "1 cell" : `${machineCount.toLocaleString("en-US")} cells`;
-  const confirmHref = `${SITE_URL}/sign-up?redirect_url=${encodeURIComponent(`${SITE_URL}/source/dashboard`)}${
+  const confirmHref = `${SITE_URL}/sign-up?as=supplier&redirect_url=${encodeURIComponent(`${SITE_URL}/source/enter`)}${
     email ? `&email_address=${encodeURIComponent(email)}` : ""
   }`;
   const dashboardHref = `${SITE_URL}/source/dashboard`;
@@ -405,7 +405,7 @@ export function sourceFiledReceiptHtml({
     : ctaBannerRow(
         confirmHref,
         "Confirm your Source account",
-        "Use this email. Then the shop dashboard.",
+        "Use this email. Accept the supplier NDA, then the shop dashboard.",
       );
   return shell(
     hasAccount
@@ -450,9 +450,13 @@ export function sourceClaimedReceiptHtml({
 export function sourceJobReceiptHtml({
   matchCount,
   diameterMm,
+  drawingPrivacy = "desk",
+  privacyHref,
 }: {
   matchCount: number;
   diameterMm?: number | null;
+  drawingPrivacy?: "desk" | "matched";
+  privacyHref?: string;
 }) {
   const size =
     diameterMm != null
@@ -464,11 +468,24 @@ export function sourceJobReceiptHtml({
       : matchCount === 1
         ? `One paid shop can run ${size}. We introduce that cell — we do not post your print.`
         : `Up to ${matchCount} paid shops can run ${size}. We introduce three chairs when we have them.`;
+  const privacy =
+    drawingPrivacy === "matched"
+      ? "You released the STEP to matched paid shops. They open it in the shop dashboard after the Source NDA. It is not posted and not attached to email."
+      : "You kept the STEP at the desk. Matched shops get the spec and your contact only.";
+  const privacyCta = privacyHref
+    ? ctaBannerRow(
+        privacyHref,
+        "Change drawing privacy",
+        "Keep it at the desk, or release it to matched shops.",
+      )
+    : "";
   return shell(
     "Your Source job is in.",
     `${kickerRow()}
      ${headingRow("Your Source job is in")}
      ${copyRow(chairs)}
+     ${copyRow(privacy)}
+     ${privacyCta}
      ${ctaBannerRow(
        `${SITE_URL}/source`,
        "Send another job",
@@ -484,6 +501,7 @@ export function sourceShopLeadHtml({
   fitNote,
   buyer,
   spec,
+  drawingPrivacy = "desk",
 }: {
   shop: string;
   why: string;
@@ -504,6 +522,7 @@ export function sourceShopLeadHtml({
     qty: string;
     notes: string;
   };
+  drawingPrivacy?: "desk" | "matched";
 }) {
   const size =
     spec.diameterMm != null
@@ -535,6 +554,14 @@ export function sourceShopLeadHtml({
          spec.notes ? { label: "Notes", value: spec.notes } : null,
        ].filter((row): row is MailRow => Boolean(row)),
      )}
-     ${ctaBannerRow(mailto, "Reply to the buyer", "The print stays with the desk until you take the job.")}`,
+     ${ctaBannerRow(
+       `${SITE_URL}/source/dashboard`,
+       drawingPrivacy === "matched"
+         ? "Open the job in the shop dashboard"
+         : "Open the shop dashboard",
+       drawingPrivacy === "matched"
+         ? "The STEP is in the dashboard if you accepted the NDA. It is not attached to this email."
+         : "The buyer kept the drawing at the desk. Quote from the spec.",
+     )}`,
   );
 }

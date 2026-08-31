@@ -5,7 +5,8 @@ import { AdminLeadsToggle } from "@/components/AdminLeadsToggle";
 import { Page, PageHero } from "@/components/ui";
 import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
-import { countSourceFilings } from "@/lib/source";
+import { countSourceFilings, countSourceProfiles } from "@/lib/source";
+import { countBuyerAccounts } from "@/lib/source-buyer";
 import {
   leadsStatusLabel,
   listSourceSubscribers,
@@ -36,12 +37,16 @@ export default async function AdminSubscribersPage({
     );
   }
 
-  const [rows, quoteCount, directoryCount, sourceCount] = await Promise.all([
-    listSourceSubscribers(),
-    countQuoteSubmissions(),
-    countDirectoryLeads(),
-    countSourceFilings(),
-  ]);
+  const [rows, quoteCount, directoryCount, sourceCount, accountCount] =
+    await Promise.all([
+      listSourceSubscribers(),
+      countQuoteSubmissions(),
+      countDirectoryLeads(),
+      countSourceFilings(),
+      Promise.all([countSourceProfiles(), countBuyerAccounts()]).then(
+        ([a, b]) => a + b,
+      ),
+    ]);
   const paid = rows.filter((row) => shopGetsLeads(row.leads)).length;
 
   return (
@@ -57,6 +62,7 @@ export default async function AdminSubscribersPage({
         directoryCount={directoryCount}
         sourceCount={sourceCount}
         subscriberCount={rows.length}
+        accountCount={accountCount}
       />
       <p className="mt-8 max-w-2xl text-sm leading-6 text-muted">
         {rows.length === 0

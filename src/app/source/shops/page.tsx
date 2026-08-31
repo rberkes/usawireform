@@ -43,8 +43,8 @@ const STEPS = [
   },
   {
     n: "03",
-    title: "Paid plans receive the buyer",
-    body: "Listing a cell stays free. A buyer sends a print; matched RFQs go to shops on a paid plan. File 10/10 open this week and matching sends more of the jobs that already fit that cell.",
+    title: "NDA, then paid plans receive the buyer",
+    body: "After you confirm the account you accept the Source NDA. Listing a cell stays free. Matched RFQs go to paid plans. A STEP opens in the shop dashboard only after that NDA and only if the buyer released it.",
   },
 ];
 

@@ -413,16 +413,6 @@ export function SourceShopForm({
           <input
             className="mt-1"
             type="checkbox"
-            name="itar"
-            value="1"
-            defaultChecked={fit?.itar === true}
-          />
-          ITAR registered
-        </label>
-        <label className="flex items-start gap-2 text-sm leading-6">
-          <input
-            className="mt-1"
-            type="checkbox"
             name="ppap"
             value="1"
             defaultChecked={fit?.ppap === true}

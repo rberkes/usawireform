@@ -84,7 +84,6 @@ export type SourceBuyerFit = {
   prototypePolicy?: SourcePrototypePolicyId;
   rush?: boolean;
   acceptingRfqs?: boolean;
-  itar?: boolean;
   ppap?: boolean;
 };
 
@@ -176,7 +175,6 @@ export function parseSourceBuyerFit(raw: unknown): SourceBuyerFit | undefined {
     prototypePolicy,
     rush: parseBoolFlag(payload.rush) === true ? true : undefined,
     acceptingRfqs: parseYesNo(payload.acceptingRfqs),
-    itar: parseBoolFlag(payload.itar) === true ? true : undefined,
     ppap: parseBoolFlag(payload.ppap) === true ? true : undefined,
   };
   return sourceFitIsEmpty(fit) ? undefined : fit;
@@ -196,7 +194,6 @@ export function readSourceFitForm(formData: FormData): SourceBuyerFit | undefine
     prototypePolicy: String(formData.get("prototypePolicy") ?? ""),
     rush: formData.get("rush") ? "1" : "0",
     acceptingRfqs: String(formData.get("acceptingRfqs") ?? ""),
-    itar: formData.get("itar") ? "1" : "0",
     ppap: formData.get("ppap") ? "1" : "0",
   });
 }
@@ -216,7 +213,6 @@ export function sourceFitIsEmpty(fit?: SourceBuyerFit | null): boolean {
     !fit.prototypePolicy &&
     fit.rush !== true &&
     fit.acceptingRfqs == null &&
-    fit.itar !== true &&
     fit.ppap !== true
   );
 }
@@ -312,7 +308,6 @@ export function sourceFitSpecs(
   } else if (fit?.acceptingRfqs === false) {
     specs.push({ label: "New RFQs", value: "Not listing new work" });
   }
-  if (fit?.itar) specs.push({ label: "ITAR", value: "Registered" });
   if (fit?.ppap) specs.push({ label: "PPAP", value: "Available" });
   return specs;
 }

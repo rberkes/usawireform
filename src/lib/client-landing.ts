@@ -114,7 +114,7 @@ export const CLIENT_SERVICES = [
     points: [
       "3D bends and closed frames",
       "Welded assemblies, not loose sticks",
-      "ITAR-registered floor for defense prints",
+      "USA made frames from this cell",
     ],
   },
   {

@@ -11,13 +11,17 @@ import { withCapacity } from "@/lib/source-capacity";
 import { parseSourceBuyerFit } from "@/lib/source-fit";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
-import type {
-  SourceFiling,
-  SourceFilingRow,
-  SourceInvite,
-  SourceJob,
-  SourceMachine,
-  SourceProfile,
+import {
+  parseDrawingPrivacy,
+  type SourceDrawingPrivacy,
+  type SourceFiling,
+  type SourceFilingRow,
+  type SourceInvite,
+  type SourceJob,
+  type SourceJobMailedTo,
+  type SourceJobRow,
+  type SourceMachine,
+  type SourceProfile,
 } from "@/lib/source-types";
 
 export type {
@@ -25,6 +29,7 @@ export type {
   SourceFilingRow,
   SourceInvite,
   SourceJob,
+  SourceJobRow,
   SourceKind,
   SourceMachine,
   SourceProfile,
@@ -227,11 +232,14 @@ export async function countSourceFilings() {
   return rows.length;
 }
 
-export async function saveSourceJob(job: SourceJob) {
+export async function saveSourceJob(job: SourceJob, pathname?: string) {
   if (!(await blobReady())) return false;
-  await put(`source/jobs/${Date.now()}.json`, JSON.stringify(job), {
+  const path = pathname ?? `source/jobs/${Date.now()}.json`;
+  const { pathname: _path, ...payload } = job as SourceJobRow;
+  await put(path, JSON.stringify(payload), {
     access: BLOB_ACCESS,
-    addRandomSuffix: true,
+    addRandomSuffix: !pathname,
+    allowOverwrite: Boolean(pathname),
     contentType: "application/json",
     ...(await blobAuth()),
   });
@@ -249,10 +257,59 @@ export async function storeSourceJobDrawing(file: File) {
   });
 }
 
-export async function listSourceJobs(): Promise<SourceJob[]> {
+function readMailedTo(raw: unknown): SourceJobMailedTo[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((row) => {
+      const item = row as Partial<SourceJobMailedTo>;
+      return {
+        email: String(item.email ?? "").trim(),
+        company: String(item.company ?? "").trim(),
+        userId: typeof item.userId === "string" ? item.userId : undefined,
+      };
+    })
+    .filter((row) => row.email);
+}
+
+function readSourceJob(
+  payload: Partial<SourceJob>,
+  pathname: string,
+): SourceJobRow {
+  return {
+    company: String(payload.company ?? ""),
+    name: String(payload.name ?? ""),
+    email: String(payload.email ?? ""),
+    phone: String(payload.phone ?? ""),
+    city: String(payload.city ?? ""),
+    state: String(payload.state ?? ""),
+    diameterRaw: String(payload.diameterRaw ?? ""),
+    diameterMm:
+      typeof payload.diameterMm === "number" ? payload.diameterMm : null,
+    kind: String(payload.kind ?? ""),
+    oem: String(payload.oem ?? ""),
+    qty: String(payload.qty ?? ""),
+    notes: String(payload.notes ?? ""),
+    parsedBy:
+      payload.parsedBy === "ai" || payload.parsedBy === "form+ai"
+        ? payload.parsedBy
+        : "form",
+    timestamp: String(payload.timestamp ?? ""),
+    fileName: payload.fileName ? String(payload.fileName) : undefined,
+    drawingPath: payload.drawingPath ? String(payload.drawingPath) : undefined,
+    drawingPrivacy: parseDrawingPrivacy(payload.drawingPrivacy),
+    privacyToken: payload.privacyToken
+      ? String(payload.privacyToken)
+      : undefined,
+    mailedTo: readMailedTo(payload.mailedTo),
+    buyerUserId: payload.buyerUserId ? String(payload.buyerUserId) : undefined,
+    pathname,
+  };
+}
+
+export async function listSourceJobs(): Promise<SourceJobRow[]> {
   if (!(await blobReady())) return [];
   const result = await list({ prefix: "source/jobs/", ...(await blobAuth()) });
-  const rows: SourceJob[] = [];
+  const rows: SourceJobRow[] = [];
   for (const blob of result.blobs
     .filter((item) => item.pathname.endsWith(".json"))
     .sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))
@@ -264,12 +321,70 @@ export async function listSourceJobs(): Promise<SourceJob[]> {
     });
     if (!file?.stream || file.statusCode !== 200) continue;
     try {
-      rows.push(JSON.parse(await new Response(file.stream).text()) as SourceJob);
+      rows.push(
+        readSourceJob(
+          JSON.parse(await new Response(file.stream).text()) as Partial<SourceJob>,
+          blob.pathname,
+        ),
+      );
     } catch {
       /* skip */
     }
   }
   return rows;
+}
+
+export async function findSourceJobByPrivacyToken(token: string) {
+  const needle = token.trim();
+  if (!needle || !(await blobReady())) return null;
+  const result = await list({ prefix: "source/jobs/", ...(await blobAuth()) });
+  for (const blob of result.blobs.filter((item) => item.pathname.endsWith(".json"))) {
+    const file = await get(blob.pathname, {
+      access: "private",
+      useCache: false,
+      ...(await blobAuth()),
+    });
+    if (!file?.stream || file.statusCode !== 200) continue;
+    try {
+      const row = readSourceJob(
+        JSON.parse(await new Response(file.stream).text()) as Partial<SourceJob>,
+        blob.pathname,
+      );
+      if (row.privacyToken === needle) return row;
+    } catch {
+      /* skip */
+    }
+  }
+  return null;
+}
+
+export async function setSourceJobDrawingPrivacy(
+  token: string,
+  drawingPrivacy: SourceDrawingPrivacy,
+) {
+  const row = await findSourceJobByPrivacyToken(token);
+  if (!row) return null;
+  const next: SourceJobRow = { ...row, drawingPrivacy };
+  await saveSourceJob(next, row.pathname);
+  return next;
+}
+
+export async function attachJobsToBuyer(userId: string, email: string) {
+  const needle = email.trim().toLowerCase();
+  if (!userId || !needle) return 0;
+  const jobs = await listSourceJobs();
+  let attached = 0;
+  for (const job of jobs) {
+    if (job.email.trim().toLowerCase() !== needle) continue;
+    if (job.buyerUserId === userId) continue;
+    await saveSourceJob({ ...job, buyerUserId: userId }, job.pathname);
+    attached += 1;
+  }
+  return attached;
+}
+
+export function sourceJobPrivacyHref(token: string) {
+  return `${SITE_URL}/source/privacy?t=${encodeURIComponent(token)}`;
 }
 
 function profilePath(userId: string) {
@@ -300,6 +415,9 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
     plantVerifiedAt: String(payload.plantVerifiedAt ?? "").trim() || undefined,
     fit: parseSourceBuyerFit(payload.fit),
     leadsAccess: payload.leadsAccess === "comp" ? "comp" : undefined,
+    ndaAcceptedAt: String(payload.ndaAcceptedAt ?? "").trim() || undefined,
+    ndaVersion: String(payload.ndaVersion ?? "").trim() || undefined,
+    ndaName: String(payload.ndaName ?? "").trim() || undefined,
     listedAt: String(
       payload.listedAt ?? payload.updatedAt ?? new Date().toISOString(),
     ),
@@ -355,6 +473,15 @@ export async function listSourceProfiles(): Promise<SourceProfile[]> {
     }
   }
   return rows;
+}
+
+export async function countSourceProfiles() {
+  if (!(await blobReady())) return 0;
+  const result = await list({
+    prefix: "source/profiles/",
+    ...(await blobAuth()),
+  });
+  return result.blobs.length;
 }
 
 export async function uniqueSourceSlug(

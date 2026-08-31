@@ -10,7 +10,7 @@ function InboxTab({
 }: {
   href: string;
   active: boolean;
-  count: number;
+  count?: number;
   waiting: boolean;
   children: string;
 }) {
@@ -27,18 +27,20 @@ function InboxTab({
       )}
     >
       {children}
-      <span
-        className={cx(
-          "min-w-5 text-center font-mono text-[11px] tracking-widest",
-          active
-            ? "text-background/70"
-            : waiting
-              ? "text-white"
-              : "text-muted",
-        )}
-      >
-        {count}
-      </span>
+      {typeof count === "number" ? (
+        <span
+          className={cx(
+            "min-w-5 text-center font-mono text-[11px] tracking-widest",
+            active
+              ? "text-background/70"
+              : waiting
+                ? "text-white"
+                : "text-muted",
+          )}
+        >
+          {count}
+        </span>
+      ) : null}
     </Link>
   );
 }
@@ -49,12 +51,14 @@ export function AdminInboxNav({
   directoryCount,
   sourceCount = 0,
   subscriberCount = 0,
+  accountCount = 0,
 }: {
-  current: "quotes" | "directory" | "source" | "subscribers";
+  current: "quotes" | "directory" | "source" | "subscribers" | "accounts" | "live";
   quoteCount: number;
   directoryCount: number;
   sourceCount?: number;
   subscriberCount?: number;
+  accountCount?: number;
 }) {
   return (
     <div className="mt-8 space-y-4">
@@ -90,6 +94,21 @@ export function AdminInboxNav({
           waiting={current !== "subscribers" && subscriberCount > 0}
         >
           Subscribers
+        </InboxTab>
+        <InboxTab
+          href="/admin/accounts"
+          active={current === "accounts"}
+          count={accountCount}
+          waiting={false}
+        >
+          Accounts
+        </InboxTab>
+        <InboxTab
+          href="/admin/live"
+          active={current === "live"}
+          waiting={false}
+        >
+          Live pages
         </InboxTab>
       </nav>
       {current === "directory" && quoteCount > 0 ? (

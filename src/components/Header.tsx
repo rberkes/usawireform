@@ -304,7 +304,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           Contact
         </Link>
         <Link
-          href="/source/dashboard"
+          href="/source/enter"
           className="py-2 text-base text-foreground"
           onClick={onClose}
         >
