@@ -47,15 +47,17 @@ export function ClientQuoteCtas({
 }) {
   const pad = sizes[size];
   const primary = cx(
-    "inline-flex items-center justify-center rounded-sm text-center text-white transition-colors",
+    "inline-flex items-center justify-center rounded-sm text-center transition-colors",
     pad,
-    "bg-zoom hover:bg-zoom-dim",
+    tone === "dark"
+      ? "bg-zoom text-white hover:bg-white hover:text-[#0b1f33]"
+      : "bg-zoom text-white hover:bg-zoom-dim",
   );
   const secondary = cx(
     "inline-flex items-center justify-center rounded-sm border text-center transition-colors",
     pad,
     tone === "dark"
-      ? "border-white/80 text-white hover:bg-white hover:text-[#0b1f33]"
+      ? "border-white/80 text-white hover:border-white hover:bg-white hover:text-[#0b1f33]"
       : "border-line text-foreground hover:border-copper/50",
   );
   const note = tone === "dark" ? "text-white/60" : "text-muted";
