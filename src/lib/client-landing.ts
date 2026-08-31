@@ -3,8 +3,8 @@ import { WIRE } from "@/lib/range";
 
 export const CLIENT_STEPS = [
   {
-    title: "Upload a CAD file",
-    body: "Drop a STEP, STP, IGES, PDF, DXF, or SLDPRT. Diameter, alloy, and quantity help the desk open the file the first time.",
+    title: "Upload a STEP or drawing",
+    body: "Drop a STEP, SolidWorks file, or a PDF 3-view. No STEP? We model one for free from the print. Diameter, alloy, and quantity help the desk open it the first time.",
   },
   {
     title: "Get a quote with review",
@@ -20,7 +20,15 @@ export const CLIENT_STEPS = [
   },
 ] as const;
 
-export const CLIENT_CTA_LEDE = `Get instant quote for cuts, bends, and inches. Start production quote when you have a STEP. ${PRICE_LINE}`;
+export const CLIENT_CTA_LEDE = `Upload a STEP, SolidWorks file, or PDF 3-view. No STEP? We convert it for free. Instant quote is still there for cuts, bends, and inches. ${PRICE_LINE}`;
+
+export const HOME_HERO_LEDE =
+  "Upload a STEP, a SolidWorks file, or a 3-view PDF. No STEP? We convert it for free. Shops: add the wire form machines on your floor.";
+
+export const HOME_CTA_TITLE = "Send the print. We'll make the STEP.";
+
+export const HOME_CTA_LEDE =
+  "Buyers upload STEP, Solid, or a PDF 3-view. No STEP file? We model it free. Shops list a machine cell — jobs that fit that iron come to you.";
 
 export const CUT_TO_LENGTH_MM = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] as const;
 
@@ -64,7 +72,7 @@ export const CLIENT_SERVICES = [
     points: [
       "Resistance and MIG where a nugget will not reach",
       "USA made baskets, racks, and cable trays",
-      "Send a STEP for a production number",
+      "Send a STEP or drawing — we model a STEP free if you need one",
     ],
   },
   {

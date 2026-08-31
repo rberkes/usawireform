@@ -42,7 +42,8 @@ export function ContactForm() {
     <form action={formAction}>
       <Panel>
         <p className="mb-5 text-sm font-medium text-copper">
-          Email and a STEP file are required. LinkedIn is optional.
+          Email and a drawing are required — STEP, SolidWorks, or a PDF 3-view.
+          No STEP? We model it free. LinkedIn is optional.
         </p>
         {state.message && !state.success && (
           <div className="mb-5 rounded border border-copper/30 bg-copper/5 p-3 text-sm text-copper">

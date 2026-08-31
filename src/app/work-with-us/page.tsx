@@ -73,7 +73,7 @@ export default function WorkWithUsPage() {
 
       <ClientCtaBand
         title="Ready to quote the print?"
-        lede="Instant quote is a ballpark. Production quote is the STEP. Both go to the same Northeast Ohio desk."
+        lede="Instant quote is a ballpark. Production quote is a STEP, Solid file, or 3-view PDF — we model a STEP free if you need one. Both go to the same Northeast Ohio desk."
       />
     </ClientPage>
   );

@@ -157,7 +157,7 @@ export function customerThanksHtml({
       ? `${hello}<br /><br />Thank you for your time. We received the intro and will follow up if we can help.`
       : `${hello}<br /><br />Thank you for your time. We received the machine note and will route it.`;
   const follow = drawing
-    ? `If this isn't the part, reply with the right STEP. We'll look at the form and write back.`
+    ? `If this isn't the part, reply with the right STEP, Solid file, or PDF. No STEP? We'll model one free.`
     : `Reply to this email if you need to add a note.`;
   const cta =
     kind === "directory"

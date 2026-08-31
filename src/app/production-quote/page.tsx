@@ -13,7 +13,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Start a Production Quote",
-  description: `Send a STEP for a production wire forming quote. ${COMPANY} reviews the print, calls 2D vs 3D, and prices the lot. ${PRICE_LINE}`,
+  description: `Send a STEP, SolidWorks file, or 3-view PDF for a production wire forming quote. No STEP? ${COMPANY} models one free. ${PRICE_LINE}`,
   path: "/production-quote",
   keywords: [
     "production wire forming quote",
@@ -28,7 +28,7 @@ export default function ProductionQuotePage() {
       <ClientHero
         kicker="Production quote"
         title="Talk with the production desk"
-        lede={`A drawing and an email are enough to start. We open the file, call the bend sequence, and write back. Instant estimate stays on Get instant quote if you only need a ballpark. ${QUOTE_REVIEW}`}
+        lede={`A STEP, SolidWorks file, or 3-view PDF and an email are enough to start. No STEP? We model one for free from the print. Instant estimate stays on Get instant quote if you only need a ballpark. ${QUOTE_REVIEW}`}
       />
 
       <section className="bg-background">
@@ -39,6 +39,7 @@ export default function ProductionQuotePage() {
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted">
             Production quotes are for a real lot — 100 pieces and up. Include
             quantity, material, and finish in the notes if the drawing does not.
+            A PDF 3-view is enough if you do not have a STEP.
           </p>
           <div className="mt-10">
             <StepQuoteBlock title="Start a production quote" />

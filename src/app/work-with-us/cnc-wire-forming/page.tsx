@@ -84,7 +84,7 @@ export default function ClientCncWireFormingPage() {
 
       <ClientCtaBand
         title="Get a number on the print"
-        lede="Get instant quote for cuts, bends, and inches. Start production quote when you have a STEP."
+        lede="Upload a STEP, SolidWorks file, or PDF 3-view. No STEP? We convert it for free."
       />
     </ClientPage>
   );

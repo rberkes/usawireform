@@ -3,6 +3,7 @@
 import { put } from "@vercel/blob";
 import { blobAuth, blobErrorMessage, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { QUOTE_EMAIL, COMPANY } from "@/lib/company";
+import { DRAWING_HINT, isAcceptedDrawing } from "@/lib/drawings";
 import { sendDrawingLeadEmails, previewAttachmentFromForm, sendLeadEmail, sendLeadThanksEmail, sendInstantEstimateEmails } from "@/lib/leads";
 import { nearest8GaBag } from "@/lib/ground-staple-prices";
 import { estimatePiece, parseInstantQuote, usd2 } from "@/lib/quoting";
@@ -76,11 +77,6 @@ async function storeLeadRecord(prefix: string, payload: Record<string, unknown>)
   return blob.url;
 }
 
-function isStepDrawing(name: string) {
-  const ext = name.split(".").pop()?.toLowerCase() ?? "";
-  return ext === "step" || ext === "stp" || ext === "stpz";
-}
-
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -135,9 +131,9 @@ export async function submitContactForm(
   if (!data.timeline) errors.timeline = "Timeline is required";
   if (!data.quality) errors.quality = "Quality standard is required";
   if (!data.notes) errors.notes = "Part notes are required";
-  if (!data.fileName) errors.drawing = "STEP file is required";
-  else if (!isStepDrawing(data.fileName))
-    errors.drawing = "Use a STEP or STP file.";
+  if (!data.fileName) errors.drawing = "A drawing is required";
+  else if (!isAcceptedDrawing(data.fileName))
+    errors.drawing = `Use ${DRAWING_HINT}.`;
 
   if (Object.keys(errors).length > 0) {
     return {
@@ -275,9 +271,9 @@ export async function submitQuickQuote(
   if (!data.targetPrice) errors.targetPrice = "Target price is required";
   if (!data.timeline) errors.timeline = "Timeline is required";
   if (!data.quality) errors.quality = "Quality standard is required";
-  if (!data.fileName) errors.drawing = "STEP file is required";
-  else if (!isStepDrawing(data.fileName))
-    errors.drawing = "Use a STEP or STP file.";
+  if (!data.fileName) errors.drawing = "A drawing is required";
+  else if (!isAcceptedDrawing(data.fileName))
+    errors.drawing = `Use ${DRAWING_HINT}.`;
 
   if (Object.keys(errors).length > 0) {
     return {

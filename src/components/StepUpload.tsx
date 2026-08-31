@@ -4,6 +4,12 @@ import { useActionState, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { submitQuickQuote, type QuoteFormState } from "@/app/actions/quote";
 import { QUOTE_EMAIL } from "@/lib/company";
+import {
+  DRAWING_ACCEPT,
+  DRAWING_FREE_STEP,
+  DRAWING_HINT,
+  isAcceptedDrawing,
+} from "@/lib/drawings";
 import { FormLegalNotice } from "./LegalDoc";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
 import { UploadedDrawingPreview } from "./UploadedDrawingPreview";
@@ -13,14 +19,7 @@ const quoteInitialState: QuoteFormState = {
   message: "",
 };
 
-const ACCEPT_EXT = ["step", "stp", "stpz"];
-const ACCEPT = ACCEPT_EXT.map((ext) => `.${ext}`).join(",");
 const MAX_BYTES = 50 * 1024 * 1024;
-const FILE_HINT = "STEP or STP";
-
-function extOf(name: string) {
-  return name.split(".").pop()?.toLowerCase() ?? "";
-}
 
 function formatBytes(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
@@ -29,8 +28,8 @@ function formatBytes(bytes: number) {
 }
 
 function validate(file: File): string | null {
-  if (!ACCEPT_EXT.includes(extOf(file.name))) {
-    return `Use ${FILE_HINT}.`;
+  if (!isAcceptedDrawing(file.name)) {
+    return `Use ${DRAWING_HINT}.`;
   }
   if (file.size > MAX_BYTES) {
     return `Over 50 MB — email it to ${QUOTE_EMAIL}.`;
@@ -146,7 +145,7 @@ export function StepUpload({
         className="sr-only"
         type="file"
         name={name}
-        accept={ACCEPT}
+        accept={DRAWING_ACCEPT}
         required={required}
         onChange={(event) => take(event.target.files?.[0] ?? null)}
       />
@@ -203,7 +202,7 @@ export function StepUpload({
                 {required ? " (required)" : ""}
               </span>
               <span className="mt-0.5 block text-xs text-muted">
-                {FILE_HINT} · drop the 3D solid
+                {DRAWING_HINT}. {DRAWING_FREE_STEP}
               </span>
             </>
           )}
@@ -355,7 +354,7 @@ export function StepQuoteBlock({
         <h2 className="text-xl tracking-tight">{title}</h2>
         <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
           We’ll call the bend sequence and whether it belongs on a 2D or 3D CNC
-          program.
+          program. {DRAWING_FREE_STEP}
         </p>
         <p className="mt-3 text-sm font-medium text-copper">
           Drawing and email are required. LinkedIn is optional.

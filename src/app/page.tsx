@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { AskBox } from "@/components/AskBox";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
+import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
 import { ClientCtaBand, ClientHero } from "@/components/client/ClientLanding";
-import { CLIENT_CTA_LEDE } from "@/lib/client-landing";
+import { HOME_CTA_LEDE, HOME_CTA_TITLE, HOME_HERO_LEDE } from "@/lib/client-landing";
 import { PricePromise } from "@/components/PricePromise";
 import { SocialProof } from "@/components/SocialProof";
 import { StateGrid } from "@/components/StateGrid";
@@ -21,7 +22,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
-  description: `${COMPANY}: ${SITE_PITCH} 3D CNC in 4–14 mm from Northeast Ohio. Lowest prices guaranteed. 100-piece minimum.`,
+  description: `${COMPANY}: Upload a STEP, SolidWorks file, or 3-view PDF. No STEP? We convert it free. Shops add wire form machines. ${SITE_PITCH}`,
   path: "/",
   absoluteTitle: true,
   keywords: [
@@ -40,6 +41,10 @@ export const metadata = pageMeta({
     "wire forming directory",
     "CNC wire forming machines",
     "coil steel suppliers",
+    "upload STEP file",
+    "3 view drawing wire form",
+    "free STEP conversion",
+    "add wire form machine",
     "Numalliance Robomac",
     "lowest price wire forming",
   ],
@@ -49,9 +54,10 @@ export default function Home() {
   return (
     <>
       <ClientHero
-        kicker="United States and beyond"
+        kicker="Buyers and shops"
         title={<BrandLockup size="hero" tone="onDark" />}
-        lede={SITE_PITCH}
+        lede={HOME_HERO_LEDE}
+        cta={<ClientQuoteCtas variant="home" tone="dark" className="mt-8" />}
       />
       <Page>
         <div className="overflow-hidden bg-inset">
@@ -102,14 +108,19 @@ export default function Home() {
                 body: "Type fourslide, Robomac, powder coating, TIG. Three or four plants drop as you type.",
               },
               {
+                href: "/source/shops",
+                title: "Add your machine",
+                body: "Shops list the wire form cells on the floor. Jobs that fit that iron come to you.",
+              },
+              {
                 href: "/materials",
                 title: "Coil steel",
                 body: "Grades from coil, mill and drawer links, and what this cell actually runs.",
               },
               {
-                href: "/contact",
+                href: "/production-quote",
                 title: "Form the print",
-                body: "4–14 mm 3D CNC on this floor. 100-piece minimum. Send a STEP.",
+                body: "4–14 mm 3D CNC on this floor. 100-piece minimum. STEP, Solid, or a 3-view PDF — we model a STEP free if you don't have one.",
               },
             ]}
           />
@@ -240,8 +251,9 @@ export default function Home() {
       </Page>
 
       <ClientCtaBand
-        title="Quote the print"
-        lede={CLIENT_CTA_LEDE}
+        title={HOME_CTA_TITLE}
+        lede={HOME_CTA_LEDE}
+        cta={<ClientQuoteCtas variant="home" tone="dark" size="band" className="mt-8" />}
       />
 
       <SocialProof className="mt-8" />

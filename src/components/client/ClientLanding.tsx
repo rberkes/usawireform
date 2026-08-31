@@ -11,11 +11,13 @@ export function ClientHero({
   kicker,
   title,
   lede,
+  cta,
   children,
 }: {
   kicker: string;
   title: ReactNode;
   lede: string;
+  cta?: ReactNode;
   children?: ReactNode;
 }) {
   return (
@@ -34,7 +36,7 @@ export function ClientHero({
           {title}
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">{lede}</p>
-        <ClientQuoteCtas tone="dark" className="mt-8" />
+        {cta ?? <ClientQuoteCtas tone="dark" className="mt-8" />}
         {children}
         <ClientCertBar />
       </Container>
@@ -151,16 +153,18 @@ export function ClientServiceCards({
 export function ClientCtaBand({
   title,
   lede,
+  cta,
 }: {
   title: string;
   lede: string;
+  cta?: ReactNode;
 }) {
   return (
     <section className={`${NAVY} text-white`}>
       <Container className="py-16 sm:py-20">
         <h2 className="max-w-3xl text-3xl tracking-tight sm:text-4xl">{title}</h2>
         <p className="mt-4 max-w-2xl text-base leading-7 text-white/70">{lede}</p>
-        <ClientQuoteCtas tone="dark" size="band" className="mt-8" />
+        {cta ?? <ClientQuoteCtas tone="dark" size="band" className="mt-8" />}
       </Container>
     </section>
   );
