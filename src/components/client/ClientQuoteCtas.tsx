@@ -72,7 +72,7 @@ export function ClientQuoteCtas({
           href={SOURCE_EQUIPMENT_HREF}
           className={secondary}
         >
-          List your machine Free
+          List Machines Free
         </CtaAction>
       </div>
     ) : (

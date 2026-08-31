@@ -3,8 +3,14 @@ import Link from "next/link";
 import { AskBox } from "@/components/AskBox";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
 import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
-import { ClientCtaBand, ClientHero } from "@/components/client/ClientLanding";
-import { HOME_CTA_LEDE, HOME_CTA_TITLE, HOME_HERO_LEDE, HOME_QUOTE_NOTE } from "@/lib/client-landing";
+import { ClientCtaBand, ClientHero, PlatformFlow } from "@/components/client/ClientLanding";
+import {
+  HOME_CTA_LEDE,
+  HOME_CTA_TITLE,
+  HOME_HERO_LEDE,
+  HOME_PLATFORM_STEPS,
+  HOME_QUOTE_NOTE,
+} from "@/lib/client-landing";
 import { PricePromise } from "@/components/PricePromise";
 import { SocialProof } from "@/components/SocialProof";
 import { StateGrid } from "@/components/StateGrid";
@@ -66,6 +72,7 @@ export default function Home() {
         kicker="Source fast. Source easy."
         title={<BrandLockup size="hero" tone="onDark" />}
         lede={HOME_HERO_LEDE}
+        flow={<PlatformFlow steps={HOME_PLATFORM_STEPS} />}
         cta={<ClientQuoteCtas variant="home" tone="dark" className="mt-8" />}
       />
       <Page>
@@ -118,7 +125,7 @@ export default function Home() {
               },
               {
                 href: "/source/equipment",
-                title: "List your machine Free",
+                title: "List Machines Free",
                 body: "File OEM, year, capacity, and stocked wire sizes. Jobs that fit that cell come to you.",
               },
               {

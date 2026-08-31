@@ -26,7 +26,22 @@ export const HOME_QUOTE_NOTE =
   "Get wire forming quotes from suppliers that are ready to run! No STEP file? We convert PDF 3-view drawings for free.";
 
 export const HOME_HERO_LEDE =
-  "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production. Shops upload capability and capacity. Buyers upload a STEP. Get wire forming quotes from suppliers that are ready to run!";
+  "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production.";
+
+export const HOME_PLATFORM_STEPS = [
+  {
+    title: "List Equipment",
+    body: "Shops file machines — OEM, year, capacity, and stocked wire sizes.",
+  },
+  {
+    title: "Customer Matching",
+    body: "Buyer prints go to cells that can actually form the part.",
+  },
+  {
+    title: "Quote Jobs",
+    body: "Those shops quote work they are ready to run.",
+  },
+] as const;
 
 export const HOME_CTA_TITLE = "Source by capability and capacity.";
 
