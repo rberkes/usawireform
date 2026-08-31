@@ -49,6 +49,11 @@ export function parseSourceMachines(raw: string): SourceMachine[] {
           minMm: String((row as SourceMachine).minMm ?? "").trim().slice(0, 16),
           maxMm: String((row as SourceMachine).maxMm ?? "").trim().slice(0, 16),
           city: String((row as SourceMachine).city ?? "").trim().slice(0, 80),
+          year: String((row as SourceMachine).year ?? "").trim().slice(0, 8),
+          capacity: String((row as SourceMachine).capacity ?? "").trim().slice(0, 80),
+          stockedSizes: String((row as SourceMachine).stockedSizes ?? "")
+            .trim()
+            .slice(0, 120),
         }),
       )
       .filter((row) => row.model);
@@ -231,6 +236,17 @@ export async function saveSourceJob(job: SourceJob) {
     ...(await blobAuth()),
   });
   return true;
+}
+
+export async function storeSourceJobDrawing(file: File) {
+  const ext = file.name.split(".").pop() || "bin";
+  const body = Buffer.from(await file.arrayBuffer());
+  return put(`source/jobs/${Date.now()}.${ext}`, body, {
+    access: BLOB_ACCESS,
+    addRandomSuffix: true,
+    contentType: file.type || "application/octet-stream",
+    ...(await blobAuth()),
+  });
 }
 
 export async function listSourceJobs(): Promise<SourceJob[]> {

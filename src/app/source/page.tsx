@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Find a wire form shop — Source",
   description:
-    "Send the print. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs.",
+    "Send a STEP. Quotes come from shops whose equipment can manufacture it — machine, year, capacity, and stocked wire sizes first.",
   path: "/source",
   keywords: [
     "find wire forming shop",
@@ -31,18 +31,18 @@ export const metadata = pageMeta({
 const STEPS = [
   {
     n: "01",
-    title: "Pick the cell, then the wire size",
-    body: "Spring, 2D CNC, 3D CNC, fourslide, or multi-slide. Then millimetres or inches. That is the match — not a company blurb.",
+    title: "Upload a STEP",
+    body: "STEP, SolidWorks, or a PDF 3-view. No STEP? We model one free. Wire size and cell type tell us which iron can run it.",
   },
   {
     n: "02",
-    title: "We match capability, then this week's open slots",
-    body: "The cell and the wire size have to fit first. Shops that filed 10/10 open this week — they need work — rank higher among those chairs. Stale weeks are not a live feed.",
+    title: "We match the equipment that can form it",
+    body: "Machine band, stocked sizes, and this week's capacity first. Shops that filed 10/10 open this week rank higher among cells that already fit.",
   },
   {
     n: "03",
-    title: "Up to three introductions",
-    body: "Shop emails stay with the desk until we make the intro. You talk to chairs that can run the work.",
+    title: "Quotes from shops that can run it",
+    body: "Up to three introductions. Shop emails stay with the desk until we make the intro.",
   },
 ];
 
@@ -56,7 +56,7 @@ export default async function SourcePage() {
           large
           kicker="Find a shop"
           title="We send your print only to shops that can run it."
-          lede="Pick the cell — spring, 2D CNC, 3D CNC, fourslide, or multi-slide — then the wire size. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs."
+          lede="Upload a STEP. We match machine, year, capacity, and stocked wire sizes — quotes from equipment that can manufacture the part. No STEP? A 3-view PDF is enough; we model one free."
         >
           <ButtonLink
             href="#job"
@@ -112,7 +112,7 @@ export default async function SourcePage() {
       >
         <Kicker>The print</Kicker>
         <h2 className="mt-3 max-w-2xl text-2xl tracking-tight sm:text-3xl">
-          Send the job. We match the shops.
+          Upload a STEP. We match the shops.
         </h2>
         <div className="mt-8">
           <SourceJobForm />
@@ -126,7 +126,10 @@ export default async function SourcePage() {
       <section className="mt-16 border-t border-line pt-12 sm:mt-20">
         <p className="max-w-xl text-sm leading-6 text-muted">
           Run a shop?{" "}
-          <TextLink href="/source/shops">Add one machine cell free</TextLink>.
+          <TextLink href="/source/equipment">
+            File machine, year, capacity, and stocked sizes
+          </TextLink>
+          .
         </p>
       </section>
     </Page>

@@ -3,7 +3,9 @@ import { cx } from "@/lib/cx";
 
 export const INSTANT_QUOTE_HREF = "/instant-quote";
 export const PRODUCTION_QUOTE_HREF = "/production-quote";
+export const SOURCE_JOB_HREF = "/source#job";
 export const SOURCE_SHOPS_HREF = "/source/shops";
+export const SOURCE_EQUIPMENT_HREF = "/source/equipment";
 
 const sizes = {
   hero: "px-7 py-3.5 text-base font-medium",
@@ -34,17 +36,16 @@ export function ClientQuoteCtas({
       ? "border-white/80 text-white hover:bg-white hover:text-[#0b1f33]"
       : "border-line text-foreground hover:border-copper/50",
   );
-  const note =
-    tone === "dark" ? "text-white/60" : "text-muted";
+  const note = tone === "dark" ? "text-white/60" : "text-muted";
 
   const buttons =
     variant === "home" ? (
       <>
-        <Link href={PRODUCTION_QUOTE_HREF} className={primary}>
-          Upload STEP or drawing
+        <Link href={SOURCE_JOB_HREF} className={primary}>
+          Upload STEP for quotes
         </Link>
-        <Link href={SOURCE_SHOPS_HREF} className={secondary}>
-          Add your machine
+        <Link href={SOURCE_EQUIPMENT_HREF} className={secondary}>
+          List your machine
         </Link>
       </>
     ) : (
@@ -65,7 +66,8 @@ export function ClientQuoteCtas({
       </div>
       {variant === "home" ? (
         <p className={cx("max-w-xl text-sm leading-6", note)}>
-          No STEP? We convert your PDF or 3-view for free.
+          Quotes come from cells that can run the print. No STEP? We convert a
+          PDF 3-view for free.
         </p>
       ) : null}
     </div>

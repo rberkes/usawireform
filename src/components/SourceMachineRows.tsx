@@ -20,6 +20,9 @@ export function emptySourceMachine(): SourceMachine {
     minMm: "",
     maxMm: "",
     city: "",
+    year: "",
+    capacity: "",
+    stockedSizes: "",
   };
 }
 
@@ -199,6 +202,40 @@ export function SourceMachineRows({
                   patch(index, { ...row, maxMm: event.target.value })
                 }
                 placeholder="14"
+              />
+            </label>
+            <label className="block text-sm sm:col-span-2">
+              Year
+              <input
+                className={`mt-1.5 ${fieldClass}`}
+                inputMode="numeric"
+                value={row.year ?? ""}
+                onChange={(event) =>
+                  patch(index, { ...row, year: event.target.value })
+                }
+                placeholder="2019"
+              />
+            </label>
+            <label className="block text-sm sm:col-span-2">
+              Capacity
+              <input
+                className={`mt-1.5 ${fieldClass}`}
+                value={row.capacity ?? ""}
+                onChange={(event) =>
+                  patch(index, { ...row, capacity: event.target.value })
+                }
+                placeholder="pcs / week"
+              />
+            </label>
+            <label className="block text-sm sm:col-span-2">
+              Stocked wire sizes
+              <input
+                className={`mt-1.5 ${fieldClass}`}
+                value={row.stockedSizes ?? ""}
+                onChange={(event) =>
+                  patch(index, { ...row, stockedSizes: event.target.value })
+                }
+                placeholder="4, 6, 8, 3/8 in"
               />
             </label>
             {otherOem ? (

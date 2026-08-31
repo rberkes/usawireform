@@ -7,8 +7,8 @@ export const QUOTE_EMAIL = `info@${SITE_HOST}`;
 
 /** Sitewide positioning. Production is still this floor; the site is the map. */
 export const SITE_PITCH =
-  "The ultimate resource for all things wire forming in the United States and beyond — learning, machines, factories, coil steel, and a shop that will form the print.";
+  "The most efficient platform for wire form manufacturers in the United States. Shops file machine, year, capacity, and stocked wire sizes. Buyers upload a STEP and get quotes from equipment that can form it.";
 
 export const SITE_LINE =
-  "All things wire forming: design, machines, factories, and coil — United States and beyond.";
+  "The most efficient platform for wire form manufacturers in the USA.";
 

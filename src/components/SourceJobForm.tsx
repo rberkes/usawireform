@@ -1,11 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   submitSourceJob,
   type SourceFormState,
 } from "@/app/actions/source";
+import { StepUpload } from "@/components/StepUpload";
 import { Button, fieldClass, Panel } from "@/components/ui";
+import { DRAWING_FREE_STEP } from "@/lib/drawings";
 import { SOURCE_OEM_NAMES } from "@/lib/source-iron";
 import { SOURCE_JOB_CLASSES } from "@/lib/source-types";
 
@@ -13,6 +15,7 @@ const initial: SourceFormState = { success: false, message: "" };
 
 export function SourceJobForm() {
   const [state, action, pending] = useActionState(submitSourceJob, initial);
+  const [file, setFile] = useState<File | null>(null);
 
   return (
     <form action={action} className="space-y-6">
@@ -22,8 +25,8 @@ export function SourceJobForm() {
             What should run this job?
           </legend>
           <p className="mt-3 text-sm leading-6 text-muted">
-            Pick the cell first. We match shops that filed that iron and a
-            wire band that fits — not a shop that says they form wire.
+            Pick the cell first. Quotes go to shops that filed that iron, year,
+            capacity, and stocked sizes — not a shop that says they form wire.
           </p>
           <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
             {SOURCE_JOB_CLASSES.map((row) => (
@@ -107,12 +110,12 @@ export function SourceJobForm() {
           The print
         </p>
         <p className="text-sm leading-6 text-muted">
-          Wire size is the second match key. Notes can be plain language. We
-          do not let a model pick the shop. Mesh and this floor’s Robomac
-          estimate are not this form. Quantity is checked against a shop’s
-          filed min when they have one. This week’s open slots boost shops
-          that already fit the cell.
+          Upload a STEP. Quotes go to shops whose equipment can manufacture it.
+          Wire size is the second match key. {DRAWING_FREE_STEP}
         </p>
+        <div>
+          <StepUpload file={file} onChange={setFile} />
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
             Wire size
@@ -155,7 +158,7 @@ export function SourceJobForm() {
       </Panel>
 
       <Button type="submit" disabled={pending}>
-        {pending ? "Matching..." : "Match shops"}
+        {pending ? "Matching..." : "Get quotes from capable equipment"}
       </Button>
       {state.message ? (
         <p

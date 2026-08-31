@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Register and upload equipment — Source",
   description:
-    "File the CNC cells on your floor: OEM, model, 2D or 3D, wire min and max, city. Source matches jobs to that iron.",
+    "File machine, year, capacity, and stocked wire sizes. Buyers upload a STEP; quotes match equipment that can manufacture the part.",
   path: "/source/equipment",
 });
 
@@ -48,7 +48,7 @@ export default async function SourceEquipmentPage({ searchParams }: Props) {
       <PageHero
         kicker="Source"
         title="Register and upload equipment"
-        lede="Name the US shop. One row per cell. Jobs match these bands so you only see work your iron can run. Source is USA for now."
+        lede="File the machine, year, capacity, and stocked wire sizes. Buyers upload a STEP and get quotes from cells that can run the print. Source is USA for now."
       />
       {invite ? (
         <p className="mt-6 max-w-2xl text-sm leading-6 text-muted">

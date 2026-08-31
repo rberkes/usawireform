@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Wire form shops — add a machine cell free",
   description:
-    "Wire form shops: add a machine cell free. File how the plant operates free — min, setup, stock, lead. List CNC machines — wire size, 2D or 3D, make, city. Jobs that fit those machines come to you. Claim your listing or file a cell.",
+    "Wire form shops: file machine, year, capacity, and stocked wire sizes. Buyers upload a STEP and get quotes from equipment that can manufacture it. Claim your listing or file a cell.",
   path: "/source/shops",
   keywords: [
     "wire forming capacity",
@@ -39,7 +39,7 @@ const STEPS = [
   {
     n: "02",
     title: "Name the machine. File how you operate.",
-    body: "Wire size, 2D or 3D, make, and city. Then min order, setup, stock, and lead — free on the listing so a buyer can see how the plant runs.",
+    body: "Machine, year, capacity, and stocked wire sizes. Then min order, setup, and lead — free on the listing so a buyer can see how the plant runs.",
   },
   {
     n: "03",
@@ -65,7 +65,7 @@ export default async function SourceShopsPage() {
           large
           kicker="Wire form shops"
           title="Add a machine cell free."
-          lede="List the CNC machines on the floor — wire size, 2D or 3D, make, and city. Our technology matches your job to the right shop, keeping costs low and reducing the time it takes to complete the job. An AI matching platform that matches your job to capability and capacity first, increasing efficiency and lowering costs."
+          lede="File the machine, year, capacity, and stocked wire sizes. Buyers upload a STEP; quotes go only to cells that can form it. The most efficient platform for wire form manufacturers in the USA."
         >
           <ButtonLink
             href="#claim"

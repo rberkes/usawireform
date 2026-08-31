@@ -147,8 +147,8 @@ export function SourceEquipmentForm({
           Equipment on the floor
         </p>
         <p className="text-sm leading-6 text-muted">
-          Pick the OEM, then the model. Type and wire band come from that
-          catalog row — confirm the plate on the cell. This plan holds{" "}
+          Machine, year, capacity, and stocked wire sizes. Type and wire band
+          come from the catalog row — confirm the plate. This plan holds{" "}
           {maxCells} {maxCells === 1 ? "cell" : "cells"} here. More iron is a
           paid plan on the shop dashboard.
         </p>

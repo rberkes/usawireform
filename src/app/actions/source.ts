@@ -5,6 +5,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/app/admin/actions";
 import { QUOTE_EMAIL } from "@/lib/company";
+import { DRAWING_HINT, isAcceptedDrawing } from "@/lib/drawings";
 import { blobErrorMessage, blobReady } from "@/lib/blob";
 import { getDirectoryCompany } from "@/lib/directory";
 import {
@@ -53,6 +54,7 @@ import {
   saveSourceJob,
   saveSourceProfile,
   sourceInviteHref,
+  storeSourceJobDrawing,
   storeSourceLogo,
   uniqueSourceSlug,
   replaceSourceFilingsForShop,
@@ -802,9 +804,15 @@ export async function submitSourceJob(
   const oem = String(formData.get("oem") ?? "").trim().slice(0, 80);
   const qty = String(formData.get("qty") ?? "").trim().slice(0, 24);
   const notes = String(formData.get("notes") ?? "").trim().slice(0, 2000);
+  const drawing = formData.get("drawing") as File | null;
+  const drawingName =
+    drawing && drawing.size > 0 ? drawing.name.replace(/[^\w.-]+/g, "_") : undefined;
 
   if (!isValidEmail(email)) {
     return { success: false, message: "Enter a valid email." };
+  }
+  if (drawingName && !isAcceptedDrawing(drawingName)) {
+    return { success: false, message: `Use ${DRAWING_HINT}.` };
   }
   if (!isSourceJobClass(kind)) {
     return {
@@ -866,10 +874,16 @@ export async function submitSourceJob(
     notes,
     parsedBy: parsed.parsedBy,
     timestamp: new Date().toISOString(),
+    fileName: drawingName,
+    drawingPath: undefined as string | undefined,
   };
 
   try {
     if (await blobReady()) {
+      if (drawing && drawing.size > 0) {
+        const stored = await storeSourceJobDrawing(drawing);
+        job.drawingPath = stored.pathname;
+      }
       await saveSourceJob(job);
     }
   } catch (error) {

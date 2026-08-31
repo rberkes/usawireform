@@ -20,15 +20,15 @@ export const CLIENT_STEPS = [
   },
 ] as const;
 
-export const CLIENT_CTA_LEDE = `Upload a STEP, SolidWorks file, or PDF 3-view. No STEP? We convert it for free. Instant quote is still there for cuts, bends, and inches. ${PRICE_LINE}`;
+export const CLIENT_CTA_LEDE = `Upload a STEP and get quotes from cells that can run it. No STEP? We convert a PDF 3-view for free. Instant quote is still there for cuts, bends, and inches. ${PRICE_LINE}`;
 
 export const HOME_HERO_LEDE =
-  "Upload a STEP, a SolidWorks file, or a 3-view PDF. No STEP? We convert it for free. Shops: add the wire form machines on your floor.";
+  "The most efficient platform for wire form manufacturers in the USA. Shops file machine, year, capacity, and stocked wire sizes. Buyers upload a STEP and get quotes from equipment that can manufacture it.";
 
-export const HOME_CTA_TITLE = "Send the print. We'll make the STEP.";
+export const HOME_CTA_TITLE = "Match the print to the iron.";
 
 export const HOME_CTA_LEDE =
-  "Buyers upload STEP, Solid, or a PDF 3-view. No STEP file? We model it free. Shops list a machine cell — jobs that fit that iron come to you.";
+  "Manufacturers list the cell — machine, year, capacity, stocked sizes. Buyers upload a STEP. Quotes come only from equipment that can form the part. No STEP? We model one free from a 3-view PDF.";
 
 export const CUT_TO_LENGTH_MM = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] as const;
 

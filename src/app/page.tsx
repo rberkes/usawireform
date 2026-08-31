@@ -16,13 +16,13 @@ import {
   StatRow,
 } from "@/components/ui";
 import { BrandLockup } from "@/components/WireMark";
-import { COMPANY, SITE_PITCH } from "@/lib/company";
+import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
-  description: `${COMPANY}: Upload a STEP, SolidWorks file, or 3-view PDF. No STEP? We convert it free. Shops add wire form machines. ${SITE_PITCH}`,
+  title: `${COMPANY} — Most Efficient Platform for Wire Form Manufacturers in the USA`,
+  description: `${COMPANY}: The most efficient platform for wire form manufacturers in the USA. File machine, year, capacity, and stocked sizes. Buyers upload a STEP and get quotes from equipment that can form it.`,
   path: "/",
   absoluteTitle: true,
   keywords: [
@@ -54,7 +54,7 @@ export default function Home() {
   return (
     <>
       <ClientHero
-        kicker="Buyers and shops"
+        kicker="Manufacturers and buyers"
         title={<BrandLockup size="hero" tone="onDark" />}
         lede={HOME_HERO_LEDE}
         cta={<ClientQuoteCtas variant="home" tone="dark" className="mt-8" />}
@@ -77,12 +77,12 @@ export default function Home() {
         <AskBox />
 
         <Section
-          kicker="The map"
-          title="Learning, machines, factories, coil."
+          kicker="The platform"
+          title="The most efficient wire forming platform in the United States."
         >
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-            This site is the resource. Production still leaves the Northeast
-            Ohio floor when you send a print.
+            Manufacturers file the cell. Buyers send a STEP. Quotes come from
+            equipment that can actually run the print.
           </p>
           <LinkList
             className="mt-8"
@@ -108,9 +108,9 @@ export default function Home() {
                 body: "Type fourslide, Robomac, powder coating, TIG. Three or four plants drop as you type.",
               },
               {
-                href: "/source/shops",
-                title: "Add your machine",
-                body: "Shops list the wire form cells on the floor. Jobs that fit that iron come to you.",
+                href: "/source/equipment",
+                title: "List your machine",
+                body: "File OEM, year, capacity, and stocked wire sizes. Jobs that fit that cell come to you.",
               },
               {
                 href: "/materials",
@@ -118,9 +118,9 @@ export default function Home() {
                 body: "Grades from coil, mill and drawer links, and what this cell actually runs.",
               },
               {
-                href: "/production-quote",
-                title: "Form the print",
-                body: "4–14 mm 3D CNC on this floor. 100-piece minimum. STEP, Solid, or a 3-view PDF — we model a STEP free if you don't have one.",
+                href: "/source",
+                title: "Upload a STEP for quotes",
+                body: "Get quotes from shops whose equipment can manufacture the part. No STEP? Send a 3-view PDF — we model it free.",
               },
             ]}
           />

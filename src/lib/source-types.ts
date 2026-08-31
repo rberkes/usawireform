@@ -53,6 +53,12 @@ export type SourceMachine = {
   minMm: string;
   maxMm: string;
   city: string;
+  /** Plate year on the cell. */
+  year?: string;
+  /** Production capacity the shop files — pcs/week, hours, or a short note. */
+  capacity?: string;
+  /** Wire diameters this cell actually stocks, not just the machine band. */
+  stockedSizes?: string;
   /** Open slots this week, 0–10. 10 = 100% open, needs work. Shop-filed. */
   openSlots?: number;
   /** When the shop last filed this week's open slots. */
@@ -133,6 +139,8 @@ export type SourceJob = {
   notes: string;
   parsedBy: "form" | "ai" | "form+ai";
   timestamp: string;
+  fileName?: string;
+  drawingPath?: string;
 };
 
 export type SourcePublicMatch = {

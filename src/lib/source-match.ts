@@ -131,7 +131,14 @@ export function matchFilingsToJob(
         tightnessScore(diameterMm, min, max) +
         fitScoreAdjust(filing.fit, job.qty) +
         capacityScoreAdjust(machine);
-      const why = `${machine.kind} · ${diameterMm} mm sits in ${machine.oem} ${machine.model} · ${machine.minMm}–${machine.maxMm} mm${openNote ? ` · ${openNote}` : ""}`;
+      const extras = [
+        machine.year ? `year ${machine.year}` : "",
+        machine.capacity ? machine.capacity : "",
+        machine.stockedSizes ? `stocks ${machine.stockedSizes}` : "",
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      const why = `${machine.kind} · ${diameterMm} mm sits in ${machine.oem} ${machine.model} · ${machine.minMm}–${machine.maxMm} mm${openNote ? ` · ${openNote}` : ""}${extras ? ` · ${extras}` : ""}`;
       const row: SourceInternalMatch & { score: number } = {
         company: filing.company,
         email: filing.email,
