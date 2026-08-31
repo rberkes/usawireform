@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { resolveSourceRole, safeSourceNext, sourceNdaHref } from "@/lib/source-gate";
-import { shopHasNda } from "@/lib/source-nda";
+import { shopNeedsNda } from "@/lib/source-nda";
 import { getSourceProfile } from "@/lib/source";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +28,6 @@ export default async function SourceEnterPage({ searchParams }: Props) {
   if (role === "buyer") redirect("/buyer/dashboard");
 
   const profile = await getSourceProfile(userId);
-  if (!shopHasNda(profile)) redirect(sourceNdaHref(dest));
+  if (shopNeedsNda(profile)) redirect(sourceNdaHref(dest));
   redirect(dest || "/source/dashboard");
 }

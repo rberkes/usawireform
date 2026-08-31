@@ -6,7 +6,7 @@ import {
   SourceMachineRows,
   emptySourceMachine,
 } from "@/components/SourceMachineRows";
-import { Button, ButtonLink, fieldClass, Panel } from "@/components/ui";
+import { Button, fieldClass, Panel } from "@/components/ui";
 import type { SourceMachine } from "@/lib/source-types";
 
 const initial: SourceFormState = { success: false, message: "" };
@@ -21,9 +21,8 @@ export function SourceAddCellsForm({ remaining }: { remaining: number }) {
     return (
       <Panel className="space-y-3 p-4 sm:p-5">
         <p className="text-sm leading-6 text-muted">
-          This plan is full. Upgrade to file more cells.
+          This form is full. Existing cells stay on the dashboard.
         </p>
-        <ButtonLink href="/source/upgrade">See Source plans</ButtonLink>
       </Panel>
     );
   }
@@ -36,8 +35,8 @@ export function SourceAddCellsForm({ remaining }: { remaining: number }) {
           Add cells
         </p>
         <p className="text-sm leading-6 text-muted">
-          Room for {remaining} more {remaining === 1 ? "cell" : "cells"} on
-          this plan.
+          Room for {remaining} more {remaining === 1 ? "cell" : "cells"} in
+          this form. Listing is free.
         </p>
         <SourceMachineRows
           machines={machines}

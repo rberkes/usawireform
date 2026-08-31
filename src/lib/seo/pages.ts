@@ -645,9 +645,9 @@ export const staticSeoPages: SeoRecord[] = [
   }),
   record({
     path: "/source/upgrade",
-    title: "Source Plans — Shop Dashboard",
+    title: "Source leads — $49 to unlock a job",
     description:
-      "File CNC cells on Source. One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Up to 3 secondaries $19/mo. Six maximum $49/mo.",
+      "List every CNC cell free. Matched buyer jobs show in the shop dashboard. $49 unlocks a lead. Up to 10 shops can buy each job. Secondaries: 3 top ops $19/mo, six maximum $49/mo.",
     section: "company",
     keywords: ["source shop plan", "CNC equipment list", "wire forming capacity"],
     priority: 0.6,

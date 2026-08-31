@@ -22,12 +22,12 @@ const GROUPS = [
       {
         href: "/source",
         label: "Send a print",
-        check: "Buyer account button. Desk vs release radios on the drawing. NDA copy on the shop line.",
+        check: "Buyer account button. Desk vs release radios. $49 lead copy on the shop line.",
       },
       {
         href: "/source/shops",
         label: "Shop join",
-        check: "Step 03 names the NDA. Claim and file a cell still work unsigned.",
+        check: "Step 03 is buy the lead. Claim and file a cell still work unsigned.",
       },
       {
         href: "/sign-up?as=buyer",
@@ -37,7 +37,7 @@ const GROUPS = [
       {
         href: "/sign-up?as=supplier",
         label: "Supplier sign-up",
-        check: "Title is Confirm the shop account. Copy says NDA is next.",
+        check: "Title is Confirm the shop account. Copy says dashboard next, $49 per lead.",
       },
       {
         href: "/sign-in",
@@ -48,12 +48,12 @@ const GROUPS = [
   },
   {
     title: "Signed-in shop",
-    note: "Use a supplier Clerk user. First visit must hit the NDA before the dashboard.",
+    note: "Use a supplier Clerk user. Dashboard opens without the NDA while that gate is off.",
     rows: [
       {
         href: "/source/enter",
         label: "Post-login router",
-        check: "Sends buyers to /buyer/dashboard, unsigned shops to /source/nda, signed shops to the dashboard.",
+        check: "Sends buyers to /buyer/dashboard. Shops go to the dashboard unless the NDA gate is on.",
       },
       {
         href: "/source/nda",
@@ -63,7 +63,7 @@ const GROUPS = [
       {
         href: "/source/dashboard",
         label: "Shop dashboard",
-        check: "Job inbox under Buyer leads. A STEP link appears only if the buyer released it and this shop was mailed.",
+        check: "Job inbox. Teaser until Buy this lead. Contact and STEP after $49.",
       },
     ],
   },
@@ -74,7 +74,7 @@ const GROUPS = [
       {
         href: "/buyer/dashboard",
         label: "Buyer dashboard",
-        check: "Company form. Jobs list. Change drawing privacy. Download own STEP. Shops cannot open it unless released + NDA.",
+        check: "Company form. Jobs list. Change drawing privacy. Download own STEP. Shops cannot open it unless released and they bought the lead.",
       },
       {
         href: "/source",
@@ -100,7 +100,7 @@ const GROUPS = [
       {
         href: "/admin/subscribers",
         label: "Subscribers",
-        check: "Who receives leads (paid or comp). Listing-only shops stay listed.",
+        check: "Who listed. Legacy cell plans and comps. Every shop can buy a $49 lead.",
       },
       {
         href: "/admin",
@@ -139,7 +139,7 @@ export default async function AdminLivePage({
       <PageHero
         kicker="Admin"
         title="Live pages"
-        lede="What shipped with the NDA, buyer desk, and shop desk. Click each path. The check is what should be true on that page."
+        lede="What shipped with free listings, $49 leads, buyer desk, and shop desk. Click each path. The check is what should be true on that page."
       />
       <AdminInboxNav
         current="live"

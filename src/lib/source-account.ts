@@ -1,5 +1,5 @@
 import type { SourceFilingRow, SourceMachine } from "@/lib/source-types";
-import { planById, type SourcePlan } from "@/lib/source-plans";
+import { SOURCE_CELL_SOFT_CAP, planById, type SourcePlan } from "@/lib/source-plans";
 
 export function normalizeShopEmail(email: string | undefined | null) {
   return email?.trim().toLowerCase() ?? "";
@@ -39,8 +39,15 @@ export function countSourceCells(rows: Pick<SourceFilingRow, "machines">[]) {
   return rows.reduce((sum, row) => sum + filedSourceMachines(row.machines).length, 0);
 }
 
-export function remainingSourceCells(plan: SourcePlan, used: number) {
-  return Math.max(0, plan.cells - used);
+export function remainingSourceCells(_plan: SourcePlan, used: number) {
+  return Math.max(0, SOURCE_CELL_SOFT_CAP - used);
+}
+
+export function sourceCapMessage(_plan: SourcePlan, used: number) {
+  if (used >= SOURCE_CELL_SOFT_CAP) {
+    return `This form holds ${SOURCE_CELL_SOFT_CAP} cells at a time. Existing cells stay on the dashboard.`;
+  }
+  return `You have ${used} cells on the list. Room for ${SOURCE_CELL_SOFT_CAP - used} more in this form.`;
 }
 
 export function shopFromFilings(
@@ -62,14 +69,6 @@ export function shopFromFilings(
     state: latest.state,
     website: latest.website,
   };
-}
-
-export function sourceCapMessage(plan: SourcePlan, used: number) {
-  const label = plan.cells === 1 ? "1 cell" : `${plan.cells} cells`;
-  if (used >= plan.cells) {
-    return `This plan holds ${label}. Upgrade to file more iron.`;
-  }
-  return `This plan holds ${label}. You already have ${used}.`;
 }
 
 export { planById };

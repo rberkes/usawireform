@@ -53,7 +53,7 @@ export const articles: BlogPost[] = [
       },
       {
         type: "p",
-        text: "Fourslide and transfer tools can take a day to set. That shop needs volume to justify the downtime. A CNC cell that programs from the print can run a hundred pieces. Mix those two in one RFQ blast and one quote looks “expensive” only because the machine was never right. The engine asks for the cell class first — spring, 2D CNC, 3D CNC, fourslide, multi-slide — then the wire size. Up to three introductions to shops that filed that kind of cell and a band that fits.",
+        text: "Fourslide and transfer tools can take a day to set. That shop needs volume to justify the downtime. A CNC cell that programs from the print can run a hundred pieces. Mix those two in one RFQ blast and one quote looks “expensive” only because the machine was never right. The engine asks for the cell class first — spring, 2D CNC, 3D CNC, fourslide, multi-slide — then the wire size. Up to 10 shops that filed that kind of cell and a band that fits see the lead. Each can buy it for $49.",
       },
       {
         type: "h2",
@@ -62,7 +62,7 @@ export const articles: BlogPost[] = [
       },
       {
         type: "p",
-        text: "It does not scrape CAD against a secret idle-capacity feed. Buyers pick the class and the diameter on /source. Engineers type an OEM or class on /find-factories-by-machine and get up to four plants that named that iron. Shops claim the directory page, pass the plant check, and file cells — OEM, model, 2D or 3D, millimetres. One cell free. Instant estimate stays this Ohio floor. We do not sell machines. We do not invent who runs a WAFIOS if they never named it.",
+        text: "It does not scrape CAD against a secret idle-capacity feed. Buyers pick the class and the diameter on /source. Engineers type an OEM or class on /find-factories-by-machine and get up to four plants that named that iron. Shops claim the directory page, pass the plant check, and file cells — OEM, model, 2D or 3D, millimetres. Every cell is free. Instant estimate stays this Ohio floor. We do not sell machines. We do not invent who runs a WAFIOS if they never named it.",
       },
       {
         type: "ul",

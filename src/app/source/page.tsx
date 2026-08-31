@@ -45,7 +45,7 @@ const STEPS = [
   {
     n: "03",
     title: "Quotes from shops that can run it",
-    body: "Up to three introductions. Shop emails stay with the desk until we make the intro.",
+    body: "Up to 10 shops see the lead. Each can buy it for $49 to unlock your contact. The STEP is never attached to email.",
   },
 ];
 
@@ -96,7 +96,7 @@ export default async function SourcePage() {
         <div className="border border-line bg-inset p-5 sm:p-8">
           <Kicker>What you get</Kicker>
           <p className="mt-4 text-2xl font-medium tracking-tight sm:text-3xl">
-            Three shops whose machines fit the job.
+            Up to 10 shops whose machines fit the job.
           </p>
           <p className="mt-4 text-sm leading-6 text-muted">
             Instant estimate on this site is still this floor — 4–14 mm on the
@@ -108,10 +108,10 @@ export default async function SourcePage() {
       <StatRow
         className="mt-14 sm:mt-16"
         items={[
-          { value: "3", label: "Shops introduced" },
+          { value: "10", label: "Shops can buy a lead" },
           { value: "Size", label: "Wire diameter first" },
           { value: "2D / 3D", label: "Bend type" },
-          { value: "Desk", label: "Emails stay here" },
+          { value: "$49", label: "To unlock a lead" },
         ]}
       />
 
@@ -156,7 +156,7 @@ export default async function SourcePage() {
           <TextLink href="/source/equipment">
             File machine, year, capacity, and stocked sizes
           </TextLink>
-          . After sign-up the shop accepts an NDA before any STEP opens.
+          . Listing is free. $49 unlocks a matched lead in the shop dashboard.
         </p>
       </section>
     </Page>

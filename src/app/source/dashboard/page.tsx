@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
-import { openSourceBillingPortal } from "@/app/actions/source-billing";
+import { openSourceBillingPortal, startSourceLeadCheckout } from "@/app/actions/source-billing";
 import { SourceAddCellsForm } from "@/components/SourceAddCellsForm";
 import { SourceFiledCells } from "@/components/SourceFiledCells";
 import { SourceWeeklyCapacityForm } from "@/components/SourceWeeklyCapacityForm";
@@ -16,15 +16,13 @@ import {
   sourceFilingsForShop,
 } from "@/lib/source-account";
 import { getSourcePlanForUser, getSourceSecondaryQtyForUser, getStripeCustomerId } from "@/lib/source-billing";
-import { formatPlanPrice } from "@/lib/source-plans";
-import {
-  leadsStatus,
-  leadsStatusLabel,
-  shopGetsLeads,
-} from "@/lib/source-leads";
+import { formatLeadPrice, SOURCE_LEAD_BUYERS_MAX, SOURCE_PLAN_LINE } from "@/lib/source-plans";
 import {
   jobsMailedToShop,
+  leadPurchaseCount,
+  shopBoughtLead,
   shopDrawingHref,
+  shopMaySeeBuyerContact,
   shopMayViewDrawing,
 } from "@/lib/source-access";
 import { requireSignedIn, requireSupplier } from "@/lib/source-gate";
@@ -45,7 +43,7 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-type Props = { searchParams: Promise<{ session_id?: string }> };
+type Props = { searchParams: Promise<{ session_id?: string; lead?: string }> };
 
 async function ensureProfile({
   userId,
@@ -102,7 +100,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
   const userId = await requireSignedIn("/source/enter");
   await requireSupplier(userId);
 
-  const { session_id: sessionId } = await searchParams;
+  const { session_id: sessionId, lead: leadFlag } = await searchParams;
   if (sessionId) {
     await syncCheckoutSession(sessionId);
     redirect("/source/dashboard");
@@ -133,9 +131,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
   const cells = shopRows.flatMap((row) => filedSourceMachines(row.machines));
   const customerId = await getStripeCustomerId(userId);
   const location = [shop?.city, shop?.state].filter(Boolean).join(", ");
-  const leads = leadsStatus(plan, profile);
-  const getsLeads = shopGetsLeads(leads);
-  const inbox = jobsMailedToShop(jobs, email);
+  const inbox = jobsMailedToShop(jobs, { userId, email });
   const finishClaim = suggestedDirectoryClaim(profile);
 
   return (
@@ -163,7 +159,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
       ) : null}
       <div className="mt-8 flex flex-wrap gap-3">
         <ButtonLink href="/source/upgrade" variant="ghost">
-          {plan.id === "free" ? "Upgrade" : "Change plan"}
+          How leads work
         </ButtonLink>
         <ButtonLink href="/source/account" variant="ghost">
           Account
@@ -180,27 +176,22 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         <Panel className="p-5">
           <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
-            Plan
+            Leads
           </p>
-          <p className="mt-2 text-xl font-medium">{plan.name}</p>
+          <p className="mt-2 text-xl font-medium">{formatLeadPrice()} each</p>
           <p className="mt-1 text-sm text-muted">
-            {formatPlanPrice(plan.priceCents)}
-            {getsLeads ? " · receives leads" : " · listing only"}
+            Up to {SOURCE_LEAD_BUYERS_MAX} shops can buy a job.
           </p>
         </Panel>
         <Panel className="p-5">
           <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
             Cells
           </p>
-          <p className="mt-2 text-xl font-medium">
-            {used} of {plan.cells}
-          </p>
+          <p className="mt-2 text-xl font-medium">{used}</p>
           <p className="mt-1 text-sm text-muted">
-            {used > plan.cells
-              ? `${used} cells filed. This plan holds ${plan.cells}. Existing cells stay. Remove extras or upgrade.`
-              : remaining === 0
-                ? "This plan is full."
-                : `${remaining} left on this plan.`}
+            Listing is free. {remaining === 0
+              ? "This form is full — cells already filed stay."
+              : `${remaining} more in this form.`}
           </p>
         </Panel>
         <Panel className="p-5">
@@ -219,24 +210,21 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
           Buyer leads
         </p>
-        <p className="mt-2 text-xl font-medium">{leadsStatusLabel(leads)}</p>
-        {getsLeads ? (
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-            Matched RFQs land in this shop email and in the inbox below.
-            A STEP opens here only if the buyer released it. Listing
-            equipment stays free; this is what the plan pays for.
+        <p className="mt-2 text-xl font-medium">Buy as they come</p>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+          {SOURCE_PLAN_LINE} Spec shows here. Buyer contact unlocks after you
+          pay. A STEP opens only if the buyer released it.
+        </p>
+        {leadFlag === "full" ? (
+          <p className="mt-2 text-sm leading-6 text-copper">
+            This lead already has {SOURCE_LEAD_BUYERS_MAX} buyers.
           </p>
-        ) : (
-          <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
-            <p className="max-w-2xl text-sm leading-6 text-muted">
-              Your cells stay on the floor list. Buyer contact goes to paid
-              shops. Subscribe to receive the RFQ.
-            </p>
-            <ButtonLink href="/source/upgrade" variant="ghost">
-              Get leads
-            </ButtonLink>
-          </div>
-        )}
+        ) : null}
+        {leadFlag === "stripe" ? (
+          <p className="mt-2 text-sm leading-6 text-copper">
+            Card checkout is not configured. Email the desk.
+          </p>
+        ) : null}
       </Panel>
 
       <section className="mt-4">
@@ -246,40 +234,60 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           </p>
           {inbox.length === 0 ? (
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-              {getsLeads
-                ? "No matched buyer jobs yet. When a print fits a cell on a paid plan, the RFQ lands here. The STEP stays off email."
-                : "Subscribe to receive matched RFQs in this inbox."}
+              No matched buyer jobs yet. When a print fits a cell you filed,
+              the lead lands here. Pay {formatLeadPrice()} to unlock the
+              buyer.
             </p>
           ) : (
             <ul className="mt-4 divide-y divide-line border border-line">
               {inbox.map((job) => {
+                const bought = shopBoughtLead(job, { userId, email });
+                const contact = shopMaySeeBuyerContact(job, { userId, email });
                 const released = shopMayViewDrawing(job, {
+                  userId,
                   email,
                   profile,
                 });
                 const privacy = parseDrawingPrivacy(job.drawingPrivacy);
+                const sold = leadPurchaseCount(job);
+                const full = sold >= SOURCE_LEAD_BUYERS_MAX && !bought;
                 return (
                   <li key={job.pathname} className="px-4 py-4 text-sm">
                     <p className="font-medium">
-                      {job.company || job.email}
-                      <span className="ml-2 font-normal text-muted">
-                        {job.kind || "job"}
-                        {job.diameterMm != null ? ` · ${job.diameterMm} mm` : ""}
-                      </span>
+                      {job.kind || "Job"}
+                      {job.diameterMm != null ? ` · ${job.diameterMm} mm` : ""}
+                      {job.qty ? ` · qty ${job.qty}` : ""}
                     </p>
                     <p className="mt-1 text-muted">
-                      {[job.name, job.email, job.phone]
-                        .filter(Boolean)
-                        .join(" · ")}
+                      {[job.city, job.state].filter(Boolean).join(", ") || "Locale on the print"}
+                      {job.oem ? ` · ${job.oem}` : ""}
                     </p>
                     {job.notes ? (
-                      <p className="mt-1 max-w-2xl text-foreground/90">{job.notes}</p>
+                      <p className="mt-1 max-w-2xl text-foreground/90">
+                        {bought ? job.notes : job.notes.slice(0, 140)}
+                      </p>
                     ) : null}
+                    {contact ? (
+                      <p className="mt-2 text-foreground">
+                        {[job.company, job.name, job.email, job.phone]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    ) : (
+                      <p className="mt-2 text-muted">
+                        Buyer contact unlocks at {formatLeadPrice()}.
+                        {sold
+                          ? ` ${sold} of ${SOURCE_LEAD_BUYERS_MAX} shops bought this lead.`
+                          : ""}
+                      </p>
+                    )}
                     <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
                       {privacy === "matched"
                         ? released
                           ? "Drawing released — open in this dashboard"
-                          : "Buyer released the STEP — wait for NDA or match"
+                          : bought
+                            ? "Buyer released the STEP — waiting on file access"
+                            : "STEP released after you buy"
                         : "STEP held at the desk"}
                     </p>
                     {released && job.drawingPath ? (
@@ -290,6 +298,20 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                         >
                           Open {job.fileName || "drawing"}
                         </a>
+                      </p>
+                    ) : null}
+                    {!bought && !full ? (
+                      <form action={startSourceLeadCheckout} className="mt-3">
+                        <input type="hidden" name="pathname" value={job.pathname} />
+                        <Button type="submit">
+                          Buy this lead — {formatLeadPrice()}
+                        </Button>
+                      </form>
+                    ) : null}
+                    {full ? (
+                      <p className="mt-2 text-sm text-muted">
+                        This lead is closed. {SOURCE_LEAD_BUYERS_MAX} shops
+                        already bought it.
                       </p>
                     ) : null}
                   </li>

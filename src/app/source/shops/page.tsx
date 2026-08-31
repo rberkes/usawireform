@@ -43,8 +43,8 @@ const STEPS = [
   },
   {
     n: "03",
-    title: "NDA, then paid plans receive the buyer",
-    body: "After you confirm the account you accept the Source NDA. Listing a cell stays free. Matched RFQs go to paid plans. A STEP opens in the shop dashboard only after that NDA and only if the buyer released it.",
+    title: "Buy the lead from the dashboard",
+    body: "Listing every cell is free. A matched job shows in the shop dashboard. $49 unlocks buyer contact. Up to 10 shops can buy the same job. A STEP opens only if the buyer released it — never attached to email.",
   },
 ];
 
@@ -85,13 +85,13 @@ export default async function SourceShopsPage() {
         <Panel className="p-5 sm:p-8">
           <Kicker>Offer</Kicker>
           <p className="mt-4 text-2xl font-medium tracking-tight sm:text-3xl">
-            List equipment free. Pay to get the leads.
+            List equipment free. $49 per lead.
           </p>
           <p className="mt-4 text-sm leading-6 text-muted">
             No card to file a cell. Min order, setup, stock, and lead stay
             free on the listing so a buyer can see how the plant operates.
-            Matched buyer RFQs go to paid plans. Four cells $30/mo. Ten
-            $49/mo. Twenty $99/mo.
+            Matched jobs show in the dashboard. $49 unlocks buyer contact. Up
+            to 10 shops can buy the same job.
           </p>
           <p className="mt-6 text-sm leading-6 text-muted">
             Already filed? <TextLink href="/sign-in">Log in</TextLink>.
@@ -102,9 +102,9 @@ export default async function SourceShopsPage() {
       <StatRow
         className="mt-14 sm:mt-16"
         items={[
-          { value: "Free", label: "List a cell. Leads are paid." },
+          { value: "Free", label: "List every cell" },
           { value: String(usaShops.length), label: "US listings to claim" },
-          { value: "3 shops", label: "Max intros on a job" },
+          { value: "$49", label: "Per lead. Max 10 shops." },
           { value: "US", label: "Shops on Source" },
         ]}
       />

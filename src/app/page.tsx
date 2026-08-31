@@ -5,6 +5,7 @@ import { CapabilityStrip } from "@/components/CapabilityStrip";
 import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
 import { ClientCtaBand, ClientHero } from "@/components/client/ClientLanding";
 import { PlatformFlowTabs } from "@/components/client/PlatformFlowTabs";
+import { HomeFloorFeed } from "@/components/HomeFloorFeed";
 import {
   HOME_CTA_LEDE,
   HOME_CTA_TITLE,
@@ -25,6 +26,8 @@ import { BrandLockup } from "@/components/WireMark";
 import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
 import { pageMeta } from "@/lib/seo";
+import { listRecentSourceFloorCells } from "@/lib/source";
+import { HOME_FLOOR_CARD_COUNT } from "@/lib/source-floor-feed";
 
 export const metadata = pageMeta({
   title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
@@ -65,7 +68,11 @@ export const metadata = pageMeta({
   ],
 });
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const floorCells = await listRecentSourceFloorCells(HOME_FLOOR_CARD_COUNT);
+
   return (
     <>
       <ClientHero
@@ -76,19 +83,7 @@ export default function Home() {
         cta={<ClientQuoteCtas variant="home" tone="dark" className="mt-8" />}
       />
       <Page>
-        <div className="overflow-hidden bg-inset">
-          <Image
-            src="/shop/hero-forms.jpg"
-            alt="3D CNC wire forms: nested hooks and frames in 4–14 mm steel"
-            width={1024}
-            height={687}
-            sizes="(min-width: 1152px) 1152px, 100vw"
-            fetchPriority="high"
-            loading="eager"
-            decoding="async"
-            className="h-auto w-full object-contain"
-          />
-        </div>
+        <HomeFloorFeed initial={floorCells} />
 
         <AskBox />
 

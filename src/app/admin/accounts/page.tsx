@@ -254,8 +254,8 @@ export default async function AdminAccountsPage({
       <section id="shops" className="mt-12 scroll-mt-24">
         <h2 className="text-lg font-medium">Shops</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          Newest first. Unsigned shops still list iron. They cannot open a
-          buyer file until they accept NDA {SOURCE_NDA_VERSION}.
+          Newest first. Shops list iron free. They open buyer contact after they
+          buy the lead. A released STEP follows that purchase.
         </p>
         {shops.length === 0 ? (
           <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
@@ -380,7 +380,7 @@ export default async function AdminAccountsPage({
         <h2 className="text-lg font-medium">STEP files</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
           Source jobs from /source. The desk can always download. A shop only
-          opens a file after the NDA and a buyer release.
+          opens a file after they buy the lead and the buyer released it.
         </p>
         {jobs.length === 0 ? (
           <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
@@ -426,7 +426,7 @@ export default async function AdminAccountsPage({
                     {drawingPrivacyLabel(privacy)}
                     {row.mailedTo && row.mailedTo.length > 0
                       ? ` · ${row.mailedTo.map((shop) => shop.company || shop.email).join(", ")}`
-                      : " · no paid match yet"}
+                      : " · no match yet"}
                     {row.buyerUserId ? " · buyer account" : " · guest"}
                   </p>
                   <p className="mt-1 font-mono text-[11px] text-muted">

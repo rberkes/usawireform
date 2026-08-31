@@ -1,8 +1,9 @@
 import { normalizeShopEmail } from "@/lib/source-account";
-import { shopHasNda } from "@/lib/source-nda";
+import { shopNeedsNda } from "@/lib/source-nda";
 import {
   parseDrawingPrivacy,
   type SourceJob,
+  type SourceJobPurchase,
   type SourceProfile,
 } from "@/lib/source-types";
 
@@ -39,34 +40,71 @@ export function jobsForBuyer<T extends SourceJob>(
 
 export function shopWasMailedJob(
   job: Pick<SourceJob, "mailedTo">,
-  email: string | null | undefined,
+  {
+    userId,
+    email,
+  }: { userId?: string | null; email?: string | null },
 ) {
   const needle = normalizeShopEmail(email);
-  if (!needle) return false;
   return (job.mailedTo ?? []).some(
-    (row) => normalizeShopEmail(row.email) === needle,
+    (row) =>
+      (userId && row.userId === userId) ||
+      (Boolean(needle) && normalizeShopEmail(row.email) === needle),
   );
 }
 
 export function jobsMailedToShop<T extends SourceJob>(
   jobs: T[],
-  email: string | null | undefined,
+  { userId, email }: { userId?: string | null; email?: string | null },
 ) {
-  return jobs.filter((job) => shopWasMailedJob(job, email));
+  return jobs.filter((job) => shopWasMailedJob(job, { userId, email }));
+}
+
+export function shopBoughtLead(
+  job: Pick<SourceJob, "purchasedBy">,
+  {
+    userId,
+    email,
+  }: { userId?: string | null; email?: string | null },
+) {
+  const needle = normalizeShopEmail(email);
+  return (job.purchasedBy ?? []).some(
+    (row) =>
+      (userId && row.userId === userId) ||
+      (Boolean(needle) && normalizeShopEmail(row.email) === needle),
+  );
+}
+
+export function leadPurchaseCount(job: Pick<SourceJob, "purchasedBy">) {
+  return job.purchasedBy?.length ?? 0;
+}
+
+export function shopMaySeeBuyerContact(
+  job: Pick<SourceJob, "mailedTo" | "purchasedBy">,
+  who: { userId?: string | null; email?: string | null },
+) {
+  return shopWasMailedJob(job, who) && shopBoughtLead(job, who);
 }
 
 export function shopMayViewDrawing(
-  job: Pick<SourceJob, "drawingPath" | "drawingPrivacy" | "mailedTo">,
+  job: Pick<
+    SourceJob,
+    "drawingPath" | "drawingPrivacy" | "mailedTo" | "purchasedBy"
+  >,
   {
+    userId,
     email,
     profile,
   }: {
+    userId?: string | null;
     email?: string | null;
     profile?: Pick<SourceProfile, "ndaAcceptedAt" | "ndaVersion"> | null;
   },
 ) {
-  if (!shopHasNda(profile)) return false;
+  if (shopNeedsNda(profile)) return false;
   if (parseDrawingPrivacy(job.drawingPrivacy) !== "matched") return false;
   if (!job.drawingPath || !isSourceDrawingPath(job.drawingPath)) return false;
-  return shopWasMailedJob(job, email);
+  return shopMaySeeBuyerContact(job, { userId, email });
 }
+
+export type { SourceJobPurchase };

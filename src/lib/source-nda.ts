@@ -32,3 +32,12 @@ export function shopHasNda(
     profile?.ndaAcceptedAt && profile.ndaVersion === SOURCE_NDA_VERSION,
   );
 }
+
+/** Flip to true to require the NDA checkbox before a shop can open a bought STEP. */
+export const SOURCE_NDA_REQUIRED = false;
+
+export function shopNeedsNda(
+  profile?: { ndaAcceptedAt?: string; ndaVersion?: string } | null,
+) {
+  return SOURCE_NDA_REQUIRED && !shopHasNda(profile);
+}

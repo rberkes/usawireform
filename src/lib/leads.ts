@@ -577,8 +577,8 @@ export async function sendSourceJobEmails({
         ${notes ? `<p>Notes: ${escapeHtml(notes)}</p>` : ""}
         <p><strong>${matches.length === 0 ? "No filed cell matched." : "Capability matches:"}</strong></p>
         ${chairs || "<p>Empty floor list — work the RFQ from the desk.</p>"}
-        <p>Paid shops were emailed the buyer. Listing-only shops stay on the directory until they subscribe.</p>
-        <p>Drawing: ${drawingPrivacy === "matched" ? "buyer released the STEP to matched shops that signed the NDA — file is in the shop dashboard, not attached here." : "buyer kept the STEP at the desk — do not forward the file."}</p>`,
+        <p>Matched shops see the lead in Source and pay $49 to unlock buyer contact. Up to 10 shops can buy this job.</p>
+        <p>Drawing: ${drawingPrivacy === "matched" ? "buyer released the STEP — a shop that bought the lead opens it in the dashboard, not attached here." : "buyer kept the STEP at the desk — do not forward the file."}</p>`,
     }),
     sendResendMail({
       to,
@@ -605,9 +605,7 @@ export async function sendSourceJobEmails({
 
 export async function sendSourceShopLeadEmails({
   mailed,
-  buyer,
   spec,
-  drawingPrivacy = "desk",
 }: {
   mailed: Array<{
     company: string;
@@ -615,7 +613,7 @@ export async function sendSourceShopLeadEmails({
     why: string;
     fitNote?: string;
   }>;
-  buyer: {
+  buyer?: {
     company?: string;
     name?: string;
     email: string;
@@ -637,15 +635,13 @@ export async function sendSourceShopLeadEmails({
     mailed.map(async (row) => {
       const ok = await sendResendMail({
         to: row.email,
-        replyTo: buyer.email,
-        subject: `LEAD: matched buyer job — ${COMPANY}`,
+        replyTo: QUOTE_EMAIL,
+        subject: `A Source job matches your cell — ${COMPANY}`,
         html: sourceShopLeadHtml({
           shop: row.company,
           why: row.why,
           fitNote: row.fitNote,
-          buyer,
           spec,
-          drawingPrivacy,
         }),
       });
       console.log("[Source shop lead]", { to: row.email, company: row.company, ok });

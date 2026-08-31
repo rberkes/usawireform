@@ -48,7 +48,7 @@ export default async function SourceEquipmentPage({ searchParams }: Props) {
       <PageHero
         kicker="Source"
         title="Register and upload equipment"
-        lede="Pick the machine class, then file OEM, model, year, capacity, and stocked sizes. Listing is free. Matched buyer leads go to paid plans."
+        lede="Pick the machine class, then file OEM, model, year, capacity, and stocked sizes. Listing is free. Matched leads show in the dashboard at $49 each."
       />
       {invite ? (
         <p className="mt-6 max-w-2xl text-sm leading-6 text-muted">
@@ -66,11 +66,10 @@ export default async function SourceEquipmentPage({ searchParams }: Props) {
       {maxCells <= 0 ? (
         <div className="mt-8 space-y-4">
           <p className="max-w-xl text-sm leading-6 text-muted">
-            This plan is full. Upgrade to file more cells, or open the
-            dashboard.
+            This form is full. Existing cells stay on the dashboard.
           </p>
           <div className="flex flex-wrap gap-3">
-            <ButtonLink href="/source/upgrade">See Source plans</ButtonLink>
+            <ButtonLink href="/source/upgrade">How leads work</ButtonLink>
             <ButtonLink href="/source/dashboard" variant="ghost">
               Shop dashboard
             </ButtonLink>

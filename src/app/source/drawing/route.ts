@@ -37,7 +37,8 @@ export async function GET(request: Request) {
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const allowed =
     (role === "buyer" && buyerOwnsJob(job, { userId, email })) ||
-    (role === "supplier" && shopMayViewDrawing(job, { email, profile }));
+    (role === "supplier" &&
+      shopMayViewDrawing(job, { userId, email, profile }));
   if (!allowed) {
     return new Response("Forbidden", { status: 403 });
   }

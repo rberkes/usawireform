@@ -54,7 +54,7 @@ export default async function AdminSubscribersPage({
       <PageHero
         kicker="Admin"
         title="Subscribers"
-        lede="Listing a cell is free. Buyer leads go only to paid plans or a comp grant from this page."
+        lede="Listing a cell is free. Matched jobs show in every shop dashboard. $49 unlocks buyer contact. Comp is a leftover grant, not required to see teasers."
       />
       <AdminInboxNav
         current="subscribers"
@@ -67,7 +67,7 @@ export default async function AdminSubscribersPage({
       <p className="mt-8 max-w-2xl text-sm leading-6 text-muted">
         {rows.length === 0
           ? "No shops have filed equipment yet."
-          : `${paid} of ${rows.length} ${rows.length === 1 ? "shop receives" : "shops receive"} leads. The rest are listed only.`}
+          : `${paid} of ${rows.length} ${rows.length === 1 ? "shop has" : "shops have"} a legacy plan or comp. Every shop can buy a $49 lead.`}
       </p>
       {rows.length > 0 ? (
         <ul className="mt-6 divide-y divide-line border border-line">

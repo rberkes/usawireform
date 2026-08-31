@@ -7,7 +7,7 @@ import { SITE_URL } from "@/lib/company";
 import { sendLeadEmail, sendSourceIncompleteReminderEmail } from "@/lib/leads";
 import { normalizeShopEmail } from "@/lib/source-account";
 import { sourceClaimPath, suggestedDirectoryClaim } from "@/lib/source-directory";
-import { shopHasNda } from "@/lib/source-nda";
+import { shopNeedsNda } from "@/lib/source-nda";
 import {
   listSourceFilings,
   listSourceInvites,
@@ -118,7 +118,7 @@ async function emailForProfile(
 }
 
 function profileComplete(profile: SourceProfile) {
-  if (!shopHasNda(profile)) return false;
+  if (shopNeedsNda(profile)) return false;
   if (profile.claimedDirectory || profile.plantVerifiedAt) return true;
   return !suggestedDirectoryClaim(profile);
 }
@@ -159,8 +159,9 @@ export async function listIncompleteSourceShops(): Promise<IncompleteShop[]> {
       filingEmailForUser.get(profile.userId) ||
       (await emailForProfile(profile, filings));
     const listing = suggestedDirectoryClaim(profile);
-    const nda = shopHasNda(profile);
-    const kind: SourceReminderKind = nda && listing ? "claim" : "nda";
+    const kind: SourceReminderKind = shopNeedsNda(profile)
+      ? "nda"
+      : "claim";
     const nextPath =
       kind === "claim" && listing
         ? sourceClaimPath(listing.slug)

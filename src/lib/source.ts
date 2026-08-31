@@ -2,6 +2,7 @@ import { get, list, put, del } from "@vercel/blob";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { SITE_URL } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
+import { SOURCE_LEAD_BUYERS_MAX } from "@/lib/source-plans";
 import {
   slugifyShopName,
   sourceProfileToDirectoryCompany,
@@ -11,6 +12,7 @@ import { withCapacity } from "@/lib/source-capacity";
 import { parseSourceBuyerFit } from "@/lib/source-fit";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
+import { filingsToFloorCells, mergeFloorFeed } from "@/lib/source-floor-feed";
 import {
   parseDrawingPrivacy,
   type SourceDrawingPrivacy,
@@ -19,6 +21,7 @@ import {
   type SourceInvite,
   type SourceJob,
   type SourceJobMailedTo,
+  type SourceJobPurchase,
   type SourceJobRow,
   type SourceMachine,
   type SourceProfile,
@@ -186,6 +189,11 @@ export async function listSourceFilings(): Promise<SourceFilingRow[]> {
   return rows;
 }
 
+export async function listRecentSourceFloorCells(limit = 6) {
+  const filings = await listSourceFilings();
+  return mergeFloorFeed(filingsToFloorCells(filings), limit);
+}
+
 export async function replaceSourceFilingsForShop({
   userId,
   email,
@@ -271,6 +279,29 @@ function readMailedTo(raw: unknown): SourceJobMailedTo[] {
     .filter((row) => row.email);
 }
 
+function readPurchasedBy(raw: unknown): SourceJobPurchase[] {
+  if (!Array.isArray(raw)) return [];
+  const seen = new Set<string>();
+  const rows: SourceJobPurchase[] = [];
+  for (const row of raw) {
+    const item = row as Partial<SourceJobPurchase>;
+    const userId = String(item.userId ?? "").trim();
+    const email = String(item.email ?? "").trim();
+    const key = userId || email.toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    rows.push({
+      userId,
+      email,
+      company: String(item.company ?? "").trim(),
+      purchasedAt: String(item.purchasedAt ?? ""),
+      sessionId:
+        typeof item.sessionId === "string" ? item.sessionId : undefined,
+    });
+  }
+  return rows;
+}
+
 function readSourceJob(
   payload: Partial<SourceJob>,
   pathname: string,
@@ -301,6 +332,7 @@ function readSourceJob(
       ? String(payload.privacyToken)
       : undefined,
     mailedTo: readMailedTo(payload.mailedTo),
+    purchasedBy: readPurchasedBy(payload.purchasedBy),
     buyerUserId: payload.buyerUserId ? String(payload.buyerUserId) : undefined,
     pathname,
   };
@@ -332,6 +364,78 @@ export async function listSourceJobs(): Promise<SourceJobRow[]> {
     }
   }
   return rows;
+}
+
+export async function getSourceJob(pathname: string) {
+  if (
+    !pathname ||
+    pathname.includes("..") ||
+    !pathname.startsWith("source/jobs/") ||
+    !pathname.endsWith(".json")
+  ) {
+    return null;
+  }
+  if (!(await blobReady())) return null;
+  const file = await get(pathname, {
+    access: "private",
+    useCache: false,
+    ...(await blobAuth()),
+  });
+  if (!file?.stream || file.statusCode !== 200) return null;
+  try {
+    return readSourceJob(
+      JSON.parse(await new Response(file.stream).text()) as Partial<SourceJob>,
+      pathname,
+    );
+  } catch {
+    return null;
+  }
+}
+
+export async function recordSourceLeadPurchase({
+  pathname,
+  userId,
+  email,
+  company,
+  sessionId,
+}: {
+  pathname: string;
+  userId: string;
+  email: string;
+  company: string;
+  sessionId?: string;
+}) {
+  const job = await getSourceJob(pathname);
+  if (!job) return { ok: false as const, reason: "missing" as const };
+  const offered = (job.mailedTo ?? []).some(
+    (row) =>
+      row.userId === userId ||
+      (email &&
+        row.email.trim().toLowerCase() === email.trim().toLowerCase()),
+  );
+  if (!offered) return { ok: false as const, reason: "not-offered" as const };
+  const already = (job.purchasedBy ?? []).some(
+    (row) => row.userId === userId || row.sessionId === sessionId,
+  );
+  if (already) return { ok: true as const, job };
+  if ((job.purchasedBy ?? []).length >= SOURCE_LEAD_BUYERS_MAX) {
+    return { ok: false as const, reason: "sold-out" as const };
+  }
+  const next: SourceJobRow = {
+    ...job,
+    purchasedBy: [
+      ...(job.purchasedBy ?? []),
+      {
+        userId,
+        email,
+        company,
+        purchasedAt: new Date().toISOString(),
+        sessionId,
+      },
+    ],
+  };
+  await saveSourceJob(next, pathname);
+  return { ok: true as const, job: next };
 }
 
 export async function findSourceJobByPrivacyToken(token: string) {

@@ -11,6 +11,13 @@ export type SourcePlan = {
   blurb: string;
 };
 
+/** One-time unlock. Up to this many matched shops can buy each job. */
+export const SOURCE_LEAD_PRICE_CENTS = 4900;
+export const SOURCE_LEAD_LOOKUP = "source_lead_once";
+export const SOURCE_LEAD_BUYERS_MAX = 10;
+/** Soft form cap so the row UI stays usable. Listing itself is not gated. */
+export const SOURCE_CELL_SOFT_CAP = 80;
+
 const PLAN_ALIASES: Record<string, SourcePlanId> = {
   fifteen: "ten",
   source_shop_10: "ten",
@@ -21,11 +28,11 @@ const PLAN_ALIASES: Record<string, SourcePlanId> = {
 export const SOURCE_PLANS: SourcePlan[] = [
   {
     id: "free",
-    name: "One cell",
-    cells: 1,
+    name: "Free listing",
+    cells: SOURCE_CELL_SOFT_CAP,
     priceCents: 0,
     lookupKey: null,
-    blurb: "List one cell free. Buyer leads need a paid plan.",
+    blurb: "List every cell free. Matched jobs show in the dashboard. $49 unlocks a lead.",
   },
   {
     id: "four",
@@ -33,7 +40,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
     cells: 4,
     priceCents: 3000,
     lookupKey: "source_cells_4",
-    blurb: "Up to four cells. Matched buyer leads come to this inbox.",
+    blurb: "Legacy cell plan. New shops buy leads at $49 instead.",
   },
   {
     id: "ten",
@@ -41,7 +48,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
     cells: 10,
     priceCents: 4900,
     lookupKey: "source_cells_10",
-    blurb: "Up to ten cells. Matched buyer leads come to this inbox.",
+    blurb: "Legacy cell plan. New shops buy leads at $49 instead.",
   },
   {
     id: "twenty",
@@ -49,14 +56,14 @@ export const SOURCE_PLANS: SourcePlan[] = [
     cells: 20,
     priceCents: 9900,
     lookupKey: "source_cells_20",
-    blurb: "Up to twenty cells. Matched buyer leads come to this inbox.",
+    blurb: "Legacy cell plan. New shops buy leads at $49 instead.",
   },
 ];
 
 export const SOURCE_PAID_PLANS = SOURCE_PLANS.filter((plan) => plan.priceCents > 0);
 
 export const SOURCE_PLAN_LINE =
-  "Listing a cell is free. Buyer leads go to paid plans. $30/mo for 4 cells. $49/mo for 10. $99/mo for 20. Up to 3 secondaries $19/mo. Six maximum $49/mo.";
+  "List every cell free. Matched leads show in the shop dashboard. $49 to unlock a lead. Up to 10 shops can buy each job.";
 
 export const SOURCE_FIT_LINE =
   "Min order, setup, stocked materials, and lead are free on the listing so a buyer can see how the factory operates.";
@@ -90,6 +97,10 @@ export function planByLookupKey(key: string | null | undefined): SourcePlan {
 export function formatPlanPrice(cents: number) {
   if (cents === 0) return "Free";
   return `$${(cents / 100).toFixed(0)}/mo`;
+}
+
+export function formatLeadPrice() {
+  return `$${(SOURCE_LEAD_PRICE_CENTS / 100).toFixed(0)}`;
 }
 
 export function sourceAccountHref(email?: string) {

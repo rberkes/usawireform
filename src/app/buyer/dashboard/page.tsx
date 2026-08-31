@@ -34,7 +34,7 @@ export default async function BuyerDashboardPage() {
       <PageHero
         kicker="Source"
         title="Buyer dashboard"
-        lede="Your jobs and drawing privacy. Matched shops get the spec. A STEP opens in their dashboard only after they signed the NDA and only if you released it."
+        lede="Your jobs and drawing privacy. Matched shops see the spec. A shop opens your contact — and a released STEP — only after they buy the lead."
       />
       <div className="mt-8 flex flex-wrap gap-3">
         <ButtonLink href="/source">Send a print</ButtonLink>
@@ -58,8 +58,8 @@ export default async function BuyerDashboardPage() {
           <Panel className="mt-4 space-y-3 p-5">
             <p className="text-sm leading-6 text-muted">
               No jobs on this email yet. Send a print from Source — keep the
-              STEP at the desk, or release it to matched shops that have signed
-              the NDA.
+              STEP at the desk, or release it so a shop that buys the lead can
+              open the file.
             </p>
             <ButtonLink href="/source" variant="ghost">
               Send the print
@@ -84,8 +84,11 @@ export default async function BuyerDashboardPage() {
                   <p className="mt-1 text-muted">
                     {drawingPrivacyLabel(privacy)}
                     {job.mailedTo && job.mailedTo.length > 0
-                      ? ` · ${job.mailedTo.length === 1 ? "1 paid shop" : `${job.mailedTo.length} paid shops`}`
-                      : " · no paid match yet"}
+                      ? ` · offered to ${job.mailedTo.length === 1 ? "1 shop" : `${job.mailedTo.length} shops`}`
+                      : " · no match yet"}
+                    {job.purchasedBy && job.purchasedBy.length > 0
+                      ? ` · ${job.purchasedBy.length === 1 ? "1 bought the lead" : `${job.purchasedBy.length} bought the lead`}`
+                      : ""}
                   </p>
                   <p className="mt-1 font-mono text-[11px] text-muted">
                     {job.timestamp

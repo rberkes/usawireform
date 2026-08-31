@@ -150,8 +150,8 @@ export function SourceEquipmentForm({
           Pick the class first: 2D CNC, 3D CNC, 4-slide, multi-slide, or
           manual pneumatic. Model and wire capacity come from the catalog —
           Baird, Nilson, Lubow, Numalliance, AIM. Confirm the plate. This
-          plan holds {maxCells} {maxCells === 1 ? "cell" : "cells"} here. More
-          iron is a paid plan on the shop dashboard.
+          plan holds {maxCells} {maxCells === 1 ? "cell" : "cells"} here. Listing
+          is free. $49 unlocks a matched lead.
         </p>
         <SourceMachineRows
           machines={machines}

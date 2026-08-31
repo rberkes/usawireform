@@ -162,8 +162,8 @@ export function SourceJobForm({
         <fieldset className="space-y-3">
           <legend className="text-sm">The drawing</legend>
           <p className="text-sm leading-6 text-muted">
-            Matched shops always get the spec and your contact. You choose
-            whether the STEP itself is released.
+            Matched shops see the spec. A shop that pays $49 gets your
+            contact. You choose whether the STEP itself is released.
           </p>
           <label className="flex items-start gap-2 text-sm leading-6">
             <input
@@ -186,9 +186,9 @@ export function SourceJobForm({
               value="matched"
             />
             <span>
-            Release the STEP to matched paid shops. They can open it in the
-            shop dashboard only after they signed the Source NDA. It is never
-            attached to email and not posted publicly.
+            Release the STEP to shops that buy this lead. They open it in the
+            shop dashboard after they pay $49. It is never attached to email
+            and not posted publicly.
             </span>
           </label>
         </fieldset>

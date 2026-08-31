@@ -3,7 +3,7 @@ import "server-only";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { getBuyerAccount } from "@/lib/source-buyer";
-import { shopHasNda } from "@/lib/source-nda";
+import { shopNeedsNda } from "@/lib/source-nda";
 import {
   ensureSourceRole,
   getSourceRole,
@@ -69,7 +69,7 @@ export async function requireSupplier(
   const role = await resolveSourceRole(userId);
   if (role === "buyer") redirect("/buyer/dashboard");
   const profile = await getSourceProfile(userId);
-  if (!shopHasNda(profile)) redirect(sourceNdaHref(next));
+  if (shopNeedsNda(profile)) redirect(sourceNdaHref(next));
   return profile;
 }
 

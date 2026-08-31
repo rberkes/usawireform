@@ -101,7 +101,7 @@ export default function PrivacyPage() {
           <ul className="list-disc space-y-2 pl-5">
             <li>Quote, program, and form the print you sent.</li>
             <li>Answer email and connect a directory inquiry to the right desk.</li>
-            <li>Operate Source accounts, shop listings, and paid plans.</li>
+            <li>Operate Source accounts, shop listings, and $49 lead purchases.</li>
             <li>Answer Ask the resource questions from this site’s library.</li>
             <li>Keep the site up, debug failures, and measure which pages are used.</li>
             <li>Meet legal, tax, and quality-record duties on a job.</li>
@@ -128,16 +128,16 @@ export default function PrivacyPage() {
             Source and admin sign-in is handled by Clerk. Clerk holds the
             account fields they need to authenticate you. Their privacy policy
             applies to that processing. We see the account identifiers required
-            to attach a shop listing, claim, or paid plan to you.
+            to attach a shop listing, claim, or lead purchase to you.
           </p>
         </LegalSection>
 
         <LegalSection id="payments" title="Payments">
           <p>
-            If you buy a Source plan, Stripe processes the card. We do not store
+            If you buy a Source lead, Stripe processes the card. We do not store
             full card numbers. Stripe’s terms and privacy policy cover that
-            payment. We keep the customer and subscription identifiers needed to
-            honor the plan.
+            payment. We keep the customer and payment identifiers needed to
+            unlock the lead.
           </p>
         </LegalSection>
 
@@ -170,7 +170,7 @@ export default function PrivacyPage() {
           <ul className="list-disc space-y-2 pl-5">
             <li>Vercel — hosting, analytics, and file storage for uploads.</li>
             <li>Clerk — sign-in and account sessions.</li>
-            <li>Stripe — Source plan payments.</li>
+            <li>Stripe — Source lead payments.</li>
             <li>Resend — outbound email for quotes and lead notices.</li>
             <li>
               Our AI gateway provider — Ask the resource answers, when that

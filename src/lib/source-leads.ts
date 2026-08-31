@@ -51,9 +51,9 @@ export function shopGetsLeads(status: SourceLeadsStatus) {
 }
 
 export function leadsStatusLabel(status: SourceLeadsStatus) {
-  if (status === "stripe") return "Paid — receives leads";
-  if (status === "comp") return "Comp — receives leads";
-  return "Listing only";
+  if (status === "stripe") return "Legacy cell plan";
+  if (status === "comp") return "Comp grant";
+  return "Lists free — buys leads";
 }
 
 function filingKey(row: SourceFiling) {
@@ -155,30 +155,12 @@ export async function plansByUserId(userIds: string[]) {
   return new Map(entries);
 }
 
-export async function partitionLeadMatches(
-  matches: SourceInternalMatch[],
-  filings: SourceFiling[],
-  profiles: SourceProfile[],
-) {
-  const plans = await plansByUserId(
-    filings.map((row) => row.userId).filter((id): id is string => Boolean(id)),
-  );
-  const profileByUser = new Map(profiles.map((row) => [row.userId, row]));
+export async function partitionLeadMatches(matches: SourceInternalMatch[]) {
   const mailed: SourceInternalMatch[] = [];
   const listed: SourceInternalMatch[] = [];
 
   for (const match of matches) {
-    const filing = filings.find(
-      (row) =>
-        row.email.trim().toLowerCase() === match.email.trim().toLowerCase() &&
-        row.company.trim().toLowerCase() === match.company.trim().toLowerCase(),
-    );
-    const userId = filing?.userId;
-    const status = leadsStatus(
-      userId ? (plans.get(userId) ?? planById("free")) : planById("free"),
-      userId ? profileByUser.get(userId) : undefined,
-    );
-    if (shopGetsLeads(status)) mailed.push(match);
+    if (match.email.trim()) mailed.push(match);
     else listed.push(match);
   }
 

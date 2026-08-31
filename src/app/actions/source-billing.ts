@@ -6,6 +6,7 @@ import {
   applyCheckoutSession,
   checkoutUrls,
   ensureBillingPortal,
+  ensureLeadPriceId,
   ensurePaidPriceId,
   ensureSecondaryPackPriceId,
   getLiveSourceSubscription,
@@ -13,7 +14,7 @@ import {
   getStripeCustomerId,
   setSubscriptionSecondaryPack,
 } from "@/lib/source-billing";
-import { isSourcePlanId, planById } from "@/lib/source-plans";
+import { SOURCE_LEAD_BUYERS_MAX, isSourcePlanId, planById } from "@/lib/source-plans";
 import {
   SOURCE_SECONDARY_MAX,
   formatSecondaryPrice,
@@ -21,13 +22,14 @@ import {
   packForCount,
   parseSourceSecondaries,
 } from "@/lib/source-secondaries";
-import { getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
+import { shopBoughtLead, shopWasMailedJob } from "@/lib/source-access";
+import { getSourceJob, getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
 
 async function requireUser() {
   const { userId, isAuthenticated } = await auth();
   if (!isAuthenticated || !userId) {
-    redirect("/sign-in?redirect_url=/source/upgrade");
+    redirect("/sign-in?redirect_url=/source/dashboard");
   }
   const user = await currentUser();
   const email = user?.primaryEmailAddress?.emailAddress;
@@ -35,6 +37,47 @@ async function requireUser() {
     throw new Error("Sign in with an email.");
   }
   return { userId, email, user };
+}
+
+export async function startSourceLeadCheckout(formData: FormData) {
+  const pathname = String(formData.get("pathname") ?? "").trim();
+  const { userId, email } = await requireUser();
+  if (!pathname) redirect("/source/dashboard");
+  if (!stripeConfigured()) redirect("/source/dashboard?lead=stripe");
+
+  const job = await getSourceJob(pathname);
+  if (!job) redirect("/source/dashboard");
+  const offered = shopWasMailedJob(job, { userId, email });
+  if (!offered) redirect("/source/dashboard");
+  if (shopBoughtLead(job, { userId, email })) {
+    redirect("/source/dashboard");
+  }
+  if ((job.purchasedBy ?? []).length >= SOURCE_LEAD_BUYERS_MAX) {
+    redirect("/source/dashboard?lead=full");
+  }
+
+  const stripe = getStripe();
+  const priceId = await ensureLeadPriceId();
+  const urls = checkoutUrls();
+  const customerId = await getStripeCustomerId(userId);
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    client_reference_id: userId,
+    ...(customerId
+      ? { customer: customerId }
+      : { customer_email: email, customer_creation: "always" }),
+    line_items: [{ price: priceId, quantity: 1 }],
+    success_url: urls.success,
+    cancel_url: urls.cancelDashboard,
+    allow_promotion_codes: true,
+    metadata: {
+      userId,
+      source_lead: "1",
+      job_pathname: pathname,
+    },
+  });
+  if (!session.url) redirect("/source/dashboard");
+  redirect(session.url);
 }
 
 export async function startSourceCheckout(formData: FormData) {

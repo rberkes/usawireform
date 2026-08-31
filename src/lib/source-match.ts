@@ -1,10 +1,11 @@
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import { capacityScoreAdjust, formatCapacityWhy } from "@/lib/source-capacity";
 import { fitScoreAdjust, formatFitWhy } from "@/lib/source-fit";
+import { SOURCE_LEAD_BUYERS_MAX } from "@/lib/source-plans";
 import { type SourceFiling, type SourceInternalMatch } from "@/lib/source-types";
 
 const BAND_SLACK_MM = 0.05;
-export const SOURCE_MATCH_LIMIT = 3;
+export const SOURCE_MATCH_LIMIT = SOURCE_LEAD_BUYERS_MAX;
 
 export function parseWireMm(raw: string): number | null {
   const text = raw.trim().toLowerCase().replace(/,/g, ".");

@@ -2,7 +2,7 @@ import "server-only";
 
 import { clerkClient } from "@clerk/nextjs/server";
 import type Stripe from "stripe";
-import { SOURCE_PAID_PLANS, planById, planByLookupKey, type SourcePlan, type SourcePlanId } from "@/lib/source-plans";
+import { SOURCE_LEAD_LOOKUP, SOURCE_LEAD_PRICE_CENTS, SOURCE_PAID_PLANS, planById, planByLookupKey, type SourcePlan, type SourcePlanId } from "@/lib/source-plans";
 import {
   SOURCE_SECONDARY_LOOKUP,
   isSourceSecondaryPrice,
@@ -10,7 +10,7 @@ import {
   parseSourceSecondaries,
   type SourceSecondaryPack,
 } from "@/lib/source-secondaries";
-import { getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
+import { getSourceProfile, recordSourceLeadPurchase, setSourceProfileSecondaries } from "@/lib/source";
 import { appOrigin, getStripe, stripeConfigured } from "@/lib/stripe";
 
 const PRICE_CACHE = new Map<string, string>();
@@ -106,6 +106,40 @@ export async function ensurePaidPriceId(plan: SourcePlan) {
     metadata: { source_plan: plan.id },
   });
   PRICE_CACHE.set(plan.lookupKey, price.id);
+  return price.id;
+}
+
+export async function ensureLeadPriceId() {
+  const cached = PRICE_CACHE.get(SOURCE_LEAD_LOOKUP);
+  if (cached) return cached;
+
+  const stripe = getStripe();
+  const existing = await stripe.prices.list({
+    lookup_keys: [SOURCE_LEAD_LOOKUP],
+    active: true,
+    limit: 1,
+  });
+  const oneTime = existing.data.find(
+    (row) => row.type === "one_time" && row.unit_amount === SOURCE_LEAD_PRICE_CENTS,
+  );
+  if (oneTime?.id) {
+    PRICE_CACHE.set(SOURCE_LEAD_LOOKUP, oneTime.id);
+    return oneTime.id;
+  }
+
+  const product = await stripe.products.create({
+    name: "Source lead",
+    description: "Unlock one matched buyer job — contact and released STEP in the shop dashboard.",
+    metadata: { source_lead: "1" },
+  });
+  const price = await stripe.prices.create({
+    product: product.id,
+    currency: "usd",
+    unit_amount: SOURCE_LEAD_PRICE_CENTS,
+    lookup_key: SOURCE_LEAD_LOOKUP,
+    metadata: { source_lead: "1" },
+  });
+  PRICE_CACHE.set(SOURCE_LEAD_LOOKUP, price.id);
   return price.id;
 }
 
@@ -315,13 +349,51 @@ export async function applyCheckoutSession(session: Stripe.Checkout.Session) {
     session.client_reference_id || session.metadata?.userId || undefined;
   const customerId =
     typeof session.customer === "string" ? session.customer : session.customer?.id;
+
+  if (session.metadata?.source_lead === "1") {
+    const stripe = getStripe();
+    if (userId && customerId) {
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      await client.users.updateUserMetadata(userId, {
+        privateMetadata: {
+          ...user.privateMetadata,
+          stripeCustomerId: customerId,
+        },
+      });
+      await stripe.customers.update(customerId, {
+        metadata: { clerkUserId: userId },
+      });
+    }
+    const paid =
+      session.payment_status === "paid" || session.status === "complete";
+    const pathname = session.metadata?.job_pathname?.trim();
+    if (paid && userId && pathname) {
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      const email =
+        user.primaryEmailAddress?.emailAddress ||
+        user.emailAddresses[0]?.emailAddress ||
+        "";
+      const profile = await getSourceProfile(userId);
+      await recordSourceLeadPurchase({
+        pathname,
+        userId,
+        email,
+        company: profile?.company || "Shop",
+        sessionId: session.id,
+      });
+    }
+    return;
+  }
+
+  if (!userId || !customerId) return;
+
+  const stripe = getStripe();
   const subscriptionId =
     typeof session.subscription === "string"
       ? session.subscription
       : session.subscription?.id;
-  if (!userId || !customerId) return;
-
-  const stripe = getStripe();
   await stripe.customers.update(customerId, {
     metadata: { clerkUserId: userId },
   });

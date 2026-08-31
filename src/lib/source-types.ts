@@ -129,8 +129,8 @@ export type SourceProfile = {
   /** Shop-filed buyer-fit: MOQ, setup, stock, lead, coil. */
   fit?: SourceBuyerFit;
   /**
-   * Admin grant so a shop receives buyer leads without a Stripe plan.
-   * Stripe paid plans also receive leads. Listing equipment stays free.
+   * Desk grant leftover from cell-plan billing. Not required to see teasers;
+   * every listed shop can buy a matched lead.
    */
   leadsAccess?: "comp";
   /** When the shop accepted the current Source NDA. */
@@ -152,7 +152,7 @@ export function parseDrawingPrivacy(
 
 export function drawingPrivacyLabel(value: SourceDrawingPrivacy) {
   return value === "matched"
-    ? "Released to matched shops"
+    ? "Released after a shop buys the lead"
     : "Held at the desk";
 }
 
@@ -160,6 +160,14 @@ export type SourceJobMailedTo = {
   email: string;
   company: string;
   userId?: string;
+};
+
+export type SourceJobPurchase = {
+  userId: string;
+  email: string;
+  company: string;
+  purchasedAt: string;
+  sessionId?: string;
 };
 
 export type SourceJob = {
@@ -183,8 +191,10 @@ export type SourceJob = {
   drawingPrivacy?: SourceDrawingPrivacy;
   /** Unguessable token so the buyer can change privacy without an account. */
   privacyToken?: string;
-  /** Paid shops that received this RFQ. */
+  /** Shops offered this RFQ in the dashboard (up to 10). */
   mailedTo?: SourceJobMailedTo[];
+  /** Shops that paid $49 to unlock buyer contact. */
+  purchasedBy?: SourceJobPurchase[];
   /** Clerk user when a signed-in buyer sent the job. */
   buyerUserId?: string;
 };

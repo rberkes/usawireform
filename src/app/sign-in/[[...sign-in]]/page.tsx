@@ -25,7 +25,7 @@ export default async function SignInPage({ searchParams }: Props) {
       <PageHero
         kicker="Source"
         title="Log in"
-        lede="Shops land on the supplier dashboard after the NDA. Buyers land on the buyer dashboard. Forgot the password? Use Forgot password on this form."
+        lede="Shops land on the supplier dashboard. Buyers land on the buyer dashboard. Forgot the password? Use Forgot password on this form."
       />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
         New here?{" "}

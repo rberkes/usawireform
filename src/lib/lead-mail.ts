@@ -170,7 +170,7 @@ export function customerThanksHtml({
         ? ctaBannerRow(
             `${SITE_URL}/source/equipment`,
             "File your cells on Source",
-            "One cell free. Jobs match the iron on the floor.",
+            "List every cell free. Jobs match the iron on the floor.",
           )
         : ctaBannerRow(
             `${SITE_URL}/contact`,
@@ -400,12 +400,12 @@ export function sourceFiledReceiptHtml({
     ? ctaBannerRow(
         dashboardHref,
         "Open the shop dashboard",
-        "Add cells, edit the listing, or change the plan.",
+        "Add cells, edit the listing, or buy a matched lead.",
       )
     : ctaBannerRow(
         confirmHref,
         "Confirm your Source account",
-        "Use this email. Accept the supplier NDA, then the shop dashboard.",
+        "Use this email. Then the shop dashboard. Listing is free. $49 unlocks a matched lead.",
       );
   return shell(
     hasAccount
@@ -441,7 +441,7 @@ export function sourceClaimedReceiptHtml({
      ${ctaBannerRow(
        dashboardHref,
        "Open the shop dashboard",
-       "One cell is free. Add the iron on the floor.",
+       "List every cell free. Buy matched leads from the dashboard.",
      )}
      ${copyRow(SOURCE_PLAN_LINE)}`,
   );
@@ -466,12 +466,12 @@ export function sourceJobReceiptHtml({
     matchCount === 0
       ? `No filed cell matches ${size} yet. The desk has the RFQ and will work it.`
       : matchCount === 1
-        ? `One paid shop can run ${size}. We introduce that cell — we do not post your print.`
-        : `Up to ${matchCount} paid shops can run ${size}. We introduce three chairs when we have them.`;
+        ? `One shop can run ${size}. They see the lead in Source and pay $49 to unlock your contact.`
+        : `Up to ${Math.min(matchCount, 10)} shops that can run ${size} see the lead. Each can buy it for $49 — maximum 10 shops.`;
   const privacy =
     drawingPrivacy === "matched"
-      ? "You released the STEP to matched paid shops. They open it in the shop dashboard after the Source NDA. It is not posted and not attached to email."
-      : "You kept the STEP at the desk. Matched shops get the spec and your contact only.";
+      ? "You released the STEP. A shop that buys the lead can open it in the dashboard. It is not posted and not attached to email."
+      : "You kept the STEP at the desk. Shops that buy the lead get the spec and your contact only.";
   const privacyCta = privacyHref
     ? ctaBannerRow(
         privacyHref,
@@ -491,7 +491,7 @@ export function sourceJobReceiptHtml({
        "Send another job",
        "Wire size, 2D or 3D, locale. We introduce — emails stay with the desk.",
      )}
-     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/shops" style="color:#0b6bcb;text-decoration:none">List a machine cell free</a>. Buyer leads need a paid plan. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
+     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/shops" style="color:#0b6bcb;text-decoration:none">List every cell free</a>. Matched leads are $49 in the dashboard. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
   );
 }
 
@@ -499,14 +499,12 @@ export function sourceShopLeadHtml({
   shop,
   why,
   fitNote,
-  buyer,
   spec,
-  drawingPrivacy = "desk",
 }: {
   shop: string;
   why: string;
   fitNote?: string;
-  buyer: {
+  buyer?: {
     company?: string;
     name?: string;
     email: string;
@@ -528,40 +526,27 @@ export function sourceShopLeadHtml({
     spec.diameterMm != null
       ? `${spec.diameterMm.toLocaleString("en-US")} mm`
       : spec.diameterRaw.trim() || "unspecified wire";
-  const mailto = `mailto:${encodeURIComponent(buyer.email)}`;
   return shell(
-    `Matched buyer lead — ${size}`,
+    `A Source job matches your cell — ${size}`,
     `${kickerRow()}
-     ${headingRow("A buyer job matches your cell")}
-     ${copyRow(`${escapeHtml(shop || "Your shop")} is on a paid Source plan, so this RFQ comes to you. Listing equipment stays free; leads do not.`)}
+     ${headingRow("A job matches your cell")}
+     ${copyRow(`${escapeHtml(shop || "Your shop")}: this print sits in a cell you filed. The lead is in the shop dashboard. $49 unlocks buyer contact. Up to 10 shops can buy it.`)}
      ${copyRow(`<strong>${escapeHtml(why)}</strong>${fitNote ? `<br />${escapeHtml(fitNote)}` : ""}`)}
      ${mailRowsHtml(
        [
-         { label: "Buyer", value: buyer.company || buyer.name || buyer.email },
-         buyer.name ? { label: "Name", value: buyer.name } : null,
-         { label: "Email", value: buyer.email, href: mailto },
-         buyer.phone ? { label: "Phone", value: buyer.phone } : null,
-         buyer.city || buyer.state
-           ? {
-               label: "Locale",
-               value: [buyer.city, buyer.state].filter(Boolean).join(", "),
-             }
-           : null,
-         { label: "Wire", value: spec.diameterRaw || size },
          spec.kind ? { label: "Cell", value: spec.kind } : null,
+         { label: "Wire", value: spec.diameterRaw || size },
          spec.oem ? { label: "OEM", value: spec.oem } : null,
          spec.qty ? { label: "Qty", value: spec.qty } : null,
-         spec.notes ? { label: "Notes", value: spec.notes } : null,
+         spec.notes
+           ? { label: "Notes", value: spec.notes.slice(0, 180) }
+           : null,
        ].filter((row): row is MailRow => Boolean(row)),
      )}
      ${ctaBannerRow(
        `${SITE_URL}/source/dashboard`,
-       drawingPrivacy === "matched"
-         ? "Open the job in the shop dashboard"
-         : "Open the shop dashboard",
-       drawingPrivacy === "matched"
-         ? "The STEP is in the dashboard if you accepted the NDA. It is not attached to this email."
-         : "The buyer kept the drawing at the desk. Quote from the spec.",
+       "Open the shop dashboard — $49 to unlock",
+       "Buyer email is not in this message. The STEP is never attached.",
      )}`,
   );
 }

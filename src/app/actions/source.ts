@@ -873,11 +873,7 @@ export async function submitSourceJob(
   ]);
   const filings = applyProfilesToFilings(filingRows, profiles);
   const internal = matchFilingsToJob(filings, parsed.spec);
-  const { mailed, listed } = await partitionLeadMatches(
-    internal,
-    filings,
-    profiles,
-  );
+  const { mailed, listed } = await partitionLeadMatches(internal);
   const matches: SourcePublicMatch[] = mailed.map(
     ({ email: _email, ...row }) => row,
   );
@@ -985,9 +981,9 @@ export async function submitSourceJob(
   const message =
     mailed.length === 0
       ? listed.length > 0
-        ? `Cells match ${parsed.spec.diameterMm} mm, but those shops list free and do not receive leads yet. Receipt sent to ${email}. The desk has the RFQ.`
+        ? `Cells match ${parsed.spec.diameterMm} mm. Those shops will see the lead in Source. Receipt sent to ${email}.`
         : `No filed cell matches ${parsed.spec.diameterMm} mm yet. Receipt sent to ${email}. The desk has the RFQ.`
-      : `Matched ${mailed.length === 1 ? "1 paid shop" : `${mailed.length} paid shops`}. Receipt sent to ${email}. Those shops got the lead.`;
+      : `Offered to ${mailed.length === 1 ? "1 shop" : `${mailed.length} shops`} that can run ${parsed.spec.diameterMm} mm. They see it in the dashboard and can buy the lead. Receipt sent to ${email}.`;
 
   return {
     success: true,
