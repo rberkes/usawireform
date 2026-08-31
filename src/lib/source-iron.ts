@@ -6,6 +6,8 @@ export type SourceIronPick = {
   kind: (typeof SOURCE_KINDS)[number];
   minMm: string;
   maxMm: string;
+  /** Plate wire cap in inches when shops file 4-slide / pneumatic cells. */
+  maxIn?: string;
 };
 
 /** Numalliance wire CNC from their published machine pages (600 N/mm² tables). Confirm the plate. */
@@ -143,10 +145,70 @@ export const AIM_MACHINES: SourceIronPick[] = [
   { name: "Gemini Twin", series: "Gemini", kind: "3D CNC", minMm: "", maxMm: "" },
 ];
 
+/** U.S. Baird four-slide / multi-slide from Surplus Record plates and published shop tables. Confirm the plate. */
+export const BAIRD_MACHINES: SourceIronPick[] = [
+  { name: "#00", series: "Four-slide", kind: "Fourslide", minMm: "0.2", maxMm: "0.81", maxIn: "1/32" },
+  { name: "#0", series: "Four-slide", kind: "Fourslide", minMm: "0.2", maxMm: "0.81", maxIn: "1/32" },
+  { name: "#1", series: "Four-slide", kind: "Fourslide", minMm: "0.4", maxMm: "2.36", maxIn: "3/32" },
+  { name: "RWI", series: "Four-slide", kind: "Fourslide", minMm: "0.4", maxMm: "2.36", maxIn: "3/32" },
+  { name: "#2", series: "Four-slide", kind: "Fourslide", minMm: "0.8", maxMm: "3.18", maxIn: "1/8" },
+  { name: "#3", series: "Four-slide", kind: "Fourslide", minMm: "1", maxMm: "4.76", maxIn: "3/16" },
+  { name: "#3-24", series: "Four-slide", kind: "Fourslide", minMm: "1", maxMm: "4.76", maxIn: "3/16" },
+  { name: "#4", series: "Four-slide", kind: "Fourslide", minMm: "1.5", maxMm: "7.94", maxIn: "5/16" },
+  { name: "#4-30", series: "Four-slide", kind: "Fourslide", minMm: "1.5", maxMm: "6.35", maxIn: "1/4" },
+  { name: "#4-36", series: "Four-slide", kind: "Fourslide", minMm: "1.5", maxMm: "6.35", maxIn: "1/4" },
+  { name: "#5", series: "Four-slide", kind: "Fourslide", minMm: "2", maxMm: "7.94", maxIn: "5/16" },
+  { name: "#8", series: "Four-slide", kind: "Fourslide", minMm: "3", maxMm: "12.7", maxIn: "1/2" },
+  { name: "#11", series: "Multi-slide", kind: "Multi-slide", minMm: "0.4", maxMm: "0.8", maxIn: "1/32" },
+  { name: "#28", series: "Multi-slide", kind: "Multi-slide", minMm: "0.5", maxMm: "1.59", maxIn: "1/16" },
+  { name: "#33", series: "Multi-slide", kind: "Multi-slide", minMm: "0.8", maxMm: "2.38", maxIn: "3/32" },
+  { name: "#35", series: "Multi-slide", kind: "Multi-slide", minMm: "0.8", maxMm: "2.38", maxIn: "3/32" },
+];
+
+/** Nilson four-slide from Surplus Record plates and published shop tables. Confirm the plate. */
+export const NILSON_MACHINES: SourceIronPick[] = [
+  { name: "S-00", series: "S", kind: "Fourslide", minMm: "0.2", maxMm: "0.81", maxIn: "1/32" },
+  { name: "#00", series: "S", kind: "Fourslide", minMm: "0.2", maxMm: "0.81", maxIn: "1/32" },
+  { name: "S-0", series: "S", kind: "Fourslide", minMm: "0.4", maxMm: "1.59", maxIn: "1/16" },
+  { name: "#0", series: "S", kind: "Fourslide", minMm: "0.4", maxMm: "1.59", maxIn: "1/16" },
+  { name: "S-1", series: "S", kind: "Fourslide", minMm: "0.5", maxMm: "2.36", maxIn: "3/32" },
+  { name: "#1", series: "S", kind: "Fourslide", minMm: "0.5", maxMm: "2.36", maxIn: "3/32" },
+  { name: "1F", series: "F", kind: "Fourslide", minMm: "0.5", maxMm: "2.36", maxIn: "3/32" },
+  { name: "S-2", series: "S", kind: "Fourslide", minMm: "0.8", maxMm: "3.18", maxIn: "1/8" },
+  { name: "#2", series: "S", kind: "Fourslide", minMm: "0.8", maxMm: "3.18", maxIn: "1/8" },
+  { name: "S-2F", series: "F", kind: "Fourslide", minMm: "0.8", maxMm: "3.18", maxIn: "1/8" },
+  { name: "S-3", series: "S", kind: "Fourslide", minMm: "1", maxMm: "4.76", maxIn: "3/16" },
+  { name: "#3", series: "S", kind: "Fourslide", minMm: "1", maxMm: "4.76", maxIn: "3/16" },
+  { name: "3F", series: "F", kind: "Fourslide", minMm: "1", maxMm: "4.76", maxIn: "3/16" },
+  { name: "S-3F", series: "F", kind: "Fourslide", minMm: "1", maxMm: "4.75", maxIn: "3/16" },
+  { name: "S3-26", series: "F", kind: "Fourslide", minMm: "1", maxMm: "4.76", maxIn: "3/16" },
+];
+
+/** Lubow (often listed Lebow) pneumatic table benders. Confirm the plate. */
+export const LUBOW_MACHINES: SourceIronPick[] = [
+  { name: "4SA 4-head", series: "Multi-head", kind: "Manual pneumatic", minMm: "1.5", maxMm: "9.53", maxIn: "3/8" },
+  { name: "ML6 table bender", series: "Table", kind: "Manual pneumatic", minMm: "", maxMm: "" },
+  { name: "ML 200 turret", series: "Table", kind: "Manual pneumatic", minMm: "", maxMm: "" },
+  { name: "WBR 1 table bender", series: "Table", kind: "Manual pneumatic", minMm: "", maxMm: "" },
+  { name: "DW132 table bender", series: "Table", kind: "Manual pneumatic", minMm: "", maxMm: "" },
+  { name: "DWB 48 double bender", series: "Table", kind: "Manual pneumatic", minMm: "", maxMm: "" },
+];
+
+/** Bihler stamp-and-form. Wire band is per tool — shop files the plate. */
+export const BIHLER_MACHINES: SourceIronPick[] = [
+  { name: "GRM-NC", series: "GRM", kind: "Multi-slide", minMm: "", maxMm: "" },
+  { name: "GRM 80", series: "GRM", kind: "Multi-slide", minMm: "", maxMm: "" },
+  { name: "RM 40", series: "RM", kind: "Multi-slide", minMm: "", maxMm: "" },
+  { name: "BIMERIC", series: "BIMERIC", kind: "Multi-slide", minMm: "", maxMm: "" },
+];
+
 export const SOURCE_OEM_NAMES = [
   "Numalliance",
   "WAFIOS",
   "AIM Inc.",
+  "U.S. Baird",
+  "Nilson",
+  "Lubow",
   "Itaya Engineering",
   "Otto Bihler Maschinenfabrik",
   "BLM GROUP",
@@ -157,12 +219,48 @@ export const SOURCE_OEM_NAMES = [
   "Other",
 ];
 
-export function machinesForOem(oem: string): SourceIronPick[] {
-  const key = oem.trim().toLowerCase();
-  if (key === "numalliance") return NUMALLIANCE_MACHINES;
-  if (key === "wafios") return WAFIOS_MACHINES;
-  if (key === "aim inc." || key === "aim") return AIM_MACHINES;
-  return [];
+function oemCatalogKey(oem: string) {
+  return oem.trim().toLowerCase().replace(/\./g, "").replace(/\s+/g, " ");
+}
+
+export function machinesForOem(oem: string, kind?: string): SourceIronPick[] {
+  const key = oemCatalogKey(oem);
+  let catalog: SourceIronPick[] = [];
+  if (key === "numalliance") catalog = NUMALLIANCE_MACHINES;
+  else if (key === "wafios") catalog = WAFIOS_MACHINES;
+  else if (key === "aim inc" || key === "aim") catalog = AIM_MACHINES;
+  else if (key === "us baird" || key === "baird") catalog = BAIRD_MACHINES;
+  else if (key === "nilson") catalog = NILSON_MACHINES;
+  else if (key === "lubow" || key === "lebow") catalog = LUBOW_MACHINES;
+  else if (key === "otto bihler maschinenfabrik" || key === "bihler") {
+    catalog = BIHLER_MACHINES;
+  }
+  if (!kind) return catalog;
+  return catalog.filter((row) => row.kind === kind);
+}
+
+export function oemsForKind(kind: string): string[] {
+  return SOURCE_OEM_NAMES.filter((name) => {
+    if (name === "Other") return true;
+    return machinesForOem(name).some((row) => row.kind === kind);
+  });
+}
+
+export function preferredOemForKind(kind: string): string {
+  return (
+    SOURCE_OEM_NAMES.find(
+      (name) =>
+        name !== "Other" && machinesForOem(name).some((row) => row.kind === kind),
+    ) ?? ""
+  );
+}
+
+export function ironPickLabel(item: SourceIronPick): string {
+  if (item.maxIn) return `${item.name} · to ${item.maxIn} in`;
+  if (item.minMm && item.maxMm) {
+    return `${item.name} · ${item.minMm}–${item.maxMm} mm`;
+  }
+  return item.name;
 }
 
 export function ironPickByName(

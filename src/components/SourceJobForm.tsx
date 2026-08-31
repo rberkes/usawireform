@@ -8,8 +8,8 @@ import {
 import { StepUpload } from "@/components/StepUpload";
 import { Button, fieldClass, Panel } from "@/components/ui";
 import { DRAWING_FREE_STEP } from "@/lib/drawings";
+import { SourceKindCards } from "@/components/SourceKindCards";
 import { SOURCE_OEM_NAMES } from "@/lib/source-iron";
-import { SOURCE_JOB_CLASSES } from "@/lib/source-types";
 
 const initial: SourceFormState = { success: false, message: "" };
 
@@ -28,25 +28,8 @@ export function SourceJobForm() {
             Pick the cell first. Quotes go to shops that filed that iron, year,
             capacity, and stocked sizes — not a shop that says they form wire.
           </p>
-          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-            {SOURCE_JOB_CLASSES.map((row) => (
-              <label
-                key={row.kind}
-                className="flex cursor-pointer flex-col border border-line bg-background px-3 py-3 has-[:checked]:border-copper has-[:checked]:bg-inset"
-              >
-                <input
-                  type="radio"
-                  name="kind"
-                  value={row.kind}
-                  required
-                  className="sr-only"
-                />
-                <span className="text-sm font-medium">{row.label}</span>
-                <span className="mt-1 text-xs leading-5 text-muted">
-                  {row.hint}
-                </span>
-              </label>
-            ))}
+          <div className="mt-4">
+            <SourceKindCards name="kind" required />
           </div>
         </fieldset>
       </Panel>

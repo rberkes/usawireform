@@ -5,19 +5,15 @@ export const SOURCE_KINDS = [
   "2D CNC",
   "Fourslide",
   "Multi-slide",
+  "Manual pneumatic",
   "Spring CNC",
   "Other",
 ] as const;
 
 export type SourceKind = (typeof SOURCE_KINDS)[number];
 
-/** Buyer must pick one. Maps 1:1 to the kind shops file on a cell. */
+/** Buyer and shop pick one. Maps 1:1 to the kind shops file on a cell. */
 export const SOURCE_JOB_CLASSES = [
-  {
-    kind: "Spring CNC",
-    label: "Spring",
-    hint: "Compression, extension, torsion. CNC or mechanical coiler. Not hot-wound rail coil.",
-  },
   {
     kind: "2D CNC",
     label: "2D CNC",
@@ -30,13 +26,23 @@ export const SOURCE_JOB_CLASSES = [
   },
   {
     kind: "Fourslide",
-    label: "Fourslide",
-    hint: "Cam four-slide. Volume wire forms and light stampings.",
+    label: "4-slide",
+    hint: "Cam four-slide. Baird, Nilson. Volume wire forms and light stampings.",
   },
   {
     kind: "Multi-slide",
     label: "Multi-slide",
-    hint: "Multi-slide, verti-slide, Bihler. More stations than fourslide.",
+    hint: "Baird #28/#33, Bihler, verti-slide. More stations than 4-slide.",
+  },
+  {
+    kind: "Manual pneumatic",
+    label: "Manual pneumatic",
+    hint: "Lubow table benders and air formers. Not a cam 4-slide.",
+  },
+  {
+    kind: "Spring CNC",
+    label: "Spring CNC",
+    hint: "Compression, extension, torsion. CNC or mechanical coiler.",
   },
 ] as const;
 

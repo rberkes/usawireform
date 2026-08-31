@@ -147,10 +147,11 @@ export function SourceEquipmentForm({
           Equipment on the floor
         </p>
         <p className="text-sm leading-6 text-muted">
-          Machine, year, capacity, and stocked wire sizes. Type and wire band
-          come from the catalog row — confirm the plate. This plan holds{" "}
-          {maxCells} {maxCells === 1 ? "cell" : "cells"} here. More iron is a
-          paid plan on the shop dashboard.
+          Pick the class first: 2D CNC, 3D CNC, 4-slide, multi-slide, or
+          manual pneumatic. Model and wire capacity come from the catalog —
+          Baird, Nilson, Lubow, Numalliance, AIM. Confirm the plate. This
+          plan holds {maxCells} {maxCells === 1 ? "cell" : "cells"} here. More
+          iron is a paid plan on the shop dashboard.
         </p>
         <SourceMachineRows
           machines={machines}

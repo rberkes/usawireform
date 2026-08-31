@@ -12,6 +12,27 @@ const sizes = {
   band: "px-6 py-3 text-sm font-medium",
 } as const;
 
+function CtaAction({
+  label,
+  href,
+  className,
+  children,
+}: {
+  label: string;
+  href: string;
+  className: string;
+  children: string;
+}) {
+  return (
+    <div className="flex min-w-0 flex-col gap-2">
+      <p className="font-mono text-[11px] tracking-[0.22em] uppercase">{label}</p>
+      <Link href={href} className={cx(className, "w-full")}>
+        {children}
+      </Link>
+    </div>
+  );
+}
+
 export function ClientQuoteCtas({
   tone = "light",
   size = "hero",
@@ -25,45 +46,48 @@ export function ClientQuoteCtas({
 }) {
   const pad = sizes[size];
   const primary = cx(
-    "inline-flex items-center justify-center rounded-sm text-white transition-colors",
+    "inline-flex items-center justify-center rounded-sm text-center text-white transition-colors",
     pad,
     "bg-zoom hover:bg-zoom-dim",
   );
   const secondary = cx(
-    "inline-flex items-center justify-center rounded-sm border transition-colors",
+    "inline-flex items-center justify-center rounded-sm border text-center transition-colors",
     pad,
     tone === "dark"
       ? "border-white/80 text-white hover:bg-white hover:text-[#0b1f33]"
       : "border-line text-foreground hover:border-copper/50",
   );
   const note = tone === "dark" ? "text-white/60" : "text-muted";
+  const labelTone = tone === "dark" ? "text-white/55" : "text-muted";
 
   const buttons =
     variant === "home" ? (
-      <>
-        <Link href={SOURCE_JOB_HREF} className={primary}>
-          Upload STEP for quotes
-        </Link>
-        <Link href={SOURCE_EQUIPMENT_HREF} className={secondary}>
-          List your machine
-        </Link>
-      </>
+      <div className={cx("grid w-full max-w-xl grid-cols-1 gap-5 sm:max-w-2xl sm:grid-cols-2 sm:gap-6", labelTone)}>
+        <CtaAction label="Buyers" href={SOURCE_JOB_HREF} className={primary}>
+          Get a Quote
+        </CtaAction>
+        <CtaAction
+          label="Suppliers"
+          href={SOURCE_EQUIPMENT_HREF}
+          className={secondary}
+        >
+          Upload your equipment
+        </CtaAction>
+      </div>
     ) : (
-      <>
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Link href={INSTANT_QUOTE_HREF} className={primary}>
           Get instant quote
         </Link>
         <Link href={PRODUCTION_QUOTE_HREF} className={secondary}>
           Upload a drawing
         </Link>
-      </>
+      </div>
     );
 
   return (
     <div className={cx("flex flex-col gap-3", className)}>
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        {buttons}
-      </div>
+      {buttons}
       {variant === "home" ? (
         <p className={cx("max-w-xl text-sm leading-6", note)}>
           Quotes come from cells that can run the print. No STEP? We convert a

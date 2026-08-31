@@ -170,6 +170,12 @@ export const MACHINE_TERMS: MachineTerm[] = [
     requireTokens: ["nilson"],
   },
   {
+    id: "lubow",
+    label: "Lubow",
+    aliases: ["lubow", "lebow", "le bow"],
+    requireTokens: ["lubow", "lebow"],
+  },
+  {
     id: "bihler",
     label: "Bihler",
     aliases: ["bihler", "grm-nc", "grm nc", "grm80", "grm 80", "rm-nc", "4slide-nc"],
