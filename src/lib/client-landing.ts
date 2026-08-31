@@ -23,10 +23,10 @@ export const CLIENT_STEPS = [
 export const CLIENT_CTA_LEDE = `Upload a STEP and get quotes from cells that can run it. No STEP? We convert a PDF 3-view for free. Instant quote is still there for cuts, bends, and inches. ${PRICE_LINE}`;
 
 export const HOME_QUOTE_NOTE =
-  "Quotes come from wire form cells that have capacity and capability. No STEP file? We convert PDF 3-view drawings for free.";
+  "Get wire forming quotes from suppliers that are ready to run! No STEP file? We convert PDF 3-view drawings for free.";
 
 export const HOME_HERO_LEDE =
-  "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production. Shops upload capability and capacity. Buyers upload a STEP. Quotes come from wire form cells that have capacity and capability.";
+  "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production. Shops upload capability and capacity. Buyers upload a STEP. Get wire forming quotes from suppliers that are ready to run!";
 
 export const HOME_CTA_TITLE = "Source by capability and capacity.";
 
