@@ -38,7 +38,7 @@ export function ClientHero({
         <h1
           className={cx(
             "mt-4 max-w-4xl font-medium tracking-tight",
-            mark && "pr-24 sm:pr-36",
+            mark ? "pr-24 sm:pr-36" : undefined,
             typeof title === "string" &&
               "text-4xl leading-[1.08] sm:text-5xl lg:text-6xl",
           )}
