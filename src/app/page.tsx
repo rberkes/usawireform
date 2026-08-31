@@ -4,7 +4,7 @@ import { AskBox } from "@/components/AskBox";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
 import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
 import { ClientCtaBand, ClientHero } from "@/components/client/ClientLanding";
-import { HOME_CTA_LEDE, HOME_CTA_TITLE, HOME_HERO_LEDE } from "@/lib/client-landing";
+import { HOME_CTA_LEDE, HOME_CTA_TITLE, HOME_HERO_LEDE, HOME_QUOTE_NOTE } from "@/lib/client-landing";
 import { PricePromise } from "@/components/PricePromise";
 import { SocialProof } from "@/components/SocialProof";
 import { StateGrid } from "@/components/StateGrid";
@@ -21,8 +21,8 @@ import { WIRE } from "@/lib/range";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: `${COMPANY} — Most Efficient Platform for Wire Form Manufacturers in the USA`,
-  description: `${COMPANY}: The most efficient platform for wire form manufacturers in the USA. File machine, year, capacity, and stocked sizes. Buyers upload a STEP and get quotes from equipment that can form it.`,
+  title: `${COMPANY} — Streamline Wire Form Suppliers`,
+  description: `${COMPANY}: Streamline wire form suppliers. Source fast and easy by capability and capacity — lowest cost and the quickest time to production. Upload a STEP; quotes come from equipment that can form it.`,
   path: "/",
   absoluteTitle: true,
   keywords: [
@@ -54,7 +54,7 @@ export default function Home() {
   return (
     <>
       <ClientHero
-        kicker="Manufacturers and buyers"
+        kicker="Source fast. Source easy."
         title={<BrandLockup size="hero" tone="onDark" />}
         lede={HOME_HERO_LEDE}
         cta={<ClientQuoteCtas variant="home" tone="dark" className="mt-8" />}
@@ -78,11 +78,12 @@ export default function Home() {
 
         <Section
           kicker="The platform"
-          title="The most efficient wire forming platform in the United States."
+          title="Source by capability and capacity."
         >
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-            Manufacturers file the cell. Buyers send a STEP. Quotes come from
-            equipment that can actually run the print.
+            Streamline USA wire form suppliers. Quotes go to shops with the
+            right machine and open capacity — lowest cost, quickest time to
+            production.
           </p>
           <LinkList
             className="mt-8"
@@ -120,7 +121,7 @@ export default function Home() {
               {
                 href: "/source",
                 title: "Upload a STEP for quotes",
-                body: "Get quotes from shops whose equipment can manufacture the part. No STEP? Send a 3-view PDF — we model it free.",
+                body: HOME_QUOTE_NOTE,
               },
             ]}
           />

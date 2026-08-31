@@ -22,13 +22,15 @@ export const CLIENT_STEPS = [
 
 export const CLIENT_CTA_LEDE = `Upload a STEP and get quotes from cells that can run it. No STEP? We convert a PDF 3-view for free. Instant quote is still there for cuts, bends, and inches. ${PRICE_LINE}`;
 
+export const HOME_QUOTE_NOTE =
+  "Quotes come from wire form cells that have capacity and capability. No STEP file? We convert PDF 3-view drawings for free.";
+
 export const HOME_HERO_LEDE =
-  "The most efficient platform for wire form manufacturers in the USA. Shops file machine, year, capacity, and stocked wire sizes. Buyers upload a STEP and get quotes from equipment that can manufacture it.";
+  "Streamline wire form suppliers. Source fast and easy by capability and capacity — lowest cost, quickest time to production. Shops file the machine. Buyers upload a STEP. Quotes come from wire form cells that have capacity and capability.";
 
-export const HOME_CTA_TITLE = "Match the print to the iron.";
+export const HOME_CTA_TITLE = "Source by capability and capacity.";
 
-export const HOME_CTA_LEDE =
-  "Manufacturers list the cell — machine, year, capacity, stocked sizes. Buyers upload a STEP. Quotes come only from equipment that can form the part. No STEP? We model one free from a 3-view PDF.";
+export const HOME_CTA_LEDE = HOME_QUOTE_NOTE;
 
 export const CUT_TO_LENGTH_MM = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] as const;
 

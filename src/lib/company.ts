@@ -7,8 +7,8 @@ export const QUOTE_EMAIL = `info@${SITE_HOST}`;
 
 /** Sitewide positioning. Production is still this floor; the site is the map. */
 export const SITE_PITCH =
-  "The most efficient platform for wire form manufacturers in the United States. Shops file machine, year, capacity, and stocked wire sizes. Buyers upload a STEP and get quotes from equipment that can form it.";
+  "Streamline wire form suppliers. Source fast and easy by capability and capacity — lowest cost and the quickest time to production. Shops file the machine. Buyers upload a STEP. Quotes come from equipment that can form it.";
 
 export const SITE_LINE =
-  "The most efficient platform for wire form manufacturers in the USA.";
+  "Streamline wire form suppliers. Source by capability and capacity.";
 

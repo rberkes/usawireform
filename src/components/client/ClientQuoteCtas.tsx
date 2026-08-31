@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cx } from "@/lib/cx";
+import { HOME_QUOTE_NOTE } from "@/lib/client-landing";
 
 export const INSTANT_QUOTE_HREF = "/instant-quote";
 export const PRODUCTION_QUOTE_HREF = "/production-quote";
@@ -88,10 +89,9 @@ export function ClientQuoteCtas({
   return (
     <div className={cx("flex flex-col gap-3", className)}>
       {buttons}
-      {variant === "home" ? (
+      {variant === "home" && size !== "band" ? (
         <p className={cx("max-w-xl text-sm leading-6", note)}>
-          Quotes come from cells that can run the print. No STEP? We convert a
-          PDF 3-view for free.
+          {HOME_QUOTE_NOTE}
         </p>
       ) : null}
     </div>
