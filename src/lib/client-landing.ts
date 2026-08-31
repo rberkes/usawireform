@@ -35,7 +35,7 @@ export const HOME_PLATFORM_STEPS = [
   },
   {
     title: "Customer Matching",
-    body: "Buyer prints go to cells that can actually form the part.",
+    body: "Smart Matching Finds the optimal factory for your STEP file(s).",
   },
   {
     title: "Quote Jobs",

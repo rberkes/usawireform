@@ -11,6 +11,7 @@ export function ClientHero({
   kicker,
   title,
   lede,
+  mark,
   flow,
   cta,
   children,
@@ -18,19 +19,26 @@ export function ClientHero({
   kicker: string;
   title: ReactNode;
   lede: string;
+  mark?: ReactNode;
   flow?: ReactNode;
   cta?: ReactNode;
   children?: ReactNode;
 }) {
   return (
     <section className={`${NAVY} text-white`}>
-      <Container className="py-16 sm:py-24">
+      <Container className="relative py-16 sm:py-24">
+        {mark ? (
+          <div className="absolute right-5 top-16 sm:right-0 sm:top-24">
+            {mark}
+          </div>
+        ) : null}
         <p className="font-mono text-[12px] tracking-[0.22em] text-white/55 uppercase">
           {kicker}
         </p>
         <h1
           className={cx(
             "mt-4 max-w-4xl font-medium tracking-tight",
+            mark && "pr-24 sm:pr-36",
             typeof title === "string" &&
               "text-4xl leading-[1.08] sm:text-5xl lg:text-6xl",
           )}
