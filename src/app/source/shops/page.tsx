@@ -65,7 +65,7 @@ export default async function SourceShopsPage() {
           large
           kicker="Wire form shops"
           title="Add a machine cell free."
-          lede="File the machine, year, capacity, and stocked wire sizes. Buyers upload a STEP; quotes go only to cells that can form it. The most efficient platform for wire form manufacturers in the USA."
+          lede="File the machine, year, capacity, and stocked wire sizes. Buyers upload a STEP; quotes go only to cells that can form it. Where wire form suppliers, manufacturers, and buyers meet."
         >
           <ButtonLink
             href="#claim"

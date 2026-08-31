@@ -30,7 +30,7 @@ const ibmMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+    default: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
     template: `%s — ${COMPANY}`,
   },
   description: SITE_PITCH,
@@ -70,12 +70,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: COMPANY,
-    title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+    title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
     description: SITE_PITCH,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+    title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
     description: SITE_PITCH,
   },
   icons: {

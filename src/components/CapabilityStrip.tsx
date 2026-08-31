@@ -4,11 +4,11 @@ import { Section } from "./ui";
 
 const shots = [
   {
-    src: "/shop/capability-01.jpg",
+    src: "/shop/robomac-214tf.jpg",
     title: "3D CNC forming",
     href: "/processes/3d-cnc-wire-forming",
     body: "Numalliance Robomac 214TF, 4–14 mm from coil.",
-    alt: "Numalliance Robomac 214TF on the shop floor",
+    alt: "Numalliance Robomac 214TF 3D CNC wire forming machine",
   },
   {
     src: "/shop/capability-02.jpg",

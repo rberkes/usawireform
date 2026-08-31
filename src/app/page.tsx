@@ -21,11 +21,20 @@ import { WIRE } from "@/lib/range";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: `${COMPANY} — Streamline Wire Form Suppliers`,
-  description: `${COMPANY}: Streamline wire form suppliers. Source fast and easy by capability and capacity — lowest cost and the quickest time to production. Upload a STEP; quotes come from equipment that can form it.`,
+  title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
+  description: `${COMPANY}: Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity. Upload a STEP; quotes come from equipment that can form it.`,
   path: "/",
   absoluteTitle: true,
+  image: {
+    url: "/shop/robomac-214tf.jpg",
+    width: 1536,
+    height: 1024,
+    alt: "Numalliance Robomac 214TF 3D CNC wire forming machine",
+  },
   keywords: [
+    "wire form suppliers",
+    "wire form manufacturers",
+    "CNC wire forming",
     "USA Wire Form",
     "CNC wire forming Northeast Ohio",
     "USA made wire baskets",
@@ -78,12 +87,11 @@ export default function Home() {
 
         <Section
           kicker="The platform"
-          title="Source by capability and capacity."
+          title="Where suppliers, manufacturers, and buyers meet."
         >
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-            Streamline USA wire form suppliers. Quotes go to shops with the
-            right machine and open capacity — lowest cost, quickest time to
-            production.
+            Wire form suppliers and manufacturers file the cell. Buyers send a
+            STEP. Quotes go to shops with the right machine and open capacity.
           </p>
           <LinkList
             className="mt-8"

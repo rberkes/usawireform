@@ -21,15 +21,30 @@ export function pageMeta({
   path,
   keywords = [],
   absoluteTitle = false,
+  image,
 }: {
   title: string;
   description: string;
   path: string;
   keywords?: string[];
   absoluteTitle?: boolean;
+  image?: {
+    url: string;
+    width?: number;
+    height?: number;
+    alt?: string;
+  };
 }): Metadata {
   const canonical = path === "/" ? SITE_URL : `${SITE_URL}${path}`;
   const fullTitle = absoluteTitle ? title : undefined;
+  const shareImage = image
+    ? {
+        url: image.url,
+        width: image.width,
+        height: image.height,
+        alt: image.alt,
+      }
+    : undefined;
 
   return {
     title: absoluteTitle ? { absolute: title } : title,
@@ -62,11 +77,13 @@ export function pageMeta({
       siteName: COMPANY,
       locale: "en_US",
       type: "website",
+      ...(shareImage ? { images: [shareImage] } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle ?? title,
       description,
+      ...(shareImage ? { images: [shareImage] } : {}),
     },
   };
 }

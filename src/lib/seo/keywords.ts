@@ -1,6 +1,8 @@
 /** Shared terms. Google largely ignores meta keywords; they still help other crawlers and consistency. */
 export const CORE_KEYWORDS = [
   "USA Wire Form",
+  "wire form suppliers",
+  "wire form manufacturers",
   "CNC wire forming",
   "3D CNC wire forming",
   "wire forming",

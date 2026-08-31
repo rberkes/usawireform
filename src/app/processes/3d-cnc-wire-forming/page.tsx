@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
@@ -8,6 +9,12 @@ export const metadata = pageMeta({
   title: "3D CNC Wire Forming",
   description: "3D CNC wire forming in 4–14 mm: how the cell works, design rules, and what to send on a print. Northeast Ohio production with 50+ years experience.",
   path: '/processes/3d-cnc-wire-forming',
+  image: {
+    url: "/shop/robomac-214tf.jpg",
+    width: 1536,
+    height: 1024,
+    alt: "Numalliance Robomac 214TF 3D CNC wire forming machine",
+  },
   keywords: [
     "3D CNC wire forming",
     "3D wire bending",
@@ -69,6 +76,7 @@ export default function ThreeDCNCPage() {
         description="Custom 3D CNC wire forming service for 4-14mm wire. Frames, hooks, routing forms, and wire-basket geometry with 50+ years of industry experience."
         url="/processes/3d-cnc-wire-forming"
         serviceType="Wire Forming Service"
+        image="/shop/robomac-214tf.jpg"
       />
       <FAQSchema questions={faqs} />
       <BreadcrumbJsonLd
@@ -84,6 +92,21 @@ export default function ThreeDCNCPage() {
         toc={toc}
         breadcrumbs={breadcrumbItems}
       >
+        <figure className="-mt-4 mb-10">
+          <div className="relative aspect-[3/2] overflow-hidden bg-inset">
+            <Image
+              src="/shop/robomac-214tf.jpg"
+              alt="Numalliance Robomac 214TF — 3D CNC wire forming from coil, 4–14 mm"
+              fill
+              priority
+              sizes="(min-width: 1024px) 720px, 100vw"
+              className="object-cover object-[center_42%]"
+            />
+          </div>
+          <figcaption className="mt-3 text-sm text-muted">
+            Numalliance Robomac 214TF. The 3D CNC cell for 4–14 mm from coil.
+          </figcaption>
+        </figure>
         <h2 id="what-it-is">What 3D CNC wire forming is</h2>
         <p>
           A 3D CNC wire former takes wire from a coil, removes cast and helix,

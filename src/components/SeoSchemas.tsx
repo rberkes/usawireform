@@ -179,12 +179,14 @@ export function ServiceSchema({
   url,
   areaServed = "United States",
   serviceType,
+  image,
 }: {
   name: string;
   description: string;
   url: string;
   areaServed?: string;
   serviceType?: string;
+  image?: string;
 }) {
   const data = {
     "@context": "https://schema.org",
@@ -192,6 +194,7 @@ export function ServiceSchema({
     name,
     description,
     url: `${SITE_URL}${url}`,
+    ...(image ? { image: image.startsWith("http") ? image : `${SITE_URL}${image}` } : {}),
     provider: {
       "@type": "Organization",
       name: COMPANY,
