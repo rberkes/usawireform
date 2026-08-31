@@ -109,7 +109,7 @@ export default function Home() {
               },
               {
                 href: "/source/equipment",
-                title: "List your machine",
+                title: "List your machine Free",
                 body: "File OEM, year, capacity, and stocked wire sizes. Jobs that fit that cell come to you.",
               },
               {

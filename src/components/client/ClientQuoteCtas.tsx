@@ -71,7 +71,7 @@ export function ClientQuoteCtas({
           href={SOURCE_EQUIPMENT_HREF}
           className={secondary}
         >
-          Upload your equipment
+          List your machine Free
         </CtaAction>
       </div>
     ) : (
