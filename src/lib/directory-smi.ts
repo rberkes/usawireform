@@ -63,8 +63,8 @@ export const smiDirectoryCompanies: DirectoryCompany[] = [
     "CA",
     "USA",
     "West",
-    "Custom springs. Temecula, CA.",
-    ["Springs", "Torsion springs"],
+    "Custom springs, CNC wire forms, and stampings. Temecula, CA.",
+    ["Springs", "Torsion springs", "Wire forms", "Stampings"],
     "https://www.aard.com/",
   ),
   shop(

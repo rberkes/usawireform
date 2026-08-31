@@ -81,13 +81,6 @@ export const STATE_SHOPS: StateShop[] = [
     capacity: "Custom springs and wire forms, ISO 9001. CNC and conventional. Serves CA, NV, HI. Lighter band than 4–14 mm frames.",
   },
   {
-    name: "RFC Wire Forms",
-    city: "Ontario",
-    state: "CA",
-    website: "https://www.rfcwireforms.com/",
-    capacity: "Custom wire forms since 1946. CNC and fourslide-style work for OEM clips, displays, and assemblies.",
-  },
-  {
     name: "California Wire Products",
     city: "Corona",
     state: "CA",
@@ -142,6 +135,104 @@ export const STATE_SHOPS: StateShop[] = [
     state: "CA",
     website: "https://www.centuryspring.com/",
     capacity: "Stock and custom springs, MW Components family. Catalog springs and light wire forms — not heavy 1/2 in structures.",
+  },
+  {
+    name: "Tru-Form Tool & Manufacturing",
+    city: "Santa Fe Springs",
+    state: "CA",
+    website: "https://www.tru-form.com/",
+    capacity: "100+ fourslide machines, CNC tube/wire bending, laser, robotic weld. In-house tool-and-die. Santa Fe Springs plant.",
+  },
+  {
+    name: "Speedy Springs",
+    city: "La Puente",
+    state: "CA",
+    website: "https://speedysprings.com/",
+    capacity: "Custom coil springs, wire forms, light stampings, and assemblies. La Puente job shop.",
+  },
+  {
+    name: "Ancar International",
+    city: "Lemon Grove",
+    state: "CA",
+    website: "https://www.ancarinc.com/",
+    capacity: "Custom springs, wire forming, tube forming, and metal fabrication. 7890 Lester Avenue, Lemon Grove.",
+  },
+  {
+    name: "R&B Wire Products",
+    city: "Santa Ana",
+    state: "CA",
+    website: "https://www.rbwire.com/",
+    capacity: "Commercial laundry carts, hampers, shelving, and custom wire products. Santa Ana wire plant.",
+  },
+  {
+    name: "Schellinger Spring",
+    city: "Rancho Cucamonga",
+    state: "CA",
+    website: "https://www.schellingerspring.com/",
+    capacity: "CNC wire forms including spring and square wire. 8477 Utica Avenue, Rancho Cucamonga. Est. 1945.",
+  },
+  {
+    name: "HN Tool & Die",
+    city: "Corona",
+    state: "CA",
+    website: "http://hnspringnstampings.com/",
+    capacity: "Fourslide and punch-press stampings, coil springs, and wire forms since 1973. Corona plant.",
+  },
+  {
+    name: "Continental Precision Stamping",
+    city: "Pomona",
+    state: "CA",
+    website: "https://www.cpsstamping.com/",
+    capacity: "Precision stampings, clips, rings, custom springs, and formed wire. Pomona plant.",
+  },
+  {
+    name: "MGM Manufacturing Alliance",
+    city: "Simi Valley",
+    state: "CA",
+    website: "https://www.mgmmfg.com/",
+    capacity: "CNC machining, custom springs, wire forming, and tube bending. 4511 Ish Drive, Simi Valley.",
+  },
+  {
+    name: "Walker Manufacturing Group",
+    city: "Ontario",
+    state: "CA",
+    website: "https://www.walkermanufacturing.com/",
+    capacity: "Stampings, fabrication, constant-force springs, and wire forms since 1954. Ontario plant.",
+  },
+  {
+    name: "FTR Associates",
+    city: "Santa Fe Springs",
+    state: "CA",
+    website: "https://ftrmetalproducts.com/",
+    capacity: "CNC springs and wire forms, fourslide, stampings. Herndon CSX-20 / HAX-40. About 0.016–0.412 in.",
+  },
+  {
+    name: "CenterLine Precision Tube Bending",
+    city: "Dublin",
+    state: "CA",
+    website: "https://www.clptbi.com/",
+    capacity: "Mandrel/roll tube bending plus wire and rod forming. 6355 Scarlett Court, Dublin. Bay Area plant.",
+  },
+  {
+    name: "Aranki Spring Manufacturing",
+    city: "Santa Fe Springs",
+    state: "CA",
+    website: "https://arankispring.com/",
+    capacity: "Compression, extension, torsion springs plus looping, bending, and forming. Santa Fe Springs. Est. 1989.",
+  },
+  {
+    name: "C&F Wire Products",
+    city: "Stanton",
+    state: "CA",
+    website: "https://www.cfwireproducts.com/",
+    capacity: "Custom springs, wire forms, and stampings. Stanton plant. Electronics, aerospace, medical. ITAR.",
+  },
+  {
+    name: "DD Wire Co.",
+    city: "Temple City",
+    state: "CA",
+    website: "https://www.ddwire.com/",
+    capacity: "CNC / 3D wire forming and bending. Temple City plant. Welding, drilling, plating secondaries.",
   },
   // Colorado
   {
@@ -319,6 +410,20 @@ export const STATE_SHOPS: StateShop[] = [
     website: "https://rswire.com/",
     capacity: "Custom wire forming, weld, and laser since 1979. POP, food-service, medical, work-cell baskets.",
   },
+  {
+    name: "Gall Machine Company",
+    city: "Countryside",
+    state: "IL",
+    website: "https://gallmachine.com/",
+    capacity: "Wire forming, straighten-and-cut, cold heading, and plating since 1982. 9640 Joliet Road. About 0.062–0.500 in.",
+  },
+  {
+    name: "Associated Fastening Products",
+    city: "Itasca",
+    state: "IL",
+    website: "https://www.associatedfastening.com/",
+    capacity: "Custom wire forms and threaded wire products. 690 Hilltop Drive, Itasca. Also sells imported catalog fasteners — the plant forms US parts.",
+  },
   // Indiana
   {
     name: "Angola Wire",
@@ -481,6 +586,20 @@ export const STATE_SHOPS: StateShop[] = [
     state: "MI",
     website: "https://rivesmfg.com/",
     capacity: "CNC wire forming, cold heading, tube forming, thread rolling since 1992. Auto, lawn-and-garden, ag. ISO.",
+  },
+  {
+    name: "Clips & Clamps Industries",
+    city: "Plymouth",
+    state: "MI",
+    website: "https://clipsclamps.com/",
+    capacity: "CNC wire forming, slide forming, progressive stampings, and welded assemblies. 15050 Keel Street, Plymouth. About 0.8–8.0 mm.",
+  },
+  {
+    name: "Clark Engineering",
+    city: "Owosso",
+    state: "MI",
+    website: "https://clarkengineering.net/",
+    capacity: "CNC wire forming, cold heading, tube, and machining since 1946. 1470 McMillan Road, Owosso.",
   },
   // Minnesota
   {
@@ -756,6 +875,13 @@ export const STATE_SHOPS: StateShop[] = [
     website: "https://www.newcombspring.com/locations/california",
     capacity: "West Coast springs and light wire forms. Transcon alternative: Ohio 4–14 mm from this shop.",
   },
+  {
+    name: "Connor Manufacturing Services",
+    city: "Fairview",
+    state: "OR",
+    website: "https://www.connorms.com/",
+    capacity: "CNC wire and rod forming, coiling, fourslide, stampings. 22867 NE Townsend Way, Fairview. US plant; Asia floors are separate.",
+  },
   // Pennsylvania
   {
     name: "Ace Wire Spring & Form",
@@ -791,6 +917,20 @@ export const STATE_SHOPS: StateShop[] = [
     state: "PA",
     website: "https://jamesspring.com/",
     capacity: "Custom springs and wire forms since 1960. Fourslide and CNC, ~0.015–0.250 in published. Eastern PA OEM — not 1/2 in frames.",
+  },
+  {
+    name: "E Tube & Wire",
+    city: "Shrewsbury",
+    state: "PA",
+    website: "https://www.etubeandwire.com/",
+    capacity: "CNC wire forming, mandrel tube bending, laser. 86,000 sq ft Shrewsbury plant. Baskets, guards, racks. About 0.080–1.25 in.",
+  },
+  {
+    name: "Aristo-Tec Metal Forms",
+    city: "Connellsville",
+    state: "PA",
+    website: "https://aristo-tec.com/",
+    capacity: "CNC wire bending and fourslide. 401 Ridge Blvd, Connellsville. About 0.095–0.500 in stainless, galv, and mild steel.",
   },
   // Rhode Island
   {
@@ -858,6 +998,13 @@ export const STATE_SHOPS: StateShop[] = [
     state: "TN",
     website: "https://www.newcombspring.com/locations/tennessee",
     capacity: "~65,000 sq ft, ISO 9001. Torsion springs and wire forms for auto, appliance, outdoor power.",
+  },
+  {
+    name: "Advanex Americas",
+    city: "White House",
+    state: "TN",
+    website: "https://www.advanexusa.com/",
+    capacity: "Precision springs, wire forms, pins, stampings. 514 Hester Drive, White House. US plant of Japan parent; Cypress CA is sales.",
   },
   {
     name: "Insteel Wire Products",

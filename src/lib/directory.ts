@@ -7,6 +7,7 @@ import type { DirectoryCompany } from "./directory-types";
 import { extraDirectoryCompanies } from "./directory-extra";
 import { fourslideDirectoryCompanies } from "./directory-fourslide";
 import { applyDirectoryIron } from "./directory-iron";
+import { moreDirectoryCompanies } from "./directory-more";
 import { smiDirectoryCompanies } from "./directory-smi";
 import { stateBoostCompanies } from "./directory-state-boost";
 import { STATE_SHOPS } from "./state-shops";
@@ -852,17 +853,6 @@ const CORE_DIRECTORY_COMPANIES: DirectoryCompany[] = [
     established: "1970s",
   },
   {
-    slug: "rfc-wire-forms",
-    name: "RFC Wire Forms",
-    location: "Ontario, CA",
-    state: "CA",
-    country: "USA",
-    region: "West",
-    description: "Customized wire forming for HVAC industry including fan guards and motor mounts. Retail and point-of-purchase displays, wire shelving, and commercial magazine racks.",
-    capabilities: ["Wire forming", "Fan guards", "Motor mounts", "POP displays", "Wire shelving"],
-    industries: ["HVAC", "Retail"],
-  },
-  {
     slug: "rockford-specialties",
     name: "Rockford Specialties Inc.",
     location: "Rockford, IL",
@@ -1125,6 +1115,8 @@ const DIRECTORY_SITES: Record<string, string> = {
   "c-j-spring": "https://www.candjspring.com",
   "california-wire-products": "https://cawire.com",
   "century-spring-corp": "https://www.centuryspring.com",
+  "cf-wire-products": "https://www.cfwireproducts.com",
+  "dd-wire-co": "https://www.ddwire.com",
   "draco-spring": "https://www.dracospring.com",
   "elyria-spring-stamping": "https://www.elyriaspring.com",
   "gemco-manufacturing": "https://gemcomfg.com",
@@ -1162,7 +1154,6 @@ const DIRECTORY_SITES: Record<string, string> = {
   "illini-wire-works": "https://illiniwire.com",
   "novo-precision": "https://novoprecision.com",
   "peninsula-spring": "https://peninsulaspring.com",
-  "rfc-wire-forms": "https://www.rfcwireforms.com",
   "rockford-specialties": "https://rswire.com",
   "wald-wire-manufacturing": "https://waldwire.com",
   "midwest-wire-products": "https://wireforming.com",
@@ -1289,6 +1280,7 @@ export const directoryCompanies = mergeDirectory([
   stateBoostCompanies,
   smiDirectoryCompanies,
   fourslideDirectoryCompanies,
+  moreDirectoryCompanies,
   fromStateShops(),
 ]).map(applyDirectoryIron);
 
