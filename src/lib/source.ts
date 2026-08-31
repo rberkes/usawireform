@@ -254,6 +254,7 @@ export async function listSourceJobs(): Promise<SourceJob[]> {
   const result = await list({ prefix: "source/jobs/", ...(await blobAuth()) });
   const rows: SourceJob[] = [];
   for (const blob of result.blobs
+    .filter((item) => item.pathname.endsWith(".json"))
     .sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))
     .slice(0, 80)) {
     const file = await get(blob.pathname, {
@@ -298,6 +299,7 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
     plantProofUrl: String(payload.plantProofUrl ?? "").trim() || undefined,
     plantVerifiedAt: String(payload.plantVerifiedAt ?? "").trim() || undefined,
     fit: parseSourceBuyerFit(payload.fit),
+    leadsAccess: payload.leadsAccess === "comp" ? "comp" : undefined,
     listedAt: String(
       payload.listedAt ?? payload.updatedAt ?? new Date().toISOString(),
     ),

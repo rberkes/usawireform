@@ -13,6 +13,7 @@ import {
   sendSourceFilingEmails,
   sendSourceInviteEmails,
   sendSourceJobEmails,
+  sendSourceShopLeadEmails,
 } from "@/lib/leads";
 import {
   countSourceCells,
@@ -41,6 +42,7 @@ import {
 import { parseOpenSlots, SOURCE_SLOT_CAP } from "@/lib/source-capacity";
 import { readSourceFitForm, type SourceBuyerFit } from "@/lib/source-fit";
 import { isSourceJobClass, type SourcePublicMatch } from "@/lib/source-types";
+import { partitionLeadMatches } from "@/lib/source-leads";
 import {
   applyProfilesToFilings,
   findSourceProfileBySlug,
@@ -144,6 +146,7 @@ async function upsertShopProfile({
     plantProofUrl: plantProofUrl ?? existing?.plantProofUrl,
     plantVerifiedAt: plantVerifiedAt ?? existing?.plantVerifiedAt,
     fit: fit === null ? undefined : (fit ?? existing?.fit),
+    leadsAccess: existing?.leadsAccess,
   });
   return slug;
 }
@@ -850,12 +853,18 @@ export async function submitSourceJob(
     };
   }
 
-  const filings = applyProfilesToFilings(
-    await listSourceFilings(),
-    await listSourceProfiles(),
-  );
+  const [filingRows, profiles] = await Promise.all([
+    listSourceFilings(),
+    listSourceProfiles(),
+  ]);
+  const filings = applyProfilesToFilings(filingRows, profiles);
   const internal = matchFilingsToJob(filings, parsed.spec);
-  const matches: SourcePublicMatch[] = internal.map(
+  const { mailed, listed } = await partitionLeadMatches(
+    internal,
+    filings,
+    profiles,
+  );
+  const matches: SourcePublicMatch[] = mailed.map(
     ({ email: _email, ...row }) => row,
   );
 
@@ -908,7 +917,27 @@ export async function submitSourceJob(
     qty,
     notes,
     matches: internal,
+    mailed,
   });
+  void sendSourceShopLeadEmails({
+    mailed,
+    buyer: {
+      company,
+      name,
+      email,
+      phone,
+      city: parsed.spec.city,
+      state: parsed.spec.state,
+    },
+    spec: {
+      diameterRaw,
+      diameterMm: parsed.spec.diameterMm,
+      kind: parsed.spec.kind,
+      oem: parsed.spec.oem,
+      qty,
+      notes,
+    },
+  }).catch((error) => console.error("[Source shop leads]", error));
   if (!emailed) {
     return {
       success: false,
@@ -919,9 +948,11 @@ export async function submitSourceJob(
   }
 
   const message =
-    matches.length === 0
-      ? `No filed cell matches ${parsed.spec.diameterMm} mm yet. Receipt sent to ${email}. The desk has the RFQ.`
-      : `Matched ${matches.length === 1 ? "1 shop" : `${matches.length} shops`} on filed cells. Receipt sent to ${email}. We introduce — emails stay with the desk.`;
+    mailed.length === 0
+      ? listed.length > 0
+        ? `Cells match ${parsed.spec.diameterMm} mm, but those shops list free and do not receive leads yet. Receipt sent to ${email}. The desk has the RFQ.`
+        : `No filed cell matches ${parsed.spec.diameterMm} mm yet. Receipt sent to ${email}. The desk has the RFQ.`
+      : `Matched ${mailed.length === 1 ? "1 paid shop" : `${mailed.length} paid shops`}. Receipt sent to ${email}. Those shops got the lead.`;
 
   return {
     success: true,

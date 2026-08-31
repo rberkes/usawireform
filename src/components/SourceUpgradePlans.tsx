@@ -27,7 +27,7 @@ export function SourceUpgradePlans({
               {formatPlanPrice(plan.priceCents)}
             </p>
             <p className="mt-2 text-sm leading-6 text-muted">
-              Up to {plan.cells} cells. {plan.blurb}
+              {plan.blurb}
             </p>
             <div className="mt-6">
               {current ? (

@@ -322,6 +322,7 @@ export function siteArchitectureTree(): ArchNode[] {
         leaf("/admin", "Leads inbox", "desk"),
         leaf("/admin/leads", "Directory leads", "desk"),
         leaf("/admin/source", "Source filings", "desk"),
+        leaf("/admin/subscribers", "Source subscribers", "desk"),
         leaf("/api/ask", "Header Q&A", "desk"),
         leaf("/api/machine-factories", "Machine typeahead", "desk"),
         leaf("/api/directory-lead", "Listing RFQ", "desk"),

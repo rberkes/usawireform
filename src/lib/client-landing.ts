@@ -28,14 +28,29 @@ export const HOME_QUOTE_NOTE =
 export const HOME_HERO_LEDE =
   "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production.";
 
-export const HOME_PLATFORM_STEPS = [
+export const HOME_BUYER_STEPS = [
   {
-    title: "List Equipment",
-    body: "Shops file machines — OEM, year, capacity, and stocked wire sizes.",
+    title: "Upload STEP",
+    body: "Drop a STEP or a PDF 3-view. No STEP? We convert the print for free.",
   },
   {
-    title: "Customer Matching",
-    body: "Smart Matching Finds the optimal factory for your STEP file(s).",
+    title: "Smart Matching",
+    body: "Finds the cells that can run your job — machine class, wire size, and open capacity.",
+  },
+  {
+    title: "Find Suppliers",
+    body: "Shops that fit your print quote in seconds.",
+  },
+] as const;
+
+export const HOME_SUPPLIER_STEPS = [
+  {
+    title: "List Equipment",
+    body: "File machines — OEM, year, capacity, and stocked wire sizes. Listing a cell is free.",
+  },
+  {
+    title: "Smart Matching",
+    body: "A buyer STEP matches cells that can form it.",
   },
   {
     title: "Quote Jobs",

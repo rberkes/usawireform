@@ -18,6 +18,11 @@ import {
 import { getSourcePlanForUser, getSourceSecondaryQtyForUser, getStripeCustomerId } from "@/lib/source-billing";
 import { formatPlanPrice } from "@/lib/source-plans";
 import {
+  leadsStatus,
+  leadsStatusLabel,
+  shopGetsLeads,
+} from "@/lib/source-leads";
+import {
   getSourceProfile,
   listSourceFilings,
   saveSourceProfile,
@@ -76,6 +81,7 @@ async function ensureProfile({
     plantProofUrl: undefined,
     plantVerifiedAt: undefined,
     fit: undefined,
+    leadsAccess: undefined,
   };
   await saveSourceProfile(profile);
   return profile;
@@ -115,6 +121,8 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
   const cells = shopRows.flatMap((row) => filedSourceMachines(row.machines));
   const customerId = await getStripeCustomerId(userId);
   const location = [shop?.city, shop?.state].filter(Boolean).join(", ");
+  const leads = leadsStatus(plan, profile);
+  const getsLeads = shopGetsLeads(leads);
 
   return (
     <Page>
@@ -149,7 +157,10 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             Plan
           </p>
           <p className="mt-2 text-xl font-medium">{plan.name}</p>
-          <p className="mt-1 text-sm text-muted">{formatPlanPrice(plan.priceCents)}</p>
+          <p className="mt-1 text-sm text-muted">
+            {formatPlanPrice(plan.priceCents)}
+            {getsLeads ? " · receives leads" : " · listing only"}
+          </p>
         </Panel>
         <Panel className="p-5">
           <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
@@ -177,6 +188,29 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           </p>
         </Panel>
       </div>
+
+      <Panel className="mt-4 p-5">
+        <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
+          Buyer leads
+        </p>
+        <p className="mt-2 text-xl font-medium">{leadsStatusLabel(leads)}</p>
+        {getsLeads ? (
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+            Matched RFQs land in this shop email. Listing equipment stays
+            free; this is what the plan pays for.
+          </p>
+        ) : (
+          <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+            <p className="max-w-2xl text-sm leading-6 text-muted">
+              Your cells stay on the floor list. Buyer contact goes to paid
+              shops. Subscribe to receive the RFQ.
+            </p>
+            <ButtonLink href="/source/upgrade" variant="ghost">
+              Get leads
+            </ButtonLink>
+          </div>
+        )}
+      </Panel>
 
       <section className="mt-12">
         <SourceShopForm

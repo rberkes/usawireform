@@ -462,8 +462,8 @@ export function sourceJobReceiptHtml({
     matchCount === 0
       ? `No filed cell matches ${size} yet. The desk has the RFQ and will work it.`
       : matchCount === 1
-        ? `One filed cell can run ${size}. We introduce — we do not send your print to a public list.`
-        : `Up to ${matchCount} filed cells can run ${size}. We introduce three chairs when we have them.`;
+        ? `One paid shop can run ${size}. We introduce that cell — we do not post your print.`
+        : `Up to ${matchCount} paid shops can run ${size}. We introduce three chairs when we have them.`;
   return shell(
     "Your Source job is in.",
     `${kickerRow()}
@@ -474,6 +474,67 @@ export function sourceJobReceiptHtml({
        "Send another job",
        "Wire size, 2D or 3D, locale. We introduce — emails stay with the desk.",
      )}
-     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/shops" style="color:#0b6bcb;text-decoration:none">Add one machine cell free</a>. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
+     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/shops" style="color:#0b6bcb;text-decoration:none">List a machine cell free</a>. Buyer leads need a paid plan. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
+  );
+}
+
+export function sourceShopLeadHtml({
+  shop,
+  why,
+  fitNote,
+  buyer,
+  spec,
+}: {
+  shop: string;
+  why: string;
+  fitNote?: string;
+  buyer: {
+    company?: string;
+    name?: string;
+    email: string;
+    phone?: string;
+    city?: string;
+    state?: string;
+  };
+  spec: {
+    diameterRaw: string;
+    diameterMm: number | null;
+    kind: string;
+    oem: string;
+    qty: string;
+    notes: string;
+  };
+}) {
+  const size =
+    spec.diameterMm != null
+      ? `${spec.diameterMm.toLocaleString("en-US")} mm`
+      : spec.diameterRaw.trim() || "unspecified wire";
+  const mailto = `mailto:${encodeURIComponent(buyer.email)}`;
+  return shell(
+    `Matched buyer lead — ${size}`,
+    `${kickerRow()}
+     ${headingRow("A buyer job matches your cell")}
+     ${copyRow(`${escapeHtml(shop || "Your shop")} is on a paid Source plan, so this RFQ comes to you. Listing equipment stays free; leads do not.`)}
+     ${copyRow(`<strong>${escapeHtml(why)}</strong>${fitNote ? `<br />${escapeHtml(fitNote)}` : ""}`)}
+     ${mailRowsHtml(
+       [
+         { label: "Buyer", value: buyer.company || buyer.name || buyer.email },
+         buyer.name ? { label: "Name", value: buyer.name } : null,
+         { label: "Email", value: buyer.email, href: mailto },
+         buyer.phone ? { label: "Phone", value: buyer.phone } : null,
+         buyer.city || buyer.state
+           ? {
+               label: "Locale",
+               value: [buyer.city, buyer.state].filter(Boolean).join(", "),
+             }
+           : null,
+         { label: "Wire", value: spec.diameterRaw || size },
+         spec.kind ? { label: "Cell", value: spec.kind } : null,
+         spec.oem ? { label: "OEM", value: spec.oem } : null,
+         spec.qty ? { label: "Qty", value: spec.qty } : null,
+         spec.notes ? { label: "Notes", value: spec.notes } : null,
+       ].filter((row): row is MailRow => Boolean(row)),
+     )}
+     ${ctaBannerRow(mailto, "Reply to the buyer", "The print stays with the desk until you take the job.")}`,
   );
 }

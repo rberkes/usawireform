@@ -25,7 +25,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
     cells: 1,
     priceCents: 0,
     lookupKey: null,
-    blurb: "File one cell. No card.",
+    blurb: "List one cell free. Buyer leads need a paid plan.",
   },
   {
     id: "four",
@@ -33,7 +33,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
     cells: 4,
     priceCents: 3000,
     lookupKey: "source_cells_4",
-    blurb: "One free, three more.",
+    blurb: "Up to four cells. Matched buyer leads come to this inbox.",
   },
   {
     id: "ten",
@@ -41,7 +41,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
     cells: 10,
     priceCents: 4900,
     lookupKey: "source_cells_10",
-    blurb: "A small cell list.",
+    blurb: "Up to ten cells. Matched buyer leads come to this inbox.",
   },
   {
     id: "twenty",
@@ -49,14 +49,14 @@ export const SOURCE_PLANS: SourcePlan[] = [
     cells: 20,
     priceCents: 9900,
     lookupKey: "source_cells_20",
-    blurb: "A full line.",
+    blurb: "Up to twenty cells. Matched buyer leads come to this inbox.",
   },
 ];
 
 export const SOURCE_PAID_PLANS = SOURCE_PLANS.filter((plan) => plan.priceCents > 0);
 
 export const SOURCE_PLAN_LINE =
-  "One cell free. How the plant operates is free. $30/mo for 4. $49/mo for 10. $99/mo for 20. Up to 3 secondaries $19/mo. Six maximum $49/mo.";
+  "Listing a cell is free. Buyer leads go to paid plans. $30/mo for 4 cells. $49/mo for 10. $99/mo for 20. Up to 3 secondaries $19/mo. Six maximum $49/mo.";
 
 export const SOURCE_FIT_LINE =
   "Min order, setup, stocked materials, and lead are free on the listing so a buyer can see how the factory operates.";

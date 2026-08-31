@@ -6,6 +6,8 @@ import { Page, PageHero } from "@/components/ui";
 import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
 import { listSourceFilings, listSourceInvites, listSourceJobs } from "@/lib/source";
+import { listSourceSubscribers } from "@/lib/source-leads";
+import { adminFileHref } from "@/lib/blob";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -25,26 +27,29 @@ export default async function AdminSourcePage({
     return <AdminLogin next="/admin/source" error={error} title="Source" />;
   }
 
-  const [invites, filings, jobs, quoteCount, directoryCount] = await Promise.all([
-    listSourceInvites(),
-    listSourceFilings(),
-    listSourceJobs(),
-    countQuoteSubmissions(),
-    countDirectoryLeads(),
-  ]);
+  const [invites, filings, jobs, quoteCount, directoryCount, subscribers] =
+    await Promise.all([
+      listSourceInvites(),
+      listSourceFilings(),
+      listSourceJobs(),
+      countQuoteSubmissions(),
+      countDirectoryLeads(),
+      listSourceSubscribers(),
+    ]);
 
   return (
     <Page>
       <PageHero
         kicker="Admin"
         title="Source"
-        lede="Send an invite. The shop gets a link to register and upload equipment. You get a LEAD copy."
+        lede="Send an invite. The shop lists equipment free. Buyer leads go to paid subscribers — manage them under Subscribers."
       />
       <AdminInboxNav
         current="source"
         quoteCount={quoteCount}
         directoryCount={directoryCount}
         sourceCount={filings.length}
+        subscriberCount={subscribers.length}
       />
       <div className="mt-10">
         <SourceInviteForm />
@@ -121,15 +126,24 @@ export default async function AdminSourcePage({
         <h2 className="text-lg font-medium">Jobs</h2>
         {jobs.length === 0 ? (
           <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
-            No buyer jobs yet.
+            No buyer jobs yet. When a buyer submits on /source, name, email,
+            phone, city, wire, notes, and the STEP land here.
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-line border border-line">
             {jobs.map((row) => (
-              <li key={row.timestamp + row.email} className="px-4 py-4 text-sm">
+              <li
+                key={`${row.timestamp}-${row.email}-${row.fileName ?? ""}`}
+                className="px-4 py-4 text-sm"
+              >
                 <p className="font-medium">
                   {row.company || row.email}
                   <span className="ml-2 font-normal text-muted">{row.email}</span>
+                </p>
+                <p className="mt-1 text-muted">
+                  {[row.name, row.phone, [row.city, row.state].filter(Boolean).join(", ")]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </p>
                 <p className="mt-1 text-muted">
                   {row.diameterMm != null ? `${row.diameterMm} mm` : row.diameterRaw}
@@ -137,6 +151,9 @@ export default async function AdminSourcePage({
                   {row.oem ? ` · ${row.oem}` : ""}
                   {row.qty ? ` · qty ${row.qty}` : ""}
                 </p>
+                {row.notes ? (
+                  <p className="mt-1 max-w-2xl text-foreground/90">{row.notes}</p>
+                ) : null}
                 <p className="mt-1 font-mono text-[11px] text-muted">
                   {row.timestamp
                     ? new Date(row.timestamp).toLocaleString("en-US", {
@@ -144,6 +161,16 @@ export default async function AdminSourcePage({
                       })
                     : "—"}
                 </p>
+                {row.drawingPath ? (
+                  <p className="mt-2">
+                    <a
+                      href={adminFileHref(row.drawingPath, row.fileName)}
+                      className="text-copper hover:underline"
+                    >
+                      Download {row.fileName || "drawing"}
+                    </a>
+                  </p>
+                ) : null}
               </li>
             ))}
           </ul>

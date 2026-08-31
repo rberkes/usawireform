@@ -48,7 +48,7 @@ export default async function SourceEquipmentPage({ searchParams }: Props) {
       <PageHero
         kicker="Source"
         title="Register and upload equipment"
-        lede="Pick the machine class, then file OEM, model, year, capacity, and stocked sizes. 4-slide and multi-slide catalogs include Baird and Nilson. Buyers upload a STEP and get quotes from cells that can run the print."
+        lede="Pick the machine class, then file OEM, model, year, capacity, and stocked sizes. Listing is free. Matched buyer leads go to paid plans."
       />
       {invite ? (
         <p className="mt-6 max-w-2xl text-sm leading-6 text-muted">

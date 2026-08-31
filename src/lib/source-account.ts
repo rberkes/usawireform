@@ -43,7 +43,14 @@ export function remainingSourceCells(plan: SourcePlan, used: number) {
   return Math.max(0, plan.cells - used);
 }
 
-export function shopFromFilings(rows: SourceFilingRow[]) {
+export function shopFromFilings(
+  rows: Array<
+    Pick<
+      SourceFilingRow,
+      "company" | "email" | "name" | "phone" | "city" | "state" | "website"
+    >
+  >,
+) {
   const latest = rows[0];
   if (!latest) return null;
   return {

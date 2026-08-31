@@ -8,7 +8,7 @@ import {
 import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
 import { StateMark } from "@/components/StateIcon";
 import { Container } from "@/components/ui";
-import { HOME_CTA_LEDE, HOME_CTA_TITLE, HOME_PLATFORM_STEPS } from "@/lib/client-landing";
+import { HOME_BUYER_STEPS, HOME_CTA_LEDE, HOME_CTA_TITLE } from "@/lib/client-landing";
 import { publicHost, type MetroShop } from "@/lib/metro-shops";
 import type { WireFormingMetro } from "@/lib/metros";
 import { getStateByAbbr, statePath } from "@/lib/states";
@@ -104,10 +104,10 @@ export function CitySuppliersPage({
             How matching works
           </p>
           <h2 className="mt-3 max-w-3xl text-3xl tracking-tight sm:text-4xl">
-            List equipment. Match the print. Quote the job.
+            Upload a STEP. Match the cell. Get the quote.
           </h2>
           <PlatformFlow
-            steps={HOME_PLATFORM_STEPS}
+            steps={HOME_BUYER_STEPS}
             className="mt-10 border-line bg-[#0b1f33] text-white"
           />
         </Container>

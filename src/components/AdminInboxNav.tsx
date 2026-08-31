@@ -48,11 +48,13 @@ export function AdminInboxNav({
   quoteCount,
   directoryCount,
   sourceCount = 0,
+  subscriberCount = 0,
 }: {
-  current: "quotes" | "directory" | "source";
+  current: "quotes" | "directory" | "source" | "subscribers";
   quoteCount: number;
   directoryCount: number;
   sourceCount?: number;
+  subscriberCount?: number;
 }) {
   return (
     <div className="mt-8 space-y-4">
@@ -80,6 +82,14 @@ export function AdminInboxNav({
           waiting={current !== "source" && sourceCount > 0}
         >
           Source
+        </InboxTab>
+        <InboxTab
+          href="/admin/subscribers"
+          active={current === "subscribers"}
+          count={subscriberCount}
+          waiting={current !== "subscribers" && subscriberCount > 0}
+        >
+          Subscribers
         </InboxTab>
       </nav>
       {current === "directory" && quoteCount > 0 ? (

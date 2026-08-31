@@ -12,6 +12,7 @@ import {
   sourceFiledReceiptHtml,
   sourceInviteHtml,
   sourceJobReceiptHtml,
+  sourceShopLeadHtml,
   type EstimateMailCopy,
   type MailRow,
 } from "@/lib/lead-mail";
@@ -442,6 +443,7 @@ export async function sendSourceJobEmails({
   qty,
   notes,
   matches,
+  mailed = [],
 }: {
   to: string;
   company: string;
@@ -468,16 +470,34 @@ export async function sendSourceJobEmails({
     why: string;
     fitNote?: string;
   }>;
+  mailed?: Array<{
+    company: string;
+    email: string;
+    why: string;
+    fitNote?: string;
+  }>;
 }) {
   const size =
     diameterMm != null
       ? `${diameterMm} mm`
       : diameterRaw.trim() || "unspecified wire";
+  const mailedKeys = new Set(
+    mailed.map((row) => `${row.email.trim().toLowerCase()}|${row.company}`),
+  );
+  const chairLine = (
+    row: (typeof matches)[number],
+    index: number,
+    sent: boolean,
+  ) =>
+    `${index + 1}. ${escapeHtml(row.company)} — <a href="mailto:${escapeHtml(row.email)}">${escapeHtml(row.email)}</a>${sent ? " · emailed" : " · listing only"}<br />
+        ${escapeHtml(row.why)}${row.fitNote ? ` · ${escapeHtml(row.fitNote)}` : ""}${row.city || row.state ? ` · ${escapeHtml([row.city, row.state].filter(Boolean).join(", "))}` : ""}`;
   const chairs = matches
-    .map(
-      (row, index) =>
-        `${index + 1}. ${escapeHtml(row.company)} — <a href="mailto:${escapeHtml(row.email)}">${escapeHtml(row.email)}</a><br />
-        ${escapeHtml(row.why)}${row.fitNote ? ` · ${escapeHtml(row.fitNote)}` : ""}${row.city || row.state ? ` · ${escapeHtml([row.city, row.state].filter(Boolean).join(", "))}` : ""}`,
+    .map((row, index) =>
+      chairLine(
+        row,
+        index,
+        mailedKeys.has(`${row.email.trim().toLowerCase()}|${row.company}`),
+      ),
     )
     .join("<p></p>");
   const [shop, receipt] = await Promise.all([
@@ -491,21 +511,78 @@ export async function sendSourceJobEmails({
         ${city || state ? `<p>Locale: ${escapeHtml([city, state].filter(Boolean).join(", "))}</p>` : ""}
         <p>Wire: ${escapeHtml(diameterRaw || size)}${kind ? ` · ${escapeHtml(kind)}` : ""}${oem ? ` · ${escapeHtml(oem)}` : ""}${qty ? ` · qty ${escapeHtml(qty)}` : ""}</p>
         ${notes ? `<p>Notes: ${escapeHtml(notes)}</p>` : ""}
-        <p><strong>${matches.length === 0 ? "No filed cell matched." : "Introduce these shops:"}</strong></p>
-        ${chairs || "<p>Empty floor list — work the RFQ from the desk.</p>"}`,
+        <p><strong>${matches.length === 0 ? "No filed cell matched." : "Capability matches:"}</strong></p>
+        ${chairs || "<p>Empty floor list — work the RFQ from the desk.</p>"}
+        <p>Paid shops were emailed the buyer. Listing-only shops stay on the directory until they subscribe.</p>`,
     }),
     sendResendMail({
       to,
       replyTo: QUOTE_EMAIL,
       subject: `Receipt: your Source job — ${COMPANY}`,
       html: sourceJobReceiptHtml({
-        matchCount: matches.length,
+        matchCount: mailed.length,
         diameterMm,
       }),
     }),
   ]);
-  console.log("[Source job mail]", { to, company, matches: matches.length, shop, receipt });
+  console.log("[Source job mail]", {
+    to,
+    company,
+    matches: matches.length,
+    mailed: mailed.length,
+    shop,
+    receipt,
+  });
   return shop && receipt;
+}
+
+export async function sendSourceShopLeadEmails({
+  mailed,
+  buyer,
+  spec,
+}: {
+  mailed: Array<{
+    company: string;
+    email: string;
+    why: string;
+    fitNote?: string;
+  }>;
+  buyer: {
+    company?: string;
+    name?: string;
+    email: string;
+    phone?: string;
+    city?: string;
+    state?: string;
+  };
+  spec: {
+    diameterRaw: string;
+    diameterMm: number | null;
+    kind: string;
+    oem: string;
+    qty: string;
+    notes: string;
+  };
+}) {
+  const results = await Promise.all(
+    mailed.map(async (row) => {
+      const ok = await sendResendMail({
+        to: row.email,
+        replyTo: buyer.email,
+        subject: `LEAD: matched buyer job — ${COMPANY}`,
+        html: sourceShopLeadHtml({
+          shop: row.company,
+          why: row.why,
+          fitNote: row.fitNote,
+          buyer,
+          spec,
+        }),
+      });
+      console.log("[Source shop lead]", { to: row.email, company: row.company, ok });
+      return ok;
+    }),
+  );
+  return results.filter(Boolean).length;
 }
 
 export async function storeDirectoryLead(lead: DirectoryLeadRecord) {

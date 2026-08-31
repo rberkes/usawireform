@@ -128,6 +128,11 @@ export type SourceProfile = {
   plantVerifiedAt?: string;
   /** Shop-filed buyer-fit: MOQ, setup, stock, lead, coil. */
   fit?: SourceBuyerFit;
+  /**
+   * Admin grant so a shop receives buyer leads without a Stripe plan.
+   * Stripe paid plans also receive leads. Listing equipment stays free.
+   */
+  leadsAccess?: "comp";
 };
 
 export type SourceJob = {
