@@ -90,8 +90,8 @@ export default function Home() {
           title="Where suppliers, manufacturers, and buyers meet."
         >
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-            Wire form suppliers and manufacturers file the cell. Buyers send a
-            STEP. Quotes go to shops with the right machine and open capacity.
+            Shops upload capability and capacity. Buyers send a STEP. Quotes go
+            to shops with the right machine and open capacity.
           </p>
           <LinkList
             className="mt-8"

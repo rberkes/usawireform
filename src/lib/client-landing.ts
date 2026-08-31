@@ -26,7 +26,7 @@ export const HOME_QUOTE_NOTE =
   "Quotes come from wire form cells that have capacity and capability. No STEP file? We convert PDF 3-view drawings for free.";
 
 export const HOME_HERO_LEDE =
-  "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production. Shops file the machine. Buyers upload a STEP. Quotes come from wire form cells that have capacity and capability.";
+  "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production. Shops upload capability and capacity. Buyers upload a STEP. Quotes come from wire form cells that have capacity and capability.";
 
 export const HOME_CTA_TITLE = "Source by capability and capacity.";
 
