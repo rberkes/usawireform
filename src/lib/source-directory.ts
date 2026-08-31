@@ -1,4 +1,8 @@
-import { directoryRegionForState, getDirectoryCompany } from "@/lib/directory";
+import {
+  directoryCompanies,
+  directoryRegionForState,
+  getDirectoryCompany,
+} from "@/lib/directory";
 import type { DirectoryCompany } from "@/lib/directory-types";
 import { shopCapacityLine } from "@/lib/source-capacity";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
@@ -60,6 +64,25 @@ export function sourceAccountLocksClaim(
 ) {
   if (!profile?.slug) return false;
   return Boolean(profile.claimedDirectory || getDirectoryCompany(profile.slug));
+}
+
+/** Unclaimed directory page that matches this shop, if they still need to finish claim. */
+export function suggestedDirectoryClaim(
+  profile:
+    | Pick<SourceProfile, "slug" | "company" | "claimedDirectory">
+    | null
+    | undefined,
+) {
+  if (!profile?.company || profile.claimedDirectory) return null;
+  if (getDirectoryCompany(profile.slug)) return null;
+  const bySlug = getDirectoryCompany(slugifyShopName(profile.company));
+  const byName = directoryCompanies.find(
+    (row) =>
+      row.name.trim().toLowerCase() === profile.company.trim().toLowerCase(),
+  );
+  const listed = bySlug || byName;
+  if (!listed || !sourceClaimable(listed)) return null;
+  return listed;
 }
 
 export function overlaySourceOnDirectory(

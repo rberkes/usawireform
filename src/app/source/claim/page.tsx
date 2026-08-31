@@ -5,7 +5,10 @@ import { ReleaseDirectoryClaimForm } from "@/components/ReleaseDirectoryClaimFor
 import { ButtonLink, Page, PageHero } from "@/components/ui";
 import { getDirectoryCompany } from "@/lib/directory";
 import { SOURCE_PLAN_LINE } from "@/lib/source-plans";
-import { sourceAccountLocksClaim } from "@/lib/source-directory";
+import {
+  sourceAccountLocksClaim,
+  sourceClaimPath,
+} from "@/lib/source-directory";
 import { requireSupplier } from "@/lib/source-gate";
 import { findSourceProfileBySlug, getSourceProfile } from "@/lib/source";
 
@@ -38,7 +41,7 @@ export default async function SourceClaimPage({ searchParams }: Props) {
 
   const { userId } = await auth();
   if (userId) {
-    await requireSupplier(userId);
+    await requireSupplier(userId, { next: sourceClaimPath(listed.slug) });
   }
   const [owner, mine] = await Promise.all([
     findSourceProfileBySlug(listed.slug),

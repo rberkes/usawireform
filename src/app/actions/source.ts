@@ -291,6 +291,10 @@ export async function claimDirectoryListing(
       plantProofUrl: plant.plantProofUrl,
       plantVerifiedAt: now,
       fit: existing?.fit,
+      leadsAccess: existing?.leadsAccess,
+      ndaAcceptedAt: existing?.ndaAcceptedAt,
+      ndaVersion: existing?.ndaVersion,
+      ndaName: existing?.ndaName,
     });
   } catch (error) {
     console.error("[Source claim store]", error);

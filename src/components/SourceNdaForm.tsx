@@ -17,14 +17,18 @@ const initial: SourceAccountState = { success: false, message: "" };
 export function SourceNdaForm({
   company,
   name,
+  next,
 }: {
   company?: string;
   name?: string;
+  next?: string;
 }) {
   const [state, action, pending] = useActionState(acceptSourceNda, initial);
+  const afterClaim = Boolean(next?.startsWith("/source/claim"));
 
   return (
     <form action={action} className="space-y-8">
+      {next ? <input type="hidden" name="next" value={next} /> : null}
       <Panel className="space-y-6 p-5 sm:p-6">
         <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
           Version {SOURCE_NDA_VERSION}
@@ -70,7 +74,11 @@ export function SourceNdaForm({
           </span>
         </label>
         <Button type="submit" disabled={pending}>
-          {pending ? "Saving..." : "Accept and open the shop dashboard"}
+          {pending
+            ? "Saving..."
+            : afterClaim
+              ? "Accept and finish claiming this listing"
+              : "Accept and open the shop dashboard"}
         </Button>
         {state.message ? (
           <p className="text-sm leading-6 text-copper">{state.message}</p>

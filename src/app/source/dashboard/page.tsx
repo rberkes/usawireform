@@ -36,7 +36,7 @@ import {
   uniqueSourceSlug,
 } from "@/lib/source";
 import { secondariesForForm } from "@/lib/source-secondaries";
-import { normalizeShopWebsite, sourceAccountLocksClaim } from "@/lib/source-directory";
+import { normalizeShopWebsite, sourceAccountLocksClaim, sourceClaimPath, suggestedDirectoryClaim } from "@/lib/source-directory";
 import { parseDrawingPrivacy } from "@/lib/source-types";
 
 export const dynamic = "force-dynamic";
@@ -136,6 +136,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
   const leads = leadsStatus(plan, profile);
   const getsLeads = shopGetsLeads(leads);
   const inbox = jobsMailedToShop(jobs, email);
+  const finishClaim = suggestedDirectoryClaim(profile);
 
   return (
     <Page>
@@ -148,6 +149,18 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             : "Shop listing, buyer fit, weekly open slots, cells, and the plan. How the plant operates is free. Account is email and password."
         }
       />
+      {finishClaim ? (
+        <Panel className="mt-8 max-w-xl space-y-3 p-5">
+          <p className="text-sm leading-6 text-muted">
+            Login is done. {finishClaim.name} is still unclaimed on the
+            directory. Finish with plant street, a public floor-proof URL, and
+            the factory attestation.
+          </p>
+          <ButtonLink href={sourceClaimPath(finishClaim.slug)}>
+            Continue claiming {finishClaim.name}
+          </ButtonLink>
+        </Panel>
+      ) : null}
       <div className="mt-8 flex flex-wrap gap-3">
         <ButtonLink href="/source/upgrade" variant="ghost">
           {plan.id === "free" ? "Upgrade" : "Change plan"}

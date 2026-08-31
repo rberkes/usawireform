@@ -10,6 +10,7 @@ import {
   shopLeadHtml,
   sourceClaimedReceiptHtml,
   sourceFiledReceiptHtml,
+  sourceIncompleteReminderHtml,
   sourceInviteHtml,
   sourceJobReceiptHtml,
   sourceShopLeadHtml,
@@ -323,6 +324,65 @@ export async function sendSourceInviteEmails({
   ]);
   console.log("[Source invite mail]", { to, company, shop, invite });
   return shop && invite;
+}
+
+export async function sendSourceIncompleteReminderEmail({
+  to,
+  company,
+  href,
+  kind,
+  detail,
+}: {
+  to: string;
+  company: string;
+  href: string;
+  kind: "claim" | "nda" | "confirm" | "invite";
+  detail: string;
+}) {
+  const shopName = company.trim() || "your shop";
+  const copy =
+    kind === "claim"
+      ? {
+          subject: `Finish claiming ${shopName} on Source`,
+          heading: "Finish claiming your listing",
+          cta: `Finish claiming ${shopName}`,
+          hint: "Sign in with the email this was sent to.",
+        }
+      : kind === "nda"
+        ? {
+            subject: `Accept the Source NDA — ${shopName}`,
+            heading: "One step left: the supplier NDA",
+            cta: "Accept the NDA",
+            hint: "Sign in with this email. Takes a minute.",
+          }
+        : kind === "confirm"
+          ? {
+              subject: `Confirm your Source account — ${shopName}`,
+              heading: "Confirm the shop account",
+              cta: "Confirm the shop account",
+              hint: "Use this email. Next is the supplier NDA.",
+            }
+          : {
+              subject: `Your Source invite is still open — ${shopName}`,
+              heading: "Your Source invite is still open",
+              cta: "Add your machines",
+              hint: "Use the email this was sent to.",
+            };
+  const ok = await sendResendMail({
+    to,
+    replyTo: QUOTE_EMAIL,
+    subject: `${copy.subject} — ${COMPANY}`,
+    html: sourceIncompleteReminderHtml({
+      company: shopName,
+      href,
+      heading: copy.heading,
+      body: detail,
+      cta: copy.cta,
+      hint: copy.hint,
+    }),
+  });
+  console.log("[Source incomplete reminder]", { to, company, kind, ok });
+  return ok;
 }
 
 export async function sendSourceFilingEmails({

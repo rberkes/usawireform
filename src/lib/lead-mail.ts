@@ -565,3 +565,29 @@ export function sourceShopLeadHtml({
      )}`,
   );
 }
+
+export function sourceIncompleteReminderHtml({
+  company,
+  href,
+  heading,
+  body,
+  cta,
+  hint,
+}: {
+  company: string;
+  href: string;
+  heading: string;
+  body: string;
+  cta: string;
+  hint: string;
+}) {
+  const who = escapeHtml(company.trim() || "your shop");
+  return shell(
+    heading,
+    `${kickerRow()}
+     ${headingRow(heading)}
+     ${copyRow(`${who}. ${body}`)}
+     ${ctaBannerRow(href, cta, hint)}
+     ${copyRow(`<span style="color:#5c5c5c">If this is already done, sign in and the dashboard will skip this step. Questions: reply to this email.</span>`)}`,
+  );
+}

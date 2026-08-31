@@ -2,8 +2,9 @@ import { isAdmin } from "../actions";
 import { AdminLogin } from "../login-form";
 import { AdminInboxNav } from "@/components/AdminInboxNav";
 import { AdminStepPreview } from "@/components/UploadedDrawingPreview";
-import { Page, PageHero } from "@/components/ui";
+import { Button, Page, PageHero } from "@/components/ui";
 import { adminFileHref } from "@/lib/blob";
+import { runSourceRegistrationReminders } from "@/app/actions/source-reminders";
 import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
 import {
@@ -15,6 +16,11 @@ import { jobsForBuyer } from "@/lib/source-access";
 import { listBuyerAccounts } from "@/lib/source-buyer";
 import { SOURCE_NDA_VERSION, shopHasNda } from "@/lib/source-nda";
 import { countSourceSubscribers } from "@/lib/source-leads";
+import {
+  listIncompleteSourceShops,
+  listSourceReminderLogs,
+  reminderKindLabel,
+} from "@/lib/source-reminders";
 import {
   drawingPrivacyLabel,
   parseDrawingPrivacy,
@@ -36,9 +42,15 @@ function ny(value?: string) {
 export default async function AdminAccountsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{
+    error?: string;
+    reminded?: string;
+    held?: string;
+    missing?: string;
+    failed?: string;
+  }>;
 }) {
-  const { error } = await searchParams;
+  const { error, reminded, held, missing, failed } = await searchParams;
   const ok = await isAdmin();
 
   if (!ok) {
@@ -53,6 +65,8 @@ export default async function AdminAccountsPage({
     quoteCount,
     directoryCount,
     subscriberCount,
+    incomplete,
+    reminderLogs,
   ] = await Promise.all([
     listSourceProfiles(),
     listBuyerAccounts(),
@@ -61,6 +75,8 @@ export default async function AdminAccountsPage({
     countQuoteSubmissions(),
     countDirectoryLeads(),
     countSourceSubscribers(),
+    listIncompleteSourceShops(),
+    listSourceReminderLogs(),
   ]);
 
   const emailByUser = new Map<string, string>();
@@ -89,6 +105,13 @@ export default async function AdminAccountsPage({
   );
   const ndaOk = shops.filter((row) => shopHasNda(row)).length;
   const accountCount = profiles.length + buyers.length;
+  const lastReminder = new Map(
+    reminderLogs.map((row) => [row.key, row.sentAt[row.sentAt.length - 1]]),
+  );
+  const reminderCount = new Map(
+    reminderLogs.map((row) => [row.key, row.sentAt.length]),
+  );
+  const ranReminders = reminded != null;
 
   return (
     <Page>
@@ -113,6 +136,9 @@ export default async function AdminAccountsPage({
         <a href="#shops" className="text-copper hover:underline">
           Shops ({shops.length})
         </a>
+        <a href="#incomplete" className="text-copper hover:underline">
+          Incomplete ({incomplete.length})
+        </a>
         <a href="#buyers" className="text-copper hover:underline">
           Buyers ({newestBuyers.length})
         </a>
@@ -132,6 +158,9 @@ export default async function AdminAccountsPage({
           <span className="mt-2 block text-xl font-medium">{shops.length}</span>
           <span className="mt-1 block text-muted">
             {ndaOk} signed NDA {SOURCE_NDA_VERSION}
+            {incomplete.length
+              ? ` · ${incomplete.length} incomplete`
+              : ""}
           </span>
         </p>
         <p className="border border-line px-4 py-4 text-sm">
@@ -159,6 +188,68 @@ export default async function AdminAccountsPage({
           </span>
         </p>
       </div>
+
+      <section id="incomplete" className="mt-12 scroll-mt-24">
+        <h2 className="text-lg font-medium">Incomplete registration</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+          Daily at 10:00 Eastern. First mail after 18 hours, then every 3 days,
+          stop after 3. NDA, directory claim, unconfirmed equipment, and unused
+          invites. The button below skips the 18-hour wait (still will not send
+          twice in 3 days). Desk gets a copy when any go out.
+        </p>
+        {ranReminders ? (
+          <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
+            This run: sent {reminded || "0"}, held {held || "0"} (too soon or
+            already at 3), no email {missing || "0"}, failed {failed || "0"}.
+          </p>
+        ) : null}
+        <form action={runSourceRegistrationReminders} className="mt-4">
+          <Button type="submit">Email due reminders now</Button>
+        </form>
+        {incomplete.length === 0 ? (
+          <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
+            Every started shop finished NDA and claim, or there is no email on
+            file yet.
+          </p>
+        ) : (
+          <ul className="mt-4 divide-y divide-line border border-line">
+            {incomplete.map((row) => {
+              const last = lastReminder.get(row.key);
+              const n = reminderCount.get(row.key) ?? 0;
+              return (
+                <li key={row.key} className="px-4 py-4 text-sm">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <p className="font-medium">
+                      {row.company}
+                      {row.to ? (
+                        <span className="ml-2 font-normal text-muted">
+                          {row.to}
+                        </span>
+                      ) : (
+                        <span className="ml-2 font-normal text-muted">
+                          no email on file
+                        </span>
+                      )}
+                    </p>
+                    <p className="font-mono text-[11px] tracking-widest text-muted uppercase">
+                      {reminderKindLabel(row.kind)}
+                    </p>
+                  </div>
+                  <p className="mt-1 text-muted">{row.detail}</p>
+                  <p className="mt-1 font-mono text-[11px] text-muted">
+                    Started {ny(row.startedAt)}
+                    {n
+                      ? ` · ${n} reminder${n === 1 ? "" : "s"}${
+                          last ? `, last ${ny(last)}` : ""
+                        }`
+                      : " · none sent yet"}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
 
       <section id="shops" className="mt-12 scroll-mt-24">
         <h2 className="text-lg font-medium">Shops</h2>

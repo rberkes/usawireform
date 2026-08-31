@@ -4,6 +4,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { blobErrorMessage, blobReady } from "@/lib/blob";
 import { getBuyerAccount, saveBuyerAccount } from "@/lib/source-buyer";
+import { safeSourceNext } from "@/lib/source-gate";
 import { SOURCE_NDA_VERSION } from "@/lib/source-nda";
 import { setSourceRole } from "@/lib/source-role";
 import {
@@ -26,6 +27,7 @@ export async function acceptSourceNda(
   if (!userId) redirect("/sign-in?redirect_url=/source/nda");
   await setSourceRole(userId, "supplier");
 
+  const next = String(formData.get("next") ?? "").trim();
   const agreed = String(formData.get("agree") ?? "");
   const name = String(formData.get("name") ?? "").trim().slice(0, 80);
   const company = String(formData.get("company") ?? "").trim().slice(0, 120);
@@ -77,7 +79,7 @@ export async function acceptSourceNda(
       message: `Could not store the agreement (${blobErrorMessage(error)}).`,
     };
   }
-  redirect("/source/dashboard");
+  redirect(safeSourceNext(next) || "/source/dashboard");
 }
 
 export async function saveSourceBuyerAccount(

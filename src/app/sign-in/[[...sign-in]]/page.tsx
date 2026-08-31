@@ -2,13 +2,24 @@ import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { Page, PageHero } from "@/components/ui";
+import { safeSourceNext } from "@/lib/source-gate";
 
 export const metadata = {
   title: "Sign in — Source",
   robots: { index: false, follow: false },
 };
 
-export default function SignInPage() {
+type Props = {
+  searchParams: Promise<{ redirect_url?: string }>;
+};
+
+export default async function SignInPage({ searchParams }: Props) {
+  const { redirect_url: raw } = await searchParams;
+  const next = safeSourceNext(raw);
+  const after = next || "/source/enter";
+  const signUpQs = new URLSearchParams({ as: "supplier" });
+  if (next) signUpQs.set("redirect_url", next);
+
   return (
     <Page>
       <PageHero
@@ -18,7 +29,7 @@ export default function SignInPage() {
       />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
         New here?{" "}
-        <Link href="/sign-up?as=supplier" className="text-copper hover:underline">
+        <Link href={`/sign-up?${signUpQs}`} className="text-copper hover:underline">
           Shop sign-up
         </Link>
         {" · "}
@@ -30,8 +41,8 @@ export default function SignInPage() {
       <div className="mt-10">
         <SignIn
           appearance={clerkAppearance}
-          fallbackRedirectUrl="/source/enter"
-          signUpUrl="/sign-up"
+          fallbackRedirectUrl={after}
+          signUpUrl={`/sign-up?${signUpQs}`}
         />
       </div>
     </Page>

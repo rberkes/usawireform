@@ -2,6 +2,7 @@ import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { Page, PageHero } from "@/components/ui";
+import { safeSourceNext } from "@/lib/source-gate";
 
 export const metadata = {
   title: "Confirm your Source account",
@@ -9,12 +10,22 @@ export const metadata = {
 };
 
 type Props = {
-  searchParams: Promise<{ email_address?: string; as?: string }>;
+  searchParams: Promise<{
+    email_address?: string;
+    as?: string;
+    redirect_url?: string;
+  }>;
 };
 
 export default async function SignUpPage({ searchParams }: Props) {
-  const { email_address: email, as } = await searchParams;
+  const { email_address: email, as, redirect_url: raw } = await searchParams;
   const buyer = as === "buyer";
+  const next = buyer ? "" : safeSourceNext(raw);
+  const after = buyer ? "/buyer/dashboard" : next || "/source/enter";
+  const signInUrl = next
+    ? `/sign-in?redirect_url=${encodeURIComponent(next)}`
+    : "/sign-in";
+
   return (
     <Page>
       <PageHero
@@ -23,7 +34,9 @@ export default async function SignUpPage({ searchParams }: Props) {
         lede={
           buyer
             ? "Then the buyer dashboard. You manage jobs and whether a STEP is released. Matched shops only open a file after they signed the NDA."
-            : "Use the email we sent the equipment receipt to. Next you accept the supplier NDA. Buyer prints stay behind that agreement."
+            : next.startsWith("/source/claim")
+              ? "Use the shop email. Next you accept the supplier NDA, then finish claiming this listing."
+              : "Use the email we sent the equipment receipt to. Next you accept the supplier NDA. Buyer prints stay behind that agreement."
         }
       />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
@@ -48,8 +61,8 @@ export default async function SignUpPage({ searchParams }: Props) {
       <div className="mt-10">
         <SignUp
           appearance={clerkAppearance}
-          fallbackRedirectUrl="/source/enter"
-          signInUrl="/sign-in"
+          fallbackRedirectUrl={after}
+          signInUrl={signInUrl}
           unsafeMetadata={{ sourceRole: buyer ? "buyer" : "supplier" }}
           initialValues={email ? { emailAddress: email } : undefined}
         />

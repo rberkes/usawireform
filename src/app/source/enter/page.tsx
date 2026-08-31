@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { resolveSourceRole } from "@/lib/source-gate";
+import { resolveSourceRole, safeSourceNext, sourceNdaHref } from "@/lib/source-gate";
 import { shopHasNda } from "@/lib/source-nda";
 import { getSourceProfile } from "@/lib/source";
 
@@ -10,14 +10,24 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function SourceEnterPage() {
+type Props = {
+  searchParams: Promise<{ next?: string; redirect_url?: string }>;
+};
+
+export default async function SourceEnterPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const dest = safeSourceNext(params.next) || safeSourceNext(params.redirect_url);
   const { userId } = await auth();
-  if (!userId) redirect("/sign-in?redirect_url=/source/enter");
+  if (!userId) {
+    redirect(
+      `/sign-in?redirect_url=${encodeURIComponent(dest || "/source/enter")}`,
+    );
+  }
 
   const role = await resolveSourceRole(userId);
   if (role === "buyer") redirect("/buyer/dashboard");
 
   const profile = await getSourceProfile(userId);
-  if (!shopHasNda(profile)) redirect("/source/nda");
-  redirect("/source/dashboard");
+  if (!shopHasNda(profile)) redirect(sourceNdaHref(dest));
+  redirect(dest || "/source/dashboard");
 }

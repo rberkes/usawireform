@@ -36,11 +36,40 @@ export async function resolveSourceRole(userId: string): Promise<SourceRole> {
   return role;
 }
 
-export async function requireSupplier(userId: string) {
+/** Only in-app Source paths. Claim URLs stay on /source/claim?slug=… */
+export function safeSourceNext(value: string | null | undefined) {
+  if (!value) return "";
+  let path = value.trim();
+  try {
+    if (/^https?:\/\//i.test(path)) {
+      const url = new URL(path);
+      path = `${url.pathname}${url.search}`;
+    }
+  } catch {
+    return "";
+  }
+  if (!path.startsWith("/source") || path.startsWith("//")) return "";
+  if (path.startsWith("/source/drawing") || path.startsWith("/source/nda")) {
+    return "";
+  }
+  return path;
+}
+
+export function sourceNdaHref(next?: string | null) {
+  const dest = safeSourceNext(next);
+  return dest
+    ? `/source/nda?next=${encodeURIComponent(dest)}`
+    : "/source/nda";
+}
+
+export async function requireSupplier(
+  userId: string,
+  { next }: { next?: string } = {},
+) {
   const role = await resolveSourceRole(userId);
   if (role === "buyer") redirect("/buyer/dashboard");
   const profile = await getSourceProfile(userId);
-  if (!shopHasNda(profile)) redirect("/source/nda");
+  if (!shopHasNda(profile)) redirect(sourceNdaHref(next));
   return profile;
 }
 
