@@ -186,7 +186,7 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             </ButtonLink>
             <p className="text-sm leading-6 text-muted">
               US shops: file every CNC cell on this listing free. How
-              the plant operates is free. $49 unlocks a matched lead.
+              the plant operates is free.
             </p>
           </div>
         ) : null}

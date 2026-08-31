@@ -45,7 +45,7 @@ export default async function SourceDrawingPrivacyPage({ searchParams }: Props) 
       <PageHero
         kicker="Source"
         title="Drawing privacy"
-        lede={`${job.company || job.email}: ${drawingPrivacyLabel(current)}. Matched shops see the spec. A shop that buys the lead gets your contact. A released STEP opens in their dashboard after they pay — never attached to email.`}
+        lede={`${job.company || job.email}: ${drawingPrivacyLabel(current)}. Matched shops see the spec. A released STEP opens in a quoting shop’s dashboard — never attached to email.`}
       />
       {saved ? (
         <p className="mt-6 max-w-xl text-sm leading-6 text-muted">Saved.</p>
@@ -73,9 +73,8 @@ export default async function SourceDrawingPrivacyPage({ searchParams }: Props) 
             defaultChecked={current === "matched"}
           />
           <span>
-            Release the STEP to shops that buy this lead. They open it in the
-            shop dashboard after they pay $49. It is not posted and not
-            attached to email.
+            Release the STEP to shops quoting this job. They open it in the
+            dashboard. It is not posted and not attached to email.
           </span>
         </label>
         <Button type="submit">Save</Button>

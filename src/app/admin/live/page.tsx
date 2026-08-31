@@ -22,7 +22,7 @@ const GROUPS = [
       {
         href: "/source",
         label: "Send a print",
-        check: "Buyer account button. Desk vs release radios. $49 lead copy on the shop line.",
+        check: "Buyer account button. No $49. Desk vs release radios. Shop line is listing free only.",
       },
       {
         href: "/source/shops",
@@ -87,6 +87,11 @@ const GROUPS = [
     title: "Master admin — this password",
     note: "Shops, buyers, and Source STEPs live under Accounts. This-floor Contact STEPs stay on Quote files.",
     rows: [
+      {
+        href: "/admin/visitors",
+        label: "Visitors",
+        check: "IP, city, referrer, clicks, company vs ISP vs cloud. Newest first.",
+      },
       {
         href: "/admin/accounts",
         label: "Accounts",

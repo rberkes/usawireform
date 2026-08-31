@@ -34,7 +34,7 @@ export default async function BuyerDashboardPage() {
       <PageHero
         kicker="Source"
         title="Buyer dashboard"
-        lede="Your jobs and drawing privacy. Matched shops see the spec. A shop opens your contact — and a released STEP — only after they buy the lead."
+        lede="Your jobs and drawing privacy. Matched shops see the spec. You choose whether a quoting shop can open the STEP."
       />
       <div className="mt-8 flex flex-wrap gap-3">
         <ButtonLink href="/source">Send a print</ButtonLink>
@@ -58,8 +58,8 @@ export default async function BuyerDashboardPage() {
           <Panel className="mt-4 space-y-3 p-5">
             <p className="text-sm leading-6 text-muted">
               No jobs on this email yet. Send a print from Source — keep the
-              STEP at the desk, or release it so a shop that buys the lead can
-              open the file.
+              STEP at the desk, or release it so quoting shops can open the
+              file.
             </p>
             <ButtonLink href="/source" variant="ghost">
               Send the print
@@ -87,7 +87,7 @@ export default async function BuyerDashboardPage() {
                       ? ` · offered to ${job.mailedTo.length === 1 ? "1 shop" : `${job.mailedTo.length} shops`}`
                       : " · no match yet"}
                     {job.purchasedBy && job.purchasedBy.length > 0
-                      ? ` · ${job.purchasedBy.length === 1 ? "1 bought the lead" : `${job.purchasedBy.length} bought the lead`}`
+                      ? ` · ${job.purchasedBy.length === 1 ? "1 shop has contact" : `${job.purchasedBy.length} shops have contact`}`
                       : ""}
                   </p>
                   <p className="mt-1 font-mono text-[11px] text-muted">

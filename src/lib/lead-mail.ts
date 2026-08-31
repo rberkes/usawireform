@@ -466,12 +466,12 @@ export function sourceJobReceiptHtml({
     matchCount === 0
       ? `No filed cell matches ${size} yet. The desk has the RFQ and will work it.`
       : matchCount === 1
-        ? `One shop can run ${size}. They see the lead in Source and pay $49 to unlock your contact.`
-        : `Up to ${Math.min(matchCount, 10)} shops that can run ${size} see the lead. Each can buy it for $49 — maximum 10 shops.`;
+        ? `One shop can run ${size}. They see the job and can quote.`
+        : `Up to ${Math.min(matchCount, 10)} shops that can run ${size} see the job.`;
   const privacy =
     drawingPrivacy === "matched"
-      ? "You released the STEP. A shop that buys the lead can open it in the dashboard. It is not posted and not attached to email."
-      : "You kept the STEP at the desk. Shops that buy the lead get the spec and your contact only.";
+      ? "You released the STEP. A quoting shop can open it in the dashboard. It is not posted and not attached to email."
+      : "You kept the STEP at the desk. Shops quote from the spec. You choose whether they get the file.";
   const privacyCta = privacyHref
     ? ctaBannerRow(
         privacyHref,
@@ -491,7 +491,7 @@ export function sourceJobReceiptHtml({
        "Send another job",
        "Wire size, 2D or 3D, locale. We introduce — emails stay with the desk.",
      )}
-     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/shops" style="color:#0b6bcb;text-decoration:none">List every cell free</a>. Matched leads are $49 in the dashboard. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
+     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/shops" style="color:#0b6bcb;text-decoration:none">List every cell free</a>. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
   );
 }
 

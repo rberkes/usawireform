@@ -33,7 +33,7 @@ export default async function SignUpPage({ searchParams }: Props) {
         title={buyer ? "Confirm a buyer account" : "Confirm the shop account"}
         lede={
           buyer
-            ? "Then the buyer dashboard. You manage jobs and whether a STEP is released. A shop opens a file only after they buy the lead, and only if you released it."
+            ? "Then the buyer dashboard. You manage jobs and whether a STEP is released."
             : next.startsWith("/source/claim")
               ? "Use the shop email. Next you finish claiming this listing. Listing is free. $49 unlocks a matched lead."
               : "Use the email we sent the equipment receipt to. Next is the shop dashboard. Listing is free. $49 unlocks a matched lead."

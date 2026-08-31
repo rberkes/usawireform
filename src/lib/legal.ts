@@ -1,7 +1,7 @@
 import { COMPANY, PART_PREFIX, QUOTE_EMAIL, SITE_HOST, SITE_URL } from "@/lib/company";
 
 /** Effective date for the public Privacy Policy and User Agreement. */
-export const LEGAL_EFFECTIVE = "August 30, 2026";
+export const LEGAL_EFFECTIVE = "August 31, 2026";
 
 export const LEGAL_EMAIL = QUOTE_EMAIL;
 

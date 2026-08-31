@@ -983,7 +983,7 @@ export async function submitSourceJob(
       ? listed.length > 0
         ? `Cells match ${parsed.spec.diameterMm} mm. Those shops will see the lead in Source. Receipt sent to ${email}.`
         : `No filed cell matches ${parsed.spec.diameterMm} mm yet. Receipt sent to ${email}. The desk has the RFQ.`
-      : `Offered to ${mailed.length === 1 ? "1 shop" : `${mailed.length} shops`} that can run ${parsed.spec.diameterMm} mm. They see it in the dashboard and can buy the lead. Receipt sent to ${email}.`;
+      : `Offered to ${mailed.length === 1 ? "1 shop" : `${mailed.length} shops`} that can run ${parsed.spec.diameterMm} mm. Receipt sent to ${email}.`;
 
   return {
     success: true,

@@ -152,7 +152,7 @@ export function parseDrawingPrivacy(
 
 export function drawingPrivacyLabel(value: SourceDrawingPrivacy) {
   return value === "matched"
-    ? "Released after a shop buys the lead"
+    ? "STEP released to quoting shops"
     : "Held at the desk";
 }
 

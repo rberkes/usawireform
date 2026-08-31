@@ -90,8 +90,11 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong className="text-foreground">Technical data:</strong> IP
-              address, browser, referring page, and timestamps that the host
-              and analytics tools record when you load a page or submit a form.
+              address, approximate city and region, reverse DNS (to see if the
+              connection looks like a company network, home ISP, or cloud),
+              referring site, pages opened, links clicked, browser, and
+              timestamps. A first-party visit cookie keeps one session together.
+              Google does not send the search words someone typed.
             </li>
           </ul>
         </LegalSection>
@@ -103,7 +106,7 @@ export default function PrivacyPage() {
             <li>Answer email and connect a directory inquiry to the right desk.</li>
             <li>Operate Source accounts, shop listings, and $49 lead purchases.</li>
             <li>Answer Ask the resource questions from this site’s library.</li>
-            <li>Keep the site up, debug failures, and measure which pages are used.</li>
+            <li>Keep the site up, debug failures, review traffic for abuse, and measure which pages are used.</li>
             <li>Meet legal, tax, and quality-record duties on a job.</li>
           </ul>
         </LegalSection>
@@ -153,7 +156,9 @@ export default function PrivacyPage() {
 
         <LegalSection id="cookies" title="Cookies and analytics">
           <p>
-            This site uses Vercel Analytics. If a Google Analytics ID is
+            This site uses a first-party visit log (IP, city, referrer, clicks)
+            so the desk can review traffic and later block abusive addresses.
+            Vercel Analytics may also run. If a Google Analytics ID is
             configured, that tool may also set cookies. Clerk and Stripe set
             cookies required to sign in and pay. Embedded YouTube players use
             YouTube’s privacy-enhanced mode; YouTube may still set cookies if

@@ -7,12 +7,12 @@ import { WireMark } from "./WireMark";
 const PILLARS = [
   {
     title: "No broker markup",
-    body: "You pay the shop for parts. A shop pays $49 to unlock a lead. We do not mark up the piece price.",
+    body: "You pay the shop for parts. We do not mark up the piece price.",
     icon: PriceSlashIcon,
   },
   {
     title: "Direct communication",
-    body: "After a shop buys the lead, you talk to the plant that filed the cell.",
+    body: "You talk to the plant that filed the cell — not a broker in the middle.",
     icon: SpeechIcon,
   },
   {

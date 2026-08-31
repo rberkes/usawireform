@@ -45,7 +45,7 @@ const STEPS = [
   {
     n: "03",
     title: "Quotes from shops that can run it",
-    body: "Up to 10 shops see the lead. Each can buy it for $49 to unlock your contact. The STEP is never attached to email.",
+    body: "Up to 10 shops whose machines fit the job see the print. The STEP is never attached to email.",
   },
 ];
 
@@ -108,10 +108,10 @@ export default async function SourcePage() {
       <StatRow
         className="mt-14 sm:mt-16"
         items={[
-          { value: "10", label: "Shops can buy a lead" },
+          { value: "10", label: "Shops can quote a job" },
           { value: "Size", label: "Wire diameter first" },
           { value: "2D / 3D", label: "Bend type" },
-          { value: "$49", label: "To unlock a lead" },
+          { value: "Free", label: "For buyers" },
         ]}
       />
 
@@ -156,7 +156,7 @@ export default async function SourcePage() {
           <TextLink href="/source/equipment">
             File machine, year, capacity, and stocked sizes
           </TextLink>
-          . Listing is free. $49 unlocks a matched lead in the shop dashboard.
+          . Listing a cell is free.
         </p>
       </section>
     </Page>

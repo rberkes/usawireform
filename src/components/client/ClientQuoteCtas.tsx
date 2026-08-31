@@ -38,11 +38,13 @@ export function ClientQuoteCtas({
   tone = "light",
   size = "hero",
   variant = "quote",
+  audience = "both",
   className,
 }: {
   tone?: "light" | "dark";
   size?: keyof typeof sizes;
   variant?: "quote" | "home";
+  audience?: "buyers" | "suppliers" | "both";
   className?: string;
 }) {
   const pad = sizes[size];
@@ -63,19 +65,52 @@ export function ClientQuoteCtas({
   const note = tone === "dark" ? "text-white/60" : "text-muted";
   const labelTone = tone === "dark" ? "text-white/55" : "text-muted";
 
+  const showBuyers = audience !== "suppliers";
+  const showSuppliers = audience !== "buyers";
+  const twoUp = showBuyers && showSuppliers;
+
   const buttons =
     variant === "home" ? (
-      <div className={cx("grid w-full max-w-xl grid-cols-1 gap-5 sm:max-w-2xl sm:grid-cols-2 sm:gap-6", labelTone)}>
-        <CtaAction label="Buyers" href={SOURCE_JOB_HREF} className={primary}>
-          Get a Quote
-        </CtaAction>
-        <CtaAction
-          label="Suppliers"
-          href={SOURCE_EQUIPMENT_HREF}
-          className={secondary}
-        >
-          List Machines Free
-        </CtaAction>
+      <div
+        className={cx(
+          "grid w-full max-w-xl grid-cols-1 gap-5",
+          twoUp ? "sm:max-w-2xl sm:grid-cols-2 sm:gap-6" : "sm:max-w-md",
+          labelTone,
+        )}
+      >
+        {showBuyers ? (
+          twoUp ? (
+            <CtaAction
+              label="Buyers"
+              href={SOURCE_JOB_HREF}
+              className={primary}
+            >
+              Get a Quote
+            </CtaAction>
+          ) : (
+            <Link href={SOURCE_JOB_HREF} className={cx(primary, "w-full sm:w-auto")}>
+              Get a Quote
+            </Link>
+          )
+        ) : null}
+        {showSuppliers ? (
+          twoUp ? (
+            <CtaAction
+              label="Suppliers"
+              href={SOURCE_EQUIPMENT_HREF}
+              className={secondary}
+            >
+              List Machines Free
+            </CtaAction>
+          ) : (
+            <Link
+              href={SOURCE_EQUIPMENT_HREF}
+              className={cx(primary, "w-full sm:w-auto")}
+            >
+              List Machines Free
+            </Link>
+          )
+        ) : null}
       </div>
     ) : (
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -93,7 +128,9 @@ export function ClientQuoteCtas({
       {buttons}
       {variant === "home" && size !== "band" ? (
         <p className={cx("max-w-xl text-sm leading-6", note)}>
-          {HOME_QUOTE_NOTE}
+          {audience === "suppliers"
+            ? "File every cell free. Matched leads show in the shop dashboard — $49 to unlock a buyer."
+            : HOME_QUOTE_NOTE}
         </p>
       ) : null}
     </div>

@@ -70,8 +70,16 @@ export const metadata = pageMeta({
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
-  const floorCells = await listRecentSourceFloorCells(HOME_FLOOR_CARD_COUNT);
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const [{ tab: tabParam }, floorCells] = await Promise.all([
+    searchParams,
+    listRecentSourceFloorCells(HOME_FLOOR_CARD_COUNT),
+  ]);
+  const tab = tabParam === "suppliers" ? "suppliers" : "buyers";
 
   return (
     <>
@@ -79,8 +87,8 @@ export default async function Home() {
         kicker="Source fast. Source easy."
         title={<BrandLockup size="hero" tone="onDark" />}
         lede={HOME_HERO_LEDE}
-        flow={<PlatformFlowTabs />}
-        cta={<ClientQuoteCtas variant="home" tone="dark" className="mt-8" />}
+        flow={<PlatformFlowTabs tab={tab} />}
+        cta={false}
       />
       <Page>
         <HomeFloorFeed initial={floorCells} />

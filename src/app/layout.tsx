@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { VisitTracker } from "@/components/VisitTracker";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SourceAccountBar } from "@/components/SourceAccountBar";
@@ -103,6 +104,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </div>
           <Footer />
           <BackToTop />
+          <VisitTracker />
           <Analytics />
         </body>
       </html>
