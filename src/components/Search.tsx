@@ -95,6 +95,7 @@ const searchItems: SearchItem[] = [
   { title: "V-Hooks", href: "/powder-coating-hooks/v-hooks", category: "Products", description: "Powder coating V-hooks. Centered hang from coil in 4–14 mm." },
   { title: "C-Hooks", href: "/powder-coating-hooks/c-hooks", category: "Products", description: "Powder coating C-hooks. Open hang for rack clearance." },
   { title: "CV-Hooks", href: "/powder-coating-hooks/cv-hooks", category: "Products", description: "Powder coating CV-hooks. C clearance plus a V locate." },
+  { title: "CV-Hook 3D", href: "/powder-coating-hooks/cv-hooks/3d", category: "Products", description: "Orbit CV-hooks in Autodesk Viewer. C eye, V locate, stills from the same model." },
   { title: "S-Hooks", href: "/powder-coating-hooks/s-hooks", category: "Products", description: "Powder coating and plant S-hooks from coil in 4–14 mm." },
   { title: "L hitch pins", href: "/l-hitch-pins", category: "Products", description: "Heavy-duty L hitch pins for trailers and implements. 3/8, 7/16, 1/2 in. Not 5/8 in." },
   { title: "Heavy-duty L hitch pins", href: "/heavy-duty-l-hitch-pins", category: "Products", description: "Trailer L hitch pins in 1/2 in stock. CNC from coil. 100-piece minimum." },

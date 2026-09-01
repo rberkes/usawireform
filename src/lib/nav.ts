@@ -62,6 +62,7 @@ export const NAV_PRODUCTS: NavSection = {
         { href: "/powder-coating-hooks/square-hanging-hooks", label: "Square hanging hooks" },
         { href: "/powder-coating-hooks/v-hooks", label: "V-hooks" },
         { href: "/powder-coating-hooks/c-hooks", label: "C-hooks" },
+        { href: "/powder-coating-hooks/cv-hooks/3d", label: "CV-hook 3D" },
         { href: "/powder-coating-hooks/super-v-hooks", label: "Super V-hooks" },
         { href: "/powder-coating-hooks/market", label: "Hook market" },
         { href: "/heavy-duty-v-hooks", label: "Heavy-duty V-hooks" },

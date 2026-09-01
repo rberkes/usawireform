@@ -15,7 +15,13 @@ export type PowderHookCluster =
   | "price"
   | "market";
 
-export type PowderHookRender = "article" | "style" | "prices" | "square" | "epsi";
+export type PowderHookRender =
+  | "article"
+  | "style"
+  | "prices"
+  | "square"
+  | "epsi"
+  | "cv-studio";
 
 export type PowderHookNode = {
   slug: string[];
@@ -156,6 +162,26 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
     alsoCalled: ["C-V hooks", "CV hangers", "combo C/V hooks"],
     render: "style",
     styleId: "cv-hooks",
+    sections: [],
+    faqs: [],
+  },
+  {
+    slug: ["cv-hooks", "3d"],
+    title: "CV-Hook 3D",
+    h1: "CV-hook in Autodesk Viewer",
+    description:
+      "Orbit CV-hooks in Autodesk Viewer. C eye, V locate, 0.180 in and 0.250 in, 6–18 in. The path this Ohio cell CNC-forms from coil.",
+    lede: "Autodesk Viewer. Stills from the same model. Round wire we actually bend.",
+    cluster: "style",
+    weight: 4,
+    keywords: [
+      "CV-hook 3D",
+      "CV-hook Autodesk",
+      "powder coating CV-hook model",
+      "HCV 3D",
+    ],
+    alsoCalled: ["CV-hook studio", "HCV 3D", "C-V hook model"],
+    render: "cv-studio",
     sections: [],
     faqs: [],
   },

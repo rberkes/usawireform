@@ -166,6 +166,7 @@ export function siteArchitectureTree(): ArchNode[] {
             leaf("/powder-coating-hooks/v-hooks", "V-hooks"),
             leaf("/powder-coating-hooks/c-hooks", "C-hooks"),
             leaf("/powder-coating-hooks/cv-hooks", "CV-hooks"),
+            leaf("/powder-coating-hooks/cv-hooks/3d", "CV Autodesk studio"),
             leaf("/powder-coating-hooks/s-hooks", "S-hooks"),
             leaf("/powder-coating-hooks/90-degree-hooks", "90° family"),
             leaf("/powder-coating-hooks/square-hanging-hooks", "Square hanging"),

@@ -4,6 +4,7 @@ import { PowderCoatingStylePage } from "@/components/PowderCoatingStylePage";
 import { PowderHookPricesView } from "@/components/PowderHookPricesView";
 import { PowderHookSquareView } from "@/components/PowderHookSquareView";
 import { EpsiHookPricesView } from "@/components/EpsiHookPricesView";
+import { CvHookStudioView } from "@/components/CvHookStudioView";
 import { HOOK_PHOTOS } from "@/components/VHookFigure";
 import { powderHookStyle } from "@/lib/powder-coating-hooks";
 import {
@@ -78,6 +79,7 @@ export default async function PowderHookBranchPage({ params }: Props) {
   }
   if (node.render === "prices") return <PowderHookPricesView />;
   if (node.render === "epsi") return <EpsiHookPricesView />;
+  if (node.render === "cv-studio") return <CvHookStudioView />;
   if (node.render === "square") return <PowderHookSquareView />;
   return <PowderHookArticlePage node={node} />;
 }

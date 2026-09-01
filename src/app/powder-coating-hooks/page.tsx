@@ -107,6 +107,12 @@ export default function PowderCoatingHooksPage() {
             — squared corners on the hang. 5% under published HSQV bags.
           </li>
           <li>
+            <Link href="/powder-coating-hooks/cv-hooks/3d">
+              CV-hook 3D
+            </Link>{" "}
+            — Autodesk Viewer. C eye, V locate, stills from the same model.
+          </li>
+          <li>
             <Link href="/powder-coating-hooks/epsi">
               EPSI-match bags
             </Link>{" "}

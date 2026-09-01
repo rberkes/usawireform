@@ -234,11 +234,18 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
             </li>
           ) : null}
           {style.id === "cv-hooks" ? (
-            <li>
-              <Link href="/powder-coating-hooks/hcv-series-cv-hooks">
-                HCV-series CV-hooks
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link href="/powder-coating-hooks/cv-hooks/3d">
+                  CV-hook in Autodesk Viewer
+                </Link>
+              </li>
+              <li>
+                <Link href="/powder-coating-hooks/hcv-series-cv-hooks">
+                  HCV-series CV-hooks
+                </Link>
+              </li>
+            </>
           ) : null}
           {style.id === "90-degree-hooks" ? (
             <li>
