@@ -1,3 +1,4 @@
+import { purgeKnownTestRecords } from "@/lib/purge-test-records";
 import { sendDueSourceRegistrationReminders } from "@/lib/source-reminders";
 
 export const maxDuration = 120;
@@ -13,6 +14,7 @@ export async function GET(request: Request) {
   if (!cronAuthorized(request)) {
     return Response.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
+  await purgeKnownTestRecords();
   const result = await sendDueSourceRegistrationReminders();
   return Response.json({ ok: true, ...result });
 }

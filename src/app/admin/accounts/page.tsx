@@ -16,6 +16,7 @@ import { jobsForBuyer } from "@/lib/source-access";
 import { listBuyerAccounts } from "@/lib/source-buyer";
 import { SOURCE_NDA_VERSION, shopHasNda } from "@/lib/source-nda";
 import { countSourceSubscribers } from "@/lib/source-leads";
+import { purgeKnownTestRecords } from "@/lib/purge-test-records";
 import {
   listIncompleteSourceShops,
   listSourceReminderLogs,
@@ -56,6 +57,8 @@ export default async function AdminAccountsPage({
   if (!ok) {
     return <AdminLogin next="/admin/accounts" error={error} title="Accounts" />;
   }
+
+  await purgeKnownTestRecords();
 
   const [
     profiles,

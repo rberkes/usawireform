@@ -1,6 +1,7 @@
 import { get, list, put } from "@vercel/blob";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { sendDrawingReviewedEmail } from "@/lib/leads";
+import { purgeKnownTestRecords } from "@/lib/purge-test-records";
 
 export type QuoteSubmission = {
   id: string;
@@ -168,6 +169,7 @@ export async function countQuoteSubmissions() {
 
 export async function listQuoteSubmissions(): Promise<QuoteSubmission[]> {
   if (!(await blobReady())) return [];
+  await purgeKnownTestRecords();
 
   const [contactRecords, quickRecords, instantRecords, quoteFiles, quickFiles] =
     await Promise.all([

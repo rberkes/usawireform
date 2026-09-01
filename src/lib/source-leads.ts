@@ -14,6 +14,7 @@ import {
   saveSourceProfile,
   uniqueSourceSlug,
 } from "@/lib/source";
+import { purgeKnownTestRecords } from "@/lib/purge-test-records";
 import type {
   SourceFiling,
   SourceInternalMatch,
@@ -64,6 +65,7 @@ function filingKey(row: SourceFiling) {
 }
 
 export async function listSourceSubscribers(): Promise<SourceSubscriber[]> {
+  await purgeKnownTestRecords();
   const [filings, profiles] = await Promise.all([
     listSourceFilings(),
     listSourceProfiles(),
