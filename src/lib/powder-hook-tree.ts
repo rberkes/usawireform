@@ -1,6 +1,9 @@
 import { STOCK } from "@/lib/catalog";
 import { WIRE } from "@/lib/range";
 import type { PowderHookStyleId } from "@/lib/powder-coating-hooks";
+import type { EpsiHookStyle } from "@/lib/epsi-hook-prices";
+import { POWDER_HOOK_EPSI } from "@/lib/powder-hook-epsi";
+import { POWDER_HOOK_ROUND_WIRE } from "@/lib/powder-hook-round";
 
 export const POWDER_HOOK_ROOT = "/powder-coating-hooks";
 
@@ -12,7 +15,7 @@ export type PowderHookCluster =
   | "price"
   | "market";
 
-export type PowderHookRender = "article" | "style" | "prices" | "square";
+export type PowderHookRender = "article" | "style" | "prices" | "square" | "epsi";
 
 export type PowderHookNode = {
   slug: string[];
@@ -29,6 +32,7 @@ export type PowderHookNode = {
   faqs: { question: string; answer: string }[];
   render?: PowderHookRender;
   styleId?: PowderHookStyleId;
+  priceBand?: EpsiHookStyle;
 };
 
 export type PowderHookPlayer = {
@@ -77,7 +81,7 @@ export const POWDER_HOOK_PLAYERS: PowderHookPlayer[] = [
     sells:
       "Masking and industrial hooks: S, C, CV, V, 90° V, locking V, diamond, spring tube, C-LAW.",
     vsUs:
-      "A masking + specialty-hook catalog. Diamond, C-LAW, and spring-tube SKUs are not this cell unless the print is a 4–14 mm round-wire CNC form.",
+      "Round-wire HV/HC/HS/HCV/HV90 in 0.180 in and 0.250 in: we list those boxes 5% under on /powder-coating-hooks/epsi. Diamond is square wire. C-LAW is a 3-prong clamp. Spring-tube and HKVL bags are under 4 mm. Swivels and wheel kits are not this cell.",
   },
   {
     name: "Echo Supply",
@@ -109,7 +113,7 @@ export function powderHookHref(slug: string[]) {
 const CELL = WIRE.label;
 const TOOLING = STOCK;
 
-export const POWDER_HOOK_TREE: PowderHookNode[] = [
+const POWDER_HOOK_CORE: PowderHookNode[] = [
   {
     slug: ["v-hooks"],
     title: "V-Hooks",
@@ -771,8 +775,8 @@ export const POWDER_HOOK_TREE: PowderHookNode[] = [
         id: "rack",
         heading: "Hook, not the rack",
         body: [
-          "Mighty Hook and Magic Rack sell hanging systems. Rack hooks on this floor are the wire forms that hang from a bar or sit on a rack crossbar: V, C, CV, S, 90°, square hang.",
-          "We do not fabricate Magnum-style adjustable racks. Send the hook print. 100-piece minimum.",
+          "Mighty Hook and Magic Rack sell hanging systems — Powder Peg frames, Z-bars, TSR-bars, load bars. We do not. Rack hooks on this floor are round-wire forms that hang from a bar: V, C, CV, S, 90°, Super V, locking V, Z-path, snap, J. See those pages. We do not make peghooks at 0.120 / 0.150 in, TSR lock-ins, or a $150 peg-rack sample kit.",
+          "Send the hook print. 100-piece minimum. You buy the coil except V and 90° V.",
         ],
       },
     ],
@@ -1024,21 +1028,21 @@ export const POWDER_HOOK_TREE: PowderHookNode[] = [
         id: "names",
         heading: "What shops ask for",
         body: [
-          "EPSI and Mighty Hook catalog diamond hooks, C-LAW / claw hooks, spring-tube hooks, locking V-hooks, and square-bar V-hooks. Those are real finishing-hook names.",
-          "This cell forms round wire 4–14 mm on a 2D CNC bender. Square-bar V is bar stock. Spring-tube and stamped claws are not a Robomac 214TF job. If the print is a round-wire V, C, CV, S, 90°, or square hang in band, send it. If it is a 0.080 in locking SKU, that is a catalog house.",
+          "EPSI catalogs diamond (square wire), C-LAW (3-prong clamp), spring-tube (1–3 mm wound), and HKVL locking V at 0.044–0.080 in. Mighty Hook catalogs peghooks, Z-bar lock-ins, TSR snaps, and flat jam. Those SKUs are real. Most are not this cell.",
+          "Round-wire 4–14 mm we do form: Super V, locking V (extra bend on a V — not the EPSI HKVL bag), Z-path hooks, jam hooks for large IDs, snap hooks that close on a bar, and J-hooks. Published EPSI HV/HC/HS/HCV/HV90 in 0.180 and 0.250 in: /powder-coating-hooks/epsi, 5% under. Square-bar V is bar stock. Peghooks at 0.120 / 0.150 in and TSR clips at 0.044–0.076 in are under 4 mm — we name them and do not quote them.",
         ],
       },
     ],
     faqs: [
       {
-        question: "Can you make diamond hooks?",
+        question: "Can you make locking V-hooks?",
         answer:
-          "Only if the drawing is a 4–14 mm round-wire form. We do not stock an EPSI diamond SKU.",
+          "Yes, as round wire in 4–14 mm with the extra stay bend on the print. Not an EPSI 0.080 in SKU. /powder-coating-hooks/locking-v-hooks.",
       },
       {
         question: "Can you make C-LAW or spring-tube hooks?",
         answer:
-          "Not as catalog copies. Those are specialty hanging products. Round-wire CNC only.",
+          "No. C-LAW is a 3-prong clamp (CLAW 200/300 also under 4 mm; CLAW 400 is 4 mm but not a 2D path). Spring-tube is wound 1–3 mm. Diamond is square wire. We do not list those bags.",
       },
     ],
   },
@@ -1064,7 +1068,7 @@ export const POWDER_HOOK_TREE: PowderHookNode[] = [
         heading: "Who does what",
         body: [
           "Mighty Hook and Magic Rack (Production Plus) sell hanging systems — racks, load bars, engineered hooks, often masking too. Hook Authority sells boxed V/C/CV/S/90° bags and a custom builder on light-to-medium wire. Argon publishes HSQV square hanging bags and masking. EPSI, HangOn, Echo Supply, and Essentra sell masking and a hook catalog that includes specialty shapes.",
-          "This floor is none of those houses. It is a 4–14 mm CNC wire cell in Northeast Ohio. Instant estimate is this cell. Listed 4–10 mm V/S/C bags undercut published 0.180/0.250 cards by 2%. Square hanging undercuts published HSQV by 5%. 0.044–0.120 in catalog hooks: no.",
+          "This floor is none of those houses. It is a 4–14 mm CNC wire cell in Northeast Ohio. Instant estimate is this cell. EPSI HV/HC/HS/HCV/HV90 round-wire boxes in 0.180 and 0.250 in: 5% under on /powder-coating-hooks/epsi. Other 4–10 mm V/S/C length steps: 2% under published cards on /powder-coating-hooks/prices. Square hanging undercuts published HSQV by 5%. 0.044–0.120 in catalog hooks: no.",
         ],
       },
       {
@@ -1077,6 +1081,11 @@ export const POWDER_HOOK_TREE: PowderHookNode[] = [
     ],
     faqs: [
       {
+        question: "Are you cheaper than EPSI?",
+        answer:
+          "On listed 0.180 in and 0.250 in HV/HC/HS/HCV/HV90 boxes we form: 5% under the published EPSI box, same length and count. On 0.060–0.120 in, diamond, C-LAW, spring-tube, HKVL, swivels, and wheel kits: we do not quote.",
+      },
+      {
         question: "Are you cheaper than Hook Authority?",
         answer:
           "On listed 4–10 mm V/S/C bags that match published 0.180 and 0.250 in cards: 2% under. On 0.044–0.120 in: we do not quote. Custom heavy V is the calculator, not their bag.",
@@ -1087,6 +1096,12 @@ export const POWDER_HOOK_TREE: PowderHookNode[] = [
       },
     ],
   },
+];
+
+export const POWDER_HOOK_TREE: PowderHookNode[] = [
+  ...POWDER_HOOK_CORE,
+  ...POWDER_HOOK_ROUND_WIRE,
+  ...POWDER_HOOK_EPSI,
 ];
 
 const byKey = new Map(

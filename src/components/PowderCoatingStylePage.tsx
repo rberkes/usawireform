@@ -1,5 +1,6 @@
 import { HookBuilder } from "@/components/HookBuilder";
 import { HookBagPriceTable } from "@/components/HookBagPriceTable";
+import { EpsiHookPriceTable } from "@/components/EpsiHookPriceTable";
 import { PowderHookBranchNav } from "@/components/PowderHookBranchNav";
 import { HookFigure } from "@/components/VHookFigure";
 import Link from "next/link";
@@ -24,6 +25,16 @@ const STYLE_HOOK: Record<PowderHookStyleId, HookTypeId> = {
   "90-degree-hooks": "90v",
 };
 
+const STYLE_EPSI: Partial<
+  Record<PowderHookStyleId, "v" | "s" | "c" | "cv" | "90v">
+> = {
+  "v-hooks": "v",
+  "c-hooks": "c",
+  "s-hooks": "s",
+  "cv-hooks": "cv",
+  "90-degree-hooks": "90v",
+};
+
 const STYLE_LABEL: Record<PowderHookStyleId, string> = {
   "v-hooks": "V-hook",
   "c-hooks": "C-hook",
@@ -36,6 +47,7 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
   const faqs = style.faqs;
   const siblings = POWDER_HOOK_STYLES.filter((item) => item.id !== style.id);
   const hookType = STYLE_HOOK[style.id];
+  const epsiStyle = STYLE_EPSI[style.id];
 
   return (
     <>
@@ -62,6 +74,7 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
         ]}
         toc={[
           { id: "hang", label: "How they hang" },
+          ...(epsiStyle ? [{ id: "epsi", label: "5% under EPSI" }] : []),
           ...(style.id === "v-hooks" ||
           style.id === "s-hooks" ||
           style.id === "c-hooks"
@@ -80,6 +93,31 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
         <div className="not-prose my-8">
           <HookFigure type={hookType} label={STYLE_LABEL[style.id]} />
         </div>
+
+        {epsiStyle ? (
+          <>
+            <h2 id="epsi">5% under published EPSI boxes</h2>
+            <p>
+              Same length, wire, hang, and box count as the published EPSI{" "}
+              {style.id === "v-hooks"
+                ? "HV"
+                : style.id === "c-hooks"
+                  ? "HC"
+                  : style.id === "s-hooks"
+                    ? "HS"
+                    : style.id === "cv-hooks"
+                      ? "HCV"
+                      : "HV90"}{" "}
+              0.180 in and 0.250 in cards. Five percent under. USAWF part
+              numbers. 0.060–0.120 in EPSI SKUs are under 4 mm — not listed.{" "}
+              <Link href="/powder-coating-hooks/epsi">All EPSI-match styles</Link>
+              .
+            </p>
+            <div className="not-prose my-8">
+              <EpsiHookPriceTable style={epsiStyle} heading="h3" />
+            </div>
+          </>
+        ) : null}
 
         {style.id === "v-hooks" ||
         style.id === "s-hooks" ||
@@ -169,6 +207,46 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
               <Link href={item.path}>{item.title}</Link>
             </li>
           ))}
+          <li>
+            <Link href="/powder-coating-hooks/epsi">
+              EPSI-match prices — 5% under 0.180 / 0.250 in boxes
+            </Link>
+          </li>
+          {style.id === "c-hooks" ? (
+            <li>
+              <Link href="/powder-coating-hooks/hc-series-c-hooks">
+                HC-series C-hooks
+              </Link>
+            </li>
+          ) : null}
+          {style.id === "s-hooks" ? (
+            <li>
+              <Link href="/powder-coating-hooks/hs-series-s-hooks">
+                HS-series S-hooks
+              </Link>
+            </li>
+          ) : null}
+          {style.id === "v-hooks" ? (
+            <li>
+              <Link href="/powder-coating-hooks/hv-series-v-hooks">
+                HV-series V-hooks
+              </Link>
+            </li>
+          ) : null}
+          {style.id === "cv-hooks" ? (
+            <li>
+              <Link href="/powder-coating-hooks/hcv-series-cv-hooks">
+                HCV-series CV-hooks
+              </Link>
+            </li>
+          ) : null}
+          {style.id === "90-degree-hooks" ? (
+            <li>
+              <Link href="/powder-coating-hooks/hv90-series-90-degree-v-hooks">
+                HV90-series 90° V-hooks
+              </Link>
+            </li>
+          ) : null}
           <li>
             <Link href="/guide/s-hooks-vs-v-hooks-vs-c-hooks">
               S-hooks vs V-hooks vs C-hooks

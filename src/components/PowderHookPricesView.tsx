@@ -63,7 +63,9 @@ export function PowderHookPricesView() {
           <Link href="/powder-coating-hooks/square-hanging-hooks">
             square hanging hooks
           </Link>
-          , 5% under the published HSQV cards.
+          , 5% under the published HSQV cards. EPSI HV/HC/HS/HCV/HV90 0.180
+          and 0.250 in boxes:{" "}
+          <Link href="/powder-coating-hooks/epsi">5% under EPSI</Link>.
         </p>
         <div className="not-prose my-8">
           <HookBagPriceTable />

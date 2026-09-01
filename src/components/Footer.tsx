@@ -15,6 +15,7 @@ const library = [
   { href: "/powder-coating-hooks/v-hooks", label: "V-hooks" },
   { href: "/powder-coating-hooks/c-hooks", label: "C-hooks" },
   { href: "/powder-coating-hooks/s-hooks", label: "S-hooks" },
+  { href: "/powder-coating-hooks/epsi", label: "EPSI-match hook prices" },
   { href: "/custom-powder-coating-hooks", label: "Custom powder coating hooks" },
   { href: "/wire-forming-process", label: "Wire forming process" },
   { href: "/wire-forming-manufacturers", label: "Manufacturers" },

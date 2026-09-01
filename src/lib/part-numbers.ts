@@ -2,7 +2,7 @@ import { PART_PREFIX } from "@/lib/company";
 
 export { PART_PREFIX };
 
-export type HookPartFamily = "V" | "S" | "C" | "SH" | "GS";
+export type HookPartFamily = "V" | "S" | "C" | "SH" | "GS" | "CV" | "V90";
 
 /** USAWF-V-180-12 — family, wire code, length in inches. */
 export function usawfPart(

@@ -40,7 +40,7 @@ const faqs = [
   },
   {
     question: "What wire sizes do you form powder coating hooks in?",
-    answer: `Production is ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog hooks are under 4 mm — no. 0.180 in and 0.250 in are in the band: /powder-coating-hooks/prices, 2% under published bags.`,
+    answer: `Production is ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog hooks are under 4 mm — no. 0.180 in and 0.250 in are in the band: EPSI-match boxes 5% under on /powder-coating-hooks/epsi; other 4–10 mm V/S/C steps 2% under on /powder-coating-hooks/prices.`,
   },
   {
     question: "Can you make custom powder coating hooks?",
@@ -73,7 +73,7 @@ export default function PowderCoatingHooksPage() {
         toc={[
           { id: "styles", label: "Hook styles" },
           { id: "cloud", label: "Keyword cloud" },
-          { id: "prices", label: "4–10 mm prices" },
+          { id: "prices", label: "Listed prices" },
           { id: "market", label: "The market" },
           { id: "steel", label: "Steel" },
           { id: "stainless", label: "Stainless" },
@@ -107,6 +107,41 @@ export default function PowderCoatingHooksPage() {
             — squared corners on the hang. 5% under published HSQV bags.
           </li>
           <li>
+            <Link href="/powder-coating-hooks/epsi">
+              EPSI-match bags
+            </Link>{" "}
+            — HV, HC, HS, HCV, HV90 in 0.180 and 0.250 in only. 5% under
+            published EPSI boxes. Not diamond, C-LAW, spring-tube, or light
+            wire.
+          </li>
+          <li>
+            <Link href="/powder-coating-hooks/super-v-hooks">Super V-hooks</Link>{" "}
+            — deeper dual V, round wire, same cell as V-hooks.
+          </li>
+          <li>
+            <Link href="/powder-coating-hooks/locking-v-hooks">
+              Locking V-hooks
+            </Link>{" "}
+            — extra bend so the V stays on the bar. Round wire in 4–14 mm.
+          </li>
+          <li>
+            <Link href="/powder-coating-hooks/z-hooks">Z-hooks</Link> — round-wire
+            Z path. Not a Mighty Hook Z-bar clip.
+          </li>
+          <li>
+            <Link href="/powder-coating-hooks/jam-hooks">Jam hooks</Link> —
+            internal hang in large IDs. Round wire, not flat stock, not 0.105
+            in.
+          </li>
+          <li>
+            <Link href="/powder-coating-hooks/snap-hooks">Snap hooks</Link> —
+            close on the bar, 4–14 mm. Not 0.044–0.120 in catalog snaps.
+          </li>
+          <li>
+            <Link href="/powder-coating-hooks/j-hooks">J-hooks</Link> — long
+            leg and a hook, round coil.
+          </li>
+          <li>
             <Link href="/powder-coating-v-hooks">Powder coating V-hooks</Link>{" "}
             — finishing, paint line, e-coat, rack, and curing oven V-hooks, with
             a live builder.
@@ -135,19 +170,23 @@ export default function PowderCoatingHooksPage() {
           <PowderHookKeywordCloud />
         </div>
 
-        <h2 id="prices">4–10 mm bag prices</h2>
+        <h2 id="prices">Listed bag prices</h2>
         <p>
-          0.180 in and 0.250 in are in this cell (4.57 mm and 6.35 mm). We list
-          those lengths — plus 4, 5, 6, 8, and 10 mm — at 2% under the published
-          bag prices, same bag counts. Carbon, steel in the lot.{" "}
+          0.180 in and 0.250 in are in this cell (4.57 mm and 6.35 mm). Where
+          EPSI publishes an HV, HC, HS, HCV, or HV90 box in those diameters, we
+          list the same length, hang, and count at 5% under:{" "}
+          <Link href="/powder-coating-hooks/epsi">EPSI-match prices</Link>
+          . Other 4–10 mm V, S, and C length steps stay on{" "}
           <Link href="/powder-coating-hooks/prices">
-            Full V, S, and C price list
-          </Link>
-          . Squared hang:{" "}
+            the 4–10 mm price list
+          </Link>{" "}
+          at 2% under those published bags. Squared hang:{" "}
           <Link href="/powder-coating-hooks/square-hanging-hooks">
             square hanging hooks
           </Link>
-          , 5% under the published HSQV bags (0.180, 0.250, 0.375 in).
+          , 5% under the published HSQV bags (0.180, 0.250, 0.375 in). Diamond,
+          C-LAW, spring-tube, HKVL locking bags, swivels, and wheel kits are not
+          this cell.
         </p>
 
         <h2 id="market">Who else sells these</h2>

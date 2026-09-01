@@ -21,6 +21,15 @@ export const POWDER_COATING_HOOK_KEYWORDS = [
   "finishing hooks",
   "coating line hooks",
   "paint line hooks",
+  "Super V-hooks",
+  "locking V-hooks",
+  "Z-hooks",
+  "jam hooks",
+  "snap hooks",
+  "J-hooks",
+  "EPSI C-hooks",
+  "HC series C-hooks",
+  "HV series V-hooks",
 ] as const;
 
 export type PowderHookStyleId =

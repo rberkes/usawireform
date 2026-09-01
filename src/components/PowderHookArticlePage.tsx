@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PowderHookBranchNav } from "@/components/PowderHookBranchNav";
+import { EpsiHookPriceTable } from "@/components/EpsiHookPriceTable";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
@@ -52,6 +53,7 @@ export function PowderHookArticlePage({ node }: { node: PowderHookNode }) {
             id: section.id,
             label: section.heading,
           })),
+          ...(node.priceBand ? [{ id: "prices", label: "5% under EPSI" }] : []),
           ...(node.alsoCalled.length
             ? [{ id: "names", label: "Also called" }]
             : []),
@@ -67,6 +69,21 @@ export function PowderHookArticlePage({ node }: { node: PowderHookNode }) {
             ))}
           </div>
         ))}
+
+        {node.priceBand ? (
+          <>
+            <h2 id="prices">5% under published EPSI boxes</h2>
+            <p>
+              Same length, wire, hang, and box count as the published EPSI card.
+              Our part numbers.{" "}
+              <Link href="/powder-coating-hooks/epsi">All EPSI-match styles</Link>
+              .
+            </p>
+            <div className="not-prose my-8">
+              <EpsiHookPriceTable style={node.priceBand} heading="h3" />
+            </div>
+          </>
+        ) : null}
 
         {node.alsoCalled.length > 0 ? (
           <>
