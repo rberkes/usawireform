@@ -74,7 +74,7 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
         ]}
         toc={[
           { id: "hang", label: "How they hang" },
-          ...(epsiStyle ? [{ id: "listed", label: "5% under published boxes" }] : [])
+          ...(epsiStyle ? [{ id: "listed", label: "5% under published boxes" }] : []),
           ...(style.id === "v-hooks" ||
           style.id === "s-hooks" ||
           style.id === "c-hooks"
@@ -98,18 +98,9 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
           <>
             <h2 id="listed">5% under published boxes</h2>
             <p>
-              Same length, wire, hang, and box count as the published{" "}
-              {style.id === "v-hooks"
-                ? "HV"
-                : style.id === "c-hooks"
-                  ? "HC"
-                  : style.id === "s-hooks"
-                    ? "HS"
-                    : style.id === "cv-hooks"
-                      ? "HCV"
-                      : "HV90"}{" "}
-              0.180 in and 0.250 in cards. Five percent under. USAWF part
-              numbers. 0.060–0.120 in is under 4 mm — not listed.{" "}
+              Same length, wire, hang, and box count as the published 0.180 in
+              and 0.250 in cards. Five percent under. USAWF part numbers.
+              0.060–0.120 in is under 4 mm — not listed.{" "}
               <Link href="/powder-coating-hooks/listed-bags">
                 All listed styles
               </Link>
@@ -244,7 +235,7 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
               </li>
               <li>
                 <Link href="/powder-coating-hooks/hcv-series-cv-hooks">
-                  HCV-series CV-hooks
+                  Listed CV-hook boxes
                 </Link>
               </li>
             </>
