@@ -1,5 +1,6 @@
-import { get, list } from "@vercel/blob";
-import { adminFileHref, blobAuth, blobReady } from "@/lib/blob";
+import { get, list, put } from "@vercel/blob";
+import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
+import { sendDrawingReviewedEmail } from "@/lib/leads";
 
 export type QuoteSubmission = {
   id: string;
@@ -21,6 +22,7 @@ export type QuoteSubmission = {
   linkedin?: string;
   notes?: string;
   recordPath: string;
+  reviewedNotifiedAt?: string;
 };
 
 async function listPrefix(prefix: string) {
@@ -88,7 +90,70 @@ function fromRecord(
     linkedin: asString(payload.linkedin),
     notes: asString(payload.notes),
     recordPath: pathname,
+    reviewedNotifiedAt: asString(payload.reviewedNotifiedAt),
   };
+}
+
+function drawingPathMatches(stored: string | undefined, viewed: string) {
+  if (!stored || !viewed) return false;
+  if (stored === viewed) return true;
+  try {
+    if (decodeURIComponent(stored) === viewed) return true;
+    if (stored === decodeURIComponent(viewed)) return true;
+  } catch {
+    /* ignore */
+  }
+  try {
+    const url = new URL(stored);
+    const pathname = decodeURIComponent(url.pathname.replace(/^\//, ""));
+    return pathname === viewed || pathname.endsWith(`/${viewed}`);
+  } catch {
+    return false;
+  }
+}
+
+/** Email the buyer once when the desk opens their drawing. Returns true if this path belonged to a quote record. */
+export async function notifyQuoteBuyerOnDrawingView(viewedPath: string) {
+  if (!(await blobReady())) return false;
+  const records = (
+    await Promise.all([listPrefix("leads/contact/"), listPrefix("leads/quick/")])
+  ).flat();
+
+  for (const blob of records) {
+    const payload = await readPrivateJson(blob.pathname);
+    if (!payload) continue;
+    if (
+      !drawingPathMatches(asString(payload.drawingPath), viewedPath) &&
+      !drawingPathMatches(asString(payload.drawingUrl), viewedPath)
+    ) {
+      continue;
+    }
+    const email = asString(payload.email);
+    if (!email) return true;
+    if (asString(payload.reviewedNotifiedAt)) return true;
+
+    payload.reviewedNotifiedAt = new Date().toISOString();
+    await put(blob.pathname, JSON.stringify(payload), {
+      access: BLOB_ACCESS,
+      allowOverwrite: true,
+      addRandomSuffix: false,
+      contentType: "application/json",
+      ...(await blobAuth()),
+    });
+    const ok = await sendDrawingReviewedEmail({
+      to: email,
+      name: asString(payload.name),
+      fileName: asString(payload.fileName),
+    });
+    console.log("[Drawing viewed mail]", {
+      to: email,
+      path: viewedPath,
+      record: blob.pathname,
+      ok,
+    });
+    return true;
+  }
+  return false;
 }
 
 export async function countQuoteSubmissions() {

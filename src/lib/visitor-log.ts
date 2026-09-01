@@ -79,6 +79,7 @@ export function shouldSkipVisit(request: Request) {
   const path = url.pathname;
   if (request.method !== "GET" && request.method !== "POST") return true;
   if (path.startsWith("/admin")) return true;
+  if (path === "/architecture" || path.startsWith("/architecture/")) return true;
   if (path.startsWith("/api/")) return true;
   if (path.startsWith("/_next")) return true;
   if (path === "/favicon.ico") return true;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PowderHookKeywordCloud } from "@/components/PowderHookKeywordCloud";
-import { HookFigure } from "@/components/VHookFigure";
+import { PowderHookStyleGrid } from "@/components/VHookFigure";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
@@ -24,6 +24,12 @@ export const metadata = pageMeta({
   description: POWDER_HOOK_HUB.description,
   path: POWDER_HOOK_HUB.path,
   keywords: [...POWDER_COATING_HOOK_KEYWORDS],
+  image: {
+    url: "/hooks/v.png",
+    width: 1024,
+    height: 1536,
+    alt: "Powder coating V-hook from coil",
+  },
 });
 
 const faqs = [
@@ -86,7 +92,7 @@ export default function PowderCoatingHooksPage() {
           {COMPANY} CNC-forms them from coil — not a boxed 9-gauge catalog.
         </p>
         <div className="not-prose my-8">
-          <HookFigure type="v" label="V-hook" />
+          <PowderHookStyleGrid />
         </div>
         <ul>
           {POWDER_HOOK_STYLES.map((style) => (

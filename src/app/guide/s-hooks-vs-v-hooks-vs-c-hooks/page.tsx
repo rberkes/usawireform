@@ -12,6 +12,12 @@ export const metadata = pageMeta({
   description:
     "S-hooks vs V-hooks vs C-hooks for powder coating: which hook to use for hang stability, rack clearance, and line speed. CV-hooks and 90° hooks included.",
   path: "/guide/s-hooks-vs-v-hooks-vs-c-hooks",
+  image: {
+    url: "/hooks/v.png",
+    width: 1024,
+    height: 1536,
+    alt: "Powder coating V-hook",
+  },
   keywords: [
     "S-hooks vs V-hooks vs C-hooks",
     "which powder coating hook",

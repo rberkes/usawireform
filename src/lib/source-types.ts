@@ -197,6 +197,8 @@ export type SourceJob = {
   purchasedBy?: SourceJobPurchase[];
   /** Clerk user when a signed-in buyer sent the job. */
   buyerUserId?: string;
+  /** Buyer mailed once when the desk opened the drawing. */
+  reviewedNotifiedAt?: string;
 };
 
 export type SourceJobRow = SourceJob & { pathname: string };

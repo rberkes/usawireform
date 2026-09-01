@@ -110,6 +110,9 @@ export default async function AdminQuotesPage({
                       timeZone: "America/New_York",
                     })
                   : "—"}
+                {row.reviewedNotifiedAt
+                  ? ` · viewed mail ${new Date(row.reviewedNotifiedAt).toLocaleString("en-US", { timeZone: "America/New_York" })}`
+                  : ""}
               </p>
               {row.drawingUrl ? (
                 <div className="mt-3 flex flex-wrap items-center gap-4">

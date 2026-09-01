@@ -3,6 +3,7 @@ import { PowderHookArticlePage } from "@/components/PowderHookArticlePage";
 import { PowderCoatingStylePage } from "@/components/PowderCoatingStylePage";
 import { PowderHookPricesView } from "@/components/PowderHookPricesView";
 import { PowderHookSquareView } from "@/components/PowderHookSquareView";
+import { HOOK_PHOTOS } from "@/components/VHookFigure";
 import { powderHookStyle } from "@/lib/powder-coating-hooks";
 import {
   powderHookHref,
@@ -23,11 +24,34 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const node = powderHookNode(slug);
   if (!node) return {};
+  const photoKey =
+    node.styleId === "v-hooks" || slug[0] === "v-hooks"
+      ? "v"
+      : node.styleId === "c-hooks" || slug[0] === "c-hooks"
+        ? "c"
+        : node.styleId === "cv-hooks" || slug[0] === "cv-hooks"
+          ? "cv"
+          : node.styleId === "s-hooks" || slug[0] === "s-hooks"
+            ? "s"
+            : node.styleId === "90-degree-hooks" || slug[0] === "90-degree-hooks"
+              ? "90v"
+              : undefined;
+  const photo = photoKey ? HOOK_PHOTOS[photoKey] : undefined;
   return pageMeta({
     title: node.title,
     description: node.description,
     path: powderHookHref(node.slug),
     keywords: node.keywords,
+    ...(photo
+      ? {
+          image: {
+            url: photo.src,
+            width: photo.width,
+            height: photo.height,
+            alt: node.h1,
+          },
+        }
+      : {}),
   });
 }
 

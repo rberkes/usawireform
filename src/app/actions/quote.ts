@@ -239,7 +239,7 @@ export async function submitContactForm(
 
   return {
     success: true,
-    message: `Thank you, ${data.name}. Your quote request has been received. We'll review ${data.fileName} and respond within 1-2 business days.`,
+    message: `Thank you, ${data.name}. Your quote request has been received. We'll review ${data.fileName} and respond within 24 hours.`,
   };
 }
 
@@ -372,7 +372,7 @@ export async function submitQuickQuote(
 
   return {
     success: true,
-    message: `Quote request received. We'll review ${data.fileName} and follow up at ${data.email}.`,
+    message: `Quote request received. We'll review ${data.fileName} and follow up at ${data.email} within 24 hours.`,
   };
 }
 

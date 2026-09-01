@@ -4,6 +4,7 @@ import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
 import {
   customerThanksHtml,
+  drawingReviewedHtml,
   escapeHtml,
   estimateLeadHtml,
   estimateReceiptHtml,
@@ -218,6 +219,23 @@ export async function sendLeadThanksEmail({
       kind,
     }),
     attachments: preview ? [preview] : undefined,
+  });
+}
+
+export async function sendDrawingReviewedEmail({
+  to,
+  name,
+  fileName,
+}: {
+  to: string;
+  name?: string;
+  fileName?: string;
+}) {
+  return sendResendMail({
+    to,
+    replyTo: QUOTE_EMAIL,
+    subject: `Your drawing is with the quote team — ${COMPANY}`,
+    html: drawingReviewedHtml({ name, fileName }),
   });
 }
 

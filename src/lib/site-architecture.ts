@@ -12,7 +12,7 @@ import { industries } from "@/lib/site";
 import { US_STATES } from "@/lib/states";
 import { V_HOOK_LANDERS } from "@/lib/v-hook-landers";
 
-export const ARCHITECTURE_PATH = "/architecture";
+export const ARCHITECTURE_PATH = "/admin/architecture";
 
 export type ArchNode = {
   id: string;
@@ -307,7 +307,6 @@ export function siteArchitectureTree(): ArchNode[] {
         leaf("/production-quote", "Production quote"),
         leaf("/about", "The map and a shop"),
         leaf("/site-map", "Every public page, listed"),
-        leaf("/architecture", "This tree"),
         leaf("/privacy", "Privacy"),
         leaf("/terms", "User Agreement"),
       ],
@@ -330,6 +329,7 @@ export function siteArchitectureTree(): ArchNode[] {
         leaf("/admin/accounts", "Shops, buyers, Source STEPs", "desk"),
         leaf("/admin/visitors", "Visitor IPs and referrers", "desk"),
         leaf("/admin/live", "Live page checklist", "desk"),
+        leaf("/admin/architecture", "This tree", "desk"),
         leaf("/api/visit", "Visitor log", "desk"),
         leaf("/api/machine-factories", "Machine typeahead", "desk"),
         leaf("/api/directory-lead", "Listing RFQ", "desk"),

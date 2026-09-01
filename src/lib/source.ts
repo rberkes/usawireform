@@ -13,6 +13,7 @@ import { parseSourceBuyerFit } from "@/lib/source-fit";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import { filingsToFloorCells, mergeFloorFeed } from "@/lib/source-floor-feed";
+import { sendDrawingReviewedEmail } from "@/lib/leads";
 import {
   parseDrawingPrivacy,
   type SourceDrawingPrivacy,
@@ -334,6 +335,9 @@ function readSourceJob(
     mailedTo: readMailedTo(payload.mailedTo),
     purchasedBy: readPurchasedBy(payload.purchasedBy),
     buyerUserId: payload.buyerUserId ? String(payload.buyerUserId) : undefined,
+    reviewedNotifiedAt: payload.reviewedNotifiedAt
+      ? String(payload.reviewedNotifiedAt)
+      : undefined,
     pathname,
   };
 }
@@ -390,6 +394,30 @@ export async function getSourceJob(pathname: string) {
   } catch {
     return null;
   }
+}
+
+export async function notifySourceBuyerOnDrawingView(viewedPath: string) {
+  if (!viewedPath.startsWith("source/jobs/")) return false;
+  const jobs = await listSourceJobs();
+  const job = jobs.find((row) => row.drawingPath === viewedPath);
+  if (!job) return false;
+  if (!job.email.trim()) return true;
+  if (job.reviewedNotifiedAt) return true;
+
+  job.reviewedNotifiedAt = new Date().toISOString();
+  await saveSourceJob(job, job.pathname);
+  const ok = await sendDrawingReviewedEmail({
+    to: job.email,
+    name: job.name,
+    fileName: job.fileName,
+  });
+  console.log("[Drawing viewed mail]", {
+    to: job.email,
+    path: viewedPath,
+    record: job.pathname,
+    ok,
+  });
+  return true;
 }
 
 export async function recordSourceLeadPurchase({

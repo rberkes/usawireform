@@ -4,6 +4,8 @@ import { SITE_URL } from "@/lib/company";
 const privatePaths = [
   "/admin",
   "/admin/",
+  "/architecture",
+  "/architecture/",
   "/source/dashboard",
   "/source/dashboard/",
   "/source/account",

@@ -152,7 +152,7 @@ export function customerThanksHtml({
   const drawing = kind === "quote" || kind === "quick";
   const heading = drawing ? "We have your drawing" : "We received your note";
   const intro = drawing
-    ? `${hello}<br /><br />Thank you for your time, and for the upload. USA Wire Form has ${fileName ? `<strong>${escapeHtml(fileName)}</strong>` : "the file"}. We'll be with you shortly — usually within 1–2 business days.`
+    ? `${hello}<br /><br />Thank you for your time, and for the upload. USA Wire Form has ${fileName ? `<strong>${escapeHtml(fileName)}</strong>` : "the file"}. We'll be with you shortly — usually within 24 hours.`
     : kind === "directory"
       ? `${hello}<br /><br />Thank you for your time. We received the intro and will follow up if we can help.`
       : `${hello}<br /><br />Thank you for your time. We received the machine note and will route it.`;
@@ -180,7 +180,7 @@ export function customerThanksHtml({
 
   return shell(
     drawing
-      ? "Thank you for the upload. We'll be with you shortly."
+      ? "Thank you for the upload. We'll be with you within 24 hours."
       : "Thank you for your time. We'll be with you shortly.",
     `${kickerRow()}
      ${headingRow(heading)}
@@ -188,6 +188,29 @@ export function customerThanksHtml({
      ${drawing ? drawingRow(fileName, hasPreview) : ""}
      ${cta}
      ${copyRow(`<span style="color:#5c5c5c">${follow}</span>`)}`,
+  );
+}
+
+export function drawingReviewedHtml({
+  name,
+  fileName,
+}: {
+  name?: string;
+  fileName?: string;
+}) {
+  const who = name?.trim() ? escapeHtml(name.trim()) : "";
+  const hello = who ? `Hi ${who},` : "Hi,";
+  const file = fileName?.trim()
+    ? `<strong>${escapeHtml(fileName.trim())}</strong>`
+    : "your drawing";
+  const intro = `${hello}<br /><br />A quote team specialist opened ${file}. We have the file in review and will be in touch.`;
+  return shell(
+    "A quote team specialist opened your drawing.",
+    `${kickerRow()}
+     ${headingRow("Your drawing is with the quote team")}
+     ${copyRow(intro)}
+     ${drawingRow(fileName, false)}
+     ${copyRow(`<span style="color:#5c5c5c">Reply if this isn't the right file, or if anything on the print changed.</span>`)}`,
   );
 }
 

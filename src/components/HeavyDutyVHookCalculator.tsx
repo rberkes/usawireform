@@ -75,6 +75,7 @@ export function HeavyDutyVHookCalculator() {
         <div className="space-y-4">
           <HookFigure
             type="v"
+            live
             overall={Number.isFinite(overallN) ? overallN : 12}
             legId={Number.isFinite(legN) ? legN : 1.5}
             label="USA made V-hook"

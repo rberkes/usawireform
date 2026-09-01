@@ -1,6 +1,8 @@
 import { get } from "@vercel/blob";
+import { after } from "next/server";
 import { isAdmin } from "../actions";
 import { blobAuth, isAdminBlobPath } from "@/lib/blob";
+import { notifyBuyerOnAdminFileView } from "@/lib/drawing-viewed";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +23,7 @@ export async function GET(request: Request) {
   if (!result?.stream || result.statusCode !== 200) {
     return new Response("Not found", { status: 404 });
   }
+  after(() => notifyBuyerOnAdminFileView(path));
   const name = (requestedName || path.split("/").pop() || "file").replace(
     /["\\\r\n]/g,
     "_",

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HookBuilder } from "@/components/HookBuilder";
-import { HookFigure } from "@/components/VHookFigure";
+import { PowderHookStyleGrid } from "@/components/VHookFigure";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -16,6 +16,12 @@ export const metadata = pageMeta({
   title: "Custom Powder Coating Hooks",
   description: `${COMPANY} custom powder coating hooks: V-hooks, C-hooks, CV-hooks, S-hooks, and 90° hooks from coil. Length, openings, and wire size on the print. ${WIRE.short}. 100-piece minimum.`,
   path: "/custom-powder-coating-hooks",
+  image: {
+    url: "/hooks/v.png",
+    width: 1024,
+    height: 1536,
+    alt: "Custom powder coating V-hook from coil",
+  },
   keywords: [
     "custom powder coating hooks",
     "custom V-hooks",
@@ -77,7 +83,7 @@ export default function CustomPowderCoatingHooksPage() {
             title="Custom powder coating hooks"
             lede={`${PRICE_LINE} Build a V, C, CV, S, or 90° hook. Live drawing and estimate. ${WIRE.short}. V-hooks: we buy the steel. Other styles: you buy the coil.`}
           />
-          <HookFigure type="v" label="Custom V-hook" />
+          <PowderHookStyleGrid caption="Custom V, C, CV, and S — length and openings on the print." />
         </div>
         <div className="mt-12">
           <HookBuilder />

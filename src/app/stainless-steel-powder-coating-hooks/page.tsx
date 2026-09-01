@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HookFigure } from "@/components/VHookFigure";
+import { PowderHookStyleGrid } from "@/components/VHookFigure";
 import { DocPage, QuoteBand } from "@/components/DocPage";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
@@ -14,6 +14,12 @@ export const metadata = pageMeta({
   title: "Stainless Steel Powder Coating Hooks",
   description: `Stainless steel powder coating hooks in 304 / 316: V-hooks, C-hooks, CV-hooks, S-hooks, and 90° hooks from coil. ${WIRE.short}. Stock ${STOCK}. Corrosion-resistant finishing hooks.`,
   path: "/stainless-steel-powder-coating-hooks",
+  image: {
+    url: "/hooks/v.png",
+    width: 1024,
+    height: 1536,
+    alt: "Stainless powder coating V-hook",
+  },
   keywords: [
     "stainless steel powder coating hooks",
     "stainless steel V-hooks",
@@ -80,7 +86,7 @@ export default function StainlessSteelPowderCoatingHooksPage() {
           the washer is mild.
         </p>
         <div className="not-prose my-8">
-          <HookFigure type="v" label="Stainless V-hook" />
+          <PowderHookStyleGrid caption="Same V, C, CV, and S hangs in 304 / 316." />
         </div>
 
         <h2 id="grades">304 and 316</h2>

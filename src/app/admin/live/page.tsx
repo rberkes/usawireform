@@ -88,6 +88,11 @@ const GROUPS = [
     note: "Shops, buyers, and Source STEPs live under Accounts. This-floor Contact STEPs stay on Quote files.",
     rows: [
       {
+        href: "/admin/architecture",
+        label: "Architecture",
+        check: "Password gate. Tree of public folders plus the desk. Not in the footer or header.",
+      },
+      {
         href: "/admin/visitors",
         label: "Visitors",
         check: "IP, city, referrer, clicks, company vs ISP vs cloud. Newest first.",

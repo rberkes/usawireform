@@ -52,7 +52,6 @@ const factories = [
   { href: "/directory/new", label: "Newest Source shops" },
   { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/ohio", label: "Ohio cities" },
-  { href: "/architecture", label: "Site architecture" },
 ];
 
 const shop = [
@@ -129,12 +128,6 @@ export function Footer() {
               className="text-foreground/90 hover:text-copper"
             >
               Sitemap
-            </Link>
-            <Link
-              href="/architecture"
-              className="text-foreground/90 hover:text-copper"
-            >
-              Architecture
             </Link>
             <Link
               href="/privacy"

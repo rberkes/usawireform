@@ -237,6 +237,11 @@ const nextConfig: NextConfig = {
         destination: "/production-quote",
         permanent: false,
       },
+      {
+        source: "/architecture",
+        destination: "/admin/architecture",
+        permanent: false,
+      },
     ];
   },
 };

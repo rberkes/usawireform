@@ -136,7 +136,6 @@ export const NAV_LEARN: NavSection = {
       items: [
         { href: "/blog", label: "Blog" },
         { href: "/videos", label: "Videos" },
-        { href: "/architecture", label: "Site architecture" },
         { href: "/about", label: "About" },
         { href: "/careers", label: "Careers" },
       ],
