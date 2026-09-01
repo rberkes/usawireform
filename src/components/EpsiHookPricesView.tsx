@@ -8,27 +8,26 @@ import { EPSI_HOOK_LINE, EPSI_HOOK_REFUSE } from "@/lib/epsi-hook-prices";
 import { POWDER_HOOK_HUB } from "@/lib/powder-coating-hooks";
 import { WIRE } from "@/lib/range";
 
-const PATH = "/powder-coating-hooks/epsi";
+const PATH = "/powder-coating-hooks/listed-bags";
 
 const faqs = [
   {
-    question: "Which EPSI hooks do you actually form?",
-    answer: `Round-wire HV V-hooks, HC C-hooks, HS S-hooks, HCV CV-hooks, and HV90 90° V-hooks in 0.180 in and 0.250 in — the only EPSI hook diameters in ${WIRE.short}. Same published lengths, bowl or legs, and box counts. 5% under those boxes.`,
+    question: "Which boxes do you list?",
+    answer: `Round-wire V, C, S, CV, and 90° V in 0.180 in and 0.250 in — the published diameters in ${WIRE.short}. Same lengths, hang, and box counts. 5% under those boxes.`,
   },
   {
     question: "Why is 0.120 in missing?",
     answer:
-      "0.120 in is 3.05 mm. This cell starts at 4 mm. EPSI 0.060 and 0.080 in are the same story. We do not list them.",
+      "0.120 in is 3.05 mm. This cell starts at 4 mm. 0.060 and 0.080 in are the same story. We do not list them.",
   },
   {
     question: "Do you make diamond, C-LAW, or spring-tube hooks?",
     answer:
-      "No. HKD diamond is square wire. C-LAW is a 3-prong clamp (CLAW 200/300 also under 4 mm). Spring-tube is a wound 1–3 mm tube. Locking-V bags (HKVL) are 0.044–0.080 in. Swivels have bearings. Wheel kits are a system. None of those are this cell.",
+      "No. Diamond is square wire. C-LAW is a 3-prong clamp (the light sizes are also under 4 mm). Spring-tube is a wound 1–3 mm tube. Locking-V bags at 0.044–0.080 in, swivels with bearings, and wheel kits are not this cell.",
   },
   {
-    question: "Are these EPSI part numbers?",
-    answer:
-      "No. USAWF part numbers. We do not clone EPSI SKU strings. 100-piece minimum.",
+    question: "Are these catalog part numbers?",
+    answer: "No. USAWF part numbers. 100-piece minimum.",
   },
 ];
 
@@ -39,16 +38,16 @@ export function EpsiHookPricesView() {
       <BreadcrumbJsonLd
         items={[
           { name: POWDER_HOOK_HUB.title, url: POWDER_HOOK_HUB.path },
-          { name: "EPSI-match prices", url: PATH },
+          { name: "0.180 / 0.250 in prices", url: PATH },
         ]}
       />
       <DocPage
         kicker="Hooks"
-        title="EPSI-match hook prices"
+        title="0.180 and 0.250 in hook prices"
         lede={`${EPSI_HOOK_LINE} Northeast Ohio.`}
         breadcrumbs={[
           { label: "Powder coating hooks", href: POWDER_HOOK_HUB.path },
-          { label: "EPSI-match prices" },
+          { label: "0.180 / 0.250 in prices" },
         ]}
         toc={[
           { id: "list", label: "Price list" },
@@ -58,10 +57,9 @@ export function EpsiHookPricesView() {
       >
         <h2 id="list">0.180 in and 0.250 in round wire</h2>
         <p>
-          EPSI publishes boxed finishing hooks across many diameters. This floor
-          is {WIRE.label}. The cards below are the published HV, HC, HS, HCV,
-          and HV90 boxes that sit in band. Five percent under those published
-          box prices. Carbon. Steel in the lot on V and 90° V.{" "}
+          This floor is {WIRE.label}. The cards below are the published V, C, S,
+          CV, and 90° V boxes that sit in band. Five percent under those
+          published box prices. Carbon. Steel in the lot on V and 90° V.{" "}
           <Link href="/powder-coating-hooks/hc-series-c-hooks">HC C-hooks</Link>
           ,{" "}
           <Link href="/powder-coating-hooks/hs-series-s-hooks">HS S-hooks</Link>
@@ -85,7 +83,7 @@ export function EpsiHookPricesView() {
           <EpsiHookPriceTable />
         </div>
 
-        <h2 id="refuse">What we do not form from the EPSI hook catalog</h2>
+        <h2 id="refuse">What we do not form from those catalogs</h2>
         <p>
           Those products are real. They are not a Robomac 214TF round-wire job
           in 4–14 mm. We do not list a fake bag for them.
@@ -114,8 +112,8 @@ export function EpsiHookPricesView() {
           </div>
         ))}
 
-        <PowderHookBranchNav slug={["epsi"]} />
-        <QuoteBand title="Need a length that is not on the EPSI card?" />
+        <PowderHookBranchNav slug={["listed-bags"]} />
+        <QuoteBand title="Need a length that is not on the card?" />
       </DocPage>
     </>
   );

@@ -174,7 +174,7 @@ export function CvHookStudio({ initialId }: { initialId?: string }) {
           <p className="max-w-xl text-sm leading-6 text-muted">
             {model.overallIn} in overall, {model.dIn} in wire, {model.openingIn}{" "}
             in C bowl and V opening — the path this cell CNC-forms from coil.
-            Not an EPSI SKU. 0.180 in and 0.250 in sit in 4–14 mm.{" "}
+            Not a catalog SKU. 0.180 in and 0.250 in sit in 4–14 mm.{" "}
             <Link
               href="/powder-coating-hooks/hcv-series-cv-hooks"
               className="text-copper hover:underline"

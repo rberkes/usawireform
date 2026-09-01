@@ -53,7 +53,9 @@ export function PowderHookArticlePage({ node }: { node: PowderHookNode }) {
             id: section.id,
             label: section.heading,
           })),
-          ...(node.priceBand ? [{ id: "prices", label: "5% under EPSI" }] : []),
+          ...(node.priceBand
+            ? [{ id: "prices", label: "5% under published boxes" }]
+            : []),
           ...(node.alsoCalled.length
             ? [{ id: "names", label: "Also called" }]
             : []),
@@ -72,11 +74,13 @@ export function PowderHookArticlePage({ node }: { node: PowderHookNode }) {
 
         {node.priceBand ? (
           <>
-            <h2 id="prices">5% under published EPSI boxes</h2>
+            <h2 id="prices">5% under published boxes</h2>
             <p>
-              Same length, wire, hang, and box count as the published EPSI card.
-              Our part numbers.{" "}
-              <Link href="/powder-coating-hooks/epsi">All EPSI-match styles</Link>
+              Same length, wire, hang, and box count as the published card. Our
+              part numbers.{" "}
+              <Link href="/powder-coating-hooks/listed-bags">
+                All listed styles
+              </Link>
               .
             </p>
             <div className="not-prose my-8">

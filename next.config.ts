@@ -104,6 +104,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/powder-coating-hooks/epsi",
+        destination: "/powder-coating-hooks/listed-bags",
+        permanent: true,
+      },
+      {
         source: "/custom-powder-coating-hook",
         destination: "/custom-powder-coating-hooks",
         permanent: true,

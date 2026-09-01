@@ -176,7 +176,7 @@ export function siteArchitectureTree(): ArchNode[] {
             leaf("/powder-coating-hooks/jam-hooks", "Large-ID jam, round wire"),
             leaf("/powder-coating-hooks/snap-hooks", "Bar snap, 4–14 mm"),
             leaf("/powder-coating-hooks/j-hooks", "J-hooks from coil"),
-            leaf("/powder-coating-hooks/epsi", "EPSI 0.180/0.250, 5% under"),
+            leaf("/powder-coating-hooks/listed-bags", "0.180/0.250 bags, 5% under"),
             leaf("/powder-coating-hooks/hc-series-c-hooks", "HC C, in-band only"),
             leaf("/powder-coating-hooks/hs-series-s-hooks", "HS S, in-band only"),
             leaf("/powder-coating-hooks/hv-series-v-hooks", "HV V, in-band only"),

@@ -40,7 +40,7 @@ const faqs = [
   },
   {
     question: "What wire sizes do you form powder coating hooks in?",
-    answer: `Production is ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog hooks are under 4 mm — no. 0.180 in and 0.250 in are in the band: EPSI-match boxes 5% under on /powder-coating-hooks/epsi; other 4–10 mm V/S/C steps 2% under on /powder-coating-hooks/prices.`,
+    answer: `Production is ${WIRE.label}. Stock tooling is ${STOCK}. 0.044–0.120 in catalog hooks are under 4 mm — no. 0.180 in and 0.250 in are in the band: listed HV/HC/HS/HCV/HV90 boxes 5% under on /powder-coating-hooks/listed-bags; other 4–10 mm V/S/C steps 2% under on /powder-coating-hooks/prices.`,
   },
   {
     question: "Can you make custom powder coating hooks?",
@@ -113,12 +113,11 @@ export default function PowderCoatingHooksPage() {
             — Autodesk Viewer. C eye, V locate, stills from the same model.
           </li>
           <li>
-            <Link href="/powder-coating-hooks/epsi">
-              EPSI-match bags
+            <Link href="/powder-coating-hooks/listed-bags">
+              0.180 / 0.250 in bags
             </Link>{" "}
             — HV, HC, HS, HCV, HV90 in 0.180 and 0.250 in only. 5% under
-            published EPSI boxes. Not diamond, C-LAW, spring-tube, or light
-            wire.
+            published boxes. Not diamond, C-LAW, spring-tube, or light wire.
           </li>
           <li>
             <Link href="/powder-coating-hooks/super-v-hooks">Super V-hooks</Link>{" "}
@@ -178,10 +177,12 @@ export default function PowderCoatingHooksPage() {
 
         <h2 id="prices">Listed bag prices</h2>
         <p>
-          0.180 in and 0.250 in are in this cell (4.57 mm and 6.35 mm). Where
-          EPSI publishes an HV, HC, HS, HCV, or HV90 box in those diameters, we
-          list the same length, hang, and count at 5% under:{" "}
-          <Link href="/powder-coating-hooks/epsi">EPSI-match prices</Link>
+          0.180 in and 0.250 in are in this cell (4.57 mm and 6.35 mm). Listed
+          HV, HC, HS, HCV, and HV90 boxes in those diameters: same length, hang,
+          and count at 5% under:{" "}
+          <Link href="/powder-coating-hooks/listed-bags">
+            0.180 / 0.250 in prices
+          </Link>
           . Other 4–10 mm V, S, and C length steps stay on{" "}
           <Link href="/powder-coating-hooks/prices">
             the 4–10 mm price list

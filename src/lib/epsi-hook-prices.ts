@@ -1,7 +1,7 @@
 import { usd2 } from "@/lib/quoting";
 import { usawfPart, type HookPartFamily } from "@/lib/part-numbers";
 
-/** 5% under published EPSI 0.180 in / 0.250 in round-wire boxes. */
+/** 5% under published 0.180 in / 0.250 in round-wire boxes. */
 export const EPSI_HOOK_UNDERCUT = 0.05;
 
 export type EpsiHookStyle = "v" | "s" | "c" | "cv" | "90v";
@@ -17,9 +17,9 @@ type PublishedEpsiBox = {
 };
 
 /**
- * EPSI HV / HC / HS / HCV / HV90 boxes whose wire is in this cell.
+ * HV / HC / HS / HCV / HV90 boxes whose wire is in this cell.
  * 0.180 in = 4.57 mm. 0.250 in = 6.35 mm. 0.060–0.120 in is under 4 mm — omitted.
- * Geometry and qty match the published series cards. Not EPSI SKU strings.
+ * Geometry and qty match the published series cards. Not catalog SKU strings.
  */
 const EPSI_BOXES: PublishedEpsiBox[] = [
   { style: "v", dIn: 0.18, lengthIn: 4, qty: 500, boxUsd: 75.64, legIn: 0.81 },
@@ -88,7 +88,7 @@ export const EPSI_HOOK_STYLE_HREF: Record<EpsiHookStyle, string> = {
 };
 
 export const EPSI_HOOK_LINE =
-  "USAWF part numbers. Round-wire 0.180 in and 0.250 in boxes that match published EPSI HV, HC, HS, HCV, and HV90 sizes — same length, bowl or legs, and box count. 5% under those published boxes. Carbon. 100-piece minimum. We do not clone EPSI SKU strings. Nothing under 4 mm.";
+  "USAWF part numbers. Round-wire 0.180 in and 0.250 in V, C, S, CV, and 90° V boxes — same length, hang, and box count as the published cards we list. 5% under those boxes. Carbon. 100-piece minimum. Nothing under 4 mm.";
 
 export const EPSI_HOOK_REFUSE = [
   {
@@ -97,7 +97,7 @@ export const EPSI_HOOK_REFUSE = [
   },
   {
     name: "HKVL locking V (0.044–0.080 in)",
-    why: "Every published EPSI locking-V box is under 4 mm. Round-wire locking V in 4–14 mm is a print, not those bags.",
+    why: "Published locking-V bags in this family are 0.044–0.080 in, under 4 mm. Round-wire locking V in 4–14 mm is a print, not those bags.",
   },
   {
     name: "HKD diamond hooks",

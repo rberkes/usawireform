@@ -58,7 +58,7 @@ export const NAV_PRODUCTS: NavSection = {
       items: [
         { href: "/powder-coating-hooks", label: "Powder coating hooks" },
         { href: "/powder-coating-hooks/prices", label: "4–10 mm hook prices" },
-        { href: "/powder-coating-hooks/epsi", label: "EPSI-match bags, 5% under" },
+        { href: "/powder-coating-hooks/listed-bags", label: "0.180 / 0.250 in bags, 5% under" },
         { href: "/powder-coating-hooks/square-hanging-hooks", label: "Square hanging hooks" },
         { href: "/powder-coating-hooks/v-hooks", label: "V-hooks" },
         { href: "/powder-coating-hooks/c-hooks", label: "C-hooks" },

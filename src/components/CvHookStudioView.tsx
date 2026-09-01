@@ -49,7 +49,7 @@ export function CvHookStudioView() {
         <h2 id="studio">Studio</h2>
         <p>
           Autodesk Viewer, light booth, view cube. Pick a length we actually
-          run. Click a still to jump the camera. This is not a boxed EPSI HCV
+          run. Click a still to jump the camera. This is not a boxed catalog
           SKU — same family, our path, our part.
         </p>
         <div className="not-prose my-8">

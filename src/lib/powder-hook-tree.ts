@@ -87,7 +87,7 @@ export const POWDER_HOOK_PLAYERS: PowderHookPlayer[] = [
     sells:
       "Masking and industrial hooks: S, C, CV, V, 90° V, locking V, diamond, spring tube, C-LAW.",
     vsUs:
-      "Round-wire HV/HC/HS/HCV/HV90 in 0.180 in and 0.250 in: we list those boxes 5% under on /powder-coating-hooks/epsi. Diamond is square wire. C-LAW is a 3-prong clamp. Spring-tube and HKVL bags are under 4 mm. Swivels and wheel kits are not this cell.",
+      "Round-wire HV/HC/HS/HCV/HV90 in 0.180 in and 0.250 in: we list those boxes 5% under on /powder-coating-hooks/listed-bags. Diamond is square wire. C-LAW is a 3-prong clamp. Spring-tube and HKVL bags are under 4 mm. Swivels and wheel kits are not this cell.",
   },
   {
     name: "Echo Supply",
@@ -1054,8 +1054,8 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         id: "names",
         heading: "What shops ask for",
         body: [
-          "EPSI catalogs diamond (square wire), C-LAW (3-prong clamp), spring-tube (1–3 mm wound), and HKVL locking V at 0.044–0.080 in. Mighty Hook catalogs peghooks, Z-bar lock-ins, TSR snaps, and flat jam. Those SKUs are real. Most are not this cell.",
-          "Round-wire 4–14 mm we do form: Super V, locking V (extra bend on a V — not the EPSI HKVL bag), Z-path hooks, jam hooks for large IDs, snap hooks that close on a bar, and J-hooks. Published EPSI HV/HC/HS/HCV/HV90 in 0.180 and 0.250 in: /powder-coating-hooks/epsi, 5% under. Square-bar V is bar stock. Peghooks at 0.120 / 0.150 in and TSR clips at 0.044–0.076 in are under 4 mm — we name them and do not quote them.",
+          "Catalog houses sell diamond (square wire), C-LAW (3-prong clamp), spring-tube (1–3 mm wound), and locking V at 0.044–0.080 in. Mighty Hook catalogs peghooks, Z-bar lock-ins, TSR snaps, and flat jam. Those SKUs are real. Most are not this cell.",
+          "Round-wire 4–14 mm we do form: Super V, locking V (extra bend on a V — not a 0.080 in catalog bag), Z-path hooks, jam hooks for large IDs, snap hooks that close on a bar, and J-hooks. Published HV/HC/HS/HCV/HV90 in 0.180 and 0.250 in: /powder-coating-hooks/listed-bags, 5% under. Square-bar V is bar stock. Peghooks at 0.120 / 0.150 in and TSR clips at 0.044–0.076 in are under 4 mm — we name them and do not quote them.",
         ],
       },
     ],
@@ -1063,7 +1063,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
       {
         question: "Can you make locking V-hooks?",
         answer:
-          "Yes, as round wire in 4–14 mm with the extra stay bend on the print. Not an EPSI 0.080 in SKU. /powder-coating-hooks/locking-v-hooks.",
+          "Yes, as round wire in 4–14 mm with the extra stay bend on the print. Not a 0.080 in catalog SKU. /powder-coating-hooks/locking-v-hooks.",
       },
       {
         question: "Can you make C-LAW or spring-tube hooks?",
@@ -1094,7 +1094,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         heading: "Who does what",
         body: [
           "Mighty Hook and Magic Rack (Production Plus) sell hanging systems — racks, load bars, engineered hooks, often masking too. Hook Authority sells boxed V/C/CV/S/90° bags and a custom builder on light-to-medium wire. Argon publishes HSQV square hanging bags and masking. EPSI, HangOn, Echo Supply, and Essentra sell masking and a hook catalog that includes specialty shapes.",
-          "This floor is none of those houses. It is a 4–14 mm CNC wire cell in Northeast Ohio. Instant estimate is this cell. EPSI HV/HC/HS/HCV/HV90 round-wire boxes in 0.180 and 0.250 in: 5% under on /powder-coating-hooks/epsi. Other 4–10 mm V/S/C length steps: 2% under published cards on /powder-coating-hooks/prices. Square hanging undercuts published HSQV by 5%. 0.044–0.120 in catalog hooks: no.",
+          "This floor is none of those houses. It is a 4–14 mm CNC wire cell in Northeast Ohio. Instant estimate is this cell. HV/HC/HS/HCV/HV90 round-wire boxes in 0.180 and 0.250 in: 5% under on /powder-coating-hooks/listed-bags. Other 4–10 mm V/S/C length steps: 2% under published cards on /powder-coating-hooks/prices. Square hanging undercuts published HSQV by 5%. 0.044–0.120 in catalog hooks: no.",
         ],
       },
       {
@@ -1107,9 +1107,9 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
     ],
     faqs: [
       {
-        question: "Are you cheaper than EPSI?",
+        question: "Are you cheaper than the published 0.180 / 0.250 in boxes?",
         answer:
-          "On listed 0.180 in and 0.250 in HV/HC/HS/HCV/HV90 boxes we form: 5% under the published EPSI box, same length and count. On 0.060–0.120 in, diamond, C-LAW, spring-tube, HKVL, swivels, and wheel kits: we do not quote.",
+          "On listed HV/HC/HS/HCV/HV90 boxes we form: 5% under the published box, same length and count. On 0.060–0.120 in, diamond, C-LAW, spring-tube, HKVL, swivels, and wheel kits: we do not quote.",
       },
       {
         question: "Are you cheaper than Hook Authority?",

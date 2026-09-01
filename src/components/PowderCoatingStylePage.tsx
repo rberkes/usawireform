@@ -74,7 +74,7 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
         ]}
         toc={[
           { id: "hang", label: "How they hang" },
-          ...(epsiStyle ? [{ id: "epsi", label: "5% under EPSI" }] : []),
+          ...(epsiStyle ? [{ id: "listed", label: "5% under published boxes" }] : [])
           ...(style.id === "v-hooks" ||
           style.id === "s-hooks" ||
           style.id === "c-hooks"
@@ -96,9 +96,9 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
 
         {epsiStyle ? (
           <>
-            <h2 id="epsi">5% under published EPSI boxes</h2>
+            <h2 id="listed">5% under published boxes</h2>
             <p>
-              Same length, wire, hang, and box count as the published EPSI{" "}
+              Same length, wire, hang, and box count as the published{" "}
               {style.id === "v-hooks"
                 ? "HV"
                 : style.id === "c-hooks"
@@ -109,8 +109,10 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
                       ? "HCV"
                       : "HV90"}{" "}
               0.180 in and 0.250 in cards. Five percent under. USAWF part
-              numbers. 0.060–0.120 in EPSI SKUs are under 4 mm — not listed.{" "}
-              <Link href="/powder-coating-hooks/epsi">All EPSI-match styles</Link>
+              numbers. 0.060–0.120 in is under 4 mm — not listed.{" "}
+              <Link href="/powder-coating-hooks/listed-bags">
+                All listed styles
+              </Link>
               .
             </p>
             <div className="not-prose my-8">
@@ -208,8 +210,8 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
             </li>
           ))}
           <li>
-            <Link href="/powder-coating-hooks/epsi">
-              EPSI-match prices — 5% under 0.180 / 0.250 in boxes
+            <Link href="/powder-coating-hooks/listed-bags">
+              0.180 / 0.250 in prices — 5% under published boxes
             </Link>
           </li>
           {style.id === "c-hooks" ? (

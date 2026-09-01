@@ -27,7 +27,6 @@ export const POWDER_COATING_HOOK_KEYWORDS = [
   "jam hooks",
   "snap hooks",
   "J-hooks",
-  "EPSI C-hooks",
   "HC series C-hooks",
   "HV series V-hooks",
 ] as const;

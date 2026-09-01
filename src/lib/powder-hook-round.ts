@@ -59,7 +59,7 @@ export const POWDER_HOOK_ROUND_WIRE: PowderHookNode[] = [
     slug: ["locking-v-hooks"],
     title: "Locking V-Hooks",
     h1: "Locking V-hooks",
-    description: `Locking V-hooks from round coil in ${WIRE.short}: a V plus an extra bend so the hook stays on the bar. Not an EPSI catalog SKU. 100-piece minimum.`,
+    description: `Locking V-hooks from round coil in ${WIRE.short}: a V plus an extra bend so the hook stays on the bar. Not a catalog SKU. 100-piece minimum.`,
     lede: "A V that does not walk off the bar. Extra bend. Round wire. 4–14 mm.",
     cluster: "style",
     weight: 4,
@@ -75,7 +75,7 @@ export const POWDER_HOOK_ROUND_WIRE: PowderHookNode[] = [
         id: "what",
         heading: "Round-wire lock, not a catalog clip",
         body: [
-          "EPSI and other houses sell locking V-hooks, often in light wire, so the hang cannot lift off the crossbar. On this floor a locking V is a round-wire V plus one more bend (or a closed wrap) that traps the bar. 2D CNC. We do not stamp a lock tab and we do not copy an EPSI SKU.",
+          "Catalog houses sell locking V-hooks, often in light wire, so the hang cannot lift off the crossbar. On this floor a locking V is a round-wire V plus one more bend (or a closed wrap) that traps the bar. 2D CNC. We do not stamp a lock tab and we do not clone a catalog SKU.",
           `If the print is 0.080 in locking V, that is under ${WIRE.minMm} mm — we name it and do not quote it as stock. If the wire is ${WIRE.short}, send the lock geometry: wrap ID, extra bend, overall, both Vs.`,
         ],
       },
@@ -90,9 +90,9 @@ export const POWDER_HOOK_ROUND_WIRE: PowderHookNode[] = [
     ],
     faqs: [
       {
-        question: "Can you copy an EPSI locking V?",
+        question: "Can you copy a catalog locking V?",
         answer:
-          "We form the round-wire path in 4–14 mm from a print. We do not stock EPSI locking SKUs or 0.080 in bags.",
+          "We form the round-wire path in 4–14 mm from a print. We do not stock catalog locking SKUs or 0.080 in bags.",
       },
     ],
   },
