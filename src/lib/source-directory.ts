@@ -107,6 +107,7 @@ export function overlaySourceOnDirectory(
       ? sourced.secondaries
       : listed.secondaries,
     logoUrl: sourced.logoUrl || listed.logoUrl,
+    photoUrl: sourced.photoUrl || listed.photoUrl,
     plantKind: sourced.plantKind || listed.plantKind,
     plantStreet: sourced.plantStreet || listed.plantStreet,
     plantProofUrl: sourced.plantProofUrl || listed.plantProofUrl,
@@ -163,6 +164,9 @@ export function sourceProfileToDirectoryCompany(
     secondaries: parseSourceSecondaries(profile.secondaries),
     logoUrl: profile.logoPath
       ? `/directory/logo/${profile.slug}?v=${encodeURIComponent(profile.updatedAt)}`
+      : undefined,
+    photoUrl: profile.photoPath
+      ? `/directory/photo/${profile.slug}?v=${encodeURIComponent(profile.updatedAt)}`
       : undefined,
     plantKind: profile.plantVerifiedAt || cells.length > 0 ? "plant" : undefined,
     plantStreet: profile.plantStreet,

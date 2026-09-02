@@ -3,6 +3,7 @@
 import { randomUUID } from "crypto";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { isAdmin } from "@/app/admin/actions";
 import { QUOTE_EMAIL } from "@/lib/company";
 import { DRAWING_HINT, isAcceptedDrawing } from "@/lib/drawings";
@@ -60,6 +61,7 @@ import {
   sourceJobPrivacyHref,
   storeSourceJobDrawing,
   storeSourceLogo,
+  storeSourcePhoto,
   uniqueSourceSlug,
   replaceSourceFilingsForShop,
   setSourceJobDrawingPrivacy,
@@ -105,6 +107,7 @@ async function upsertShopProfile({
   website,
   blurb,
   logoPath,
+  photoPath,
   plantStreet,
   plantProofUrl,
   plantVerifiedAt,
@@ -119,6 +122,7 @@ async function upsertShopProfile({
   website: string;
   blurb?: string;
   logoPath?: string | null;
+  photoPath?: string | null;
   plantStreet?: string;
   plantProofUrl?: string;
   plantVerifiedAt?: string;
@@ -145,6 +149,8 @@ async function upsertShopProfile({
     updatedAt: now,
     logoPath:
       logoPath === null ? undefined : logoPath ?? existing?.logoPath,
+    photoPath:
+      photoPath === null ? undefined : photoPath ?? existing?.photoPath,
     plantStreet: plantStreet ?? existing?.plantStreet,
     plantProofUrl: plantProofUrl ?? existing?.plantProofUrl,
     plantVerifiedAt: plantVerifiedAt ?? existing?.plantVerifiedAt,
@@ -287,6 +293,7 @@ export async function claimDirectoryListing(
       listedAt: existing?.listedAt || existing?.updatedAt || now,
       updatedAt: now,
       logoPath: existing?.logoPath,
+      photoPath: existing?.photoPath,
       plantStreet: plant.plantStreet,
       plantProofUrl: plant.plantProofUrl,
       plantVerifiedAt: now,
@@ -770,6 +777,19 @@ export async function updateSourceShop(
     logoPath = stored.path;
   }
 
+  const removePhoto = String(formData.get("removePhoto") ?? "") === "1";
+  const photo = formData.get("photo");
+  const photoFile = photo instanceof File && photo.size > 0 ? photo : null;
+  let photoPath: string | null | undefined;
+  if (removePhoto && !photoFile) photoPath = null;
+  if (photoFile) {
+    const stored = await storeSourcePhoto(signedIn.userId, photoFile);
+    if (!stored.ok) {
+      return { success: false, message: stored.message };
+    }
+    photoPath = stored.path;
+  }
+
   try {
     if (!(await blobReady())) {
       return { success: false, message: "Could not store the shop." };
@@ -784,11 +804,14 @@ export async function updateSourceShop(
       website,
       blurb,
       logoPath,
+      photoPath,
       plantStreet: plant.plantStreet || existing?.plantStreet,
       plantProofUrl: plant.plantProofUrl || existing?.plantProofUrl,
       plantVerifiedAt,
       fit: readSourceFitForm(formData) ?? null,
     });
+    revalidatePath(`/directory/${slug}`);
+    revalidatePath("/directory");
     return {
       success: true,
       message: `Shop saved. Public page is /directory/${slug}.`,
@@ -800,6 +823,42 @@ export async function updateSourceShop(
       message: `Could not store the shop (${blobErrorMessage(error)}).`,
     };
   }
+}
+
+export async function updateSourceListingPhoto(
+  _prev: SourceFormState,
+  formData: FormData,
+): Promise<SourceFormState> {
+  const signedIn = await signedInShop();
+  if (!signedIn) {
+    return { success: false, message: "Sign in to upload a photo." };
+  }
+  const profile = await getSourceProfile(signedIn.userId);
+  const slug = String(formData.get("slug") ?? "").trim();
+  if (!profile?.slug || profile.slug !== slug) {
+    return { success: false, message: "This login does not own this listing." };
+  }
+  const photo = formData.get("photo");
+  const photoFile = photo instanceof File && photo.size > 0 ? photo : null;
+  if (!photoFile) {
+    return { success: false, message: "Choose a plant photo." };
+  }
+  if (!(await blobReady())) {
+    return { success: false, message: "Could not store the photo." };
+  }
+  const stored = await storeSourcePhoto(signedIn.userId, photoFile);
+  if (!stored.ok) {
+    return { success: false, message: stored.message };
+  }
+  const now = new Date().toISOString();
+  await saveSourceProfile({
+    ...profile,
+    photoPath: stored.path,
+    updatedAt: now,
+  });
+  revalidatePath(`/directory/${slug}`);
+  revalidatePath("/directory");
+  return { success: true, message: "Plant photo is on the listing." };
 }
 
 export async function submitSourceJob(

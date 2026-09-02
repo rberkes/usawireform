@@ -120,6 +120,8 @@ export type SourceProfile = {
   updatedAt: string;
   /** Private blob path for the public shop logo. */
   logoPath?: string;
+  /** Private blob path for the public plant photo on the listing. */
+  photoPath?: string;
   /** Numbered plant street. Required to pass the plant check. */
   plantStreet?: string;
   /** Public page that names machines or shows the floor. */

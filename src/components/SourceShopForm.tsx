@@ -27,6 +27,7 @@ export function SourceShopForm({
   slug,
   claimedDirectory = false,
   logoUrl,
+  photoUrl,
   plantStreet = "",
   plantProofUrl = "",
   plantVerified = false,
@@ -42,6 +43,7 @@ export function SourceShopForm({
   slug?: string;
   claimedDirectory?: boolean;
   logoUrl?: string;
+  photoUrl?: string;
   plantStreet?: string;
   plantProofUrl?: string;
   plantVerified?: boolean;
@@ -191,7 +193,33 @@ export function SourceShopForm({
           </label>
         ) : (
           <p className="text-sm leading-6 text-muted">
-            PNG, JPG, WebP, or GIF. Under 2 MB. Shows on the public listing.
+            PNG, JPG, WebP, or GIF. Under 2 MB. Shows next to the shop name.
+          </p>
+        )}
+        <label className="block text-sm">
+          Plant photo
+          {photoUrl ? (
+            <img
+              src={photoUrl}
+              alt=""
+              className="mt-1.5 aspect-[16/7] w-full max-w-lg object-cover"
+            />
+          ) : null}
+          <input
+            className="mt-1.5 block text-sm"
+            name="photo"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+          />
+        </label>
+        {photoUrl ? (
+          <label className="flex items-center gap-2 text-sm text-muted">
+            <input type="checkbox" name="removePhoto" value="1" />
+            Remove plant photo
+          </label>
+        ) : (
+          <p className="text-sm leading-6 text-muted">
+            Floor or shop photo for the public listing. Under 8 MB.
           </p>
         )}
         <label className="block text-sm">

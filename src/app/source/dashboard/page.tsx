@@ -83,6 +83,7 @@ async function ensureProfile({
     listedAt: now,
     updatedAt: now,
     logoPath: undefined,
+    photoPath: undefined,
     plantStreet: undefined,
     plantProofUrl: undefined,
     plantVerifiedAt: undefined,
@@ -340,6 +341,11 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           logoUrl={
             profile?.logoPath && profile.slug
               ? `/directory/logo/${profile.slug}?v=${encodeURIComponent(profile.updatedAt)}`
+              : undefined
+          }
+          photoUrl={
+            profile?.photoPath && profile.slug
+              ? `/directory/photo/${profile.slug}?v=${encodeURIComponent(profile.updatedAt)}`
               : undefined
           }
         />

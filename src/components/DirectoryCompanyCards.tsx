@@ -15,12 +15,26 @@ export function DirectoryCompanyCard({ company }: { company: DirectoryCompany })
   const fitLine = sourceFitCardLine(company.buyerFit);
 
   return (
-    <div className="flex flex-col bg-background p-4 hover:bg-inset transition-colors">
-      {company.logoUrl ? (
+    <div className="flex flex-col bg-background hover:bg-inset transition-colors">
+      {company.photoUrl ? (
+        <img
+          src={company.photoUrl}
+          alt=""
+          className="aspect-[16/7] w-full object-cover"
+        />
+      ) : company.logoUrl ? (
         <img
           src={company.logoUrl}
           alt=""
-          className="mb-3 h-10 w-auto max-w-[8rem] object-contain"
+          className="mx-4 mt-4 h-10 w-auto max-w-[8rem] object-contain"
+        />
+      ) : null}
+      <div className="flex flex-1 flex-col p-4">
+      {company.photoUrl && company.logoUrl ? (
+        <img
+          src={company.logoUrl}
+          alt=""
+          className="mb-3 h-8 w-auto max-w-[7rem] object-contain"
         />
       ) : null}
       <Link
@@ -68,6 +82,7 @@ export function DirectoryCompanyCard({ company }: { company: DirectoryCompany })
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

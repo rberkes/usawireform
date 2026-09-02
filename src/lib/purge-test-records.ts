@@ -74,7 +74,7 @@ function shouldDropJson(payload: Record<string, unknown>) {
 }
 
 function extraPaths(payload: Record<string, unknown>) {
-  return [payload.drawingPath, payload.logoPath]
+  return [payload.drawingPath, payload.logoPath, payload.photoPath]
     .map((value) => asString(value))
     .filter(Boolean);
 }

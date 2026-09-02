@@ -4,14 +4,12 @@ import { auth } from "@clerk/nextjs/server";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DirectoryLeadForm } from "@/components/DirectoryLeadForm";
+import { DirectoryPhotoUpload } from "@/components/DirectoryPhotoUpload";
 import { ServiceSchema } from "@/components/SeoSchemas";
 import {
-  Page,
-  PageHero,
-  Section,
-  Kicker,
-  SpecList,
   ButtonLink,
+  Kicker,
+  Page,
 } from "@/components/ui";
 import {
   directoryCompanies,
@@ -89,6 +87,7 @@ export default async function DirectoryCompanyPage({ params }: Props) {
   const { company, source, claimable } = resolved;
   const { userId } = await auth();
   const mine = userId ? await getSourceProfile(userId) : null;
+  const isOwner = Boolean(mine?.slug && mine.slug === company.slug);
   const signedInAsOther =
     Boolean(mine?.company) &&
     mine?.slug !== company.slug &&
@@ -100,31 +99,9 @@ export default async function DirectoryCompanyPage({ params }: Props) {
 
   const specs: { label: string; value: string }[] = [
     { label: "Location", value: company.location },
-    { label: "Region", value: company.region },
-    { label: "Country", value: company.country },
   ];
-  const plantStatus = directoryPlantStatus(company);
-  if (plantStatus === "plant") {
-    specs.push({
-      label: "Plant check",
-      value: company.filedOnSource
-        ? "Passed — filed a cell on Source"
-        : company.plantStreet
-          ? "Passed — street and floor proof"
-          : "Passed — named iron on a public page",
-    });
-  } else if (plantStatus === "office") {
-    specs.push({
-      label: "Plant check",
-      value: "Desk — sales or sourcing language. Not on the USA factories page.",
-    });
-  }
-
-  if (company.plantStreet) {
-    specs.push({ label: "Plant street", value: company.plantStreet });
-  }
   if (company.wireDiameters) {
-    specs.push({ label: "Wire diameters", value: company.wireDiameters });
+    specs.push({ label: "Wire", value: company.wireDiameters });
   }
   if (company.established) {
     specs.push({ label: "Established", value: company.established });
@@ -132,19 +109,18 @@ export default async function DirectoryCompanyPage({ params }: Props) {
   if (company.certifications && company.certifications.length > 0) {
     specs.push({ label: "Certifications", value: company.certifications.join(", ") });
   }
-  if (company.website) {
-    specs.push({ label: "Website", value: publicHost(company.website) });
+  if (company.plantStreet) {
+    specs.push({ label: "Plant", value: company.plantStreet });
   }
   if (company.phone) {
     specs.push({ label: "Phone", value: company.phone });
-  }
-  if (company.machines && company.machines.length > 0) {
-    specs.push({ label: "Public equipment notes", value: company.machines.join(", ") });
   }
   specs.push(...sourceFitSpecs(company.buyerFit));
   if (company.weeklyCapacity) {
     specs.push({ label: "This week", value: company.weeklyCapacity });
   }
+
+  const plantStatus = directoryPlantStatus(company);
 
   return (
     <>
@@ -171,15 +147,15 @@ export default async function DirectoryCompanyPage({ params }: Props) {
         {claimable && signedInAsOther && mine ? (
           <div className="mb-8 max-w-xl space-y-3">
             <p className="text-sm leading-6 text-muted">
-              Signed in as <strong className="font-medium text-foreground">{mine.company}</strong>.
-              This login cannot claim {company.name}. One shop per account. Sign
-              out to use a different company.
+              Signed in as{" "}
+              <strong className="font-medium text-foreground">{mine.company}</strong>
+              . This login cannot claim {company.name}.
             </p>
             <ButtonLink href="/source/dashboard" variant="ghost">
               Shop dashboard
             </ButtonLink>
           </div>
-        ) : claimable ? (
+        ) : claimable && !isOwner ? (
           <div className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2">
             <ButtonLink href={sourceClaimPath(company.slug)}>
               Claim this page
@@ -187,157 +163,181 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             <ButtonLink href="/#login" variant="ghost">
               Log in
             </ButtonLink>
-            <p className="text-sm leading-6 text-muted">
-              US shops: file every CNC cell on this listing free. How
-              the plant operates is free.
+          </div>
+        ) : null}
+
+        {isOwner ? (
+          <div className="mb-8 flex flex-wrap items-center gap-3">
+            <ButtonLink href="/source/dashboard" variant="ghost">
+              Shop dashboard
+            </ButtonLink>
+            <p className="text-sm text-muted">
+              This is your public listing. Buyers see the photo, cells, and note below.
             </p>
           </div>
         ) : null}
 
-        <div className="grid gap-12 lg:grid-cols-[1fr,400px] lg:gap-16">
-          <div>
-            <PageHero
-              kicker={`${company.region} · ${company.country}`}
-              title={company.name}
-              lede={company.location}
+        <div className="overflow-hidden border border-line bg-inset/30">
+          {company.photoUrl ? (
+            <img
+              src={company.photoUrl}
+              alt={`${company.name} plant`}
+              className="aspect-[16/7] w-full object-cover"
             />
-            {company.logoUrl ? (
-              <img
-                src={company.logoUrl}
-                alt={`${company.name} logo`}
-                className="mt-6 h-16 w-auto max-w-[14rem] object-contain"
+          ) : (
+            <div className="flex min-h-52 items-end bg-[#0b1f33] px-6 py-8 sm:min-h-64 sm:px-10">
+              <p className="max-w-lg text-sm leading-6 text-white/70">
+                {isOwner
+                  ? "Upload a floor photo so buyers see the plant, not a blank card."
+                  : company.location}
+              </p>
+            </div>
+          )}
+          {isOwner ? (
+            <div className="border-t border-line bg-background px-5 py-4 sm:px-8">
+              <DirectoryPhotoUpload
+                slug={company.slug}
+                hasPhoto={Boolean(company.photoUrl)}
               />
-            ) : null}
+            </div>
+          ) : null}
+        </div>
 
-            <p className="mt-6 text-sm leading-7 text-muted">
+        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-16">
+          <div>
+            <div className="flex flex-wrap items-start gap-5">
+              {company.logoUrl ? (
+                <img
+                  src={company.logoUrl}
+                  alt={`${company.name} logo`}
+                  className="h-14 w-auto max-w-[10rem] object-contain"
+                />
+              ) : null}
+              <div>
+                <p className="font-mono text-[11px] tracking-[0.22em] text-muted uppercase">
+                  {company.location}
+                  {plantStatus === "plant" ? " · Plant" : ""}
+                  {source ? " · Source" : ""}
+                </p>
+                <h1 className="mt-2 text-4xl font-medium tracking-tight sm:text-5xl">
+                  {company.name}
+                </h1>
+              </div>
+            </div>
+
+            <p className="mt-6 max-w-2xl text-base leading-7 text-muted">
               {company.description}
             </p>
 
-            {company.website && (
-              <p className="mt-4">
+            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              {company.website ? (
                 <a
                   href={company.website}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-copper hover:underline"
                 >
-                  {publicHost(company.website)} →
+                  {publicHost(company.website)}
                 </a>
-              </p>
-            )}
-            {company.linkedin && (
-              <p className="mt-2">
+              ) : null}
+              {company.linkedin ? (
                 <a
                   href={company.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-copper hover:underline"
                 >
-                  Company LinkedIn →
+                  LinkedIn
                 </a>
-              </p>
-            )}
+              ) : null}
+              {company.phone ? (
+                <a href={`tel:${company.phone}`} className="text-copper hover:underline">
+                  {company.phone}
+                </a>
+              ) : null}
+            </div>
 
-            <Section title="Specifications">
-              <SpecList rows={specs} />
-            </Section>
-
-            <Section title="Capabilities">
-              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+            {company.capabilities.length > 0 ? (
+              <ul className="mt-8 flex flex-wrap gap-2">
                 {company.capabilities.map((cap) => (
                   <li
                     key={cap}
-                    className="flex items-start gap-2 text-sm leading-6"
+                    className="border border-line px-3 py-1.5 text-sm"
                   >
-                    <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-copper" />
                     {cap}
                   </li>
                 ))}
               </ul>
-            </Section>
+            ) : null}
+
+            {company.machines && company.machines.length > 0 ? (
+              <section className="mt-12">
+                <h2 className="text-lg font-medium tracking-tight">
+                  {source ? "Filed cells" : "Equipment"}
+                </h2>
+                <ul className="mt-4 divide-y divide-line border-y border-line">
+                  {company.machines.map((machine) => (
+                    <li key={machine} className="py-3 text-sm leading-6">
+                      {machine}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
 
             {company.secondaries && company.secondaries.length > 0 ? (
-              <Section title="Secondaries">
-                <p className="mt-3 text-sm leading-6 text-muted">
-                  Main secondary operations the shop listed on Source. Confirm
-                  with the chair before you send a print.
-                </p>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              <section className="mt-12">
+                <h2 className="text-lg font-medium tracking-tight">Secondaries</h2>
+                <ul className="mt-4 flex flex-wrap gap-2">
                   {company.secondaries.map((id) => {
                     const href = secondaryHref(id);
                     const label = secondaryLabel(id);
                     return (
-                      <li
-                        key={id}
-                        className="flex items-start gap-2 text-sm leading-6"
-                      >
-                        <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-copper" />
+                      <li key={id}>
                         {href ? (
-                          <Link href={href} className="hover:text-copper">
+                          <Link
+                            href={href}
+                            className="border border-line px-3 py-1.5 text-sm hover:border-copper"
+                          >
                             {label}
                           </Link>
                         ) : (
-                          label
+                          <span className="border border-line px-3 py-1.5 text-sm">
+                            {label}
+                          </span>
                         )}
                       </li>
                     );
                   })}
                 </ul>
-              </Section>
+              </section>
             ) : null}
 
-            {company.machines && company.machines.length > 0 ? (
-              <Section title={source ? "Filed cells" : "What the shop published"}>
-                <p className="mt-3 text-sm leading-6 text-muted">
-                  {source
-                    ? "OEM, type, and wire band from the shop on Source. Not a floor walk by us."
-                    : "Named iron from a public page. Not a floor audit. Confirm before you send a print."}
+            {company.industries && company.industries.length > 0 ? (
+              <section className="mt-12">
+                <h2 className="text-lg font-medium tracking-tight">Industries</h2>
+                <p className="mt-4 text-sm leading-7 text-muted">
+                  {company.industries.join(" · ")}
                 </p>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                  {company.machines.map((machine) => (
-                    <li
-                      key={machine}
-                      className="flex items-start gap-2 text-sm leading-6"
-                    >
-                      <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-copper" />
-                      {machine}
-                    </li>
-                  ))}
-                </ul>
-                {company.equipmentSource ? (
-                  <p className="mt-4 text-sm text-muted">
-                    Source:{" "}
-                    <a
-                      href={company.equipmentSource}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-copper hover:underline"
-                    >
-                      {publicHost(company.equipmentSource)}
-                    </a>
-                  </p>
-                ) : null}
-              </Section>
+              </section>
             ) : null}
 
-            {company.industries && company.industries.length > 0 && (
-              <Section title="Industries Served">
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {company.industries.map((ind) => (
-                    <li
-                      key={ind}
-                      className="border border-line px-3 py-2 text-sm"
-                    >
-                      {ind}
-                    </li>
-                  ))}
-                </ul>
-              </Section>
-            )}
+            {specs.length > 1 ? (
+              <dl className="mt-12 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                {specs.map((row) => (
+                  <div key={row.label}>
+                    <dt className="font-mono text-[11px] tracking-widest text-muted uppercase">
+                      {row.label}
+                    </dt>
+                    <dd className="mt-1 text-sm leading-6">{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
           </div>
 
-          <div className="lg:sticky lg:top-8 lg:self-start">
-            <div className="border border-line bg-inset/30 p-6">
+          <aside className="lg:sticky lg:top-24">
+            <div className="border border-line p-6">
               {source ? (
                 <div className="space-y-4">
                   <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
@@ -347,6 +347,9 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                     Jobs match the cells this shop filed. We introduce — emails
                     stay with the desk.
                   </p>
+                  {company.weeklyCapacity ? (
+                    <p className="text-sm leading-6">{company.weeklyCapacity}</p>
+                  ) : null}
                   <Link
                     href="/source"
                     className="inline-flex items-center justify-center rounded-sm bg-copper px-5 py-2.5 text-sm font-medium text-white hover:bg-copper-dim"
@@ -361,71 +364,35 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                 />
               )}
             </div>
-          </div>
+          </aside>
         </div>
 
-        <div className="mt-12 border border-line bg-inset/30 p-4 text-xs leading-5 text-muted">
-          <p>
-            <strong className="text-foreground">Disclaimer:</strong>{" "}
-            {source
-              ? `${company.name} filed its own cells on Source. USA Wire Form did not walk the floor. Confirm with the shop before you send a print.`
-              : `${company.name} is not affiliated with, endorsed by, or verified by USA Wire Form. Company names and trademarks belong to their respective owners. This listing is provided for informational purposes only. Contact ${company.name} directly to verify their capabilities, credentials, current equipment, and current business status.`}
-          </p>
-        </div>
+        <p className="mt-14 max-w-2xl text-xs leading-5 text-muted">
+          {source
+            ? `${company.name} filed its own cells on Source. Confirm with the shop before you send a print.`
+            : `${company.name} names and marks belong to their owners. Confirm capabilities with the shop.`}
+        </p>
 
-        {relatedCompanies.length > 0 && (
-          <section className="mt-20 border-t border-line pt-12">
-            <Kicker>More in {company.region}</Kicker>
-            <h2 className="mt-3 text-2xl tracking-tight">
-              Other wire forming companies nearby
-            </h2>
+        {relatedCompanies.length > 0 ? (
+          <section className="mt-16 border-t border-line pt-12">
+            <Kicker>Nearby</Kicker>
+            <h2 className="mt-3 text-2xl tracking-tight">Other shops in {company.region}</h2>
             <div className="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
               {relatedCompanies.map((related) => (
                 <Link
                   key={related.slug}
                   href={`/directory/${related.slug}`}
-                  className="group bg-background p-4 hover:bg-inset transition-colors"
+                  className="group bg-background p-5 hover:bg-inset"
                 >
-                  <h3 className="font-medium group-hover:text-copper transition-colors">
+                  <h3 className="font-medium group-hover:text-copper">
                     {related.name}
                   </h3>
                   <p className="mt-1 text-xs text-muted">{related.location}</p>
-                  <p className="mt-2 text-sm text-muted line-clamp-2">
-                    {related.description.slice(0, 80)}...
-                  </p>
                 </Link>
               ))}
             </div>
           </section>
-        )}
-
-        <section className="mt-16 border-t border-line pt-12">
-          <div className="max-w-2xl">
-            <Kicker>Need something different?</Kicker>
-            <h2 className="mt-3 text-2xl tracking-tight">
-              We form 4–14 mm wire in Northeast Ohio
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-muted">
-              If your project falls in our diameter range, we&apos;d be happy to quote it.
-              3D CNC wire forming, resistance welding, and secondary operations — all
-              in-house in Cleveland.
-            </p>
-            <div className="mt-6 flex gap-4">
-              <Link
-                href="/instant-quote"
-                className="bg-copper px-6 py-3 text-sm font-medium text-background hover:bg-copper/90 transition-colors"
-              >
-                Get instant quote
-              </Link>
-              <Link
-                href="/contact"
-                className="border border-line px-6 py-3 text-sm font-medium hover:border-copper hover:text-copper transition-colors"
-              >
-                Send a STEP
-              </Link>
-            </div>
-          </div>
-        </section>
+        ) : null}
       </Page>
     </>
   );

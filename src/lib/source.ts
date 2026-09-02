@@ -542,6 +542,11 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
       payload.logoPath.startsWith("source/logos/")
         ? payload.logoPath
         : undefined,
+    photoPath:
+      typeof payload.photoPath === "string" &&
+      payload.photoPath.startsWith("source/photos/")
+        ? payload.photoPath
+        : undefined,
     plantStreet: String(payload.plantStreet ?? "").trim() || undefined,
     plantProofUrl: String(payload.plantProofUrl ?? "").trim() || undefined,
     plantVerifiedAt: String(payload.plantVerifiedAt ?? "").trim() || undefined,
@@ -647,7 +652,7 @@ export async function saveSourceProfile(profile: SourceProfile) {
   return true;
 }
 
-const LOGO_TYPES: Record<string, string> = {
+const IMAGE_TYPES: Record<string, string> = {
   "image/png": "png",
   "image/jpeg": "jpg",
   "image/jpg": "jpg",
@@ -655,27 +660,33 @@ const LOGO_TYPES: Record<string, string> = {
   "image/gif": "gif",
 };
 
-export async function storeSourceLogo(userId: string, file: File) {
-  const ext =
-    LOGO_TYPES[file.type] ||
-    (file.name.split(".").pop()?.toLowerCase() === "png"
-      ? "png"
-      : file.name.split(".").pop()?.toLowerCase() === "jpg" ||
-          file.name.split(".").pop()?.toLowerCase() === "jpeg"
-        ? "jpg"
-        : file.name.split(".").pop()?.toLowerCase() === "webp"
-          ? "webp"
-          : file.name.split(".").pop()?.toLowerCase() === "gif"
-            ? "gif"
-            : "");
-  if (!ext) {
-    return { ok: false as const, message: "Logo must be PNG, JPG, WebP, or GIF." };
+function imageExt(file: File) {
+  const fromType = IMAGE_TYPES[file.type];
+  if (fromType) return fromType;
+  const ext = file.name.split(".").pop()?.toLowerCase();
+  if (ext === "jpeg") return "jpg";
+  if (ext === "png" || ext === "jpg" || ext === "webp" || ext === "gif") {
+    return ext;
   }
-  if (file.size > 2 * 1024 * 1024) {
-    return { ok: false as const, message: "Logo must be under 2 MB." };
+  return "";
+}
+
+async function storeSourceImage(
+  userId: string,
+  file: File,
+  kind: "logos" | "photos",
+  maxBytes: number,
+) {
+  const ext = imageExt(file);
+  if (!ext) {
+    return { ok: false as const, message: "Use PNG, JPG, WebP, or GIF." };
+  }
+  if (file.size > maxBytes) {
+    const mb = Math.round(maxBytes / (1024 * 1024));
+    return { ok: false as const, message: `Image must be under ${mb} MB.` };
   }
   const safeId = userId.replace(/[^a-zA-Z0-9_-]/g, "");
-  const pathname = `source/logos/${safeId}.${ext}`;
+  const pathname = `source/${kind}/${safeId}.${ext}`;
   await put(pathname, file, {
     access: BLOB_ACCESS,
     addRandomSuffix: false,
@@ -684,6 +695,14 @@ export async function storeSourceLogo(userId: string, file: File) {
     ...(await blobAuth()),
   });
   return { ok: true as const, path: pathname };
+}
+
+export async function storeSourceLogo(userId: string, file: File) {
+  return storeSourceImage(userId, file, "logos", 2 * 1024 * 1024);
+}
+
+export async function storeSourcePhoto(userId: string, file: File) {
+  return storeSourceImage(userId, file, "photos", 8 * 1024 * 1024);
 }
 
 export async function setSourceProfileSecondaries(

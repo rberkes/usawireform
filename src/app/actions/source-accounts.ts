@@ -63,6 +63,7 @@ export async function acceptSourceNda(
       listedAt: existing?.listedAt || existing?.updatedAt || now,
       updatedAt: now,
       logoPath: existing?.logoPath,
+      photoPath: existing?.photoPath,
       plantStreet: existing?.plantStreet,
       plantProofUrl: existing?.plantProofUrl,
       plantVerifiedAt: existing?.plantVerifiedAt,
