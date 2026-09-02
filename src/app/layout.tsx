@@ -1,6 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import { VisitTracker } from "@/components/VisitTracker";
 import { Footer } from "@/components/Footer";
@@ -85,6 +86,9 @@ export const metadata: Metadata = {
   },
 };
 
+const GA_MEASUREMENT_ID =
+  process.env.NEXT_PUBLIC_GA_ID ?? "G-2J3FGMRF7E";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <ClerkProvider appearance={clerkAppearance} afterSignOutUrl="/">
@@ -107,6 +111,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <VisitTracker />
           <Analytics />
         </body>
+        <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
       </html>
     </ClerkProvider>
   );

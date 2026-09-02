@@ -78,7 +78,7 @@ export const config = {
   
   // Analytics (IDs go here when configured)
   analytics: {
-    googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID,
+    googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID ?? "G-2J3FGMRF7E",
     vercelAnalytics: true,
   },
 } as const;

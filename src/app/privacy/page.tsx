@@ -174,6 +174,10 @@ export default function PrivacyPage() {
           <p>We use vendors to run the site. They process data on our instructions:</p>
           <ul className="list-disc space-y-2 pl-5">
             <li>Vercel — hosting, analytics, and file storage for uploads.</li>
+            <li>
+              Google Analytics — page views and traffic when a Measurement ID is
+              configured.
+            </li>
             <li>Clerk — sign-in and account sessions.</li>
             <li>Stripe — Source lead payments.</li>
             <li>Resend — outbound email for quotes and lead notices.</li>
