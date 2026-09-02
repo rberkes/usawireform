@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cx } from "@/lib/cx";
 import { HOME_QUOTE_NOTE } from "@/lib/client-landing";
+import { SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 
 export const INSTANT_QUOTE_HREF = "/instant-quote";
 export const PRODUCTION_QUOTE_HREF = "/production-quote";
@@ -129,7 +130,7 @@ export function ClientQuoteCtas({
       {variant === "home" && size !== "band" ? (
         <p className={cx("max-w-xl text-sm leading-6", note)}>
           {audience === "suppliers"
-            ? "File every cell free. Matched leads show in the shop dashboard — $49 to unlock a buyer."
+            ? `File every cell free. Matched leads show in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}.`
             : HOME_QUOTE_NOTE}
         </p>
       ) : null}

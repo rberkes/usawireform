@@ -1,6 +1,6 @@
 import { COMPANY, SITE_HOST, SITE_URL } from "@/lib/company";
 import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
-import { SOURCE_PLAN_LINE } from "@/lib/source-plans";
+import { SOURCE_PLAN_LINE, SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 
 export function escapeHtml(value: string) {
   return value
@@ -428,7 +428,7 @@ export function sourceFiledReceiptHtml({
     : ctaBannerRow(
         confirmHref,
         "Confirm your Source account",
-        "Use this email. Then the shop dashboard. Listing is free. $49 unlocks a matched lead.",
+        `Use this email. Then the shop dashboard. Listing is free. ${SOURCE_SMART_CONNECT_LINE}.`,
       );
   return shell(
     hasAccount
@@ -553,7 +553,7 @@ export function sourceShopLeadHtml({
     `A Source job matches your cell — ${size}`,
     `${kickerRow()}
      ${headingRow("A job matches your cell")}
-     ${copyRow(`${escapeHtml(shop || "Your shop")}: this print sits in a cell you filed. The lead is in the shop dashboard. $49 unlocks buyer contact. Up to 10 shops can buy it.`)}
+     ${copyRow(`${escapeHtml(shop || "Your shop")}: this print sits in a cell you filed. The lead is in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}. Up to 10 shops can buy it.`)}
      ${copyRow(`<strong>${escapeHtml(why)}</strong>${fitNote ? `<br />${escapeHtml(fitNote)}` : ""}`)}
      ${mailRowsHtml(
        [
@@ -568,7 +568,7 @@ export function sourceShopLeadHtml({
      )}
      ${ctaBannerRow(
        `${SITE_URL}/source/dashboard`,
-       "Open the shop dashboard — $49 to unlock",
+       SOURCE_SMART_CONNECT_LINE,
        "Buyer email is not in this message. The STEP is never attached.",
      )}`,
   );

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { Page, PageHero } from "@/components/ui";
 import { safeSourceNext } from "@/lib/source-gate";
+import { SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 
 export const metadata = {
   title: "Confirm your Source account",
@@ -35,8 +36,8 @@ export default async function SignUpPage({ searchParams }: Props) {
           buyer
             ? "Then the buyer dashboard. You manage jobs and whether a STEP is released."
             : next.startsWith("/source/claim")
-              ? "Use the shop email. Next you finish claiming this listing. Listing is free. $49 unlocks a matched lead."
-              : "Use the email we sent the equipment receipt to. Next is the shop dashboard. Listing is free. $49 unlocks a matched lead."
+              ? `Use the shop email. Next you finish claiming this listing. Listing is free. ${SOURCE_SMART_CONNECT_LINE}.`
+              : `Use the email we sent the equipment receipt to. Next is the shop dashboard. Listing is free. ${SOURCE_SMART_CONNECT_LINE}.`
         }
       />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">

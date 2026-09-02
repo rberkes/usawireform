@@ -44,7 +44,7 @@ const STEPS = [
   {
     n: "03",
     title: "Buy the lead from the dashboard",
-    body: "Listing every cell is free. A matched job shows in the shop dashboard. $49 unlocks buyer contact. Up to 10 shops can buy the same job. A STEP opens only if the buyer released it — never attached to email.",
+    body: "Listing every cell is free. A matched job shows in the shop dashboard. Unlock Buyer Leads with AI Smart Connect™. Up to 10 shops can buy the same job. A STEP opens only if the buyer released it — never attached to email.",
   },
 ];
 
@@ -85,13 +85,13 @@ export default async function SourceShopsPage() {
         <Panel className="p-5 sm:p-8">
           <Kicker>Offer</Kicker>
           <p className="mt-4 text-2xl font-medium tracking-tight sm:text-3xl">
-            List equipment free. $49 per lead.
+            Unlock Buyer Leads with AI Smart Connect™
           </p>
           <p className="mt-4 text-sm leading-6 text-muted">
             No card to file a cell. Min order, setup, stock, and lead stay
             free on the listing so a buyer can see how the plant operates.
-            Matched jobs show in the dashboard. $49 unlocks buyer contact. Up
-            to 10 shops can buy the same job.
+            Matched jobs show in the dashboard. Unlock Buyer Leads with AI
+            Smart Connect™. Up to 10 shops can buy the same job.
           </p>
           <p className="mt-6 text-sm leading-6 text-muted">
             Already filed? <TextLink href="/sign-in">Log in</TextLink>.
@@ -132,7 +132,7 @@ export default async function SourceShopsPage() {
         </p>
       </section>
 
-      <Section kicker="How it works" title="Three steps. List free. Pay for leads.">
+      <Section kicker="How it works" title="Three steps. List free. Unlock with AI Smart Connect™.">
         <ol className="mt-10 grid gap-px bg-line sm:grid-cols-3">
           {STEPS.map((step) => (
             <li key={step.n} className="bg-background px-5 py-8 sm:px-6">

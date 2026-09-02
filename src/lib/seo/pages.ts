@@ -15,6 +15,7 @@ import { L_HITCH_PIN_LANDERS } from "@/lib/l-hitch-pins";
 import { GROUND_STAPLE_TREE, groundStapleHref } from "@/lib/ground-staple-tree";
 import { POWDER_HOOK_TREE, powderHookHref } from "@/lib/powder-hook-tree";
 import { V_HOOK_LANDERS } from "@/lib/v-hook-landers";
+import { SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 
 export type SeoSection =
   | "home"
@@ -645,9 +646,9 @@ export const staticSeoPages: SeoRecord[] = [
   }),
   record({
     path: "/source/upgrade",
-    title: "Source leads — $49 to unlock a job",
+    title: "Unlock Buyer Leads with AI Smart Connect™",
     description:
-      "List every CNC cell free. Matched buyer jobs show in the shop dashboard. $49 unlocks a lead. Up to 10 shops can buy each job. Secondaries: 3 top ops $19/mo, six maximum $49/mo.",
+      `List every CNC cell free. Matched buyer jobs show in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}. Up to 10 shops can buy each job. Secondaries: 3 top ops $19/mo, six maximum $49/mo.`,
     section: "company",
     keywords: ["source shop plan", "CNC equipment list", "wire forming capacity"],
     priority: 0.6,

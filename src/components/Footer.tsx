@@ -50,7 +50,7 @@ const factories = [
   { href: "/source", label: "Find a wire form shop" },
   { href: "/source/shops", label: "Add a machine cell" },
   { href: "/#login", label: "Log in" },
-  { href: "/source/upgrade", label: "Source leads" },
+  { href: "/source/upgrade", label: "AI Smart Connect™" },
   { href: "/directory/new", label: "Newest Source shops" },
   { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/ohio", label: "Ohio cities" },
@@ -189,8 +189,8 @@ export function Footer() {
       </div>
       <div className="border-t border-line">
         <p className="mx-auto max-w-6xl px-5 py-4 font-mono text-[11px] tracking-wide text-muted">
-          © {new Date().getFullYear()} {COMPANY}. All rights reserved. {COMPANY}™
-          and USAWF™ are trademarks of {COMPANY}.
+          © {new Date().getFullYear()} {COMPANY}. All rights reserved. {COMPANY}™,
+          USAWF™, and AI Smart Connect™ are trademarks of {COMPANY}.
         </p>
       </div>
     </footer>

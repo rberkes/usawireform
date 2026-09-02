@@ -143,6 +143,7 @@ export default function TermsPage() {
           <ul className="list-disc space-y-2 pl-5">
             <li>{COMPANY}™</li>
             <li>{PART_PREFIX}™ and part numbers that begin with {PART_PREFIX}</li>
+            <li>AI Smart Connect™</li>
             <li>{SITE_HOST} and the {COMPANY} word mark and logo (the wire lockup)</li>
             <li>
               Distinctive taglines used as source identifiers on this site,

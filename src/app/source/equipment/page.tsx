@@ -48,7 +48,7 @@ export default async function SourceEquipmentPage({ searchParams }: Props) {
       <PageHero
         kicker="Source"
         title="Register and upload equipment"
-        lede="Pick the machine class, then file OEM, model, year, capacity, and stocked sizes. Listing is free. Matched leads show in the dashboard at $49 each."
+        lede="Pick the machine class, then file OEM, model, year, capacity, and stocked sizes. Listing is free. Unlock Buyer Leads with AI Smart Connect™."
       />
       {invite ? (
         <p className="mt-6 max-w-2xl text-sm leading-6 text-muted">

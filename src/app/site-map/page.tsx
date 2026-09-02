@@ -10,6 +10,7 @@ import { OHIO_CITIES, OHIO_CITY_HUB, ohioCityPath } from "@/lib/ohio-cities";
 import { publishedProcesses } from "@/lib/processes";
 import { pageMeta } from "@/lib/seo";
 import { industries, shopLines } from "@/lib/site";
+import { SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 
 export const metadata = pageMeta({
   title: "Sitemap",
@@ -90,8 +91,8 @@ export default function SiteMapPage() {
             },
             {
               href: "/source/upgrade",
-              title: "Source leads",
-              body: "List every cell free. $49 unlocks a matched lead. Up to 10 shops can buy each job. Three secondaries $19. Six maximum $49.",
+              title: "AI Smart Connect™",
+              body: `List every cell free. ${SOURCE_SMART_CONNECT_LINE}. Up to 10 shops can buy each job. Three secondaries $19. Six maximum $49.`,
             },
             {
               href: "/source/dashboard",

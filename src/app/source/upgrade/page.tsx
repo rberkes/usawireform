@@ -4,15 +4,17 @@ import {
   formatLeadPrice,
   SOURCE_LEAD_BUYERS_MAX,
   SOURCE_PLAN_LINE,
+  SOURCE_SMART_CONNECT,
+  SOURCE_SMART_CONNECT_LINE,
 } from "@/lib/source-plans";
 import { SOURCE_SECONDARY_LINE } from "@/lib/source-secondaries";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = pageMeta({
-  title: "Source leads — $49 to unlock a job",
+  title: "Unlock Buyer Leads with AI Smart Connect™",
   description:
-    "List every cell free. Matched buyer jobs show in the shop dashboard. $49 unlocks a lead. Up to 10 shops can buy each job.",
+    "List every cell free. Matched buyer jobs show in the shop dashboard. Unlock Buyer Leads with AI Smart Connect™. Up to 10 shops can buy each job.",
   path: "/source/upgrade",
   keywords: ["wire forming leads", "buy RFQ", "source shop dashboard"],
 });
@@ -22,7 +24,7 @@ export default function SourceUpgradePage() {
     <Page>
       <PageHero
         kicker="Source"
-        title="List free. Buy the lead."
+        title={SOURCE_SMART_CONNECT_LINE}
         lede={SOURCE_PLAN_LINE}
       />
 
@@ -39,7 +41,7 @@ export default function SourceUpgradePage() {
 
       <Panel className="mt-4 max-w-xl space-y-3 p-5 sm:p-6">
         <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
-          A matched lead
+          {SOURCE_SMART_CONNECT}
         </p>
         <p className="text-3xl font-medium tracking-tight">{formatLeadPrice()}</p>
         <p className="text-sm leading-6 text-muted">

@@ -10,7 +10,7 @@ import {
   emptySourceMachine,
 } from "@/components/SourceMachineRows";
 import { Button, ButtonLink, fieldClass, Panel } from "@/components/ui";
-import { sourceAccountHref } from "@/lib/source-plans";
+import { sourceAccountHref, SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 import type { SourceMachine } from "@/lib/source-types";
 
 const initial: SourceFormState = { success: false, message: "" };
@@ -152,7 +152,7 @@ export function SourceEquipmentForm({
           come from the catalog — Baird, Nilson, Lubow, Numalliance, AIM,
           Whitelegg. Confirm the plate. This
           plan holds {maxCells} {maxCells === 1 ? "cell" : "cells"} here. Listing
-          is free. $49 unlocks a matched lead.
+          is free. {SOURCE_SMART_CONNECT_LINE}.
         </p>
         <SourceMachineRows
           machines={machines}

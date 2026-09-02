@@ -15,6 +15,10 @@ export type SourcePlan = {
 export const SOURCE_LEAD_PRICE_CENTS = 4900;
 export const SOURCE_LEAD_LOOKUP = "source_lead_once";
 export const SOURCE_LEAD_BUYERS_MAX = 10;
+/** Shop-facing name for paid lead unlocks. */
+export const SOURCE_SMART_CONNECT = "AI Smart Connect™";
+export const SOURCE_SMART_CONNECT_LINE =
+  "Unlock Buyer Leads with AI Smart Connect™";
 /** Soft form cap so the row UI stays usable. Listing itself is not gated. */
 export const SOURCE_CELL_SOFT_CAP = 80;
 
@@ -32,7 +36,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
     cells: SOURCE_CELL_SOFT_CAP,
     priceCents: 0,
     lookupKey: null,
-    blurb: "List every cell free. Matched jobs show in the dashboard. $49 unlocks a lead.",
+    blurb: `List every cell free. Matched jobs show in the dashboard. ${SOURCE_SMART_CONNECT_LINE}.`,
   },
   {
     id: "four",
@@ -63,7 +67,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
 export const SOURCE_PAID_PLANS = SOURCE_PLANS.filter((plan) => plan.priceCents > 0);
 
 export const SOURCE_PLAN_LINE =
-  "List every cell free. Matched leads show in the shop dashboard. $49 to unlock a lead. Up to 10 shops can buy each job.";
+  `List every cell free. Matched leads show in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}. Up to 10 shops can buy each job.`;
 
 export const SOURCE_FIT_LINE =
   "Min order, setup, stocked materials, and lead are free on the listing so a buyer can see how the factory operates.";

@@ -16,7 +16,7 @@ import {
   sourceFilingsForShop,
 } from "@/lib/source-account";
 import { getSourcePlanForUser, getSourceSecondaryQtyForUser, getStripeCustomerId } from "@/lib/source-billing";
-import { formatLeadPrice, SOURCE_LEAD_BUYERS_MAX, SOURCE_PLAN_LINE } from "@/lib/source-plans";
+import { formatLeadPrice, SOURCE_LEAD_BUYERS_MAX, SOURCE_PLAN_LINE, SOURCE_SMART_CONNECT } from "@/lib/source-plans";
 import {
   jobsMailedToShop,
   leadPurchaseCount,
@@ -177,7 +177,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         <Panel className="p-5">
           <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
-            Leads
+            {SOURCE_SMART_CONNECT}
           </p>
           <p className="mt-2 text-xl font-medium">{formatLeadPrice()} each</p>
           <p className="mt-1 text-sm text-muted">
@@ -209,7 +209,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
 
       <Panel className="mt-4 p-5">
         <p className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
-          Buyer leads
+          {SOURCE_SMART_CONNECT}
         </p>
         <p className="mt-2 text-xl font-medium">Buy as they come</p>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
