@@ -98,17 +98,7 @@ export function SourceAccountNav({
 
   return (
     <div className="flex items-center">
-      <Show
-        when="signed-in"
-        fallback={
-          <Link
-            href="/sign-in?redirect_url=/source/enter"
-            className="px-2 py-2 text-sm text-muted transition-colors hover:text-foreground"
-          >
-            Source
-          </Link>
-        }
-      >
+      <Show when="signed-in">
         <UserButton
           key={shopName ?? "no-shop"}
           appearance={{

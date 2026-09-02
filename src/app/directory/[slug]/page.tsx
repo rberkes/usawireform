@@ -184,6 +184,9 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             <ButtonLink href={sourceClaimPath(company.slug)}>
               Claim this page
             </ButtonLink>
+            <ButtonLink href="/#login" variant="ghost">
+              Log in
+            </ButtonLink>
             <p className="text-sm leading-6 text-muted">
               US shops: file every CNC cell on this listing free. How
               the plant operates is free.

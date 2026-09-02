@@ -80,12 +80,20 @@ export function PlatformFlowTabs({
               Get a Quote
             </Link>
           ) : (
-            <Link
-              href={SOURCE_EQUIPMENT_HREF}
-              className="inline-flex w-full max-w-md items-center justify-center rounded-sm bg-zoom px-7 py-3.5 text-center text-base font-medium text-white transition-colors hover:bg-white hover:text-[#0b1f33]"
-            >
-              Add your equipment free
-            </Link>
+            <div className="flex max-w-md flex-col gap-3">
+              <Link
+                href={SOURCE_EQUIPMENT_HREF}
+                className="inline-flex w-full items-center justify-center rounded-sm bg-zoom px-7 py-3.5 text-center text-base font-medium text-white transition-colors hover:bg-white hover:text-[#0b1f33]"
+              >
+                Add your equipment free
+              </Link>
+              <Link
+                href="/#login"
+                className="text-center text-sm text-white/70 hover:text-white hover:underline"
+              >
+                Already filed? Log in
+              </Link>
+            </div>
           )}
         </div>
         <div

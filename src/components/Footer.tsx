@@ -49,6 +49,7 @@ const factories = [
   { href: "/find-factories-by-machine", label: "Find by machine or secondary" },
   { href: "/source", label: "Find a wire form shop" },
   { href: "/source/shops", label: "Add a machine cell" },
+  { href: "/#login", label: "Log in" },
   { href: "/source/upgrade", label: "Source leads" },
   { href: "/directory/new", label: "Newest Source shops" },
   { href: "/directory/areas", label: "Wire forming cities" },

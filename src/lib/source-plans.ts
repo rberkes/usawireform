@@ -116,6 +116,11 @@ export function sourceSignInHref() {
   return "/sign-in?redirect_url=/source/enter";
 }
 
+/** Homepage login card. Dedicated /sign-in stays for mail and password reset. */
+export function sourceHomeLoginHref() {
+  return "/#login";
+}
+
 export function sourceBuyerSignUpHref() {
   return "/sign-up?as=buyer&redirect_url=/source/enter";
 }

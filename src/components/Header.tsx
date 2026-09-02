@@ -12,6 +12,7 @@ import {
   navSections,
   type NavSection,
 } from "@/lib/nav";
+import { sourceHomeLoginHref } from "@/lib/source-plans";
 
 const SearchDialog = dynamic(
   () => import("./Search").then((mod) => ({ default: mod.SearchDialog })),
@@ -113,6 +114,12 @@ export function Header({ account }: { account: ReactNode }) {
 
           <div className="flex items-center gap-2">
             <SearchButton onClick={() => setSearchOpen(true)} />
+            <Link
+              href={sourceHomeLoginHref()}
+              className="hidden px-2 py-2 text-sm text-muted transition-colors hover:text-foreground sm:inline"
+            >
+              Log in
+            </Link>
             {account}
             <Link
               href="/instant-quote"
@@ -302,6 +309,13 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           onClick={onClose}
         >
           Contact
+        </Link>
+        <Link
+          href={sourceHomeLoginHref()}
+          className="py-2 text-base text-foreground"
+          onClick={onClose}
+        >
+          Log in
         </Link>
         <Link
           href="/source/enter"

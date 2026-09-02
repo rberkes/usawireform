@@ -17,6 +17,7 @@ export function ClientHero({
   mark,
   flow,
   cta,
+  aside,
   children,
 }: {
   kicker: string;
@@ -25,6 +26,7 @@ export function ClientHero({
   mark?: ReactNode;
   flow?: ReactNode;
   cta?: ReactNode;
+  aside?: ReactNode;
   children?: ReactNode;
 }) {
   return (
@@ -35,23 +37,34 @@ export function ClientHero({
             {mark}
           </div>
         ) : null}
-        <p className="font-mono text-[12px] tracking-[0.22em] text-white/55 uppercase">
-          {kicker}
-        </p>
-        <h1
-          className={cx(
-            "mt-4 max-w-4xl font-medium tracking-tight",
-            mark ? "pr-24 sm:pr-36" : undefined,
-            typeof title === "string" &&
-              "text-4xl leading-[1.08] sm:text-5xl lg:text-6xl",
-          )}
+        <div
+          className={
+            aside
+              ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start lg:gap-14"
+              : undefined
+          }
         >
-          {title}
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">{lede}</p>
-        {flow}
-        {cta ?? <ClientQuoteCtas tone="dark" className="mt-8" />}
-        {children}
+          <div>
+            <p className="font-mono text-[12px] tracking-[0.22em] text-white/55 uppercase">
+              {kicker}
+            </p>
+            <h1
+              className={cx(
+                "mt-4 max-w-4xl font-medium tracking-tight",
+                mark ? "pr-24 sm:pr-36" : undefined,
+                typeof title === "string" &&
+                  "text-4xl leading-[1.08] sm:text-5xl lg:text-6xl",
+              )}
+            >
+              {title}
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">{lede}</p>
+            {flow}
+            {cta ?? <ClientQuoteCtas tone="dark" className="mt-8" />}
+            {children}
+          </div>
+          {aside}
+        </div>
         <ClientCertBar />
       </Container>
     </section>

@@ -6,6 +6,7 @@ import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
 import { ClientCtaBand, ClientHero } from "@/components/client/ClientLanding";
 import { PlatformFlowTabs } from "@/components/client/PlatformFlowTabs";
 import { HomeFloorFeed } from "@/components/HomeFloorFeed";
+import { HomeLogin } from "@/components/HomeLogin";
 import {
   HOME_CTA_LEDE,
   HOME_CTA_TITLE,
@@ -89,6 +90,7 @@ export default async function Home({
         lede={HOME_HERO_LEDE}
         flow={<PlatformFlowTabs tab={tab} />}
         cta={false}
+        aside={<HomeLogin />}
       />
       <Page>
         <HomeFloorFeed initial={floorCells} />
