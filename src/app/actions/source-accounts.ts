@@ -4,12 +4,16 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/app/admin/actions";
 import { blobErrorMessage, blobReady } from "@/lib/blob";
-import { sendSourceBuyerSignupEmails } from "@/lib/leads";
+import { sendSourceBuyerSignupEmails, sendSourceNdaEmails, sendSourceBuyerVolumeEmail } from "@/lib/leads";
 import {
   clerkEmailIsConfirmed,
   getBuyerAccount,
   saveBuyerAccount,
 } from "@/lib/source-buyer";
+import {
+  formatBuyerJobsPerMonth,
+  parseBuyerJobsPerMonth,
+} from "@/lib/source-buyer-volume";
 import { safeSourceNext } from "@/lib/source-gate";
 import { SOURCE_NDA_VERSION } from "@/lib/source-nda";
 import { setSourceRole } from "@/lib/source-role";
@@ -86,6 +90,15 @@ export async function acceptSourceNda(
       message: `Could not store the agreement (${blobErrorMessage(error)}).`,
     };
   }
+  const user = await currentUser();
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
+  if (email) {
+    void sendSourceNdaEmails({
+      to: email,
+      company: shopName,
+      name,
+    }).catch((error) => console.error("[Source NDA mail]", error));
+  }
   redirect(safeSourceNext(next) || "/source/dashboard");
 }
 
@@ -94,7 +107,7 @@ export async function saveSourceBuyerAccount(
   formData: FormData,
 ): Promise<SourceAccountState> {
   const { userId } = await auth();
-  if (!userId) redirect("/sign-in?redirect_url=/buyer/dashboard");
+  if (!userId) redirect("/sign-in?as=buyer&redirect_url=/buyer/dashboard");
   await setSourceRole(userId, "buyer");
 
   const user = await currentUser();
@@ -131,6 +144,8 @@ export async function saveSourceBuyerAccount(
       emailConfirmedAt: emailConfirmed
         ? existing?.emailConfirmedAt || now
         : existing?.emailConfirmedAt,
+      jobsPerMonth: existing?.jobsPerMonth,
+      jobsPerMonthAt: existing?.jobsPerMonthAt,
     });
     await attachJobsToBuyer(userId, email);
   } catch (error) {
@@ -146,6 +161,56 @@ export async function saveSourceBuyerAccount(
     );
   }
   return { success: true, message: "Buyer account saved." };
+}
+
+export async function saveSourceBuyerVolume(
+  _prev: SourceAccountState,
+  formData: FormData,
+): Promise<SourceAccountState> {
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in?as=buyer&redirect_url=/buyer/dashboard");
+  await setSourceRole(userId, "buyer");
+
+  const user = await currentUser();
+  const existing = await getBuyerAccount(userId);
+  if (!existing?.company) {
+    return { success: false, message: "Save the buyer account first." };
+  }
+
+  const jobsPerMonth = parseBuyerJobsPerMonth(formData.get("jobsPerMonth"));
+  const prev = parseBuyerJobsPerMonth(existing.jobsPerMonth ?? 0);
+  const now = new Date().toISOString();
+  try {
+    await saveBuyerAccount({
+      ...existing,
+      jobsPerMonth,
+      jobsPerMonthAt: now,
+      updatedAt: now,
+    });
+  } catch (error) {
+    console.error("[Source buyer volume]", error);
+    return {
+      success: false,
+      message: `Could not store the volume (${blobErrorMessage(error)}).`,
+    };
+  }
+
+  if (jobsPerMonth !== prev) {
+    const email =
+      existing.email || user?.primaryEmailAddress?.emailAddress || "";
+    void sendSourceBuyerVolumeEmail({
+      to: email,
+      company: existing.company,
+      name: existing.name,
+      jobsPerMonth,
+      previous: existing.jobsPerMonth == null ? undefined : prev,
+    }).catch((error) => console.error("[Source buyer volume mail]", error));
+  }
+
+  return {
+    success: true,
+    message: `Saved ${formatBuyerJobsPerMonth(jobsPerMonth)}.`,
+  };
 }
 
 export async function setSourceBuyerVerified(formData: FormData) {

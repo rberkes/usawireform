@@ -12,10 +12,15 @@ import {
 } from "@/lib/source-role";
 import { getSourceProfile } from "@/lib/source";
 
-export async function requireSignedIn(redirectTo: string) {
+export async function requireSignedIn(
+  redirectTo: string,
+  { as }: { as?: "buyer" } = {},
+) {
   const { userId } = await auth();
   if (!userId) {
-    redirect(`/sign-in?redirect_url=${encodeURIComponent(redirectTo)}`);
+    const qs = new URLSearchParams({ redirect_url: redirectTo });
+    if (as === "buyer") qs.set("as", "buyer");
+    redirect(`/sign-in?${qs.toString()}`);
   }
   return userId;
 }
@@ -48,7 +53,9 @@ export function safeSourceNext(value: string | null | undefined) {
   } catch {
     return "";
   }
-  if (!path.startsWith("/source") || path.startsWith("//")) return "";
+  if (path.startsWith("//")) return "";
+  if (path === "/buyer" || path.startsWith("/buyer/dashboard")) return path;
+  if (!path.startsWith("/source")) return "";
   if (path.startsWith("/source/drawing") || path.startsWith("/source/nda")) {
     return "";
   }

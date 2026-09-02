@@ -15,6 +15,9 @@ import {
   sendSourceInviteEmails,
   sendSourceJobEmails,
   sendSourceShopLeadEmails,
+  sendSourceBuyerPayEmail,
+  sendSourceNdaEmails,
+  sendSourceCellsAddedEmail,
 } from "@/lib/leads";
 import {
   countSourceCells,
@@ -26,8 +29,15 @@ import {
 } from "@/lib/source-account";
 import { getSourcePlanForUser } from "@/lib/source-billing";
 import { parseBuyerJob } from "@/lib/source-job-parse";
+import { parseCoilBuyer, parseRunKind } from "@/lib/source-fit";
 import { matchFilingsToJob } from "@/lib/source-match";
 import { planById } from "@/lib/source-plans";
+import { isSourceSecondaryId } from "@/lib/source-secondaries";
+import {
+  applyJobRelease,
+  markJobQualified,
+  previewSourceRelease,
+} from "@/lib/source-release";
 import {
   directoryCity,
   normalizeShopWebsite,
@@ -42,8 +52,7 @@ import {
 } from "@/lib/plant-verify";
 import { parseFullPercent, stampMachinesWithShopFullness, openSlotsFromFullPercent } from "@/lib/source-capacity";
 import { readSourceFitForm, type SourceBuyerFit } from "@/lib/source-fit";
-import { isSourceJobClass, parseDrawingPrivacy, sourceJobClassPrompt, type SourcePublicMatch } from "@/lib/source-types";
-import { partitionLeadMatches } from "@/lib/source-leads";
+import { isSourceJobClass, parseDrawingPrivacy, sourceJobClassPrompt } from "@/lib/source-types";
 import { getSourceRole } from "@/lib/source-role";
 import {
   buyerMayUploadExtras,
@@ -54,8 +63,10 @@ import {
   applyProfilesToFilings,
   findSourceProfileBySlug,
   getSourceInvite,
+  getSourceJob,
   getSourceProfile,
   listSourceFilings,
+  listSourceJobs,
   listSourceProfiles,
   parseSourceMachines,
   saveSourceFiling,
@@ -76,7 +87,6 @@ export type SourceFormState = {
   success: boolean;
   message: string;
   receiptTo?: string;
-  matches?: SourcePublicMatch[];
   diameterMm?: number | null;
 };
 
@@ -582,6 +592,13 @@ export async function addSourceCells(
     };
   }
 
+  void sendSourceCellsAddedEmail({
+    to: email,
+    company: shop.company,
+    count: machines.length,
+    fileName,
+  }).catch((error) => console.error("[Source cells mail]", error));
+
   return {
     success: true,
     message:
@@ -887,6 +904,13 @@ export async function submitSourceJob(
   const oem = String(formData.get("oem") ?? "").trim().slice(0, 80);
   const qty = String(formData.get("qty") ?? "").trim().slice(0, 24);
   const notes = String(formData.get("notes") ?? "").trim().slice(0, 2000);
+  const alloy = String(formData.get("alloy") ?? "").trim().slice(0, 40);
+  const coilBuyer = parseCoilBuyer(String(formData.get("coilBuyer") ?? ""));
+  const needBy = String(formData.get("needBy") ?? "").trim().slice(0, 40);
+  const finishRaw = String(formData.get("finish") ?? "").trim();
+  const finish = isSourceSecondaryId(finishRaw) ? finishRaw : "";
+  const runKind = parseRunKind(String(formData.get("runKind") ?? ""));
+  const ppap = String(formData.get("ppap") ?? "") === "yes";
   const drawingPrivacy = parseDrawingPrivacy(
     String(formData.get("drawingPrivacy") ?? ""),
   );
@@ -957,22 +981,6 @@ export async function submitSourceJob(
   ]);
   const filings = applyProfilesToFilings(filingRows, profiles);
   const internal = matchFilingsToJob(filings, parsed.spec);
-  const { mailed, listed } = await partitionLeadMatches(internal);
-  const matches: SourcePublicMatch[] = mailed.map(
-    ({ email: _email, ...row }) => row,
-  );
-  const mailedTo = mailed.map((row) => {
-    const filing = filings.find(
-      (item) =>
-        item.email.trim().toLowerCase() === row.email.trim().toLowerCase() &&
-        item.company.trim().toLowerCase() === row.company.trim().toLowerCase(),
-    );
-    return {
-      email: row.email,
-      company: row.company,
-      userId: filing?.userId,
-    };
-  });
 
   const job = {
     company,
@@ -987,13 +995,19 @@ export async function submitSourceJob(
     oem: parsed.spec.oem,
     qty,
     notes,
+    alloy: alloy || undefined,
+    coilBuyer,
+    needBy: needBy || undefined,
+    finish: finish || undefined,
+    runKind,
+    ppap: ppap || undefined,
     parsedBy: parsed.parsedBy,
     timestamp: new Date().toISOString(),
     fileName: drawingName,
     drawingPath: undefined as string | undefined,
     drawingPrivacy,
     privacyToken,
-    mailedTo,
+    mailedTo: [] as { email: string; company: string; userId?: string }[],
     buyerUserId: role === "buyer" && signedIn ? signedIn.userId : undefined,
   };
 
@@ -1027,51 +1041,23 @@ export async function submitSourceJob(
     qty,
     notes,
     matches: internal,
-    mailed,
+    mailed: [],
+    held: true,
     drawingPrivacy,
     privacyHref: sourceJobPrivacyHref(privacyToken),
   });
-  void sendSourceShopLeadEmails({
-    mailed,
-    drawingPrivacy,
-    buyer: {
-      company,
-      name,
-      email,
-      phone,
-      city: parsed.spec.city,
-      state: parsed.spec.state,
-    },
-    spec: {
-      diameterRaw,
-      diameterMm: parsed.spec.diameterMm,
-      kind: parsed.spec.kind,
-      oem: parsed.spec.oem,
-      qty,
-      notes,
-    },
-  }).catch((error) => console.error("[Source shop leads]", error));
   if (!emailed) {
     return {
       success: false,
       message: `Job received but mail failed. Email ${QUOTE_EMAIL} if you need a copy.`,
-      matches,
       diameterMm: parsed.spec.diameterMm,
     };
   }
 
-  const message =
-    mailed.length === 0
-      ? listed.length > 0
-        ? `Cells match ${parsed.spec.diameterMm} mm. Those shops will see the lead in Source. Receipt sent to ${email}.`
-        : `No filed cell matches ${parsed.spec.diameterMm} mm yet. Receipt sent to ${email}. The desk has the RFQ.`
-      : `Offered to ${mailed.length === 1 ? "1 shop" : `${mailed.length} shops`} that can run ${parsed.spec.diameterMm} mm. Receipt sent to ${email}.`;
-
   return {
     success: true,
-    message,
+    message: `The desk has this print. Shops are not notified until we release it. Receipt sent to ${email}.`,
     receiptTo: email,
-    matches,
     diameterMm: parsed.spec.diameterMm,
   };
 }
@@ -1086,5 +1072,43 @@ export async function updateSourceJobPrivacy(formData: FormData) {
   if (!row) redirect("/source/privacy?error=1");
   redirect(
     `/source/privacy?t=${encodeURIComponent(token)}&saved=1`,
+  );
+}
+
+export async function releaseSourceJob(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/accounts");
+  const pathname = String(formData.get("pathname") ?? "").trim();
+  if (!pathname) redirect("/admin/accounts#files");
+  const job = await getSourceJob(pathname);
+  if (!job) redirect("/admin/accounts?released=missing#files");
+
+  const preview = await previewSourceRelease(job);
+  if (preview.alreadyReleased) {
+    redirect("/admin/accounts?released=already#files");
+  }
+  if (preview.needsBuyerPay) {
+    await markJobQualified(job);
+    await sendSourceBuyerPayEmail({
+      to: job.email,
+      company: job.company,
+      name: job.name,
+    });
+    redirect("/admin/accounts?released=pay#files");
+  }
+
+  await applyJobRelease(job, preview.mailedTo);
+  void sendSourceShopLeadEmails({
+    mailed: preview.matches,
+    spec: {
+      diameterRaw: job.diameterRaw,
+      diameterMm: job.diameterMm,
+      kind: job.kind,
+      oem: "",
+      qty: job.qty,
+      notes: "",
+    },
+  }).catch((error) => console.error("[Source shop leads]", error));
+  redirect(
+    `/admin/accounts?released=${preview.matches.length}#files`,
   );
 }

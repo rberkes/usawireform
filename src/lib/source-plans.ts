@@ -126,5 +126,9 @@ export function sourceHomeLoginHref() {
 }
 
 export function sourceBuyerSignUpHref() {
-  return "/sign-up?as=buyer&redirect_url=/source/enter";
+  return "/sign-up?as=buyer";
+}
+
+export function sourceBuyerSignInHref() {
+  return "/sign-in?as=buyer&redirect_url=/buyer/dashboard";
 }

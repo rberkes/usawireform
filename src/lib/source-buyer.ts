@@ -2,6 +2,7 @@ import "server-only";
 
 import { get, list, put } from "@vercel/blob";
 import { blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
+import { parseBuyerJobsPerMonth } from "@/lib/source-buyer-volume";
 
 export type SourceBuyerAccount = {
   userId: string;
@@ -14,6 +15,10 @@ export type SourceBuyerAccount = {
   /** Desk marked this as a real buyer. Excel and other files stay locked until this is set. */
   verifiedAt?: string;
   emailConfirmedAt?: string;
+  /** Approx jobs this buyer sources a month. 0–10, where 10 = 10+. */
+  jobsPerMonth?: number;
+  /** When the buyer last moved the volume slider. */
+  jobsPerMonthAt?: string;
 };
 
 function buyerPath(userId: string) {
@@ -35,6 +40,13 @@ function readBuyer(
     verifiedAt: payload.verifiedAt ? String(payload.verifiedAt) : undefined,
     emailConfirmedAt: payload.emailConfirmedAt
       ? String(payload.emailConfirmedAt)
+      : undefined,
+    jobsPerMonth:
+      payload.jobsPerMonth != null
+        ? parseBuyerJobsPerMonth(payload.jobsPerMonth)
+        : undefined,
+    jobsPerMonthAt: payload.jobsPerMonthAt
+      ? String(payload.jobsPerMonthAt)
       : undefined,
   };
 }

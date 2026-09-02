@@ -571,6 +571,7 @@ export async function sendSourceJobEmails({
   notes,
   matches,
   mailed = [],
+  held = false,
   drawingPrivacy = "desk",
   privacyHref,
 }: {
@@ -605,6 +606,7 @@ export async function sendSourceJobEmails({
     why: string;
     fitNote?: string;
   }>;
+  held?: boolean;
   drawingPrivacy?: "desk" | "matched";
   privacyHref?: string;
 }) {
@@ -642,9 +644,19 @@ export async function sendSourceJobEmails({
         ${city || state ? `<p>Locale: ${escapeHtml([city, state].filter(Boolean).join(", "))}</p>` : ""}
         <p>Wire: ${escapeHtml(diameterRaw || size)}${kind ? ` · ${escapeHtml(kind)}` : ""}${oem ? ` · ${escapeHtml(oem)}` : ""}${qty ? ` · qty ${escapeHtml(qty)}` : ""}</p>
         ${notes ? `<p>Notes: ${escapeHtml(notes)}</p>` : ""}
-        <p><strong>${matches.length === 0 ? "No filed cell matched." : "Capability matches:"}</strong></p>
+        <p><strong>${
+          held
+            ? "Held at the desk — shops not notified. Recommended if you Release:"
+            : matches.length === 0
+              ? "No filed cell matched."
+              : "Capability matches:"
+        }</strong></p>
         ${chairs || "<p>Empty floor list — work the RFQ from the desk.</p>"}
-        <p>Matched shops see the lead in Source and pay $49 to unlock buyer contact. Up to 10 shops can buy this job.</p>
+        <p>${
+          held
+            ? "Release to shops from /admin/accounts. Shops then see a teaser and pay $49 to unlock buyer contact."
+            : "Matched shops see the lead in Source and pay $49 to unlock buyer contact. Up to 10 shops can buy this job."
+        }</p>
         <p>Drawing: ${drawingPrivacy === "matched" ? "buyer released the STEP — a shop that bought the lead opens it in the dashboard, not attached here." : "buyer kept the STEP at the desk — do not forward the file."}</p>`,
     }),
     sendResendMail({
@@ -656,6 +668,7 @@ export async function sendSourceJobEmails({
         diameterMm,
         drawingPrivacy,
         privacyHref,
+        held,
       }),
     }),
   ]);
@@ -668,6 +681,105 @@ export async function sendSourceJobEmails({
     receipt,
   });
   return shop && receipt;
+}
+
+export async function sendSourceBuyerPayEmail({
+  to,
+  company,
+  name,
+}: {
+  to: string;
+  company: string;
+  name?: string;
+}) {
+  const hello = name ? escapeHtml(name) : "there";
+  return sendResendMail({
+    to,
+    replyTo: QUOTE_EMAIL,
+    subject: `Your Source print is ready — ${COMPANY}`,
+    html: `<p>Hi ${hello},</p>
+      <p>The desk qualified ${escapeHtml(company || "your print")}. Sign in and pay from the buyer dashboard to send it to shops that fit this cell.</p>
+      <p><a href="${SITE_URL}/buyer/dashboard">${SITE_URL}/buyer/dashboard</a></p>`,
+  });
+}
+
+export async function sendSourceNdaEmails({
+  to,
+  company,
+  name,
+}: {
+  to: string;
+  company: string;
+  name?: string;
+}) {
+  const shopLabel = escapeHtml(company || "Shop");
+  const safeTo = escapeHtml(to);
+  return sendLeadEmail({
+    replyTo: to,
+    heading: "LEAD — shop NDA",
+    subject: `LEAD: shop NDA — ${company || to}`,
+    html: `<p><strong>${shopLabel}</strong> accepted the Source NDA.</p>
+      <p>Email: <a href="mailto:${safeTo}">${safeTo}</a>${name ? ` · ${escapeHtml(name)}` : ""}</p>
+      <p>Shop dashboard: <a href="${SITE_URL}/source/dashboard">${SITE_URL}/source/dashboard</a></p>`,
+  });
+}
+
+export async function sendSourceCellsAddedEmail({
+  to,
+  company,
+  count,
+  fileName,
+}: {
+  to: string;
+  company: string;
+  count: number;
+  fileName?: string;
+}) {
+  const shopLabel = escapeHtml(company || "Shop");
+  const safeTo = escapeHtml(to);
+  return sendLeadEmail({
+    replyTo: to,
+    heading: "LEAD — more cells",
+    subject: `LEAD: more cells — ${company || to}`,
+    html: `<p><strong>${shopLabel}</strong> added ${count} ${count === 1 ? "cell" : "cells"} on Source.</p>
+      <p>Email: <a href="mailto:${safeTo}">${safeTo}</a></p>
+      ${fileName ? `<p>File: ${escapeHtml(fileName)}</p>` : ""}`,
+  });
+}
+
+export async function sendSourceBuyerVolumeEmail({
+  to,
+  company,
+  name,
+  jobsPerMonth,
+  previous,
+}: {
+  to: string;
+  company: string;
+  name?: string;
+  jobsPerMonth: number;
+  previous?: number;
+}) {
+  const shopLabel = escapeHtml(company || "Buyer");
+  const safeTo = escapeHtml(to);
+  const volume =
+    jobsPerMonth >= 10 ? "10+ jobs / month" : `${jobsPerMonth} / month`;
+  const prev =
+    previous == null
+      ? "not filed"
+      : previous >= 10
+        ? "10+"
+        : String(previous);
+  return sendLeadEmail({
+    replyTo: to || undefined,
+    heading: "LEAD — buyer volume",
+    subject: `LEAD: buyer volume ${volume} — ${company || to}`,
+    html: `<p><strong>${shopLabel}</strong> moved the monthly job slider.</p>
+      <p>Now: <strong>${escapeHtml(volume)}</strong> (was ${escapeHtml(prev)}).</p>
+      <p>Email: <a href="mailto:${safeTo}">${safeTo}</a>${name ? ` · ${escapeHtml(name)}` : ""}</p>
+      <p>Desk only — the buyer did not get a copy. Use this to predict how many prints this account may send.</p>
+      <p>Buyer: <a href="${SITE_URL}/admin/accounts#buyers">${SITE_URL}/admin/accounts#buyers</a></p>`,
+  });
 }
 
 export async function sendSourceShopLeadEmails({

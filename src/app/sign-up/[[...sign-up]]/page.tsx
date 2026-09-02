@@ -23,9 +23,11 @@ export default async function SignUpPage({ searchParams }: Props) {
   const buyer = as === "buyer";
   const next = buyer ? "" : safeSourceNext(raw);
   const after = buyer ? "/buyer/dashboard" : next || "/source/enter";
-  const signInUrl = next
-    ? `/sign-in?redirect_url=${encodeURIComponent(next)}`
-    : "/sign-in";
+  const signInUrl = buyer
+    ? "/sign-in?as=buyer&redirect_url=/buyer/dashboard"
+    : next
+      ? `/sign-in?redirect_url=${encodeURIComponent(next)}`
+      : "/sign-in";
 
   return (
     <Page>
@@ -34,7 +36,7 @@ export default async function SignUpPage({ searchParams }: Props) {
         title={buyer ? "Confirm a buyer account" : "Confirm the shop account"}
         lede={
           buyer
-            ? "Then the buyer dashboard. You manage jobs and whether a STEP is released."
+            ? "Then the buyer dashboard. You manage jobs, drawing privacy, and how many prints you source a month."
             : next.startsWith("/source/claim")
               ? `Use the shop email. Next you finish claiming this listing. Listing is free. ${SOURCE_SMART_CONNECT_LINE}.`
               : `Use the email we sent the equipment receipt to. Next is the shop dashboard. Listing is free. ${SOURCE_SMART_CONNECT_LINE}.`
@@ -47,6 +49,13 @@ export default async function SignUpPage({ searchParams }: Props) {
             <Link href="/sign-up?as=supplier" className="text-copper hover:underline">
               Supplier sign-up
             </Link>
+            {" · "}
+            <Link
+              href="/sign-in?as=buyer"
+              className="text-copper hover:underline"
+            >
+              Buyer log in
+            </Link>
             .
           </>
         ) : (
@@ -54,6 +63,10 @@ export default async function SignUpPage({ searchParams }: Props) {
             Buying parts?{" "}
             <Link href="/sign-up?as=buyer" className="text-copper hover:underline">
               Buyer sign-up
+            </Link>
+            {" · "}
+            <Link href="/sign-in?as=buyer" className="text-copper hover:underline">
+              Buyer log in
             </Link>
             .
           </>

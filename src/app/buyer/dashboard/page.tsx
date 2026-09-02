@@ -1,5 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { SourceBuyerForm } from "@/components/SourceBuyerForm";
+import { SourceBuyerVolumeForm } from "@/components/SourceBuyerVolumeForm";
 import { ButtonLink, Page, PageHero, Panel } from "@/components/ui";
 import { jobsForBuyer, shopDrawingHref } from "@/lib/source-access";
 import { requireBuyer, requireSignedIn } from "@/lib/source-gate";
@@ -22,7 +23,7 @@ export const metadata = {
 };
 
 export default async function BuyerDashboardPage() {
-  const userId = await requireSignedIn("/buyer/dashboard");
+  const userId = await requireSignedIn("/buyer/dashboard", { as: "buyer" });
   await requireBuyer(userId);
 
   const [user, account, jobs] = await Promise.all([
@@ -72,6 +73,12 @@ export default async function BuyerDashboardPage() {
           phone={account?.phone}
         />
       </section>
+
+      {account?.company ? (
+        <section className="mt-10">
+          <SourceBuyerVolumeForm jobsPerMonth={account.jobsPerMonth ?? 0} />
+        </section>
+      ) : null}
 
       <section className="mt-12">
         <h2 className="text-lg font-medium">Your jobs</h2>

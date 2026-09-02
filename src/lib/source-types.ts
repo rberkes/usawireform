@@ -199,6 +199,15 @@ export type SourceJob = {
   oem: string;
   qty: string;
   notes: string;
+  /** Alloy the buyer named. */
+  alloy?: string;
+  /** Who buys coil. */
+  coilBuyer?: string;
+  needBy?: string;
+  /** Finish / secondary the print needs. */
+  finish?: string;
+  runKind?: string;
+  ppap?: boolean;
   parsedBy: "form" | "ai" | "form+ai";
   timestamp: string;
   fileName?: string;
@@ -207,7 +216,7 @@ export type SourceJob = {
   drawingPrivacy?: SourceDrawingPrivacy;
   /** Unguessable token so the buyer can change privacy without an account. */
   privacyToken?: string;
-  /** Shops offered this RFQ in the dashboard (up to 10). */
+  /** Shops offered this RFQ in the dashboard (up to 10). Empty until desk Release. */
   mailedTo?: SourceJobMailedTo[];
   /** Shops that paid $49 to unlock buyer contact. */
   purchasedBy?: SourceJobPurchase[];
@@ -215,6 +224,12 @@ export type SourceJob = {
   buyerUserId?: string;
   /** Buyer mailed once when the desk opened the drawing. */
   reviewedNotifiedAt?: string;
+  /** Desk released this print to matching shops. */
+  releasedAt?: string;
+  /** Desk clicked Release; later prints wait on buyer $49. */
+  qualifiedAt?: string;
+  /** Buyer paid $49 for this later print. First released print is free. */
+  buyerPaidAt?: string;
 };
 
 export type SourceJobRow = SourceJob & { pathname: string };

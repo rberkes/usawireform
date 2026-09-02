@@ -475,18 +475,21 @@ export function sourceJobReceiptHtml({
   diameterMm,
   drawingPrivacy = "desk",
   privacyHref,
+  held = false,
 }: {
   matchCount: number;
   diameterMm?: number | null;
   drawingPrivacy?: "desk" | "matched";
   privacyHref?: string;
+  held?: boolean;
 }) {
   const size =
     diameterMm != null
       ? `${diameterMm.toLocaleString("en-US")} mm`
       : "this print";
-  const chairs =
-    matchCount === 0
+  const chairs = held
+    ? `The desk has ${size}. Shops are not notified until we release the print.`
+    : matchCount === 0
       ? `No filed cell matches ${size} yet. The desk has the RFQ and will work it.`
       : matchCount === 1
         ? `One shop can run ${size}. They see the job and can quote.`

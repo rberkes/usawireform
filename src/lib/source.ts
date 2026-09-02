@@ -321,6 +321,12 @@ function readSourceJob(
     oem: String(payload.oem ?? ""),
     qty: String(payload.qty ?? ""),
     notes: String(payload.notes ?? ""),
+    alloy: payload.alloy ? String(payload.alloy) : undefined,
+    coilBuyer: payload.coilBuyer ? String(payload.coilBuyer) : undefined,
+    needBy: payload.needBy ? String(payload.needBy) : undefined,
+    finish: payload.finish ? String(payload.finish) : undefined,
+    runKind: payload.runKind ? String(payload.runKind) : undefined,
+    ppap: payload.ppap === true,
     parsedBy:
       payload.parsedBy === "ai" || payload.parsedBy === "form+ai"
         ? payload.parsedBy
@@ -338,6 +344,9 @@ function readSourceJob(
     reviewedNotifiedAt: payload.reviewedNotifiedAt
       ? String(payload.reviewedNotifiedAt)
       : undefined,
+    releasedAt: payload.releasedAt ? String(payload.releasedAt) : undefined,
+    qualifiedAt: payload.qualifiedAt ? String(payload.qualifiedAt) : undefined,
+    buyerPaidAt: payload.buyerPaidAt ? String(payload.buyerPaidAt) : undefined,
     pathname,
   };
 }

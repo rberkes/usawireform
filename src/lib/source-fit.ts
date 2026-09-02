@@ -36,6 +36,33 @@ export const SOURCE_COIL_POLICIES = [
 
 export type SourceCoilPolicyId = (typeof SOURCE_COIL_POLICIES)[number]["id"];
 
+export const SOURCE_COIL_BUYERS = [
+  { id: "shop", label: "Shop buys the coil" },
+  { id: "buyer", label: "We buy / send coil" },
+  { id: "either", label: "Either is fine" },
+] as const;
+
+export type SourceCoilBuyerId = (typeof SOURCE_COIL_BUYERS)[number]["id"];
+
+export const SOURCE_RUN_KINDS = [
+  { id: "first-article", label: "First article / prototype" },
+  { id: "production", label: "Production" },
+] as const;
+
+export type SourceRunKindId = (typeof SOURCE_RUN_KINDS)[number]["id"];
+
+export function parseCoilBuyer(value: string | undefined | null): SourceCoilBuyerId | undefined {
+  return SOURCE_COIL_BUYERS.some((row) => row.id === value)
+    ? (value as SourceCoilBuyerId)
+    : undefined;
+}
+
+export function parseRunKind(value: string | undefined | null): SourceRunKindId | undefined {
+  return SOURCE_RUN_KINDS.some((row) => row.id === value)
+    ? (value as SourceRunKindId)
+    : undefined;
+}
+
 export const SOURCE_MIN_ORDER_KINDS = [
   { id: "none", label: "No piece minimum" },
   { id: "qty", label: "Piece minimum" },

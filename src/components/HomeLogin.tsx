@@ -51,6 +51,10 @@ export function HomeLogin() {
             Shop sign-up
           </Link>
           {" · "}
+          <Link href="/sign-in?as=buyer" className="text-[#0b6bcb] hover:underline">
+            Buyer log in
+          </Link>
+          {" · "}
           <Link href="/sign-up?as=buyer" className="text-[#0b6bcb] hover:underline">
             Buyer sign-up
           </Link>

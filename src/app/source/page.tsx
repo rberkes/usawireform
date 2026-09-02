@@ -13,7 +13,7 @@ import { SourcePathCompare } from "@/components/SourcePathCompare";
 import { pageMeta } from "@/lib/seo";
 import { getBuyerAccount, buyerMayUploadExtras, clerkEmailIsConfirmed } from "@/lib/source-buyer";
 import { listNewestSourceDirectoryCompanies } from "@/lib/source";
-import { sourceBuyerSignUpHref } from "@/lib/source-plans";
+import { sourceBuyerSignInHref, sourceBuyerSignUpHref } from "@/lib/source-plans";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
@@ -88,13 +88,32 @@ export default async function SourcePage() {
           >
             Send the print
           </ButtonLink>
-          <ButtonLink
-            href={sourceBuyerSignUpHref()}
-            variant="ghost"
-            className="w-full justify-center whitespace-nowrap sm:w-auto"
-          >
-            Buyer account
-          </ButtonLink>
+          {buyer ? (
+            <ButtonLink
+              href="/buyer/dashboard"
+              variant="ghost"
+              className="w-full justify-center whitespace-nowrap sm:w-auto"
+            >
+              Buyer dashboard
+            </ButtonLink>
+          ) : (
+            <>
+              <ButtonLink
+                href={sourceBuyerSignInHref()}
+                variant="ghost"
+                className="w-full justify-center whitespace-nowrap sm:w-auto"
+              >
+                Buyer log in
+              </ButtonLink>
+              <ButtonLink
+                href={sourceBuyerSignUpHref()}
+                variant="ghost"
+                className="w-full justify-center whitespace-nowrap sm:w-auto"
+              >
+                Buyer account
+              </ButtonLink>
+            </>
+          )}
         </PageHero>
         <div className="border border-line bg-inset p-5 sm:p-8">
           <Kicker>What you get</Kicker>

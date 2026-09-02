@@ -30,6 +30,7 @@ import {
   listSourceReminderLogs,
   reminderKindLabel,
 } from "@/lib/source-reminders";
+import { formatBuyerJobsPerMonth } from "@/lib/source-buyer-volume";
 import {
   drawingPrivacyLabel,
   parseDrawingPrivacy,
@@ -337,9 +338,11 @@ export default async function AdminAccountsPage({
         <h2 className="text-lg font-medium">Buyers</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
           Newest first. Guest RFQs without an account are listed under the
-          buyer until they confirm Clerk. Prints (STEP, DXF, SLDPRT, PDF)
-          are always allowed. Excel and other files stay locked until the
-          buyer confirms the account and you validate them here.
+          buyer until they confirm Clerk. Monthly volume is the slider they
+          file on the buyer dashboard — desk-only, they do not see this ping.
+          Prints (STEP, DXF, SLDPRT, PDF) are always allowed. Excel and other
+          files stay locked until the buyer confirms the account and you
+          validate them here.
         </p>
         {newestBuyers.length === 0 ? (
           <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
@@ -366,6 +369,9 @@ export default async function AdminAccountsPage({
                   </p>
                   <p className="mt-1 text-muted">
                     {[row.name, row.phone].filter(Boolean).join(" · ") || "—"}
+                    {row.jobsPerMonth != null
+                      ? ` · ${formatBuyerJobsPerMonth(row.jobsPerMonth)}`
+                      : " · volume not filed"}
                   </p>
                   <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
                     {theirs.length === 0

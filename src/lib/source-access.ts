@@ -31,11 +31,30 @@ export function buyerOwnsJob(
   return Boolean(needle) && normalizeShopEmail(job.email) === needle;
 }
 
+export function jobIsReleased(
+  job: Pick<SourceJob, "releasedAt" | "mailedTo">,
+) {
+  if (job.releasedAt) return true;
+  return (job.mailedTo?.length ?? 0) > 0;
+}
+
 export function jobsForBuyer<T extends SourceJob>(
   jobs: T[],
   who: { userId?: string | null; email?: string | null },
 ) {
   return jobs.filter((job) => buyerOwnsJob(job, who));
+}
+
+export function buyerHasReleasedJob<T extends SourceJob & { pathname?: string }>(
+  jobs: T[],
+  job: Pick<SourceJob, "buyerUserId" | "email"> & { pathname?: string },
+) {
+  return jobs.some(
+    (row) =>
+      jobIsReleased(row) &&
+      row.pathname !== job.pathname &&
+      buyerOwnsJob(row, { userId: job.buyerUserId, email: job.email }),
+  );
 }
 
 export function shopWasMailedJob(

@@ -4,7 +4,7 @@ Source matches buyers to US wire-form shops. **The desk is the gate.** Shops do 
 
 ## Roles
 
-- **Buyer** — `/sign-up?as=buyer` → company card on `/buyer/dashboard` → send a print on `/source`
+- **Buyer** — `/sign-in?as=buyer` or `/sign-up?as=buyer` → `/buyer/dashboard` → send a print on `/source`
 - **Shop** — `/sign-up?as=supplier` → NDA → file cells on `/source/equipment` or dashboard → fullness slider
 - **Desk** — `/admin/accounts` — shops, buyers, STEP files, **Validate buyer**
 
@@ -33,6 +33,10 @@ One company slider, 0–100% full.
 
 UI: `SourceWeeklyCapacityForm` on `/source/dashboard`. Logic: `src/lib/source-capacity.ts`.
 
+## Buyer volume
+
+One slider on `/buyer/dashboard`, 0–10+ jobs they source a month. Starts at 0. Saving a new number emails the **desk only** (`LEAD: buyer volume`) so we can predict uploads. The buyer does not get a copy and the copy does not mention the ping. Shown on `/admin/accounts` buyers.
+
 ## Money (copy rules)
 
 - Shop unlock name: **AI Smart Connect™**. Charge is $49 per lead (`SOURCE_LEAD_PRICE_CENTS`).
@@ -43,9 +47,9 @@ Listing every cell is free. Up to 10 shops can buy the same job.
 
 ## Desk email today
 
-Desk **does** get: Source job, first equipment list, directory claim, invite, quote/drawing, estimate, directory intro, careers, buyer **account saved**, reminder summaries.
+Desk **does** get: Source job, first equipment list, directory claim, invite, quote/drawing, estimate, directory intro, careers, buyer **account saved**, buyer **monthly volume slider**, shop NDA, later machine adds, reminder summaries.
 
-Desk **does not** get: Clerk sign-up itself, shop NDA, later machine adds, fullness slider moves, plant photo.
+Desk **does not** get: Clerk sign-up itself, fullness slider moves, plant photo.
 
 ## Matching (current code)
 

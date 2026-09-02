@@ -217,25 +217,6 @@ export function SourceJobForm({
           {state.message}
         </p>
       ) : null}
-      {state.success && state.matches && state.matches.length > 0 ? (
-        <ul className="divide-y divide-line border border-line">
-          {state.matches.map((row, index) => (
-            <li key={`${row.company}-${row.model}-${index}`} className="px-4 py-4 text-sm">
-              <p className="font-medium">{row.company}</p>
-              <p className="mt-1 text-muted">
-                {row.oem} {row.model} · {row.kind} · {row.minMm}–{row.maxMm} mm
-                {row.city || row.state
-                  ? ` · ${[row.city, row.state].filter(Boolean).join(", ")}`
-                  : ""}
-              </p>
-              <p className="mt-1 text-muted">{row.why}</p>
-              {row.fitNote ? (
-                <p className="mt-1 text-muted">{row.fitNote}</p>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      ) : null}
     </form>
   );
 }

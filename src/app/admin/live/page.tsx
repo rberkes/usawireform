@@ -22,7 +22,7 @@ const GROUPS = [
       {
         href: "/source",
         label: "Send a print",
-        check: "Buyer account button. No $49. Desk vs release radios. Shop line is listing free only.",
+        check: "Buyer log in and Buyer account. No $49. Desk vs release radios. Shop line is listing free only.",
       },
       {
         href: "/source/shops",
@@ -42,7 +42,12 @@ const GROUPS = [
       {
         href: "/sign-in",
         label: "Sign in",
-        check: "Falls through to /source/enter so buyers and shops split after login.",
+        check: "Falls through to /source/enter so buyers and shops split after login. Buyer log in link on the page.",
+      },
+      {
+        href: "/sign-in?as=buyer",
+        label: "Buyer log in",
+        check: "Title is Buyer log in. Lands on /buyer/dashboard.",
       },
     ],
   },
@@ -74,7 +79,7 @@ const GROUPS = [
       {
         href: "/buyer/dashboard",
         label: "Buyer dashboard",
-        check: "Company form. Jobs list. Prints only until desk validates. Then Excel.",
+        check: "Company form. Monthly jobs slider 0–10+. Jobs list. Prints only until desk validates. Then Excel.",
       },
       {
         href: "/source",
