@@ -22,7 +22,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Wire Forming Companies Directory — USA & Canada",
   description:
-    "Directory of wire forming shops: 3D CNC, 2D CNC, fourslide, multi-slide, and spring CNC. Equipment tags come from public pages, not a floor walk.",
+    "Directory of wire forming shops: 3D CNC, 2D CNC, straighten & cut to length, fourslide, multi-slide, and spring CNC. Equipment tags come from public pages, not a floor walk.",
   path: "/directory",
   keywords: [
     "wire forming companies",

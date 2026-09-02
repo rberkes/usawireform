@@ -202,6 +202,17 @@ export const BIHLER_MACHINES: SourceIronPick[] = [
   { name: "BIMERIC", series: "BIMERIC", kind: "Multi-slide", minMm: "", maxMm: "" },
 ];
 
+/** Whitelegg straighten-and-cut from their published straightener pages. Confirm the plate. */
+export const WHITELEGG_MACHINES: SourceIronPick[] = [
+  {
+    name: "Straightener / cut-to-length",
+    series: "Straighten & cut",
+    kind: "Straighten & Cut to Length",
+    minMm: "",
+    maxMm: "",
+  },
+];
+
 export const SOURCE_OEM_NAMES = [
   "Numalliance",
   "WAFIOS",
@@ -234,6 +245,8 @@ export function machinesForOem(oem: string, kind?: string): SourceIronPick[] {
   else if (key === "lubow" || key === "lebow") catalog = LUBOW_MACHINES;
   else if (key === "otto bihler maschinenfabrik" || key === "bihler") {
     catalog = BIHLER_MACHINES;
+  } else if (key === "whitelegg machines" || key === "whitelegg") {
+    catalog = WHITELEGG_MACHINES;
   }
   if (!kind) return catalog;
   return catalog.filter((row) => row.kind === kind);

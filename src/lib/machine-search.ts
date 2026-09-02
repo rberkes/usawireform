@@ -71,6 +71,7 @@ const FACTORIES = "/wire-form-factories-in-usa";
 const KIND_BY_CLASS: Record<IronClass, string> = {
   "3d-cnc": "3D CNC",
   "2d-cnc": "2D CNC",
+  "straighten-cut": "Straighten & Cut to Length",
   cnc: "CNC",
   fourslide: "Fourslide",
   "multi-slide": "Multi-slide",
@@ -128,6 +129,21 @@ export const MACHINE_TERMS: MachineTerm[] = [
     aliases: ["2d cnc", "2-d cnc", "two dimensional cnc", "2d table"],
     ironClass: "2d-cnc",
     seeAllHref: `${FACTORIES}?iron=2d-cnc`,
+  },
+  {
+    id: "straighten-cut",
+    label: "Straighten & Cut to Length",
+    aliases: [
+      "straighten and cut",
+      "straighten & cut",
+      "straighten and cut to length",
+      "straighten cut to length",
+      "cut to length",
+      "cut-to-length",
+    ],
+    ironClass: "straighten-cut",
+    seeAllHref: `${FACTORIES}?iron=straighten-cut`,
+    hint: true,
   },
   {
     id: "spring-cnc",
@@ -264,6 +280,12 @@ function classFromKind(kind: string): IronClass | undefined {
   if (folded.includes("multi") && folded.includes("slide")) return "multi-slide";
   if (folded.includes("3d")) return "3d-cnc";
   if (folded.includes("2d")) return "2d-cnc";
+  if (
+    (folded.includes("straighten") && folded.includes("cut")) ||
+    (folded.includes("cut") && folded.includes("length"))
+  ) {
+    return "straighten-cut";
+  }
   if (folded.includes("spring") || folded.includes("coil")) return "spring-cnc";
   if (folded === "cnc") return "cnc";
   return undefined;
@@ -323,6 +345,7 @@ function isClassLabel(value: string) {
     compact === "cnc" ||
     compact === "3dcnc" ||
     compact === "2dcnc" ||
+    compact === "straightencuttolength" ||
     compact === "springcnc"
   );
 }

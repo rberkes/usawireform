@@ -123,7 +123,7 @@ const searchItems: SearchItem[] = [
   { title: "Wire Mesh", href: "/wire-mesh", category: "Pages", description: "Weave types, crimp, mesh count, openings, and welded wire cloth." },
   { title: "Careers", href: "/careers", category: "Pages", description: "CNC operator and manufacturing jobs in Northeast Ohio." },
   { title: "Wire Forming Technology International", href: "https://www.wireformingtech.com", category: "Industry", description: "Trade magazine for spring makers, wire formers, mesh welders, and rebar processors." },
-  { title: "Company Directory", href: "/directory", category: "Resources", description: "Wire forming shops. Filter fourslide, 3D CNC, 2D CNC, multi-slide, spring CNC." },
+  { title: "Company Directory", href: "/directory", category: "Resources", description: "Wire forming shops. Filter fourslide, 3D CNC, 2D CNC, straighten & cut, multi-slide, spring CNC." },
   { title: "Wire Form Factories in the USA", href: "/wire-form-factories-in-usa", category: "Resources", description: "U.S. wire form factories as company cards. CNC, fourslide, multi-slide, spring shops." },
   { title: "Find factories by machine", href: "/find-factories-by-machine", category: "Resources", description: "Type fourslide, Robomac, powder coating, TIG, zinc. Three or four plants drop as you type." },
   { title: "Find a wire form shop", href: "/source", category: "Pages", description: "Send the print. We introduce shops that listed a machine that can run it." },

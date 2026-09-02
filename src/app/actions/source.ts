@@ -42,7 +42,7 @@ import {
 } from "@/lib/plant-verify";
 import { parseOpenSlots, SOURCE_SLOT_CAP } from "@/lib/source-capacity";
 import { readSourceFitForm, type SourceBuyerFit } from "@/lib/source-fit";
-import { isSourceJobClass, parseDrawingPrivacy, type SourcePublicMatch } from "@/lib/source-types";
+import { isSourceJobClass, parseDrawingPrivacy, sourceJobClassPrompt, type SourcePublicMatch } from "@/lib/source-types";
 import { partitionLeadMatches } from "@/lib/source-leads";
 import { getSourceRole } from "@/lib/source-role";
 import {
@@ -893,7 +893,7 @@ export async function submitSourceJob(
   if (!isSourceJobClass(kind)) {
     return {
       success: false,
-      message: "Pick the cell: spring, 2D CNC, 3D CNC, fourslide, or multi-slide.",
+      message: `Pick the cell: ${sourceJobClassPrompt()}.`,
     };
   }
   if (!diameterRaw && !notes) {
@@ -922,7 +922,7 @@ export async function submitSourceJob(
   if (!isSourceJobClass(parsed.spec.kind)) {
     return {
       success: false,
-      message: "Pick the cell: spring, 2D CNC, 3D CNC, fourslide, or multi-slide.",
+      message: `Pick the cell: ${sourceJobClassPrompt()}.`,
     };
   }
 

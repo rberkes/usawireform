@@ -60,7 +60,7 @@ async function extractJobWithAi(text: string): Promise<AiFields | null> {
         }),
       }),
       system: `Extract a wire-forming RFQ. Do not name shops or invent capacity.
-kind must be one of: ${SOURCE_JOB_CLASSES.map((row) => row.kind).join(", ")} — or null. Spring / coiler = Spring CNC. Bihler / verti-slide = Multi-slide. Baird / Nilson four-slide = Fourslide. Lubow / Lebow / air table bender = Manual pneumatic. Cut-to-length = 2D CNC.
+kind must be one of: ${SOURCE_JOB_CLASSES.map((row) => row.kind).join(", ")} — or null. Spring / coiler = Spring CNC. Bihler / verti-slide = Multi-slide. Baird / Nilson four-slide = Fourslide. Lubow / Lebow / air table bender = Manual pneumatic. Straighten-and-cut / CTL / dedicated straightener = Straighten & Cut to Length. 2D benders stay 2D CNC.
 oem must be one of: ${SOURCE_OEM_NAMES.filter((name) => name !== "Other").join(", ")} — or null. Robomac/FTX/FRX = Numalliance. BM/BMU/FUL/FMU = WAFIOS. AFM/AFC/AFE/Gemini = AIM Inc. Baird = U.S. Baird. Lebow = Lubow.
 diameterMm: convert inches to millimetres (3/8 in = 9.525). Null if unknown.
 state: US state name or 2-letter code if present. Null if unknown.`,

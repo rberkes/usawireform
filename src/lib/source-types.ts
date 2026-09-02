@@ -3,6 +3,7 @@ import type { SourceBuyerFit } from "@/lib/source-fit";
 export const SOURCE_KINDS = [
   "3D CNC",
   "2D CNC",
+  "Straighten & Cut to Length",
   "Fourslide",
   "Multi-slide",
   "Manual pneumatic",
@@ -17,12 +18,17 @@ export const SOURCE_JOB_CLASSES = [
   {
     kind: "2D CNC",
     label: "2D CNC",
-    hint: "Bends in one plane. Tables, 2D benders, cut-to-length.",
+    hint: "Bends in one plane. Tables and 2D benders.",
   },
   {
     kind: "3D CNC",
     label: "3D CNC",
     hint: "Spatial forms from coil or bar. Hooks, frames, baskets.",
+  },
+  {
+    kind: "Straighten & Cut to Length",
+    label: "Straighten & Cut to Length",
+    hint: "Decoil, straighten, shear or saw. Straight blanks — not a 2D former.",
   },
   {
     kind: "Fourslide",
@@ -50,6 +56,10 @@ export type SourceJobClassKind = (typeof SOURCE_JOB_CLASSES)[number]["kind"];
 
 export function isSourceJobClass(value: string): value is SourceJobClassKind {
   return SOURCE_JOB_CLASSES.some((row) => row.kind === value);
+}
+
+export function sourceJobClassPrompt() {
+  return SOURCE_JOB_CLASSES.map((row) => row.label).join(", ");
 }
 
 export type SourceMachine = {

@@ -12,6 +12,11 @@ export const IRON_FILTERS = [
     hint: "Planar table / 2D bender",
   },
   {
+    id: "straighten-cut",
+    label: "Straighten & Cut to Length",
+    hint: "Dedicated straightener and cutoff — not a 2D former",
+  },
+  {
     id: "cnc",
     label: "CNC (unspecified)",
     hint: "Shop says CNC; 2D vs 3D not on the page",
@@ -213,6 +218,8 @@ const CLASS_RE: Record<IronClass, RegExp> = {
     /\b3[\s-]?d\s*cnc|\bthree[\s-]?dimensional(?:\s+and\s+two[\s-]?dimensional)?\s+cnc|\brobomac\b|\bnumalliance\b|\bafm[\s-]?3d|\bftx\d/i,
   "2d-cnc":
     /\b2[\s-]?d\s*cnc|\btwo[\s-]?dimensional(?:\s+and\s+three[\s-]?dimensional)?\s+cnc/i,
+  "straighten-cut":
+    /straighten(?:ing)?[\s&/-]+(?:and\s+)?cut|cut[\s-]?to[\s-]?length|\bctl\b/i,
   cnc: /\bcnc\b/,
   fourslide: /four[\s-]?slide|4[\s-]?slide/i,
   "multi-slide": /multi[\s-]?slide|verti[\s-]?slide|\bbihler\b/i,
