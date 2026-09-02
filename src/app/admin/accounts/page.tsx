@@ -4,7 +4,10 @@ import { AdminInboxNav } from "@/components/AdminInboxNav";
 import { AdminStepPreview } from "@/components/UploadedDrawingPreview";
 import { Button, Page, PageHero } from "@/components/ui";
 import { adminFileHref } from "@/lib/blob";
-import { runSourceRegistrationReminders } from "@/app/actions/source-reminders";
+import {
+  removeIncompleteSourceShop,
+  runSourceRegistrationReminders,
+} from "@/app/actions/source-reminders";
 import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
 import {
@@ -247,6 +250,15 @@ export default async function AdminAccountsPage({
                         }`
                       : " · none sent yet"}
                   </p>
+                  {row.kind === "invite" && row.to ? (
+                    <form action={removeIncompleteSourceShop} className="mt-2">
+                      <input type="hidden" name="email" value={row.to} />
+                      <input type="hidden" name="kind" value={row.kind} />
+                      <Button type="submit" variant="ghost">
+                        Remove unused invite
+                      </Button>
+                    </form>
+                  ) : null}
                 </li>
               );
             })}

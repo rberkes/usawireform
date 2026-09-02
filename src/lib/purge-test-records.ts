@@ -5,6 +5,7 @@ import { del, get, list, put } from "@vercel/blob";
 import { blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 
 const FLAG_PATH = "internal/purged-test-records-2026-09-01.json";
+const MOCK_INVITE_FLAG_PATH = "internal/purged-mock-invites-2026-09-02.json";
 
 /** Plus/alias inboxes from quote-desk tests. Delete every record on these. */
 const DROP_EMAILS = new Set([
@@ -46,7 +47,7 @@ function asString(value: unknown) {
 }
 
 function emailOf(payload: Record<string, unknown>) {
-  return asString(payload.email).toLowerCase();
+  return (asString(payload.email) || asString(payload.to)).toLowerCase();
 }
 
 function nyDate(iso: string) {
@@ -112,13 +113,23 @@ async function readJson(pathname: string) {
   }
 }
 
-async function flagExists() {
-  const result = await get(FLAG_PATH, {
+async function flagExists(path = FLAG_PATH) {
+  const result = await get(path, {
     access: "private",
     useCache: false,
     ...(await blobAuth()),
   });
   return Boolean(result && result.statusCode === 200);
+}
+
+async function writeFlag(path: string, payload: Record<string, unknown>) {
+  await put(path, JSON.stringify(payload), {
+    access: BLOB_ACCESS,
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    contentType: "application/json",
+    ...(await blobAuth()),
+  });
 }
 
 async function deleteClerkTestShops() {
@@ -143,12 +154,78 @@ async function deleteClerkTestShops() {
   }
 }
 
+async function reminderPathForEmail(email: string) {
+  const key = email.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-") || "unknown";
+  return `source/reminders/${key}.json`;
+}
+
+/** Unused Source invites from mock shop pages. Keep the real owner shop. */
+export async function deleteUnusedMockInvites(email: string) {
+  const needle = email.trim().toLowerCase();
+  if (!needle || !(await blobReady())) return 0;
+  const paths = new Set<string>();
+  for (const blob of await listPrefix("source/invites/")) {
+    if (!blob.pathname.endsWith(".json")) continue;
+    const payload = await readJson(blob.pathname);
+    if (emailOf(payload ?? {}) !== needle) continue;
+    paths.add(blob.pathname);
+  }
+  paths.add(await reminderPathForEmail(needle));
+  if (DROP_EMAILS.has(needle)) {
+    for (const prefix of PREFIXES) {
+      for (const blob of await listPrefix(prefix)) {
+        if (!blob.pathname.endsWith(".json")) continue;
+        const payload = await readJson(blob.pathname);
+        if (!payload || emailOf(payload) !== needle) continue;
+        paths.add(blob.pathname);
+        for (const path of extraPaths(payload)) paths.add(path);
+      }
+    }
+  }
+  const existing = [...paths].filter((path) =>
+    PREFIXES.some((prefix) => path.startsWith(prefix)),
+  );
+  const toDelete: string[] = [];
+  for (const path of existing) {
+    const file = await get(path, {
+      access: "private",
+      useCache: false,
+      ...(await blobAuth()),
+    });
+    if (file && file.statusCode === 200) toDelete.push(path);
+  }
+  if (toDelete.length > 0) {
+    await del(toDelete, { ...(await blobAuth()) });
+  }
+  return toDelete.length;
+}
+
+async function purgeUnusedMockInvites() {
+  if (await flagExists(MOCK_INVITE_FLAG_PATH)) {
+    return { ok: true, skipped: true, deleted: 0 };
+  }
+  let deleted = 0;
+  deleted += await deleteUnusedMockInvites(OWNER_EMAIL);
+  for (const email of SHOP_EMAILS) {
+    deleted += await deleteUnusedMockInvites(email);
+  }
+  await writeFlag(MOCK_INVITE_FLAG_PATH, {
+    at: new Date().toISOString(),
+    deleted,
+    emails: [OWNER_EMAIL, ...SHOP_EMAILS],
+  });
+  console.log("[purge mock invites]", { deleted });
+  return { ok: true, skipped: false, deleted };
+}
+
 export async function purgeKnownTestRecords() {
   if (!(await blobReady())) {
     return { ok: false, skipped: true, deleted: 0 };
   }
+
+  const mock = await purgeUnusedMockInvites();
   if (await flagExists()) {
-    return { ok: true, skipped: true, deleted: 0 };
+    return { ok: true, skipped: mock.skipped, deleted: mock.deleted };
   }
 
   const paths = new Set<string>();
@@ -192,22 +269,16 @@ export async function purgeKnownTestRecords() {
   }
   await deleteClerkTestShops();
 
-  await put(
-    FLAG_PATH,
-    JSON.stringify({
-      at: new Date().toISOString(),
-      deleted: toDelete.length,
-      emails: [...DROP_EMAILS],
-    }),
-    {
-      access: BLOB_ACCESS,
-      addRandomSuffix: false,
-      allowOverwrite: true,
-      contentType: "application/json",
-      ...(await blobAuth()),
-    },
-  );
+  await writeFlag(FLAG_PATH, {
+    at: new Date().toISOString(),
+    deleted: toDelete.length,
+    emails: [...DROP_EMAILS],
+  });
 
   console.log("[purge tests]", { deleted: toDelete.length });
-  return { ok: true, skipped: false, deleted: toDelete.length };
+  return {
+    ok: true,
+    skipped: false,
+    deleted: toDelete.length + mock.deleted,
+  };
 }
