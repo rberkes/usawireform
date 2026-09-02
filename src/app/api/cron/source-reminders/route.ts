@@ -1,5 +1,8 @@
 import { purgeKnownTestRecords } from "@/lib/purge-test-records";
-import { sendDueSourceRegistrationReminders } from "@/lib/source-reminders";
+import {
+  sendDueSourceCapacityReminders,
+  sendDueSourceRegistrationReminders,
+} from "@/lib/source-reminders";
 
 export const maxDuration = 120;
 export const dynamic = "force-dynamic";
@@ -16,5 +19,6 @@ export async function GET(request: Request) {
   }
   await purgeKnownTestRecords();
   const result = await sendDueSourceRegistrationReminders();
-  return Response.json({ ok: true, ...result });
+  const capacity = await sendDueSourceCapacityReminders();
+  return Response.json({ ok: true, ...result, capacity });
 }

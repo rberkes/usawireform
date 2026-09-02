@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { COMPANY, QUOTE_EMAIL, SITE_LINE } from "@/lib/company";
+import { DRAWING_LIST } from "@/lib/drawings";
 import { BrandLockup } from "./WireMark";
 import { Container } from "./ui";
 import { StateGrid } from "./StateGrid";
@@ -163,7 +164,7 @@ export function Footer() {
             >
               {QUOTE_EMAIL}
             </a>
-            <p className="text-muted">STEP, STP, IGES, PDF, DXF, SLDPRT</p>
+            <p className="text-muted">{DRAWING_LIST}</p>
           </div>
         </div>
       </Container>

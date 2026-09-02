@@ -51,13 +51,10 @@ export function HomeFloorFeed({ initial }: { initial: SourceFloorCell[] }) {
 
   return (
     <section className="mt-0">
-      <Kicker>On the floor</Kicker>
-      <h2 className="mt-3 text-2xl tracking-tight">
-        Cells just filed. No shop names.
-      </h2>
+      <Kicker>Recent equipment added</Kicker>
+      <h2 className="mt-3 text-2xl tracking-tight">Newest Machine Lines</h2>
       <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-        Live from Source equipment uploads — OEM, year, wire band, and city.
-        Company stays off this grid.{" "}
+        Live from shops around the USA.{" "}
         <Link href="/source/equipment" className="text-copper hover:underline">
           List a cell free
         </Link>

@@ -39,6 +39,7 @@ const PREFIXES = [
   "source/buyers/",
   "source/jobs/",
   "source/reminders/",
+  "source/capacity-mail/",
   "source/invites/",
 ];
 

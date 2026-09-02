@@ -31,7 +31,7 @@ export const HOME_HERO_LEDE =
 export const HOME_BUYER_STEPS = [
   {
     title: "Upload STEP",
-    body: "Drop a STEP or a PDF 3-view. No STEP? We convert the print for free.",
+    body: "Drop a STEP, SLDPRT, DXF, or a PDF 3-view. No STEP? We convert the print for free.",
   },
   {
     title: "Smart Matching",

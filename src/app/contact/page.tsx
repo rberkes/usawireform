@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { Page, PageHero, TextLink } from "@/components/ui";
 import { QUOTE_EMAIL } from "@/lib/company";
+import { DRAWING_LIST } from "@/lib/drawings";
 import { PRICE_LINE } from "@/lib/price";
 import { pageMeta } from "@/lib/seo";
 
@@ -22,7 +23,7 @@ const ContactForm = dynamic(() => import("@/components/ContactForm").then(mod =>
 
 export const metadata = pageMeta({
   title: "Contact",
-  description: `Request a production quote for custom CNC wire forms. ${PRICE_LINE} Upload a STEP file. Response within 24 hours from our Northeast Ohio facility.`,
+  description: `Request a production quote for custom CNC wire forms. ${PRICE_LINE} Upload a STEP, DXF, or SLDPRT. Response within 24 hours from our Northeast Ohio facility.`,
   path: '/contact',
   keywords: [
     "request a quote",
@@ -84,7 +85,7 @@ export default function ContactPage() {
               Files
             </dt>
             <dd className="mt-1 text-foreground/90">
-              STEP or STP
+              {DRAWING_LIST}
             </dd>
           </div>
         </dl>

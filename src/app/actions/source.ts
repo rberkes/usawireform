@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isAdmin } from "@/app/admin/actions";
 import { QUOTE_EMAIL } from "@/lib/company";
-import { DRAWING_HINT, isAcceptedDrawing } from "@/lib/drawings";
+import { DRAWING_HINT, isAcceptedUpload, uploadHint } from "@/lib/drawings";
 import { blobErrorMessage, blobReady } from "@/lib/blob";
 import { getDirectoryCompany } from "@/lib/directory";
 import {
@@ -40,11 +40,16 @@ import {
   verifyPlantClaim,
   verifyPlantFiling,
 } from "@/lib/plant-verify";
-import { parseOpenSlots, SOURCE_SLOT_CAP } from "@/lib/source-capacity";
+import { parseFullPercent, stampMachinesWithShopFullness, openSlotsFromFullPercent } from "@/lib/source-capacity";
 import { readSourceFitForm, type SourceBuyerFit } from "@/lib/source-fit";
 import { isSourceJobClass, parseDrawingPrivacy, sourceJobClassPrompt, type SourcePublicMatch } from "@/lib/source-types";
 import { partitionLeadMatches } from "@/lib/source-leads";
 import { getSourceRole } from "@/lib/source-role";
+import {
+  buyerMayUploadExtras,
+  clerkEmailIsConfirmed,
+  getBuyerAccount,
+} from "@/lib/source-buyer";
 import {
   applyProfilesToFilings,
   findSourceProfileBySlug,
@@ -647,40 +652,44 @@ export async function updateSourceCapacity(
 ): Promise<SourceFormState> {
   const signedIn = await signedInShop();
   if (!signedIn?.email) {
-    return { success: false, message: "Sign in to file this week's open slots." };
+    return { success: false, message: "Sign in to file this week's capacity." };
   }
   const current = await shopCellsForEdit(signedIn.userId, signedIn.email);
   if (!current.shop) {
     return { success: false, message: "No shop on this account." };
   }
-  if (current.machines.length === 0) {
-    return { success: false, message: "File a cell first." };
+  const fullPercent = parseFullPercent(formData.get("fullPercent"));
+  if (fullPercent == null) {
+    return { success: false, message: "Move the slider from 0% (needs work) to 100% (full)." };
+  }
+  const profile = await getSourceProfile(signedIn.userId);
+  if (!profile) {
+    return { success: false, message: "Save the shop listing first." };
   }
 
   const now = new Date().toISOString();
-  let filed = 0;
-  const machines = current.machines.map((cell, index) => {
-    const raw = formData.get(`open-${index}`);
-    if (raw == null || String(raw).trim() === "") return cell;
-    const openSlots = parseOpenSlots(raw);
-    if (openSlots == null) return cell;
-    filed += 1;
-    return { ...cell, openSlots, capacityAt: now };
-  });
-  if (filed === 0) {
-    return {
-      success: false,
-      message: `Enter 0–${SOURCE_SLOT_CAP} open slots on a cell.`,
-    };
-  }
+  const snap = {
+    fullPercent,
+    openSlots: openSlotsFromFullPercent(fullPercent),
+    capacityAt: now,
+    fresh: true as const,
+  };
 
   try {
-    await replaceSourceFilingsForShop({
-      userId: signedIn.userId,
-      email: current.email,
-      shop: current.shop,
-      machines,
+    await saveSourceProfile({
+      ...profile,
+      fullPercent,
+      capacityAt: now,
+      updatedAt: now,
     });
+    if (current.machines.length > 0) {
+      await replaceSourceFilingsForShop({
+        userId: signedIn.userId,
+        email: current.email,
+        shop: current.shop,
+        machines: stampMachinesWithShopFullness(current.machines, snap),
+      });
+    }
   } catch (error) {
     console.error("[Source capacity store]", error);
     return {
@@ -692,9 +701,11 @@ export async function updateSourceCapacity(
   return {
     success: true,
     message:
-      filed === 1
-        ? "Filed 1 cell for this week. Matching uses it on jobs that fit."
-        : `Filed ${filed} cells for this week. Matching uses it on jobs that fit.`,
+      fullPercent === 0
+        ? "Filed 0% full — needs work. Matching will send more jobs that fit."
+        : fullPercent === 100
+          ? "Filed 100% full — no capacity. Matching will not boost this shop."
+          : `Filed ${fullPercent}% full. Matching uses it on jobs that fit.`,
   };
 }
 
@@ -887,8 +898,22 @@ export async function submitSourceJob(
   if (!isValidEmail(email)) {
     return { success: false, message: "Enter a valid email." };
   }
-  if (drawingName && !isAcceptedDrawing(drawingName)) {
-    return { success: false, message: `Use ${DRAWING_HINT}.` };
+
+  const signedIn = await signedInShop();
+  const role = signedIn ? await getSourceRole() : null;
+  const user = signedIn ? await currentUser() : null;
+  const buyer =
+    role === "buyer" && signedIn ? await getBuyerAccount(signedIn.userId) : null;
+  const allowExtras = buyerMayUploadExtras(buyer, {
+    emailConfirmed: clerkEmailIsConfirmed(user),
+  });
+  if (drawingName && !isAcceptedUpload(drawingName, allowExtras)) {
+    return {
+      success: false,
+      message: allowExtras
+        ? `Use ${uploadHint(true)}.`
+        : `Use ${DRAWING_HINT}. Excel and other files unlock after you confirm the buyer account and the desk validates it.`,
+    };
   }
   if (!isSourceJobClass(kind)) {
     return {
@@ -936,8 +961,6 @@ export async function submitSourceJob(
   const matches: SourcePublicMatch[] = mailed.map(
     ({ email: _email, ...row }) => row,
   );
-  const signedIn = await signedInShop();
-  const role = signedIn ? await getSourceRole() : null;
   const mailedTo = mailed.map((row) => {
     const filing = filings.find(
       (item) =>

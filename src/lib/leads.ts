@@ -9,6 +9,7 @@ import {
   estimateLeadHtml,
   estimateReceiptHtml,
   shopLeadHtml,
+  sourceCapacityReminderHtml,
   sourceClaimedReceiptHtml,
   sourceFiledReceiptHtml,
   sourceIncompleteReminderHtml,
@@ -403,6 +404,32 @@ export async function sendSourceIncompleteReminderEmail({
   return ok;
 }
 
+export async function sendSourceCapacityReminderEmail({
+  to,
+  company,
+  href,
+  current,
+}: {
+  to: string;
+  company: string;
+  href: string;
+  current?: string;
+}) {
+  const shopName = company.trim() || "your shop";
+  const ok = await sendResendMail({
+    to,
+    replyTo: QUOTE_EMAIL,
+    subject: `Move the Source capacity slider — ${shopName} — ${COMPANY}`,
+    html: sourceCapacityReminderHtml({
+      company: shopName,
+      href,
+      current,
+    }),
+  });
+  console.log("[Source capacity reminder]", { to, company, ok });
+  return ok;
+}
+
 export async function sendSourceFilingEmails({
   to,
   company,
@@ -505,6 +532,28 @@ export async function sendSourceClaimEmails({
   ]);
   console.log("[Source claim mail]", { to, company, slug, shop, receipt });
   return shop && receipt;
+}
+
+export async function sendSourceBuyerSignupEmails({
+  to,
+  company,
+  name,
+}: {
+  to: string;
+  company: string;
+  name?: string;
+}) {
+  const shopLabel = escapeHtml(company || "Buyer");
+  const safeTo = escapeHtml(to);
+  const dashboard = `${SITE_URL}/admin/accounts#buyers`;
+  return sendLeadEmail({
+    replyTo: to,
+    heading: "LEAD — buyer account",
+    subject: `LEAD: buyer sign-up — ${company || to}`,
+    html: `<p><strong>${shopLabel}</strong> confirmed a Source buyer account.</p>
+      <p>Email: <a href="mailto:${safeTo}">${safeTo}</a>${name ? ` · ${escapeHtml(name)}` : ""}</p>
+      <p>Prints (STEP, DXF, SLDPRT, PDF) are open. Excel and other files stay locked until you validate this buyer on <a href="${escapeHtml(dashboard)}">${escapeHtml(dashboard)}</a>.</p>`,
+  });
 }
 
 export async function sendSourceJobEmails({

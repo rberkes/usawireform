@@ -11,7 +11,7 @@ import { SourceJobForm } from "@/components/SourceJobForm";
 import { SourceNewestMembers } from "@/components/SourceNewestMembers";
 import { SourcePathCompare } from "@/components/SourcePathCompare";
 import { pageMeta } from "@/lib/seo";
-import { getBuyerAccount } from "@/lib/source-buyer";
+import { getBuyerAccount, buyerMayUploadExtras, clerkEmailIsConfirmed } from "@/lib/source-buyer";
 import { listNewestSourceDirectoryCompanies } from "@/lib/source";
 import { sourceBuyerSignUpHref } from "@/lib/source-plans";
 import { auth, currentUser } from "@clerk/nextjs/server";
@@ -40,7 +40,7 @@ const STEPS = [
   {
     n: "02",
     title: "We match the equipment that can form it",
-    body: "Machine band, stocked sizes, and this week's capacity first. Shops that filed 10/10 open this week rank higher among cells that already fit.",
+    body: "Machine band, stocked sizes, and this week's plant fullness first. Shops at 0% full (need work) rank higher among cells that already fit. 100% full means no capacity.",
   },
   {
     n: "03",
@@ -68,6 +68,9 @@ export default async function SourcePage() {
           name: user.fullName ?? "",
         }
       : undefined;
+  const allowExtras = buyerMayUploadExtras(buyer, {
+    emailConfirmed: clerkEmailIsConfirmed(user),
+  });
 
   return (
     <Page className="py-10 sm:py-20">
@@ -142,7 +145,7 @@ export default async function SourcePage() {
           Upload a STEP. We match the shops.
         </h2>
         <div className="mt-8">
-          <SourceJobForm defaults={defaults} />
+          <SourceJobForm defaults={defaults} allowExtras={allowExtras} />
         </div>
       </section>
 

@@ -8,7 +8,7 @@ import {
   sourceProfileToDirectoryCompany,
 } from "@/lib/source-directory";
 import { filedSourceMachines, sourceFilingsForShop } from "@/lib/source-account";
-import { withCapacity } from "@/lib/source-capacity";
+import { withCapacity, parseFullPercent, readShopCapacity, stampMachinesWithShopFullness } from "@/lib/source-capacity";
 import { parseSourceBuyerFit } from "@/lib/source-fit";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
@@ -551,6 +551,8 @@ function readProfile(payload: Partial<SourceProfile>, userId: string): SourcePro
     plantProofUrl: String(payload.plantProofUrl ?? "").trim() || undefined,
     plantVerifiedAt: String(payload.plantVerifiedAt ?? "").trim() || undefined,
     fit: parseSourceBuyerFit(payload.fit),
+    fullPercent: parseFullPercent(payload.fullPercent),
+    capacityAt: String(payload.capacityAt ?? "").trim() || undefined,
     leadsAccess: payload.leadsAccess === "comp" ? "comp" : undefined,
     ndaAcceptedAt: String(payload.ndaAcceptedAt ?? "").trim() || undefined,
     ndaVersion: String(payload.ndaVersion ?? "").trim() || undefined,
@@ -740,6 +742,7 @@ export function applyProfilesToFilings(
   return filings.map((filing) => {
     const profile = filing.userId ? byUser.get(filing.userId) : undefined;
     if (!profile) return filing;
+    const snap = readShopCapacity(profile, filing.machines);
     return {
       ...filing,
       company: profile.company || filing.company,
@@ -749,6 +752,9 @@ export function applyProfilesToFilings(
       state: profile.state || filing.state,
       website: profile.website || filing.website,
       fit: profile.fit,
+      machines: snap
+        ? stampMachinesWithShopFullness(filing.machines, snap)
+        : filing.machines,
     };
   });
 }

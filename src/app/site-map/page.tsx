@@ -97,7 +97,7 @@ export default function SiteMapPage() {
             {
               href: "/source/dashboard",
               title: "How the factory operates",
-              body: "Free on a registered listing: min order, setup, stocked materials, lead, and weekly open slots on each cell. Buyers see how that plant runs.",
+              body: "Free on a registered listing: min order, setup, stocked materials, lead, and a 0–100% plant-fullness slider. Buyers see how that plant runs.",
             },
             {
               href: "/secondary-operations",

@@ -8,7 +8,9 @@ import {
   DRAWING_ACCEPT,
   DRAWING_FREE_STEP,
   DRAWING_HINT,
-  isAcceptedDrawing,
+  drawingAcceptList,
+  isAcceptedUpload,
+  uploadHint,
 } from "@/lib/drawings";
 import { FormLegalNotice } from "./LegalDoc";
 import { Button, fieldClass, Kicker, Panel } from "./ui";
@@ -27,9 +29,11 @@ function formatBytes(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-function validate(file: File): string | null {
-  if (!isAcceptedDrawing(file.name)) {
-    return `Use ${DRAWING_HINT}.`;
+function validate(file: File, extras: boolean, mentionLock: boolean): string | null {
+  if (!isAcceptedUpload(file.name, extras)) {
+    return mentionLock && !extras
+      ? `Use ${DRAWING_HINT}. Excel and other files unlock after the desk confirms this buyer.`
+      : `Use ${uploadHint(extras)}.`;
   }
   if (file.size > MAX_BYTES) {
     return `Over 50 MB — email it to ${QUOTE_EMAIL}.`;
@@ -96,11 +100,15 @@ export function StepUpload({
   onChange,
   name = "drawing",
   required = false,
+  allowExtras = false,
+  showExtrasLock = false,
 }: {
   file: File | null;
   onChange: (file: File | null) => void;
   name?: string;
   required?: boolean;
+  allowExtras?: boolean;
+  showExtrasLock?: boolean;
 }) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -116,7 +124,7 @@ export function StepUpload({
       onChange(null);
       return;
     }
-    const message = validate(next);
+    const message = validate(next, allowExtras, showExtrasLock);
     if (message) {
       setError(message);
       assignFile(inputRef.current, null);
@@ -145,7 +153,7 @@ export function StepUpload({
         className="sr-only"
         type="file"
         name={name}
-        accept={DRAWING_ACCEPT}
+        accept={allowExtras ? drawingAcceptList(true) : DRAWING_ACCEPT}
         required={required}
         onChange={(event) => take(event.target.files?.[0] ?? null)}
       />
@@ -202,7 +210,10 @@ export function StepUpload({
                 {required ? " (required)" : ""}
               </span>
               <span className="mt-0.5 block text-xs text-muted">
-                {DRAWING_HINT}. {DRAWING_FREE_STEP}
+                {uploadHint(allowExtras)}. {DRAWING_FREE_STEP}
+                {showExtrasLock && !allowExtras
+                  ? " Excel and other files after the desk confirms the buyer."
+                  : ""}
               </span>
             </>
           )}

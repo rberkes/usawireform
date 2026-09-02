@@ -4,7 +4,8 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { get, list, put } from "@vercel/blob";
 import { blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { SITE_URL } from "@/lib/company";
-import { sendLeadEmail, sendSourceIncompleteReminderEmail } from "@/lib/leads";
+import { sendLeadEmail, sendSourceCapacityReminderEmail, sendSourceIncompleteReminderEmail } from "@/lib/leads";
+import { formatFullness, readShopCapacity } from "@/lib/source-capacity";
 import { normalizeShopEmail } from "@/lib/source-account";
 import { sourceClaimPath, suggestedDirectoryClaim } from "@/lib/source-directory";
 import { shopNeedsNda } from "@/lib/source-nda";
@@ -374,5 +375,158 @@ export async function sendDueSourceRegistrationReminders(
   }
 
   console.log("[Source registration reminders]", result);
+  return result;
+}
+
+const CAPACITY_MAIL_PREFIX = "source/capacity-mail/";
+const CAPACITY_GAP_MS = 10 * 24 * 60 * 60 * 1000;
+
+function capacityMailPath(key: string) {
+  return `${CAPACITY_MAIL_PREFIX}${key.replace(/[^a-z0-9._-]+/g, "-")}.json`;
+}
+
+function isCapacityReminderDay(now = new Date()) {
+  const day = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      day: "numeric",
+    }).format(now),
+  );
+  return day === 1 || day === 15;
+}
+
+type CapacityMailLog = {
+  key: string;
+  to: string;
+  company: string;
+  sentAt: string[];
+};
+
+async function listCapacityMailLogs(): Promise<CapacityMailLog[]> {
+  if (!(await blobReady())) return [];
+  const result = await list({
+    prefix: CAPACITY_MAIL_PREFIX,
+    ...(await blobAuth()),
+  });
+  const rows: CapacityMailLog[] = [];
+  for (const blob of result.blobs) {
+    const file = await get(blob.pathname, {
+      access: "private",
+      useCache: false,
+      ...(await blobAuth()),
+    });
+    if (!file?.stream || file.statusCode !== 200) continue;
+    try {
+      const payload = JSON.parse(
+        await new Response(file.stream).text(),
+      ) as Partial<CapacityMailLog>;
+      const sentAt = Array.isArray(payload.sentAt)
+        ? payload.sentAt.filter((value): value is string => typeof value === "string")
+        : [];
+      rows.push({
+        key: String(payload.key ?? blob.pathname),
+        to: String(payload.to ?? ""),
+        company: String(payload.company ?? ""),
+        sentAt,
+      });
+    } catch {
+      /* skip */
+    }
+  }
+  return rows;
+}
+
+/** Listed shops, 1st and 15th Eastern. Move the 0–100% fullness slider. */
+export async function sendDueSourceCapacityReminders(
+  { immediate = false }: { immediate?: boolean } = {},
+): Promise<SourceReminderRun> {
+  const result: SourceReminderRun = {
+    sent: 0,
+    held: 0,
+    missingEmail: 0,
+    failed: 0,
+    mailed: [],
+  };
+  if (!immediate && !isCapacityReminderDay()) {
+    return result;
+  }
+
+  const [profiles, filings, logs] = await Promise.all([
+    listSourceProfiles(),
+    listSourceFilings(),
+    listCapacityMailLogs(),
+  ]);
+  const logByKey = new Map(logs.map((row) => [row.key, row]));
+  const href = `${SITE_URL}/sign-in?redirect_url=${encodeURIComponent("/source/dashboard")}`;
+
+  for (const profile of profiles) {
+    if (!profileComplete(profile) || !profile.company) continue;
+    const to = await emailForProfile(profile, filings);
+    if (!to || !isEmail(to)) {
+      result.missingEmail += 1;
+      continue;
+    }
+    const key = `capacity.${emailKey(to)}`;
+    const existing = logByKey.get(key);
+    const last = existing?.sentAt[existing.sentAt.length - 1];
+    if (last && ageMs(last) < CAPACITY_GAP_MS) {
+      result.held += 1;
+      continue;
+    }
+    const cells = filings
+      .filter((row) => row.userId === profile.userId)
+      .flatMap((row) => row.machines);
+    const snap = readShopCapacity(profile, cells);
+    const ok = await sendSourceCapacityReminderEmail({
+      to,
+      company: profile.company,
+      href,
+      current: snap ? formatFullness(snap) : undefined,
+    });
+    if (!ok) {
+      result.failed += 1;
+      continue;
+    }
+    const now = new Date().toISOString();
+    const nextLog: CapacityMailLog = {
+      key,
+      to,
+      company: profile.company,
+      sentAt: [...(existing?.sentAt ?? []), now],
+    };
+    if (await blobReady()) {
+      await put(capacityMailPath(key), JSON.stringify(nextLog), {
+        access: BLOB_ACCESS,
+        addRandomSuffix: false,
+        allowOverwrite: true,
+        contentType: "application/json",
+        ...(await blobAuth()),
+      });
+    }
+    logByKey.set(key, nextLog);
+    result.sent += 1;
+    result.mailed.push({
+      to,
+      company: profile.company,
+      kind: "invite",
+    });
+  }
+
+  if (result.mailed.length > 0) {
+    const lines = result.mailed
+      .map((row) => `<li>${row.company} — ${row.to}</li>`)
+      .join("");
+    await sendLeadEmail({
+      heading: "LEAD — Source capacity slider",
+      subject: `LEAD: ${result.sent} Source capacity reminder${
+        result.sent === 1 ? "" : "s"
+      }`,
+      html: `<p>Sent ${result.sent} fullness-slider reminder${
+        result.sent === 1 ? "" : "s"
+      } (1st and 15th). Held ${result.held}. Missing email ${result.missingEmail}. Failed ${result.failed}.</p><ul>${lines}</ul>`,
+    });
+  }
+
+  console.log("[Source capacity reminders]", result);
   return result;
 }

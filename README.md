@@ -2,6 +2,10 @@
 
 A Next.js 16 marketing website for USA Wire Form, a custom CNC wire forming manufacturer based in Northeast Ohio.
 
+## Documentation
+
+How the site is built and how Source is supposed to work: **[docs/](./docs/README.md)**.
+
 ## Overview
 
 This website showcases wire forming capabilities, products, and services for industrial customers. Key features include:

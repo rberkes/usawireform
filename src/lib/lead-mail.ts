@@ -599,3 +599,32 @@ export function sourceIncompleteReminderHtml({
      ${copyRow(`<span style="color:#5c5c5c">If this is already done, sign in and the dashboard will skip this step. Questions: reply to this email.</span>`)}`,
   );
 }
+
+export function sourceCapacityReminderHtml({
+  company,
+  href,
+  current,
+}: {
+  company: string;
+  href: string;
+  current?: string;
+}) {
+  const who = escapeHtml(company.trim() || "your shop");
+  const status = current
+    ? ` Last filed: ${escapeHtml(current)}.`
+    : " Matching will not boost you until you file this week.";
+  return shell(
+    "Move the plant fullness slider",
+    `${kickerRow()}
+     ${headingRow("How full is the plant this week?")}
+     ${copyRow(
+       `${who}. 0% full means you need work. 100% full means no capacity. Matching sends jobs that already fit your cells to shops that still have open time.${status}`,
+     )}
+     ${ctaBannerRow(
+       href,
+       "Move the slider",
+       "Takes about ten seconds. Sign in with this email.",
+     )}
+     ${copyRow(`<span style="color:#5c5c5c">We ask twice a month — the 1st and the 15th. You can move it any day. Questions: reply to this email.</span>`)}`,
+  );
+}

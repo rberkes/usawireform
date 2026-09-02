@@ -40,6 +40,6 @@ export interface DirectoryCompany {
   plantProofUrl?: string;
   /** Shop-filed buyer-fit. Empty on public-page listings we did not walk. */
   buyerFit?: SourceBuyerFit;
-  /** Fresh weekly open slots the shop filed on a cell. */
+  /** Fresh plant fullness the shop filed this week (0% needs work, 100% full). */
   weeklyCapacity?: string;
 }

@@ -3,7 +3,12 @@ import { SourceBuyerForm } from "@/components/SourceBuyerForm";
 import { ButtonLink, Page, PageHero, Panel } from "@/components/ui";
 import { jobsForBuyer, shopDrawingHref } from "@/lib/source-access";
 import { requireBuyer, requireSignedIn } from "@/lib/source-gate";
-import { getBuyerAccount } from "@/lib/source-buyer";
+import {
+  buyerMayUploadExtras,
+  clerkEmailIsConfirmed,
+  getBuyerAccount,
+  saveBuyerAccount,
+} from "@/lib/source-buyer";
 import { listSourceJobs } from "@/lib/source";
 import {
   drawingPrivacyLabel,
@@ -25,8 +30,19 @@ export default async function BuyerDashboardPage() {
     getBuyerAccount(userId),
     listSourceJobs(),
   ]);
+  if (account && clerkEmailIsConfirmed(user) && !account.emailConfirmedAt) {
+    const confirmedAt = new Date().toISOString();
+    await saveBuyerAccount({
+      ...account,
+      emailConfirmedAt: confirmedAt,
+    });
+    account.emailConfirmedAt = confirmedAt;
+  }
   const email =
     account?.email || user?.primaryEmailAddress?.emailAddress || "";
+  const extrasOpen = buyerMayUploadExtras(account, {
+    emailConfirmed: clerkEmailIsConfirmed(user),
+  });
   const mine = jobsForBuyer(jobs, { userId, email });
 
   return (
@@ -36,6 +52,11 @@ export default async function BuyerDashboardPage() {
         title="Buyer dashboard"
         lede="Your jobs and drawing privacy. Matched shops see the spec. You choose whether a quoting shop can open the STEP."
       />
+      <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
+        {extrasOpen
+          ? "This account is confirmed. You can upload STEP, DXF, SLDPRT, PDF, Excel, Word, ZIP, and photos of the print."
+          : "Prints only for now (STEP, DXF, SLDPRT, PDF). Excel and other files unlock after you save this account and the desk confirms you are a real buyer."}
+      </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <ButtonLink href="/source">Send a print</ButtonLink>
         <ButtonLink href="/source/account" variant="ghost">

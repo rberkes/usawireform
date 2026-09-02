@@ -75,9 +75,9 @@ export type SourceMachine = {
   capacity?: string;
   /** Wire diameters this cell actually stocks, not just the machine band. */
   stockedSizes?: string;
-  /** Open slots this week, 0–10. 10 = 100% open, needs work. Shop-filed. */
+  /** Mirrored from the shop fullness slider. 0 = full, 10 = needs work. */
   openSlots?: number;
-  /** When the shop last filed this week's open slots. */
+  /** When the shop last filed this week's plant fullness. */
   capacityAt?: string;
 };
 
@@ -140,6 +140,10 @@ export type SourceProfile = {
   plantVerifiedAt?: string;
   /** Shop-filed buyer-fit: MOQ, setup, stock, lead, coil. */
   fit?: SourceBuyerFit;
+  /** Company load this week. 0 = needs work, 100 = no capacity. */
+  fullPercent?: number;
+  /** When the shop last moved the fullness slider. */
+  capacityAt?: string;
   /**
    * Desk grant leftover from cell-plan billing. Not required to see teasers;
    * every listed shop can buy a matched lead.

@@ -1,25 +1,32 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { updateSourceCapacity, type SourceFormState } from "@/app/actions/source";
-import { Button, fieldClass, Panel } from "@/components/ui";
+import { Button, Panel } from "@/components/ui";
 import {
   SOURCE_CAPACITY_LINE,
-  SOURCE_SLOT_CAP,
   capacityNeedsRefresh,
-  formatCapacity,
-  readCapacity,
+  formatFullness,
+  readShopCapacity,
 } from "@/lib/source-capacity";
-import type { SourceMachine } from "@/lib/source-types";
+import type { SourceMachine, SourceProfile } from "@/lib/source-types";
 
 const initial: SourceFormState = { success: false, message: "" };
 
-export function SourceWeeklyCapacityForm({ cells }: { cells: SourceMachine[] }) {
+export function SourceWeeklyCapacityForm({
+  profile,
+  cells,
+}: {
+  profile?: Pick<SourceProfile, "fullPercent" | "capacityAt"> | null;
+  cells: SourceMachine[];
+}) {
   const [state, action, pending] = useActionState(
     updateSourceCapacity,
     initial,
   );
-  const stale = capacityNeedsRefresh(cells);
+  const snap = readShopCapacity(profile, cells);
+  const [full, setFull] = useState(snap?.fullPercent ?? 50);
+  const stale = capacityNeedsRefresh(profile, cells);
 
   return (
     <form action={action} className="mt-6">
@@ -30,48 +37,33 @@ export function SourceWeeklyCapacityForm({ cells }: { cells: SourceMachine[] }) 
         <p className="text-sm leading-6 text-muted">{SOURCE_CAPACITY_LINE}</p>
         {stale ? (
           <p className="text-sm leading-6 text-copper">
-            File this week or matching will not boost these cells.
+            File this week or matching will not boost this shop.
           </p>
+        ) : snap ? (
+          <p className="text-sm leading-6 text-muted">{formatFullness(snap)}</p>
         ) : null}
-        <ul className="divide-y divide-line border border-line">
-          {cells.map((cell, index) => {
-            const snap = readCapacity(cell);
-            return (
-              <li
-                key={`${cell.oem}-${cell.model}-${index}`}
-                className="grid gap-3 px-4 py-3 sm:grid-cols-[1fr_7rem] sm:items-center"
-              >
-                <div>
-                  <p className="text-sm font-medium">
-                    {cell.oem} {cell.model}
-                  </p>
-                  <p className="mt-1 text-xs leading-5 text-muted">
-                    {cell.kind}
-                    {cell.minMm || cell.maxMm
-                      ? ` · ${cell.minMm || "?"}–${cell.maxMm || "?"} mm`
-                      : ""}
-                    {snap
-                      ? ` · ${formatCapacity(cell)}`
-                      : " · not filed this week"}
-                  </p>
-                </div>
-                <label className="block text-sm">
-                  Open / {SOURCE_SLOT_CAP}
-                  <input
-                    className={`mt-1.5 ${fieldClass}`}
-                    name={`open-${index}`}
-                    type="number"
-                    min={0}
-                    max={SOURCE_SLOT_CAP}
-                    inputMode="numeric"
-                    defaultValue={snap?.openSlots ?? ""}
-                    placeholder="0–10"
-                  />
-                </label>
-              </li>
-            );
-          })}
-        </ul>
+        <label className="block text-sm">
+          <span className="flex items-baseline justify-between gap-3">
+            <span>How full is the plant</span>
+            <span className="font-mono text-[12px] tracking-widest text-muted uppercase">
+              {full}% full
+            </span>
+          </span>
+          <input
+            className="mt-3 w-full accent-copper"
+            name="fullPercent"
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={full}
+            onChange={(event) => setFull(Number(event.target.value))}
+          />
+        </label>
+        <div className="flex justify-between text-xs leading-5 text-muted">
+          <span>0% — needs work</span>
+          <span>100% — no capacity</span>
+        </div>
         <Button type="submit" disabled={pending}>
           {pending ? "Saving..." : "Save this week"}
         </Button>

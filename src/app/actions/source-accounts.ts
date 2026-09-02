@@ -2,8 +2,14 @@
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { isAdmin } from "@/app/admin/actions";
 import { blobErrorMessage, blobReady } from "@/lib/blob";
-import { getBuyerAccount, saveBuyerAccount } from "@/lib/source-buyer";
+import { sendSourceBuyerSignupEmails } from "@/lib/leads";
+import {
+  clerkEmailIsConfirmed,
+  getBuyerAccount,
+  saveBuyerAccount,
+} from "@/lib/source-buyer";
 import { safeSourceNext } from "@/lib/source-gate";
 import { SOURCE_NDA_VERSION } from "@/lib/source-nda";
 import { setSourceRole } from "@/lib/source-role";
@@ -111,6 +117,7 @@ export async function saveSourceBuyerAccount(
 
   const existing = await getBuyerAccount(userId);
   const now = new Date().toISOString();
+  const emailConfirmed = clerkEmailIsConfirmed(user);
   try {
     await saveBuyerAccount({
       userId,
@@ -120,6 +127,10 @@ export async function saveSourceBuyerAccount(
       phone,
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
+      verifiedAt: existing?.verifiedAt,
+      emailConfirmedAt: emailConfirmed
+        ? existing?.emailConfirmedAt || now
+        : existing?.emailConfirmedAt,
     });
     await attachJobsToBuyer(userId, email);
   } catch (error) {
@@ -129,5 +140,26 @@ export async function saveSourceBuyerAccount(
       message: `Could not store the buyer (${blobErrorMessage(error)}).`,
     };
   }
+  if (!existing) {
+    void sendSourceBuyerSignupEmails({ to: email, company, name }).catch(
+      (error) => console.error("[Source buyer signup mail]", error),
+    );
+  }
   return { success: true, message: "Buyer account saved." };
+}
+
+export async function setSourceBuyerVerified(formData: FormData) {
+  if (!(await isAdmin())) redirect("/admin/accounts");
+  const userId = String(formData.get("userId") ?? "").trim();
+  const verified = String(formData.get("verified") ?? "") === "1";
+  if (!userId) redirect("/admin/accounts#buyers");
+  const existing = await getBuyerAccount(userId);
+  if (!existing) redirect("/admin/accounts#buyers");
+  const now = new Date().toISOString();
+  await saveBuyerAccount({
+    ...existing,
+    verifiedAt: verified ? now : undefined,
+    updatedAt: now,
+  });
+  redirect("/admin/accounts#buyers");
 }

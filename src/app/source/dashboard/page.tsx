@@ -88,6 +88,8 @@ async function ensureProfile({
     plantProofUrl: undefined,
     plantVerifiedAt: undefined,
     fit: undefined,
+    fullPercent: undefined,
+    capacityAt: undefined,
     leadsAccess: undefined,
     ndaAcceptedAt: undefined,
     ndaVersion: undefined,
@@ -142,8 +144,8 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         title="Shop dashboard"
         lede={
           shop?.company
-            ? `Signed in as ${shop.company.replace(/\.$/, "")} — one shop per account. Buyer fit and weekly open slots are free.`
-            : "Shop listing, buyer fit, weekly open slots, cells, and the plan. How the plant operates is free. Account is email and password."
+            ? `Signed in as ${shop.company.replace(/\.$/, "")} — one shop per account. Buyer fit and plant fullness are free.`
+            : "Shop listing, buyer fit, plant fullness, cells, and the plan. How the plant operates is free. Account is email and password."
         }
       />
       {finishClaim ? (
@@ -378,11 +380,11 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             ) : null}
           </p>
         ) : (
-          <>
-            <SourceFiledCells cells={cells} />
-            <SourceWeeklyCapacityForm cells={cells} />
-          </>
+          <SourceFiledCells cells={cells} />
         )}
+        {shop?.company ? (
+          <SourceWeeklyCapacityForm profile={profile} cells={cells} />
+        ) : null}
       </section>
 
       <section className="mt-12">

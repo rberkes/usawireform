@@ -172,6 +172,6 @@ export function sourceProfileToDirectoryCompany(
     plantStreet: profile.plantStreet,
     plantProofUrl: profile.plantProofUrl,
     buyerFit: profile.fit,
-    weeklyCapacity: shopCapacityLine(cells),
+    weeklyCapacity: shopCapacityLine(profile, cells),
   };
 }

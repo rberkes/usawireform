@@ -15,6 +15,7 @@ const initial: SourceFormState = { success: false, message: "" };
 
 export function SourceJobForm({
   defaults,
+  allowExtras = false,
 }: {
   defaults?: {
     company?: string;
@@ -22,6 +23,7 @@ export function SourceJobForm({
     email?: string;
     phone?: string;
   };
+  allowExtras?: boolean;
 }) {
   const [state, action, pending] = useActionState(submitSourceJob, initial);
   const [file, setFile] = useState<File | null>(null);
@@ -114,11 +116,20 @@ export function SourceJobForm({
           The print
         </p>
         <p className="text-sm leading-6 text-muted">
-          Upload a STEP. Quotes go to shops whose equipment can manufacture it.
-          Wire size is the second match key. {DRAWING_FREE_STEP}
+          Upload a STEP, DXF, SLDPRT, or PDF. Quotes go to shops whose
+          equipment can manufacture it. Wire size is the second match key.{" "}
+          {DRAWING_FREE_STEP}
+          {allowExtras
+            ? " This account is confirmed — Excel, Word, ZIP, and photos of the print are also allowed."
+            : " Excel and other files unlock after you confirm the buyer account and the desk validates it."}
         </p>
         <div>
-          <StepUpload file={file} onChange={setFile} />
+          <StepUpload
+            file={file}
+            onChange={setFile}
+            allowExtras={allowExtras}
+            showExtrasLock
+          />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">

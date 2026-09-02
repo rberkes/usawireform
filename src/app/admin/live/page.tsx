@@ -63,7 +63,7 @@ const GROUPS = [
       {
         href: "/source/dashboard",
         label: "Shop dashboard",
-        check: "Job inbox. Teaser until Buy this lead. Contact and STEP after $49.",
+        check: "Job inbox. Plant fullness slider 0–100%. Teaser until Buy this lead. Contact and STEP after $49.",
       },
     ],
   },
@@ -74,7 +74,7 @@ const GROUPS = [
       {
         href: "/buyer/dashboard",
         label: "Buyer dashboard",
-        check: "Company form. Jobs list. Change drawing privacy. Download own STEP. Shops cannot open it unless released and they bought the lead.",
+        check: "Company form. Jobs list. Prints only until desk validates. Then Excel.",
       },
       {
         href: "/source",
@@ -100,7 +100,7 @@ const GROUPS = [
       {
         href: "/admin/accounts",
         label: "Accounts",
-        check: "Jump Shops, Buyers, STEP files. NDA status on each shop. Download a Source drawing.",
+        check: "Jump Shops, Buyers, STEP files. Validate buyer to open Excel. NDA on shops.",
       },
       {
         href: "/admin/source",

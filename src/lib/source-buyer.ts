@@ -11,6 +11,9 @@ export type SourceBuyerAccount = {
   phone: string;
   createdAt: string;
   updatedAt: string;
+  /** Desk marked this as a real buyer. Excel and other files stay locked until this is set. */
+  verifiedAt?: string;
+  emailConfirmedAt?: string;
 };
 
 function buyerPath(userId: string) {
@@ -29,7 +32,42 @@ function readBuyer(
     phone: String(payload.phone ?? ""),
     createdAt: String(payload.createdAt ?? payload.updatedAt ?? new Date().toISOString()),
     updatedAt: String(payload.updatedAt ?? new Date().toISOString()),
+    verifiedAt: payload.verifiedAt ? String(payload.verifiedAt) : undefined,
+    emailConfirmedAt: payload.emailConfirmedAt
+      ? String(payload.emailConfirmedAt)
+      : undefined,
   };
+}
+
+export function buyerProfileComplete(buyer: SourceBuyerAccount | null | undefined) {
+  return Boolean(buyer?.company.trim() && buyer.email.trim());
+}
+
+export function buyerDeskVerified(buyer: SourceBuyerAccount | null | undefined) {
+  return Boolean(buyer?.verifiedAt);
+}
+
+export function clerkEmailIsConfirmed(
+  user:
+    | {
+        primaryEmailAddress?: {
+          verification?: { status?: string | null } | null;
+        } | null;
+      }
+    | null
+    | undefined,
+) {
+  return user?.primaryEmailAddress?.verification?.status === "verified";
+}
+
+/** Prints (STEP/DXF/SLDPRT/PDF) always. Excel and other types only after all three. */
+export function buyerMayUploadExtras(
+  buyer: SourceBuyerAccount | null | undefined,
+  { emailConfirmed }: { emailConfirmed: boolean },
+) {
+  return (
+    buyerProfileComplete(buyer) && buyerDeskVerified(buyer) && emailConfirmed
+  );
 }
 
 export async function getBuyerAccount(userId: string) {

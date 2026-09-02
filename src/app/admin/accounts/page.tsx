@@ -16,7 +16,12 @@ import {
   listSourceProfiles,
 } from "@/lib/source";
 import { jobsForBuyer } from "@/lib/source-access";
-import { listBuyerAccounts } from "@/lib/source-buyer";
+import {
+  buyerDeskVerified,
+  buyerProfileComplete,
+  listBuyerAccounts,
+} from "@/lib/source-buyer";
+import { setSourceBuyerVerified } from "@/app/actions/source-accounts";
 import { SOURCE_NDA_VERSION, shopHasNda } from "@/lib/source-nda";
 import { countSourceSubscribers } from "@/lib/source-leads";
 import { purgeKnownTestRecords } from "@/lib/purge-test-records";
@@ -200,8 +205,9 @@ export default async function AdminAccountsPage({
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
           Daily at 10:00 Eastern. First mail after 18 hours, then every 3 days,
           stop after 3. NDA, directory claim, unconfirmed equipment, and unused
-          invites. The button below skips the 18-hour wait (still will not send
-          twice in 3 days). Desk gets a copy when any go out.
+          invites. Listed shops also get a plant-fullness email on the 1st
+          and 15th Eastern. The button below skips the 18-hour wait (still will
+          not send twice in 3 days). Desk gets a copy when any go out.
         </p>
         {ranReminders ? (
           <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
@@ -331,7 +337,9 @@ export default async function AdminAccountsPage({
         <h2 className="text-lg font-medium">Buyers</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
           Newest first. Guest RFQs without an account are listed under the
-          buyer until they confirm Clerk.
+          buyer until they confirm Clerk. Prints (STEP, DXF, SLDPRT, PDF)
+          are always allowed. Excel and other files stay locked until the
+          buyer confirms the account and you validate them here.
         </p>
         {newestBuyers.length === 0 ? (
           <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
@@ -346,6 +354,10 @@ export default async function AdminAccountsPage({
                 email: row.email,
               });
               const theirsSteps = theirs.filter((job) => job.drawingPath).length;
+              const extrasOpen =
+                buyerDeskVerified(row) &&
+                buyerProfileComplete(row) &&
+                Boolean(row.emailConfirmedAt);
               return (
                 <li key={row.userId} className="px-4 py-4 text-sm">
                   <p className="font-medium">
@@ -360,10 +372,26 @@ export default async function AdminAccountsPage({
                       ? "No jobs yet"
                       : `${theirs.length} job${theirs.length === 1 ? "" : "s"}`}
                     {theirsSteps > 0 ? ` · ${theirsSteps} STEP` : ""}
+                    {extrasOpen
+                      ? " · extra files open"
+                      : " · prints only"}
+                    {row.emailConfirmedAt ? " · email confirmed" : " · email not confirmed"}
                   </p>
                   <p className="mt-1 font-mono text-[11px] text-muted">
                     {ny(row.updatedAt)}
+                    {row.verifiedAt ? ` · validated ${ny(row.verifiedAt)}` : ""}
                   </p>
+                  <form action={setSourceBuyerVerified} className="mt-3">
+                    <input type="hidden" name="userId" value={row.userId} />
+                    <input
+                      type="hidden"
+                      name="verified"
+                      value={row.verifiedAt ? "0" : "1"}
+                    />
+                    <Button type="submit" variant={row.verifiedAt ? "ghost" : "primary"}>
+                      {row.verifiedAt ? "Lock extra files" : "Validate buyer"}
+                    </Button>
+                  </form>
                 </li>
               );
             })}
