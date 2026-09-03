@@ -15,7 +15,6 @@ import {
   sendSourceInviteEmails,
   sendSourceJobEmails,
   sendSourceShopLeadEmails,
-  sendSourceBuyerPayEmail,
   sendSourceNdaEmails,
   sendSourceCellsAddedEmail,
 } from "@/lib/leads";
@@ -35,7 +34,6 @@ import { planById } from "@/lib/source-plans";
 import { isSourceSecondaryId } from "@/lib/source-secondaries";
 import {
   applyJobRelease,
-  markJobQualified,
   previewSourceRelease,
 } from "@/lib/source-release";
 import {
@@ -1086,19 +1084,12 @@ export async function releaseSourceJob(formData: FormData) {
   if (preview.alreadyReleased) {
     redirect("/admin/accounts?released=already#files");
   }
-  if (preview.needsBuyerPay) {
-    await markJobQualified(job);
-    await sendSourceBuyerPayEmail({
-      to: job.email,
-      company: job.company,
-      name: job.name,
-    });
-    redirect("/admin/accounts?released=pay#files");
-  }
 
   await applyJobRelease(job, preview.mailedTo);
+  const mailed = preview.matches.slice(0, preview.mailedTo.length);
   void sendSourceShopLeadEmails({
-    mailed: preview.matches,
+    mailed,
+    maskedBuyerEmail: job.email,
     spec: {
       diameterRaw: job.diameterRaw,
       diameterMm: job.diameterMm,
@@ -1109,6 +1100,6 @@ export async function releaseSourceJob(formData: FormData) {
     },
   }).catch((error) => console.error("[Source shop leads]", error));
   redirect(
-    `/admin/accounts?released=${preview.matches.length}#files`,
+    `/admin/accounts?released=${mailed.length}#files`,
   );
 }

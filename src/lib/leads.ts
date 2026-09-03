@@ -698,8 +698,31 @@ export async function sendSourceBuyerPayEmail({
     replyTo: QUOTE_EMAIL,
     subject: `Your Source print is ready — ${COMPANY}`,
     html: `<p>Hi ${hello},</p>
-      <p>The desk qualified ${escapeHtml(company || "your print")}. Sign in and pay from the buyer dashboard to send it to shops that fit this cell.</p>
+      <p>Two shops get ${escapeHtml(company || "your print")} free. More shops to bid are $49 each from the buyer dashboard.</p>
       <p><a href="${SITE_URL}/buyer/dashboard">${SITE_URL}/buyer/dashboard</a></p>`,
+  });
+}
+
+export async function sendSourceBuyerExtraShopsEmail({
+  company,
+  email,
+  qty,
+  pathname,
+}: {
+  company: string;
+  email: string;
+  qty: number;
+  pathname: string;
+}) {
+  const n = Math.max(1, Math.floor(qty));
+  return sendLeadEmail({
+    replyTo: email,
+    heading: "LEAD — buyer extra shops",
+    subject: `LEAD: buyer extra shops × ${n} — ${company || email}`,
+    html: `<p><strong>${escapeHtml(company || email)}</strong> paid for ${n} extra shop ${n === 1 ? "slot" : "slots"} ($49 each).</p>
+      <p>Email: <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
+      <p>Job: ${escapeHtml(pathname)}</p>
+      <p>Desk only — the buyer receipt is Stripe. Accounts: <a href="${SITE_URL}/admin/accounts#files">${SITE_URL}/admin/accounts#files</a></p>`,
   });
 }
 
@@ -785,6 +808,7 @@ export async function sendSourceBuyerVolumeEmail({
 export async function sendSourceShopLeadEmails({
   mailed,
   spec,
+  maskedBuyerEmail,
 }: {
   mailed: Array<{
     company: string;
@@ -800,6 +824,7 @@ export async function sendSourceShopLeadEmails({
     city?: string;
     state?: string;
   };
+  maskedBuyerEmail?: string;
   spec: {
     diameterRaw: string;
     diameterMm: number | null;
@@ -821,6 +846,7 @@ export async function sendSourceShopLeadEmails({
           why: row.why,
           fitNote: row.fitNote,
           spec,
+          maskedBuyerEmail,
         }),
       });
       console.log("[Source shop lead]", { to: row.email, company: row.company, ok });

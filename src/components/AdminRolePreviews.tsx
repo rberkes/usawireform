@@ -7,6 +7,7 @@ import {
 } from "@/lib/source-buyer-volume";
 import { SOURCE_CAPACITY_LINE } from "@/lib/source-capacity";
 import {
+  SOURCE_BUYER_QUOTE_LINE,
   SOURCE_CELL_SOFT_CAP,
   SOURCE_LEAD_BUYERS_MAX,
   SOURCE_PLAN_LINE,
@@ -58,7 +59,7 @@ export function BuyerDashboardPreview() {
       <PageHero
         kicker="Source"
         title="Buyer dashboard"
-        lede="Your jobs and drawing privacy. Shop names and locations stay with the desk."
+        lede={`Your jobs and drawing privacy. ${SOURCE_BUYER_QUOTE_LINE} Shop names stay with the desk.`}
       />
       <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
         Prints only for now (STEP, DXF, SLDPRT, PDF). Excel and other files
@@ -157,9 +158,13 @@ export function BuyerDashboardPreview() {
               <span className="ml-2 font-normal text-muted">2D CNC · 6 mm</span>
             </p>
             <p className="mt-1 text-muted">
-              {drawingPrivacyLabel("matched")} · 3 shops
+              {drawingPrivacyLabel("matched")} · 2 of 2 shops included
             </p>
+            <p className="mt-1 text-muted">Quoting: p***@l***.com · a***@w***.com</p>
             <p className="mt-1 font-mono text-[11px] text-muted">Released to shops</p>
+            <p className="mt-3 text-sm text-muted">
+              Add more shops to bid — {formatLeadPrice()} each
+            </p>
           </li>
         </ul>
       </section>
@@ -221,9 +226,9 @@ export function ShopDashboardPreview() {
         </p>
         <p className="mt-2 text-xl font-medium">Buy as they come</p>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          {SOURCE_PLAN_LINE} Cell, wire, and qty show here. Buyer name and
-          email unlock after you pay. A STEP opens only if the buyer
-          released it.
+          {SOURCE_PLAN_LINE} Cell, wire, qty, and a masked buyer email show
+          here. Full name and email unlock after you pay. A STEP opens only
+          if the buyer released it.
         </p>
       </Panel>
 
@@ -236,7 +241,7 @@ export function ShopDashboardPreview() {
             <li className="px-4 py-4 text-sm">
               <p className="font-medium">3D CNC · 8 mm · qty 5000</p>
               <p className="mt-2 text-muted">
-                Buyer contact unlocks at {price}.
+                Buyer a***@e***.com. Full contact unlocks at {price}.
               </p>
               <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
                 STEP held at the desk

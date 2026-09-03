@@ -1,8 +1,10 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { syncCheckoutSession } from "@/app/actions/source-billing";
 import { SourceBuyerForm } from "@/components/SourceBuyerForm";
 import { SourceBuyerVolumeForm } from "@/components/SourceBuyerVolumeForm";
+import { SourceBuyerExtraShopsForm } from "@/components/SourceBuyerExtraShopsForm";
 import { ButtonLink, Page, PageHero, Panel } from "@/components/ui";
-import { jobsForBuyer, shopDrawingHref } from "@/lib/source-access";
+import { jobsForBuyer, jobIsReleased, shopDrawingHref } from "@/lib/source-access";
 import { requireBuyer, requireSignedIn } from "@/lib/source-gate";
 import {
   buyerMayUploadExtras,
@@ -10,7 +12,16 @@ import {
   getBuyerAccount,
   saveBuyerAccount,
 } from "@/lib/source-buyer";
-import { listSourceJobs } from "@/lib/source";
+import { applyProfilesToFilings, listSourceFilings, listSourceJobs, listSourceProfiles } from "@/lib/source";
+import { matchFilingsToJob } from "@/lib/source-match";
+import { jobToSpec } from "@/lib/source-release";
+import { maskEmail } from "@/lib/mask-email";
+import {
+  SOURCE_BUYER_INCLUDED_SHOPS,
+  SOURCE_BUYER_QUOTE_LINE,
+  extraShopsRemaining,
+} from "@/lib/source-plans";
+import { stripeConfigured } from "@/lib/stripe";
 import {
   drawingPrivacyLabel,
   parseDrawingPrivacy,
@@ -22,14 +33,24 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function BuyerDashboardPage() {
+export default async function BuyerDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ session_id?: string }>;
+}) {
   const userId = await requireSignedIn("/buyer/dashboard", { as: "buyer" });
   await requireBuyer(userId);
+  const { session_id: sessionId } = await searchParams;
+  if (sessionId) {
+    await syncCheckoutSession(sessionId);
+  }
 
-  const [user, account, jobs] = await Promise.all([
+  const [user, account, jobs, filingRows, profiles] = await Promise.all([
     currentUser(),
     getBuyerAccount(userId),
     listSourceJobs(),
+    listSourceFilings(),
+    listSourceProfiles(),
   ]);
   if (account && clerkEmailIsConfirmed(user) && !account.emailConfirmedAt) {
     const confirmedAt = new Date().toISOString();
@@ -45,13 +66,15 @@ export default async function BuyerDashboardPage() {
     emailConfirmed: clerkEmailIsConfirmed(user),
   });
   const mine = jobsForBuyer(jobs, { userId, email });
+  const filings = applyProfilesToFilings(filingRows, profiles);
+  const canPay = stripeConfigured();
 
   return (
     <Page>
       <PageHero
         kicker="Source"
         title="Buyer dashboard"
-        lede="Your jobs and drawing privacy. Shop names and locations stay with the desk. Shops see the cell, wire, and qty — not your name or email — until they unlock the lead."
+        lede={`Your jobs and drawing privacy. ${SOURCE_BUYER_QUOTE_LINE} Shop names stay with the desk.`}
       />
       <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
         {extrasOpen
@@ -87,7 +110,7 @@ export default async function BuyerDashboardPage() {
             <p className="text-sm leading-6 text-muted">
               No jobs on this email yet. Send a print from Source — keep the
               STEP at the desk, or release it so quoting shops can open the
-              file.
+              file. {SOURCE_BUYER_QUOTE_LINE}
             </p>
             <ButtonLink href="/source" variant="ghost">
               Send the print
@@ -97,6 +120,15 @@ export default async function BuyerDashboardPage() {
           <ul className="mt-4 divide-y divide-line border border-line">
             {mine.map((job) => {
               const privacy = parseDrawingPrivacy(job.drawingPrivacy);
+              const released = jobIsReleased(job);
+              const offered = job.mailedTo?.length ?? 0;
+              const quoting = (job.purchasedBy ?? [])
+                .map((row) => maskEmail(row.email))
+                .filter(Boolean);
+              const matchCount = released
+                ? matchFilingsToJob(filings, jobToSpec(job)).length
+                : 0;
+              const remaining = extraShopsRemaining(matchCount, offered);
               return (
                 <li
                   key={job.pathname}
@@ -111,13 +143,17 @@ export default async function BuyerDashboardPage() {
                   </p>
                   <p className="mt-1 text-muted">
                     {drawingPrivacyLabel(privacy)}
-                    {job.mailedTo && job.mailedTo.length > 0
-                      ? ` · ${job.mailedTo.length === 1 ? "1 shop" : `${job.mailedTo.length} shops`}`
+                    {offered > 0
+                      ? offered <= SOURCE_BUYER_INCLUDED_SHOPS
+                        ? ` · ${offered} of ${SOURCE_BUYER_INCLUDED_SHOPS} shops included`
+                        : ` · ${offered} shops`
                       : " · not sent to shops yet"}
-                    {job.purchasedBy && job.purchasedBy.length > 0
-                      ? ` · ${job.purchasedBy.length === 1 ? "1 shop has contact" : `${job.purchasedBy.length} shops have contact`}`
-                      : ""}
                   </p>
+                  {quoting.length > 0 ? (
+                    <p className="mt-1 text-muted">
+                      Quoting: {quoting.join(" · ")}
+                    </p>
+                  ) : null}
                   <p className="mt-1 font-mono text-[11px] text-muted">
                     {job.timestamp
                       ? new Date(job.timestamp).toLocaleString("en-US", {
@@ -143,6 +179,12 @@ export default async function BuyerDashboardPage() {
                       </a>
                     ) : null}
                   </div>
+                  {released && remaining > 0 && canPay ? (
+                    <SourceBuyerExtraShopsForm
+                      pathname={job.pathname}
+                      remaining={remaining}
+                    />
+                  ) : null}
                 </li>
               );
             })}

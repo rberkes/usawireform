@@ -1,6 +1,7 @@
 import { COMPANY, SITE_HOST, SITE_URL } from "@/lib/company";
 import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
 import { SOURCE_PLAN_LINE, SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
+import { maskEmail } from "@/lib/mask-email";
 
 export function escapeHtml(value: string) {
   return value
@@ -526,6 +527,7 @@ export function sourceShopLeadHtml({
   why,
   fitNote,
   spec,
+  maskedBuyerEmail,
 }: {
   shop: string;
   why: string;
@@ -538,6 +540,7 @@ export function sourceShopLeadHtml({
     city?: string;
     state?: string;
   };
+  maskedBuyerEmail?: string;
   spec: {
     diameterRaw: string;
     diameterMm: number | null;
@@ -552,6 +555,7 @@ export function sourceShopLeadHtml({
     spec.diameterMm != null
       ? `${spec.diameterMm.toLocaleString("en-US")} mm`
       : spec.diameterRaw.trim() || "unspecified wire";
+  const teaserEmail = maskedBuyerEmail ? maskEmail(maskedBuyerEmail) : "";
   return shell(
     `A Source job matches your cell — ${size}`,
     `${kickerRow()}
@@ -563,12 +567,13 @@ export function sourceShopLeadHtml({
          spec.kind ? { label: "Cell", value: spec.kind } : null,
          { label: "Wire", value: spec.diameterRaw || size },
          spec.qty ? { label: "Qty", value: spec.qty } : null,
+         teaserEmail ? { label: "Buyer", value: teaserEmail } : null,
        ].filter((row): row is MailRow => Boolean(row)),
      )}
      ${ctaBannerRow(
        `${SITE_URL}/source/dashboard`,
        SOURCE_SMART_CONNECT_LINE,
-       "Buyer name and email are not in this message. The STEP is never attached.",
+       "Buyer name and full email are not in this message. The STEP is never attached.",
      )}`,
   );
 }

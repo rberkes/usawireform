@@ -501,6 +501,9 @@ export default async function AdminAccountsPage({
                       ? ` · ${mailed.join(", ")}`
                       : " · no match yet"}
                     {row.buyerUserId ? " · buyer account" : " · guest"}
+                    {(row.buyerExtraShops ?? 0) > 0
+                      ? ` · ${row.buyerExtraShops} extra shop ${row.buyerExtraShops === 1 ? "slot" : "slots"} paid`
+                      : ""}
                   </p>
                   <p className="mt-1 font-mono text-[11px] text-muted">
                     {ny(row.timestamp)}

@@ -186,6 +186,12 @@ export type SourceJobPurchase = {
   sessionId?: string;
 };
 
+export type SourceBuyerExtraPurchase = {
+  qty: number;
+  paidAt: string;
+  sessionId?: string;
+};
+
 export type SourceJob = {
   company: string;
   name: string;
@@ -226,10 +232,13 @@ export type SourceJob = {
   reviewedNotifiedAt?: string;
   /** Desk released this print to matching shops. */
   releasedAt?: string;
-  /** Desk clicked Release; later prints wait on buyer $49. */
+  /** Desk clicked Release. */
   qualifiedAt?: string;
-  /** Buyer paid $49 for this later print. First released print is free. */
+  /** Last time the buyer paid for extra shop slots. */
   buyerPaidAt?: string;
+  /** Paid extra shops beyond the included two. */
+  buyerExtraShops?: number;
+  buyerExtraPurchases?: SourceBuyerExtraPurchase[];
 };
 
 export type SourceJobRow = SourceJob & { pathname: string };

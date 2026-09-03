@@ -68,7 +68,7 @@ const GROUPS = [
       {
         href: "/source/dashboard",
         label: "Shop dashboard",
-        check: "Inbox. Cell, wire, qty until Buy this lead. Contact after $49. No buyer name or locale.",
+        check: "Inbox. Cell, wire, qty, masked buyer email until Buy this lead. Full contact after $49. No locale.",
       },
     ],
   },
@@ -79,7 +79,7 @@ const GROUPS = [
       {
         href: "/buyer/dashboard",
         label: "Buyer dashboard",
-        check: "Company form. Monthly jobs slider 0–10+. Jobs list — shop count, not names or cities.",
+        check: "Company form. Monthly jobs slider. Two shops included. Extra shops $49 each. Masked quoting emails.",
       },
       {
         href: "/source",
@@ -115,12 +115,12 @@ const GROUPS = [
       {
         href: "/admin/preview/buyer",
         label: "Buyer dashboard preview",
-        check: "Company card, 0–10+ volume slider, held vs released jobs. No shop names or cities.",
+        check: "Company card, 0–10+ volume slider, held vs released jobs. Two shops included. Extra $49. No shop names.",
       },
       {
         href: "/admin/preview/shop",
         label: "Shop dashboard preview",
-        check: "Inbox teaser then unlocked contact. No buyer name until $49. No buyer locale. Cells and fullness slider.",
+        check: "Inbox teaser with masked buyer email then unlocked contact. No buyer locale. Cells and fullness slider.",
       },
       {
         href: "/admin/source",

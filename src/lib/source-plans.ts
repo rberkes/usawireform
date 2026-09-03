@@ -15,6 +15,28 @@ export type SourcePlan = {
 export const SOURCE_LEAD_PRICE_CENTS = 4900;
 export const SOURCE_LEAD_LOOKUP = "source_lead_once";
 export const SOURCE_LEAD_BUYERS_MAX = 10;
+/** First this many matched shops are included on a released print. */
+export const SOURCE_BUYER_INCLUDED_SHOPS = 2;
+/** Buyer pays this per extra shop beyond the included two. */
+export const SOURCE_BUYER_EXTRA_SHOP_LOOKUP = "source_buyer_extra_shop";
+export const SOURCE_BUYER_QUOTE_LINE =
+  "Two shops get the print free. More shops to bid are $49 each.";
+
+export function buyerShopSlots(extraShops = 0) {
+  const extra = Number.isFinite(extraShops) ? Math.max(0, Math.floor(extraShops)) : 0;
+  return Math.min(SOURCE_LEAD_BUYERS_MAX, SOURCE_BUYER_INCLUDED_SHOPS + extra);
+}
+
+export function extraShopsRemaining(matchCount: number, mailedCount: number) {
+  const matches = Math.max(0, Math.min(SOURCE_LEAD_BUYERS_MAX, matchCount));
+  const mailed = Math.max(0, mailedCount);
+  return Math.max(0, matches - mailed);
+}
+
+export function formatLeadTotal(qty: number) {
+  const n = Math.max(1, Math.floor(qty));
+  return `$${((SOURCE_LEAD_PRICE_CENTS * n) / 100).toFixed(0)}`;
+}
 /** Shop-facing name for paid lead unlocks. */
 export const SOURCE_SMART_CONNECT = "AI Smart Connect™";
 export const SOURCE_SMART_CONNECT_LINE =

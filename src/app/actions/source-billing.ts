@@ -6,6 +6,7 @@ import {
   applyCheckoutSession,
   checkoutUrls,
   ensureBillingPortal,
+  ensureBuyerExtraShopPriceId,
   ensureLeadPriceId,
   ensurePaidPriceId,
   ensureSecondaryPackPriceId,
@@ -14,7 +15,17 @@ import {
   getStripeCustomerId,
   setSubscriptionSecondaryPack,
 } from "@/lib/source-billing";
-import { SOURCE_LEAD_BUYERS_MAX, isSourcePlanId, planById } from "@/lib/source-plans";
+import {
+  extraShopsRemaining,
+  SOURCE_LEAD_BUYERS_MAX,
+  isSourcePlanId,
+  planById,
+  sourceBuyerSignInHref,
+} from "@/lib/source-plans";
+import { buyerOwnsJob, jobIsReleased, shopBoughtLead, shopWasMailedJob } from "@/lib/source-access";
+import { getSourceJob, getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
+import { previewSourceRelease } from "@/lib/source-release";
+import { requireBuyer } from "@/lib/source-gate";
 import {
   SOURCE_SECONDARY_MAX,
   formatSecondaryPrice,
@@ -22,8 +33,6 @@ import {
   packForCount,
   parseSourceSecondaries,
 } from "@/lib/source-secondaries";
-import { shopBoughtLead, shopWasMailedJob } from "@/lib/source-access";
-import { getSourceJob, getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
 
 async function requireUser() {
@@ -77,6 +86,57 @@ export async function startSourceLeadCheckout(formData: FormData) {
     },
   });
   if (!session.url) redirect("/source/dashboard");
+  redirect(session.url);
+}
+
+export async function startSourceBuyerExtraCheckout(formData: FormData) {
+  const pathname = String(formData.get("pathname") ?? "").trim();
+  const qtyRaw = Number(formData.get("qty") ?? 0);
+  const { userId } = await auth();
+  if (!userId) redirect(sourceBuyerSignInHref());
+  await requireBuyer(userId);
+  const user = await currentUser();
+  const email = user?.primaryEmailAddress?.emailAddress;
+  if (!email) redirect("/buyer/dashboard");
+  if (!pathname) redirect("/buyer/dashboard");
+  if (!stripeConfigured()) redirect("/buyer/dashboard?extra=stripe");
+
+  const job = await getSourceJob(pathname);
+  if (!job || !buyerOwnsJob(job, { userId, email })) {
+    redirect("/buyer/dashboard");
+  }
+  if (!jobIsReleased(job)) redirect("/buyer/dashboard");
+
+  const preview = await previewSourceRelease(job);
+  const remaining = extraShopsRemaining(
+    preview.matches.length,
+    job.mailedTo?.length ?? 0,
+  );
+  const qty = Math.min(remaining, Math.max(1, Math.floor(qtyRaw)));
+  if (qty < 1) redirect("/buyer/dashboard");
+
+  const stripe = getStripe();
+  const priceId = await ensureBuyerExtraShopPriceId();
+  const urls = checkoutUrls();
+  const customerId = await getStripeCustomerId(userId);
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    client_reference_id: userId,
+    ...(customerId
+      ? { customer: customerId }
+      : { customer_email: email, customer_creation: "always" }),
+    line_items: [{ price: priceId, quantity: qty }],
+    success_url: urls.buyerSuccess,
+    cancel_url: urls.buyerCancel,
+    allow_promotion_codes: true,
+    metadata: {
+      userId,
+      source_buyer_extra: "1",
+      job_pathname: pathname,
+      extra_qty: String(qty),
+    },
+  });
+  if (!session.url) redirect("/buyer/dashboard");
   redirect(session.url);
 }
 

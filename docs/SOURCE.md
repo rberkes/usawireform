@@ -22,7 +22,7 @@ Contact/quote (this floor) stays prints-only. Code: `src/lib/drawings.ts`, `buye
 
 A drawing is never on email. Privacy default is **desk**. Shop may open a released file only after they paid for the lead (`shopMayViewDrawing`).
 
-**Names and locale stay off both dashboards.** The shop teaser is cell, wire, and qty — not buyer company, email, notes, or city. After they pay they get contact, not locale. The buyer sees that a print was offered (shop count) — not shop names or cities. Plant city and nearest major city (Elyria → Cleveland) are **desk-only** on `/admin/accounts`.
+**Names and locale stay off both dashboards.** Shop teaser: cell, wire, qty, and a **masked** buyer email (`a***@m***.com`). Full contact after the shop pays. After shops buy the lead, the buyer sees those shops as **masked shop emails** — not names or full addresses. Plant city and nearest major city are **desk-only** on `/admin/accounts`.
 
 ## Capacity
 
@@ -43,7 +43,7 @@ One slider on `/buyer/dashboard`, 0–10+ jobs they source a month. Starts at 0.
 
 - Shop unlock name: **AI Smart Connect™**. Charge is $49 per lead (`SOURCE_LEAD_PRICE_CENTS`).
 - Do not tell **buyers** about shop $49.
-- Agreed buyer money (not coded yet): first print free; each later job the desk qualifies and releases is $49. Not $49 per shop bid.
+- **Buyer quotes:** two shops are included on a released print. Each extra shop to bid is $49 (`SOURCE_BUYER_EXTRA_SHOP_LOOKUP`). Example: 4 more shops = 4 × $49.
 
 Listing every cell is free. Up to 10 shops can buy the same job.
 
@@ -62,9 +62,9 @@ Hard filter: cell class + diameter band. Bonuses: OEM, locale, qty vs fit, fulln
 ## Agreed next (not in this push)
 
 1. Admin is the trigger — no shop mail, no shop inbox until Release
-2. Shop ping after release: “a job fits this cell” — no file, no contact
+2. Shop ping after release: “a job fits this cell” — masked buyer email, no file, no full contact
 3. Shop $49 opens spec/contact; STEP stays desk unless released **and** paid
-4. Buyer first print free; later released jobs $49
+4. Buyer: two shops included; extra shops $49 each from the buyer dashboard
 5. Fit check on Release: cell, wire, alloy, coil, finish, qty vs MOQ, fullness
 6. Buyer form: alloy, who buys coil, need-by, finish, first-article vs production, PPAP
 7. Desk mail: shop sign-up, NDA, later cells

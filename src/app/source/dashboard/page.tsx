@@ -36,6 +36,7 @@ import {
 import { secondariesForForm } from "@/lib/source-secondaries";
 import { normalizeShopWebsite, sourceAccountLocksClaim, sourceClaimPath, suggestedDirectoryClaim } from "@/lib/source-directory";
 import { parseDrawingPrivacy } from "@/lib/source-types";
+import { maskEmail } from "@/lib/mask-email";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -239,8 +240,9 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           {inbox.length === 0 ? (
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
               No matched buyer jobs yet. When a print fits a cell you filed,
-              the lead lands here. Cell, wire, and qty only until you pay{" "}
-              {formatLeadPrice()} — buyer name and email stay hidden.
+              the lead lands here. Cell, wire, qty, and a masked buyer email
+              until you pay {formatLeadPrice()} — name and full email stay
+              hidden.
             </p>
           ) : (
             <ul className="mt-4 divide-y divide-line border border-line">
@@ -278,7 +280,8 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                       </p>
                     ) : (
                       <p className="mt-2 text-muted">
-                        Buyer contact unlocks at {formatLeadPrice()}.
+                        Buyer {maskEmail(job.email) || "email masked"}. Full
+                        contact unlocks at {formatLeadPrice()}.
                         {sold
                           ? ` ${sold} of ${SOURCE_LEAD_BUYERS_MAX} shops bought this lead.`
                           : ""}

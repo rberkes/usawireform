@@ -2,7 +2,7 @@ import "server-only";
 
 import { clerkClient } from "@clerk/nextjs/server";
 import type Stripe from "stripe";
-import { SOURCE_LEAD_LOOKUP, SOURCE_LEAD_PRICE_CENTS, SOURCE_PAID_PLANS, planById, planByLookupKey, type SourcePlan, type SourcePlanId } from "@/lib/source-plans";
+import { SOURCE_BUYER_EXTRA_SHOP_LOOKUP, SOURCE_LEAD_LOOKUP, SOURCE_LEAD_PRICE_CENTS, SOURCE_PAID_PLANS, planById, planByLookupKey, type SourcePlan, type SourcePlanId } from "@/lib/source-plans";
 import {
   SOURCE_SECONDARY_LOOKUP,
   isSourceSecondaryPrice,
@@ -11,6 +11,7 @@ import {
   type SourceSecondaryPack,
 } from "@/lib/source-secondaries";
 import { getSourceProfile, recordSourceLeadPurchase, setSourceProfileSecondaries } from "@/lib/source";
+import { sendSourceBuyerExtraShopsEmail, sendSourceShopLeadEmails } from "@/lib/leads";
 import { appOrigin, getStripe, stripeConfigured } from "@/lib/stripe";
 
 const PRICE_CACHE = new Map<string, string>();
@@ -140,6 +141,40 @@ export async function ensureLeadPriceId() {
     metadata: { source_lead: "1" },
   });
   PRICE_CACHE.set(SOURCE_LEAD_LOOKUP, price.id);
+  return price.id;
+}
+
+export async function ensureBuyerExtraShopPriceId() {
+  const cached = PRICE_CACHE.get(SOURCE_BUYER_EXTRA_SHOP_LOOKUP);
+  if (cached) return cached;
+
+  const stripe = getStripe();
+  const existing = await stripe.prices.list({
+    lookup_keys: [SOURCE_BUYER_EXTRA_SHOP_LOOKUP],
+    active: true,
+    limit: 1,
+  });
+  const oneTime = existing.data.find(
+    (row) => row.type === "one_time" && row.unit_amount === SOURCE_LEAD_PRICE_CENTS,
+  );
+  if (oneTime?.id) {
+    PRICE_CACHE.set(SOURCE_BUYER_EXTRA_SHOP_LOOKUP, oneTime.id);
+    return oneTime.id;
+  }
+
+  const product = await stripe.products.create({
+    name: "Source extra shop quote",
+    description: "Send this print to one more matching shop. Two shops are included.",
+    metadata: { source_buyer_extra: "1" },
+  });
+  const price = await stripe.prices.create({
+    product: product.id,
+    currency: "usd",
+    unit_amount: SOURCE_LEAD_PRICE_CENTS,
+    lookup_key: SOURCE_BUYER_EXTRA_SHOP_LOOKUP,
+    metadata: { source_buyer_extra: "1" },
+  });
+  PRICE_CACHE.set(SOURCE_BUYER_EXTRA_SHOP_LOOKUP, price.id);
   return price.id;
 }
 
@@ -350,6 +385,57 @@ export async function applyCheckoutSession(session: Stripe.Checkout.Session) {
   const customerId =
     typeof session.customer === "string" ? session.customer : session.customer?.id;
 
+  if (session.metadata?.source_buyer_extra === "1") {
+    const stripe = getStripe();
+    if (userId && customerId) {
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      await client.users.updateUserMetadata(userId, {
+        privateMetadata: {
+          ...user.privateMetadata,
+          stripeCustomerId: customerId,
+        },
+      });
+      await stripe.customers.update(customerId, {
+        metadata: { clerkUserId: userId },
+      });
+    }
+    const paid =
+      session.payment_status === "paid" || session.status === "complete";
+    const pathname = session.metadata?.job_pathname?.trim();
+    const qty = Number(session.metadata?.extra_qty ?? 0);
+    if (paid && pathname && qty > 0) {
+      const { applyBuyerExtraShops } = await import("@/lib/source-release");
+      const result = await applyBuyerExtraShops({
+        pathname,
+        qty,
+        sessionId: session.id,
+      });
+      if (result.ok && result.added.length > 0) {
+        const job = result.job;
+        await sendSourceShopLeadEmails({
+          mailed: result.added,
+          maskedBuyerEmail: job.email,
+          spec: {
+            diameterRaw: job.diameterRaw,
+            diameterMm: job.diameterMm,
+            kind: job.kind,
+            oem: "",
+            qty: job.qty,
+            notes: "",
+          },
+        });
+        await sendSourceBuyerExtraShopsEmail({
+          company: job.company,
+          email: job.email,
+          qty: result.added.length,
+          pathname,
+        });
+      }
+    }
+    return;
+  }
+
   if (session.metadata?.source_lead === "1") {
     const stripe = getStripe();
     if (userId && customerId) {
@@ -469,6 +555,8 @@ export function checkoutUrls() {
     success: `${origin}/source/dashboard?session_id={CHECKOUT_SESSION_ID}`,
     cancel: `${origin}/source/upgrade`,
     cancelDashboard: `${origin}/source/dashboard`,
+    buyerSuccess: `${origin}/buyer/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+    buyerCancel: `${origin}/buyer/dashboard`,
     portalReturn: `${origin}/source/dashboard`,
   };
 }

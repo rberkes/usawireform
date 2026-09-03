@@ -23,6 +23,7 @@ import {
   type SourceJob,
   type SourceJobMailedTo,
   type SourceJobPurchase,
+  type SourceBuyerExtraPurchase,
   type SourceJobRow,
   type SourceMachine,
   type SourceProfile,
@@ -303,6 +304,28 @@ function readPurchasedBy(raw: unknown): SourceJobPurchase[] {
   return rows;
 }
 
+function readBuyerExtraPurchases(raw: unknown): SourceBuyerExtraPurchase[] {
+  if (!Array.isArray(raw)) return [];
+  const seen = new Set<string>();
+  const rows: SourceBuyerExtraPurchase[] = [];
+  for (const row of raw) {
+    const item = row as Partial<SourceBuyerExtraPurchase>;
+    const qty = Number(item.qty);
+    if (!Number.isFinite(qty) || qty <= 0) continue;
+    const sessionId =
+      typeof item.sessionId === "string" ? item.sessionId : undefined;
+    const key = sessionId || `${item.paidAt ?? ""}:${qty}:${rows.length}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    rows.push({
+      qty: Math.floor(qty),
+      paidAt: String(item.paidAt ?? ""),
+      sessionId,
+    });
+  }
+  return rows;
+}
+
 function readSourceJob(
   payload: Partial<SourceJob>,
   pathname: string,
@@ -347,6 +370,14 @@ function readSourceJob(
     releasedAt: payload.releasedAt ? String(payload.releasedAt) : undefined,
     qualifiedAt: payload.qualifiedAt ? String(payload.qualifiedAt) : undefined,
     buyerPaidAt: payload.buyerPaidAt ? String(payload.buyerPaidAt) : undefined,
+    buyerExtraShops:
+      typeof payload.buyerExtraShops === "number" && payload.buyerExtraShops > 0
+        ? Math.floor(payload.buyerExtraShops)
+        : readBuyerExtraPurchases(payload.buyerExtraPurchases).reduce(
+            (sum, row) => sum + row.qty,
+            0,
+          ) || undefined,
+    buyerExtraPurchases: readBuyerExtraPurchases(payload.buyerExtraPurchases),
     pathname,
   };
 }

@@ -1,10 +1,8 @@
 import "server-only";
 
-import { applyProfilesToFilings, getSourceJob, listSourceFilings, listSourceJobs, listSourceProfiles, saveSourceJob } from "@/lib/source";
-import {
-  buyerHasReleasedJob,
-  jobIsReleased,
-} from "@/lib/source-access";
+import { applyProfilesToFilings, getSourceJob, listSourceFilings, listSourceProfiles, saveSourceJob } from "@/lib/source";
+import { jobIsReleased } from "@/lib/source-access";
+import { normalizeShopEmail } from "@/lib/source-account";
 import { formatFullness, readShopCapacity } from "@/lib/source-capacity";
 import {
   parseCoilBuyer,
@@ -15,6 +13,7 @@ import {
 import { partitionLeadMatches } from "@/lib/source-leads";
 import { matchFilingsToJob, parseQty, type SourceJobSpec } from "@/lib/source-match";
 import { secondaryLabel } from "@/lib/source-secondaries";
+import { buyerShopSlots, SOURCE_BUYER_INCLUDED_SHOPS } from "@/lib/source-plans";
 import type {
   SourceFiling,
   SourceInternalMatch,
@@ -32,13 +31,15 @@ export type FitFlag = {
 
 export type ReleaseShopPreview = SourceInternalMatch & {
   flags: FitFlag[];
+  userId?: string;
 };
 
 export type ReleasePreview = {
   job: SourceJobRow;
   alreadyReleased: boolean;
-  firstPrintFree: boolean;
-  needsBuyerPay: boolean;
+  includedShops: number;
+  extraShops: number;
+  slots: number;
   matches: ReleaseShopPreview[];
   listed: SourceInternalMatch[];
   mailedTo: SourceJobMailedTo[];
@@ -199,9 +200,7 @@ function shopFitFlags(
 
 export async function previewSourceRelease(
   job: SourceJobRow,
-  allJobs?: SourceJobRow[],
 ): Promise<ReleasePreview> {
-  const jobs = allJobs ?? (await listSourceJobs());
   const [filingRows, profiles] = await Promise.all([
     listSourceFilings(),
     listSourceProfiles(),
@@ -230,19 +229,25 @@ export async function previewSourceRelease(
     const profile = filing?.userId
       ? profiles.find((item) => item.userId === filing.userId)
       : undefined;
-    return { ...row, flags: shopFitFlags(job, filing, profile) };
+    return { ...row, userId: filing?.userId, flags: shopFitFlags(job, filing, profile) };
   });
-  const firstPrintFree = !buyerHasReleasedJob(jobs, job);
+  const extraShops = job.buyerExtraShops ?? 0;
+  const slots = buyerShopSlots(extraShops);
   const alreadyReleased = jobIsReleased(job);
-  const needsBuyerPay = !alreadyReleased && !firstPrintFree && !job.buyerPaidAt;
   return {
     job,
     alreadyReleased,
-    firstPrintFree,
-    needsBuyerPay,
+    includedShops: SOURCE_BUYER_INCLUDED_SHOPS,
+    extraShops,
+    slots,
     matches,
     listed,
-    mailedTo,
+    mailedTo: mailedTo.slice(
+      0,
+      alreadyReleased
+        ? Math.max(job.mailedTo?.length ?? 0, slots)
+        : slots,
+    ),
   };
 }
 
@@ -265,6 +270,52 @@ export async function applyJobRelease(job: SourceJobRow, mailedTo: SourceJobMail
     },
     job.pathname,
   );
+}
+
+export async function applyBuyerExtraShops({
+  pathname,
+  qty,
+  sessionId,
+}: {
+  pathname: string;
+  qty: number;
+  sessionId?: string;
+}) {
+  const job = await getSourceJob(pathname);
+  if (!job) return { ok: false as const, reason: "missing" as const };
+  const want = Math.max(0, Math.floor(qty));
+  if (want < 1) return { ok: false as const, reason: "qty" as const };
+
+  const purchases = job.buyerExtraPurchases ?? [];
+  if (sessionId && purchases.some((row) => row.sessionId === sessionId)) {
+    return { ok: true as const, job, added: [] as ReleaseShopPreview[] };
+  }
+
+  const preview = await previewSourceRelease(job);
+  const already = new Set(
+    (job.mailedTo ?? []).map((row) => normalizeShopEmail(row.email)),
+  );
+  const take = preview.matches
+    .filter((row) => !already.has(normalizeShopEmail(row.email)))
+    .slice(0, want);
+  const addedMailed = take.map((row) => ({
+    email: row.email,
+    company: row.company,
+    userId: row.userId,
+  }));
+  const now = new Date().toISOString();
+  const next = {
+    ...job,
+    mailedTo: [...(job.mailedTo ?? []), ...addedMailed],
+    buyerExtraShops: (job.buyerExtraShops ?? 0) + take.length,
+    buyerExtraPurchases: [
+      ...purchases,
+      { qty: take.length, paidAt: now, sessionId },
+    ],
+    buyerPaidAt: now,
+  };
+  await saveSourceJob(next, job.pathname);
+  return { ok: true as const, job: next, added: take };
 }
 
 export async function recordBuyerJobPayment(pathname: string) {
