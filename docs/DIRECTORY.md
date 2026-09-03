@@ -8,7 +8,7 @@ problem.
 Count it with `directoryCompanies.length`. Never by grepping one file —
 `directory.ts` merges seven sources plus `fromStateShops()`.
 
-Today: **529** entries (512 US, 17 Canada, 43 states and provinces), 430 with a
+Today: **539** entries (517 US, 22 Canada, 43 states and provinces), 441 with a
 working website.
 
 ## Sources merged
@@ -33,12 +33,36 @@ npm run directory:ingest
 
 The TSVs live in the repo on purpose. They were research output, and if they sat
 in `/tmp` the generated file could never be rebuilt or audited — the provenance
-of 129 companies would exist only in a chat log.
+of 139 companies would exist only in a chat log.
 
 ### Inputs
 
 `found-*.tsv` are research passes: association rosters, trade show exhibitor
 lists, under-covered states, and trade directory listings.
+
+### Sources now exhausted — do not re-run these
+
+- **SMI** — mined.
+- **CASMI** — mined, and it yielded **zero** new companies. All 43 member
+  spring makers were already listed, because CASMI primaries are mostly SMI
+  members too. The gated "Find a Spring Maker" search is not worth fighting;
+  the SpringWorld member dropdown is the complete roster.
+- **WCSMA** — effectively defunct. `wcsma.us` does not resolve and the Wayback
+  archive holds no roster. Reachable only backwards, by finding shops that
+  advertise membership, all of which were already listed.
+- **Trade show exhibitor lists** — mined, and nearly all of it was rejected;
+  exhibitor halls are mostly material suppliers, tooling vendors and machine
+  builders, not forming floors.
+
+Two association rosters returning nothing new is the useful signal here: roster
+mining is finished. Further growth has to come from company-level verification
+in thin regions, which is how the Canadian entries were found — there is no
+Canadian spring association to mine, so those shops sit under general bodies
+like Canadian Manufacturers & Exporters and have to be found one at a time.
+
+**PMA is not exhausted.** Its member directory moved to a JavaScript Salesforce
+portal that cannot be scraped, so only search-indexed profiles were reachable.
+Expect low yield regardless — PMA is mostly stampers and tool-and-die.
 
 `resolved-*.tsv` are verification passes over rows that arrived without a
 website. Each row carries a status:
@@ -85,6 +109,12 @@ further:
 | Monarch Spring & Mfg (Shrewsbury, MA) | Minuteman Spring Company (Millbury, MA) |
 | Tremac Corp (Xenia, OH) | Timac Spring Manufacturing (Xenia, OH) |
 
+Two more identity traps worth remembering. Wisconsin Coil Spring is the legal
+name of WCS Industries, already listed at Muskego — a name-only duplicate that
+hostname dedupe would miss. And the Los Angeles "Titan Springs & Wire Products"
+and the Hayden, Idaho "Titan Spring" share `titanspring.com` because they are
+one relocated company, not two shops.
+
 ## Data quality notes
 
 `state` must be a two-letter US state or Canadian province. It feeds the
@@ -93,6 +123,27 @@ placeholder like `Multiple` makes a shop unmatchable and invisible. Newcomb
 Spring was filed that way and is now filed under its Georgia plant, with the
 other seven plants named in the description.
 
-One entry per company, not per plant. Multi-plant shops are filed at the plant
-that matters for locale. If same-state matching starts mattering more than it
-does now, per-plant entries are the fix, and that is a schema change.
+Multi-plant groups are listed **per plant**, not per company — MW Components
+has nine entries, Newcomb four, Associated Spring two. Fifteen hostnames are
+shared for this reason, so a duplicate-hostname check will always return hits
+and is not by itself a defect. Dedupe on slug, and read hostname collisions by
+hand.
+
+The dedupe in the ingest script rejects a *new* row whose hostname already
+exists, which means it cannot add a second plant for a group already listed.
+That is the conservative direction to fail, but it is worth knowing before
+someone wonders why a known plant will not ingest.
+
+`country` gates claiming: `sourceClaimable()` in `source-directory.ts` allows
+only `USA`, so a US shop misfiled as Canada can never claim its own Source
+profile. ZB Wire Works of Ontario, **California** was filed as Ontario, Canada
+and was silently unclaimable. When a city name exists in both countries, check
+the country before trusting a two-letter code.
+
+One deliberate exception to "state means located in": `state-shops.ts` lists
+J&J Wire's Beatrice, Nebraska plant under Idaho, because Idaho has almost no
+wire floor and that plant ships west. The city text discloses it. This is safe
+only because the directory does not feed matching — pools are drawn from
+filings in `source-match.ts`, never from `directoryCompanies`. If the directory
+ever feeds matching, that entry becomes a bug and `serves` needs to be its own
+field.

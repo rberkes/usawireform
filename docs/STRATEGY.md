@@ -16,11 +16,11 @@ A teaser pool wants **6 shops** (`SOURCE_TEASER_POOL`). The buyer is promised
 **2 quotes** (`SOURCE_BUYER_INCLUDED_SHOPS`). Getting there means surviving
 four narrowing steps:
 
-1. Shops in the directory — **529** (512 US, 17 Canada, 43 states/provinces).
+1. Shops in the directory — **539** (517 US, 22 Canada, 43 states/provinces).
    Count it with `directoryCompanies.length`, not by grepping one file:
    `directory.ts` merges seven sources plus `fromStateShops()`.
 2. Of those, shops that actually **filed capability** with a working email —
-   this is the number that matters, and it is much smaller than 529
+   this is the number that matters, and it is much smaller than 539
 3. Of those, shops with the **matching cell class**
 4. Of those, shops whose **diameter band brackets the print**
 5. Then same-state preference reorders whoever is left
@@ -36,7 +36,7 @@ thin markets.
 
 Industry counts (external, not from this codebase) put spring and wire product
 manufacturing at roughly **869 US companies** — about **1,051 establishments**
-and 35K workers. The directory already maps **529 shops**, so *most of the
+and 35K workers. The directory already maps **539 shops**, so *most of the
 industry is already catalogued*.
 
 That reframes the recruiting job. The gap is not finding shops; it is converting
@@ -189,6 +189,6 @@ If wire forming genuinely cannot sustain the model — pools that cannot fill ev
 after real recruiting effort — then breadth stops being growth and becomes the
 fix.
 
-Nothing observed so far points that way. With 512 of ~869 US companies already
+Nothing observed so far points that way. With 517 of ~869 US companies already
 mapped, the constraint is filing conversion, not supply. That is a much better
 problem than needing more industries.

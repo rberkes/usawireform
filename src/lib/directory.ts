@@ -1097,13 +1097,14 @@ const CORE_DIRECTORY_COMPANIES: DirectoryCompany[] = [
   },
   {
     slug: "zb-wire-works",
-    name: "ZB Wire Works",
+    name: "ZB Wire Works, Inc.",
     location: "Ontario, CA",
-    state: "ON",
-    country: "Canada",
-    region: "Canada",
-    description: "Custom wire products and wire forming services for industrial and commercial applications. Specialized wire solutions.",
-    capabilities: ["Custom wire products", "Wire forming"],
+    state: "CA",
+    country: "USA",
+    region: "West",
+    website: "https://www.zbsweldedmesh.com",
+    description: "Custom pattern welded wire mesh and metal mesh up to 9'-6\" wide panels, plus mesh framing, wire baskets, shelves and racks. Ontario, California — mesh fabrication, not CNC wire from coil.",
+    capabilities: ["Welded wire mesh", "Metal mesh", "Mesh framing", "Wire baskets"],
   },
 ];
 

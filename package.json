@@ -10,7 +10,7 @@
     "export-cv-glb": "npx tsx scripts/export-cv-hook-glb.ts",
     "start": "next start",
     "lint": "eslint",
-    "directory:ingest": "RESOLVED=scripts/directory-research/resolved-websites.tsv,scripts/directory-research/resolved-websites-2.tsv,scripts/directory-research/resolved-override.tsv npx tsx scripts/ingest-directory-tsv.ts src/lib/directory-outreach.ts scripts/directory-research/found-states.tsv scripts/directory-research/found-dir.tsv scripts/directory-research/found-assoc.tsv scripts/directory-research/found-shows.tsv",
+    "directory:ingest": "RESOLVED=scripts/directory-research/resolved-websites.tsv,scripts/directory-research/resolved-websites-2.tsv,scripts/directory-research/resolved-override.tsv npx tsx scripts/ingest-directory-tsv.ts src/lib/directory-outreach.ts scripts/directory-research/found-states.tsv scripts/directory-research/found-dir.tsv scripts/directory-research/found-assoc.tsv scripts/directory-research/found-shows.tsv scripts/directory-research/found-casmi.tsv",
     "validate": "npx tsx src/lib/catalog-validation.ts",
     "typecheck": "tsc --noEmit"
   },
