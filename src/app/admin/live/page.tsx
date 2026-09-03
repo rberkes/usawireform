@@ -115,12 +115,12 @@ const GROUPS = [
       {
         href: "/admin/preview/buyer",
         label: "Buyer dashboard preview",
-        check: "Company card, 0–10+ volume slider, held vs released jobs. Two shops included. Extra $49. No shop names.",
+        check: "Company card, 0–10+ volume slider, held vs released jobs. Two shops can buy first. $49 opens one more quote. Close the print. No shop names.",
       },
       {
         href: "/admin/preview/shop",
         label: "Shop dashboard preview",
-        check: "Inbox teaser with masked buyer email then unlocked contact. No buyer locale. Cells and fullness slider.",
+        check: "Inbox teaser with masked buyer email. First two unlock. Waitlist if those two already bought. Fullness this week ranks higher. No buyer locale.",
       },
       {
         href: "/admin/source",

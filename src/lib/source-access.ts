@@ -1,3 +1,4 @@
+import { buyerShopSlots, SOURCE_LEAD_BUYERS_MAX } from "@/lib/source-plans";
 import { normalizeShopEmail } from "@/lib/source-account";
 import { shopNeedsNda } from "@/lib/source-nda";
 import {
@@ -96,6 +97,54 @@ export function shopBoughtLead(
 
 export function leadPurchaseCount(job: Pick<SourceJob, "purchasedBy">) {
   return job.purchasedBy?.length ?? 0;
+}
+
+export function leadIsClosed(job: Pick<SourceJob, "closedAt">) {
+  return Boolean(job.closedAt);
+}
+
+export function leadPurchaseSlots(
+  job: Pick<SourceJob, "buyerExtraShops">,
+) {
+  return buyerShopSlots(job.buyerExtraShops);
+}
+
+export function waitlistedMailed(
+  job: Pick<SourceJob, "mailedTo" | "purchasedBy">,
+) {
+  const boughtEmail = new Set(
+    (job.purchasedBy ?? []).map((row) => normalizeShopEmail(row.email)),
+  );
+  const boughtUser = new Set(
+    (job.purchasedBy ?? []).map((row) => row.userId).filter(Boolean),
+  );
+  return (job.mailedTo ?? []).filter((row) => {
+    if (row.userId && boughtUser.has(row.userId)) return false;
+    return !boughtEmail.has(normalizeShopEmail(row.email));
+  });
+}
+
+export function shopMayBuyLead(
+  job: Pick<SourceJob, "mailedTo" | "purchasedBy" | "buyerExtraShops" | "closedAt">,
+  who: { userId?: string | null; email?: string | null },
+) {
+  if (leadIsClosed(job)) return false;
+  if (!shopWasMailedJob(job, who)) return false;
+  if (shopBoughtLead(job, who)) return false;
+  if (leadPurchaseCount(job) >= SOURCE_LEAD_BUYERS_MAX) return false;
+  return leadPurchaseCount(job) < leadPurchaseSlots(job);
+}
+
+export function shopIsWaitlisted(
+  job: Pick<SourceJob, "mailedTo" | "purchasedBy" | "buyerExtraShops" | "closedAt">,
+  who: { userId?: string | null; email?: string | null },
+) {
+  if (leadIsClosed(job)) return false;
+  return (
+    shopWasMailedJob(job, who) &&
+    !shopBoughtLead(job, who) &&
+    !shopMayBuyLead(job, who)
+  );
 }
 
 export function shopMaySeeBuyerContact(

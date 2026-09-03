@@ -31,6 +31,7 @@ One company slider, 0–100% full.
 - 0% = needs work (match boost among shops that already fit)
 - 100% = no capacity
 - Stale after 8 days — no boost
+- Filed **this week** (7 days) ranks higher in the six teasers
 - Email listed shops on the **1st and 15th Eastern** (cron + 10-day gap)
 
 UI: `SourceWeeklyCapacityForm` on `/source/dashboard`. Logic: `src/lib/source-capacity.ts`.
@@ -43,9 +44,10 @@ One slider on `/buyer/dashboard`, 0–10+ jobs they source a month. Starts at 0.
 
 - Shop unlock name: **AI Smart Connect™**. Charge is $49 per lead (`SOURCE_LEAD_PRICE_CENTS`).
 - Do not tell **buyers** about shop $49.
-- **Buyer quotes:** two shops are included on a released print. Each extra shop to bid is $49 (`SOURCE_BUYER_EXTRA_SHOP_LOOKUP`). Example: 4 more shops = 4 × $49.
+- **Buyer quotes:** two shops can buy first (first come). If the buyer wants another quote, $49 opens **one more slot** among the waitlist (`SOURCE_BUYER_EXTRA_SHOP_LOOKUP`). Four more quotes = 4 × $49. Not a bundle. One-line **why** goes to waitlist only — not to shops that already quoted.
+- Buyer can **close** the print so waitlist shops stop sitting on a ghost RFQ.
 
-Listing every cell is free. Up to 10 shops can buy the same job.
+Listing every cell is free. Teaser pool is **6**. First **2** unlock. Hard cap 10.
 
 ## Desk email today
 
@@ -55,7 +57,7 @@ Desk **does not** get: Clerk sign-up itself, fullness slider moves, plant photo.
 
 ## Matching (current code)
 
-Hard filter: cell class + diameter band. Bonuses: OEM, locale, qty vs fit, fullness. Cap 10 shops. `src/lib/source-match.ts`.
+Hard filter: cell class + diameter band. Bonuses: OEM, locale, qty vs fit, fullness, filed this week. Cap **6** teasers. `src/lib/source-match.ts`.
 
 **Still wrong vs product:** `submitSourceJob` writes `mailedTo` and emails shops immediately. Product is: save job, receipt to buyer + desk, **Release to shops** is the trigger.
 
@@ -64,7 +66,7 @@ Hard filter: cell class + diameter band. Bonuses: OEM, locale, qty vs fit, fulln
 1. Admin is the trigger — no shop mail, no shop inbox until Release
 2. Shop ping after release: “a job fits this cell” — masked buyer email, no file, no full contact
 3. Shop $49 opens spec/contact; STEP stays desk unless released **and** paid
-4. Buyer: two shops included; extra shops $49 each from the buyer dashboard
+4. Buyer: two shops can buy first; $49 opens one waitlist slot; close the print from the dashboard
 5. Fit check on Release: cell, wire, alloy, coil, finish, qty vs MOQ, fullness
 6. Buyer form: alloy, who buys coil, need-by, finish, first-article vs production, PPAP
 7. Desk mail: shop sign-up, NDA, later cells

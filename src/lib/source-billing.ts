@@ -11,7 +11,7 @@ import {
   type SourceSecondaryPack,
 } from "@/lib/source-secondaries";
 import { getSourceProfile, recordSourceLeadPurchase, setSourceProfileSecondaries } from "@/lib/source";
-import { sendSourceBuyerExtraShopsEmail, sendSourceShopLeadEmails } from "@/lib/leads";
+import { sendSourceBuyerExtraShopsEmail, sendSourceShopLeadEmails, sendSourceShopRebidEmails } from "@/lib/leads";
 import { appOrigin, getStripe, stripeConfigured } from "@/lib/stripe";
 
 const PRICE_CACHE = new Map<string, string>();
@@ -410,25 +410,41 @@ export async function applyCheckoutSession(session: Stripe.Checkout.Session) {
         pathname,
         qty,
         sessionId: session.id,
+        reason: session.metadata?.rebid_reason,
       });
-      if (result.ok && result.added.length > 0) {
+      if (result.ok && result.opened) {
         const job = result.job;
-        await sendSourceShopLeadEmails({
-          mailed: result.added,
-          maskedBuyerEmail: job.email,
-          spec: {
-            diameterRaw: job.diameterRaw,
-            diameterMm: job.diameterMm,
-            kind: job.kind,
-            oem: "",
-            qty: job.qty,
-            notes: "",
-          },
-        });
+        if (result.added.length > 0) {
+          await sendSourceShopLeadEmails({
+            mailed: result.added,
+            maskedBuyerEmail: job.email,
+            spec: {
+              diameterRaw: job.diameterRaw,
+              diameterMm: job.diameterMm,
+              kind: job.kind,
+              oem: "",
+              qty: job.qty,
+              notes: "",
+            },
+          });
+        }
+        if (result.waitlist.length > 0) {
+          const { rebidReasonShopLine } = await import("@/lib/source-rebid");
+          await sendSourceShopRebidEmails({
+            shops: result.waitlist,
+            reason: rebidReasonShopLine(job.buyerRebidReason),
+            spec: {
+              diameterRaw: job.diameterRaw,
+              diameterMm: job.diameterMm,
+              kind: job.kind,
+              qty: job.qty,
+            },
+          });
+        }
         await sendSourceBuyerExtraShopsEmail({
           company: job.company,
           email: job.email,
-          qty: result.added.length,
+          qty,
           pathname,
         });
       }

@@ -15,12 +15,14 @@ export type SourcePlan = {
 export const SOURCE_LEAD_PRICE_CENTS = 4900;
 export const SOURCE_LEAD_LOOKUP = "source_lead_once";
 export const SOURCE_LEAD_BUYERS_MAX = 10;
-/** First this many matched shops are included on a released print. */
+/** Shops who see the teaser. First two to pay unlock contact. */
+export const SOURCE_TEASER_POOL = 6;
+/** First this many shops can buy the lead. Buyer pays $49 per extra quote after that. */
 export const SOURCE_BUYER_INCLUDED_SHOPS = 2;
 /** Buyer pays this per extra shop beyond the included two. */
 export const SOURCE_BUYER_EXTRA_SHOP_LOOKUP = "source_buyer_extra_shop";
 export const SOURCE_BUYER_QUOTE_LINE =
-  "Two shops get the print free. More shops to bid are $49 each.";
+  "Two shops can buy first — first come. If you want another quote, $49 opens the next shop in line.";
 
 export function buyerShopSlots(extraShops = 0) {
   const extra = Number.isFinite(extraShops) ? Math.max(0, Math.floor(extraShops)) : 0;
@@ -31,6 +33,29 @@ export function extraShopsRemaining(matchCount: number, mailedCount: number) {
   const matches = Math.max(0, Math.min(SOURCE_LEAD_BUYERS_MAX, matchCount));
   const mailed = Math.max(0, mailedCount);
   return Math.max(0, matches - mailed);
+}
+
+export function extraQuoteSlotsRemaining({
+  mailed,
+  purchased,
+  extraShops,
+  closed,
+}: {
+  mailed: number;
+  purchased: number;
+  extraShops?: number;
+  closed?: boolean;
+}) {
+  if (closed) return 0;
+  if (purchased < SOURCE_BUYER_INCLUDED_SHOPS) return 0;
+  const slots = buyerShopSlots(extraShops);
+  const room = SOURCE_LEAD_BUYERS_MAX - slots;
+  if (room <= 0) return 0;
+  const wait = Math.max(0, mailed - purchased);
+  const unfilled = Math.max(0, slots - purchased);
+  const waitCanOpen = Math.max(0, wait - unfilled);
+  const poolRoom = Math.max(0, SOURCE_TEASER_POOL - mailed);
+  return Math.min(waitCanOpen + poolRoom, room);
 }
 
 export function formatLeadTotal(qty: number) {
@@ -89,7 +114,7 @@ export const SOURCE_PLANS: SourcePlan[] = [
 export const SOURCE_PAID_PLANS = SOURCE_PLANS.filter((plan) => plan.priceCents > 0);
 
 export const SOURCE_PLAN_LINE =
-  `List every cell free. Matched leads show in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}. Up to 10 shops can buy each job.`;
+  `List every cell free. Matched leads show in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}. Up to ${SOURCE_TEASER_POOL} shops see the teaser. First two to unlock get contact.`;
 
 export const SOURCE_FIT_LINE =
   "Min order, setup, stocked materials, and lead are free on the listing so a buyer can see how the factory operates.";

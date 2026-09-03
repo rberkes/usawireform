@@ -45,7 +45,7 @@ const STEPS = [
   {
     n: "03",
     title: "Quotes from shops that can run it",
-    body: "Up to 10 shops whose machines fit the job see the print. The STEP is never attached to email.",
+    body: "Six shops whose machines fit the job see a teaser. First two to unlock can quote. The STEP is never attached to email.",
   },
 ];
 
@@ -118,7 +118,8 @@ export default async function SourcePage() {
         <div className="border border-line bg-inset p-5 sm:p-8">
           <Kicker>What you get</Kicker>
           <p className="mt-4 text-2xl font-medium tracking-tight sm:text-3xl">
-            Up to 10 shops whose machines fit the job.
+            Six shops whose machines fit the job see a teaser. First two
+            to unlock can quote.
           </p>
           <p className="mt-4 text-sm leading-6 text-muted">
             Instant estimate on this site is still this floor — 4–14 mm on the
@@ -130,7 +131,7 @@ export default async function SourcePage() {
       <StatRow
         className="mt-14 sm:mt-16"
         items={[
-          { value: "10", label: "Shops can quote a job" },
+          { value: "6", label: "Shops see a teaser" },
           { value: "Size", label: "Wire diameter first" },
           { value: "2D / 3D", label: "Bend type" },
           { value: "Free", label: "For buyers" },

@@ -16,12 +16,15 @@ import {
   sourceFilingsForShop,
 } from "@/lib/source-account";
 import { getSourcePlanForUser, getSourceSecondaryQtyForUser, getStripeCustomerId } from "@/lib/source-billing";
-import { formatLeadPrice, SOURCE_LEAD_BUYERS_MAX, SOURCE_PLAN_LINE, SOURCE_SMART_CONNECT } from "@/lib/source-plans";
+import { formatLeadPrice, SOURCE_LEAD_BUYERS_MAX, SOURCE_PLAN_LINE, SOURCE_SMART_CONNECT, SOURCE_TEASER_POOL } from "@/lib/source-plans";
 import {
   jobsMailedToShop,
+  leadIsClosed,
   leadPurchaseCount,
   shopBoughtLead,
   shopDrawingHref,
+  shopIsWaitlisted,
+  shopMayBuyLead,
   shopMaySeeBuyerContact,
   shopMayViewDrawing,
 } from "@/lib/source-access";
@@ -184,7 +187,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           </p>
           <p className="mt-2 text-xl font-medium">{formatLeadPrice()} each</p>
           <p className="mt-1 text-sm text-muted">
-            Up to {SOURCE_LEAD_BUYERS_MAX} shops can buy a job.
+            First two to unlock. Up to {SOURCE_TEASER_POOL} see the teaser.
           </p>
         </Panel>
         <Panel className="p-5">
@@ -216,13 +219,23 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         </p>
         <p className="mt-2 text-xl font-medium">Buy as they come</p>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          {SOURCE_PLAN_LINE} Cell, wire, and qty show here. Buyer name and
-          email unlock after you pay. A STEP opens only if the buyer
-          released it.
+          {SOURCE_PLAN_LINE} Others wait if the buyer wants another quote.
+          File fullness this week to sit higher in that six.
         </p>
         {leadFlag === "full" ? (
           <p className="mt-2 text-sm leading-6 text-copper">
             This lead already has {SOURCE_LEAD_BUYERS_MAX} buyers.
+          </p>
+        ) : null}
+        {leadFlag === "wait" ? (
+          <p className="mt-2 text-sm leading-6 text-copper">
+            Two shops already unlocked this lead. You are next if the buyer
+            opens another quote.
+          </p>
+        ) : null}
+        {leadFlag === "closed" ? (
+          <p className="mt-2 text-sm leading-6 text-copper">
+            The buyer closed this print. It is not open for another bid.
           </p>
         ) : null}
         {leadFlag === "stripe" ? (
@@ -240,9 +253,9 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           {inbox.length === 0 ? (
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
               No matched buyer jobs yet. When a print fits a cell you filed,
-              the lead lands here. Cell, wire, qty, and a masked buyer email
-              until you pay {formatLeadPrice()} — name and full email stay
-              hidden.
+              the lead lands here. Up to {SOURCE_TEASER_POOL} shops see
+              the teaser. First two to unlock get contact. File fullness this
+              week to sit higher in that six.
             </p>
           ) : (
             <ul className="mt-4 divide-y divide-line border border-line">
@@ -256,6 +269,9 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                 });
                 const privacy = parseDrawingPrivacy(job.drawingPrivacy);
                 const sold = leadPurchaseCount(job);
+                const closed = leadIsClosed(job);
+                const canBuy = shopMayBuyLead(job, { userId, email });
+                const waiting = shopIsWaitlisted(job, { userId, email });
                 const full = sold >= SOURCE_LEAD_BUYERS_MAX && !bought;
                 return (
                   <li key={job.pathname} className="px-4 py-4 text-sm">
@@ -278,12 +294,22 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                           .filter(Boolean)
                           .join(" · ")}
                       </p>
+                    ) : waiting ? (
+                      <p className="mt-2 text-muted">
+                        Two shops already unlocked this lead. You are next if
+                        the buyer asks for another quote. You do not pay to
+                        wait.
+                      </p>
+                    ) : closed ? (
+                      <p className="mt-2 text-muted">
+                        The buyer closed this print.
+                      </p>
                     ) : (
                       <p className="mt-2 text-muted">
-                        Buyer {maskEmail(job.email) || "email masked"}. Full
-                        contact unlocks at {formatLeadPrice()}.
+                        Buyer {maskEmail(job.email) || "email masked"}. First
+                        two to unlock get contact at {formatLeadPrice()}.
                         {sold
-                          ? ` ${sold} of ${SOURCE_LEAD_BUYERS_MAX} shops bought this lead.`
+                          ? ` ${sold} already unlocked.`
                           : ""}
                       </p>
                     )}
@@ -306,7 +332,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                         </a>
                       </p>
                     ) : null}
-                    {!bought && !full ? (
+                    {canBuy ? (
                       <form action={startSourceLeadCheckout} className="mt-3">
                         <input type="hidden" name="pathname" value={job.pathname} />
                         <Button type="submit">

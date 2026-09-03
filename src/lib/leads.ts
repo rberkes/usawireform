@@ -16,6 +16,9 @@ import {
   sourceInviteHtml,
   sourceJobReceiptHtml,
   sourceShopLeadHtml,
+  sourceShopWaitlistHtml,
+  sourceShopRebidHtml,
+  sourceShopClosedHtml,
   type EstimateMailCopy,
   type MailRow,
 } from "@/lib/lead-mail";
@@ -655,7 +658,7 @@ export async function sendSourceJobEmails({
         <p>${
           held
             ? "Release to shops from /admin/accounts. Shops then see a teaser and pay $49 to unlock buyer contact."
-            : "Matched shops see the lead in Source and pay $49 to unlock buyer contact. Up to 10 shops can buy this job."
+            : "Matched shops see the lead in Source and pay $49 to unlock buyer contact. Six shops see the teaser. First two to unlock get contact."
         }</p>
         <p>Drawing: ${drawingPrivacy === "matched" ? "buyer released the STEP — a shop that bought the lead opens it in the dashboard, not attached here." : "buyer kept the STEP at the desk — do not forward the file."}</p>`,
     }),
@@ -683,6 +686,87 @@ export async function sendSourceJobEmails({
   return shop && receipt;
 }
 
+export async function sendSourceShopWaitlistEmails({
+  shops,
+  spec,
+}: {
+  shops: Array<{ company: string; email: string }>;
+  spec: {
+    diameterRaw: string;
+    diameterMm: number | null;
+    kind: string;
+    qty: string;
+  };
+}) {
+  const results = await Promise.all(
+    shops.map(async (row) => {
+      if (!row.email.trim()) return false;
+      const ok = await sendResendMail({
+        to: row.email,
+        replyTo: QUOTE_EMAIL,
+        subject: `You are next in line — ${COMPANY}`,
+        html: sourceShopWaitlistHtml({ shop: row.company, spec }),
+      });
+      console.log("[Source waitlist]", { to: row.email, company: row.company, ok });
+      return ok;
+    }),
+  );
+  return results.filter(Boolean).length;
+}
+
+export async function sendSourceShopRebidEmails({
+  shops,
+  reason,
+  spec,
+}: {
+  shops: Array<{ company: string; email: string }>;
+  reason: string;
+  spec: {
+    diameterRaw: string;
+    diameterMm: number | null;
+    kind: string;
+    qty: string;
+  };
+}) {
+  const results = await Promise.all(
+    shops.map(async (row) => {
+      if (!row.email.trim()) return false;
+      const ok = await sendResendMail({
+        to: row.email,
+        replyTo: QUOTE_EMAIL,
+        subject: `This print is open for another quote — ${COMPANY}`,
+        html: sourceShopRebidHtml({ shop: row.company, reason, spec }),
+      });
+      console.log("[Source rebid]", { to: row.email, company: row.company, ok });
+      return ok;
+    }),
+  );
+  return results.filter(Boolean).length;
+}
+
+export async function sendSourceShopClosedEmails({
+  shops,
+  spec,
+}: {
+  shops: Array<{ company: string; email: string }>;
+  spec: { diameterRaw: string; diameterMm: number | null; kind: string };
+}) {
+  const results = await Promise.all(
+    shops.map(async (row) => {
+      if (!row.email.trim()) return false;
+      const ok = await sendResendMail({
+        to: row.email,
+        replyTo: QUOTE_EMAIL,
+        subject: `The buyer closed this print — ${COMPANY}`,
+        html: sourceShopClosedHtml({ shop: row.company, spec }),
+      });
+      console.log("[Source closed]", { to: row.email, company: row.company, ok });
+      return ok;
+    }),
+  );
+  return results.filter(Boolean).length;
+}
+
 export async function sendSourceBuyerPayEmail({
   to,
   company,
@@ -698,7 +782,7 @@ export async function sendSourceBuyerPayEmail({
     replyTo: QUOTE_EMAIL,
     subject: `Your Source print is ready — ${COMPANY}`,
     html: `<p>Hi ${hello},</p>
-      <p>Two shops get ${escapeHtml(company || "your print")} free. More shops to bid are $49 each from the buyer dashboard.</p>
+      <p>Two shops can buy first — first come. Another quote is $49 from the buyer dashboard.</p>
       <p><a href="${SITE_URL}/buyer/dashboard">${SITE_URL}/buyer/dashboard</a></p>`,
   });
 }

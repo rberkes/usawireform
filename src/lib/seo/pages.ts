@@ -648,7 +648,7 @@ export const staticSeoPages: SeoRecord[] = [
     path: "/source/upgrade",
     title: "Unlock Buyer Leads with AI Smart Connect™",
     description:
-      `List every CNC cell free. Matched buyer jobs show in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}. Up to 10 shops can buy each job. Secondaries: 3 top ops $19/mo, six maximum $49/mo.`,
+      `List every CNC cell free. Matched buyer jobs show in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}. Six shops see the teaser. First two to unlock get contact. Secondaries: 3 top ops $19/mo, six maximum $49/mo.`,
     section: "company",
     keywords: ["source shop plan", "CNC equipment list", "wire forming capacity"],
     priority: 0.6,

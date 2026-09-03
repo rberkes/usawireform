@@ -2,10 +2,10 @@ import { ButtonLink, Page, PageHero, Panel } from "@/components/ui";
 import { pageMeta } from "@/lib/seo";
 import {
   formatLeadPrice,
-  SOURCE_LEAD_BUYERS_MAX,
   SOURCE_PLAN_LINE,
   SOURCE_SMART_CONNECT,
   SOURCE_SMART_CONNECT_LINE,
+  SOURCE_TEASER_POOL,
 } from "@/lib/source-plans";
 import { SOURCE_SECONDARY_LINE } from "@/lib/source-secondaries";
 
@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta({
   title: "Unlock Buyer Leads with AI Smart Connect™",
   description:
-    "List every cell free. Matched buyer jobs show in the shop dashboard. Unlock Buyer Leads with AI Smart Connect™. Up to 10 shops can buy each job.",
+    "List every cell free. Matched buyer jobs show in the shop dashboard. Unlock Buyer Leads with AI Smart Connect™. Six shops see the teaser. First two to unlock get contact.",
   path: "/source/upgrade",
   keywords: ["wire forming leads", "buy RFQ", "source shop dashboard"],
 });
@@ -47,7 +47,9 @@ export default function SourceUpgradePage() {
         <p className="text-sm leading-6 text-muted">
           The job shows in your dashboard when a print fits a cell you filed.
           Pay {formatLeadPrice()} to unlock buyer contact. Up to{" "}
-          {SOURCE_LEAD_BUYERS_MAX} shops can buy the same job. A STEP opens
+          {SOURCE_TEASER_POOL} shops see the teaser. First two to unlock get
+          contact — first come. Others wait if the buyer wants another quote.
+          File fullness this week to sit higher in that six. A STEP opens
           only if the buyer released it. Never attached to email.
         </p>
         <div className="pt-2">

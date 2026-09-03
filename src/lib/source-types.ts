@@ -190,6 +190,7 @@ export type SourceBuyerExtraPurchase = {
   qty: number;
   paidAt: string;
   sessionId?: string;
+  reason?: string;
 };
 
 export type SourceJob = {
@@ -222,7 +223,7 @@ export type SourceJob = {
   drawingPrivacy?: SourceDrawingPrivacy;
   /** Unguessable token so the buyer can change privacy without an account. */
   privacyToken?: string;
-  /** Shops offered this RFQ in the dashboard (up to 10). Empty until desk Release. */
+  /** Shops offered this RFQ in the dashboard (teaser pool of 6). Empty until desk Release. */
   mailedTo?: SourceJobMailedTo[];
   /** Shops that paid $49 to unlock buyer contact. */
   purchasedBy?: SourceJobPurchase[];
@@ -239,6 +240,11 @@ export type SourceJob = {
   /** Paid extra shops beyond the included two. */
   buyerExtraShops?: number;
   buyerExtraPurchases?: SourceBuyerExtraPurchase[];
+  /** Buyer marked the print done — waitlist closes. */
+  closedAt?: string;
+  /** Last one-line reason when the buyer opened another quote. */
+  buyerRebidReason?: string;
+  waitlistNotifiedAt?: string;
 };
 
 export type SourceJobRow = SourceJob & { pathname: string };

@@ -494,7 +494,7 @@ export function sourceJobReceiptHtml({
       ? `No filed cell matches ${size} yet. The desk has the RFQ and will work it.`
       : matchCount === 1
         ? `One shop can run ${size}. They see the job and can quote.`
-        : `Up to ${Math.min(matchCount, 10)} shops that can run ${size} see the job.`;
+        : `Up to ${Math.min(matchCount, 6)} shops that can run ${size} see a teaser. First two to unlock can quote.`;
   const privacy =
     drawingPrivacy === "matched"
       ? "You released the STEP. A quoting shop can open it in the dashboard. It is not posted and not attached to email."
@@ -560,7 +560,7 @@ export function sourceShopLeadHtml({
     `A Source job matches your cell — ${size}`,
     `${kickerRow()}
      ${headingRow("A job matches your cell")}
-     ${copyRow(`${escapeHtml(shop || "Your shop")}: this print sits in a cell you filed. The lead is in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}. Up to 10 shops can buy it.`)}
+     ${copyRow(`${escapeHtml(shop || "Your shop")}: this print sits in a cell you filed. First two shops to unlock get contact — first come. Others stay in line if the buyer wants another quote. ${SOURCE_SMART_CONNECT_LINE}.`)}
      ${copyRow(`<strong>${escapeHtml(why)}</strong>${fitNote ? `<br />${escapeHtml(fitNote)}` : ""}`)}
      ${mailRowsHtml(
        [
@@ -574,6 +574,87 @@ export function sourceShopLeadHtml({
        `${SITE_URL}/source/dashboard`,
        SOURCE_SMART_CONNECT_LINE,
        "Buyer name and full email are not in this message. The STEP is never attached.",
+     )}`,
+  );
+}
+
+export function sourceShopWaitlistHtml({
+  shop,
+  spec,
+}: {
+  shop: string;
+  spec: { diameterRaw: string; diameterMm: number | null; kind: string; qty: string };
+}) {
+  const size =
+    spec.diameterMm != null
+      ? `${spec.diameterMm.toLocaleString("en-US")} mm`
+      : spec.diameterRaw.trim() || "unspecified wire";
+  return shell(
+    "You are next if the buyer wants another quote",
+    `${kickerRow()}
+     ${headingRow("You are next in line")}
+     ${copyRow(`${escapeHtml(shop || "Your shop")}: two shops already unlocked this ${escapeHtml(spec.kind || "job")} (${escapeHtml(size)}${spec.qty ? `, qty ${escapeHtml(spec.qty)}` : ""}). You do not pay unless the buyer opens another quote.`)}
+     ${ctaBannerRow(
+       `${SITE_URL}/source/dashboard`,
+       "Watch the dashboard",
+       "If they want another quote, first come among the shops still in line.",
+     )}`,
+  );
+}
+
+export function sourceShopRebidHtml({
+  shop,
+  reason,
+  spec,
+}: {
+  shop: string;
+  reason: string;
+  spec: { diameterRaw: string; diameterMm: number | null; kind: string; qty: string };
+}) {
+  const size =
+    spec.diameterMm != null
+      ? `${spec.diameterMm.toLocaleString("en-US")} mm`
+      : spec.diameterRaw.trim() || "unspecified wire";
+  return shell(
+    "This print is open for another quote",
+    `${kickerRow()}
+     ${headingRow("Open for another quote")}
+     ${copyRow(`${escapeHtml(shop || "Your shop")}: ${escapeHtml(reason)} First shop in line to unlock gets contact.`)}
+     ${mailRowsHtml(
+       [
+         spec.kind ? { label: "Cell", value: spec.kind } : null,
+         { label: "Wire", value: spec.diameterRaw || size },
+         spec.qty ? { label: "Qty", value: spec.qty } : null,
+       ].filter((row): row is MailRow => Boolean(row)),
+     )}
+     ${ctaBannerRow(
+       `${SITE_URL}/source/dashboard`,
+       SOURCE_SMART_CONNECT_LINE,
+       "The shops that already quoted are not copied on this note.",
+     )}`,
+  );
+}
+
+export function sourceShopClosedHtml({
+  shop,
+  spec,
+}: {
+  shop: string;
+  spec: { diameterRaw: string; diameterMm: number | null; kind: string };
+}) {
+  const size =
+    spec.diameterMm != null
+      ? `${spec.diameterMm.toLocaleString("en-US")} mm`
+      : spec.diameterRaw.trim() || "unspecified wire";
+  return shell(
+    "The buyer closed this print",
+    `${kickerRow()}
+     ${headingRow("This print is closed")}
+     ${copyRow(`${escapeHtml(shop || "Your shop")}: the buyer is done taking quotes on this ${escapeHtml(spec.kind || "job")} (${escapeHtml(size)}). It is not open for another bid.`)}
+     ${ctaBannerRow(
+       `${SITE_URL}/source/dashboard`,
+       "Back to the dashboard",
+       "Keep the fullness slider current. Hungry shops that filed this week sit higher on the next teaser.",
      )}`,
   );
 }

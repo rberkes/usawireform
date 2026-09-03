@@ -4,7 +4,16 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/app/admin/actions";
 import { blobErrorMessage, blobReady } from "@/lib/blob";
-import { sendSourceBuyerSignupEmails, sendSourceNdaEmails, sendSourceBuyerVolumeEmail } from "@/lib/leads";
+import {
+  attachJobsToBuyer,
+  getSourceJob,
+  getSourceProfile,
+  saveSourceJob,
+  saveSourceProfile,
+  uniqueSourceSlug,
+} from "@/lib/source";
+import { buyerOwnsJob, leadIsClosed, waitlistedMailed } from "@/lib/source-access";
+import { sendSourceBuyerSignupEmails, sendSourceNdaEmails, sendSourceBuyerVolumeEmail, sendSourceShopClosedEmails } from "@/lib/leads";
 import {
   clerkEmailIsConfirmed,
   getBuyerAccount,
@@ -17,12 +26,6 @@ import {
 import { safeSourceNext } from "@/lib/source-gate";
 import { SOURCE_NDA_VERSION } from "@/lib/source-nda";
 import { setSourceRole } from "@/lib/source-role";
-import {
-  attachJobsToBuyer,
-  getSourceProfile,
-  saveSourceProfile,
-  uniqueSourceSlug,
-} from "@/lib/source";
 
 export type SourceAccountState = {
   success: boolean;
@@ -227,4 +230,32 @@ export async function setSourceBuyerVerified(formData: FormData) {
     updatedAt: now,
   });
   redirect("/admin/accounts#buyers");
+}
+
+export async function closeSourceBuyerJob(formData: FormData) {
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in?as=buyer&redirect_url=/buyer/dashboard");
+  const user = await currentUser();
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
+  const pathname = String(formData.get("pathname") ?? "").trim();
+  if (!pathname) redirect("/buyer/dashboard");
+  const job = await getSourceJob(pathname);
+  if (!job || !buyerOwnsJob(job, { userId, email })) {
+    redirect("/buyer/dashboard");
+  }
+  if (leadIsClosed(job)) redirect("/buyer/dashboard");
+  const wait = waitlistedMailed(job);
+  const now = new Date().toISOString();
+  await saveSourceJob({ ...job, closedAt: now }, job.pathname);
+  if (wait.length > 0) {
+    await sendSourceShopClosedEmails({
+      shops: wait,
+      spec: {
+        diameterRaw: job.diameterRaw,
+        diameterMm: job.diameterMm,
+        kind: job.kind,
+      },
+    });
+  }
+  redirect("/buyer/dashboard");
 }

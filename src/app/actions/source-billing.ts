@@ -15,16 +15,10 @@ import {
   getStripeCustomerId,
   setSubscriptionSecondaryPack,
 } from "@/lib/source-billing";
-import {
-  extraShopsRemaining,
-  SOURCE_LEAD_BUYERS_MAX,
-  isSourcePlanId,
-  planById,
-  sourceBuyerSignInHref,
-} from "@/lib/source-plans";
-import { buyerOwnsJob, jobIsReleased, shopBoughtLead, shopWasMailedJob } from "@/lib/source-access";
+import { extraQuoteSlotsRemaining, isSourcePlanId, planById, sourceBuyerSignInHref } from "@/lib/source-plans";
+import { buyerOwnsJob, jobIsReleased, leadIsClosed, shopBoughtLead, shopMayBuyLead, shopWasMailedJob } from "@/lib/source-access";
+import { parseRebidReason } from "@/lib/source-rebid";
 import { getSourceJob, getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
-import { previewSourceRelease } from "@/lib/source-release";
 import { requireBuyer } from "@/lib/source-gate";
 import {
   SOURCE_SECONDARY_MAX,
@@ -61,8 +55,10 @@ export async function startSourceLeadCheckout(formData: FormData) {
   if (shopBoughtLead(job, { userId, email })) {
     redirect("/source/dashboard");
   }
-  if ((job.purchasedBy ?? []).length >= SOURCE_LEAD_BUYERS_MAX) {
-    redirect("/source/dashboard?lead=full");
+  if (!shopMayBuyLead(job, { userId, email })) {
+    redirect(
+      leadIsClosed(job) ? "/source/dashboard?lead=closed" : "/source/dashboard?lead=wait",
+    );
   }
 
   const stripe = getStripe();
@@ -107,13 +103,17 @@ export async function startSourceBuyerExtraCheckout(formData: FormData) {
   }
   if (!jobIsReleased(job)) redirect("/buyer/dashboard");
 
-  const preview = await previewSourceRelease(job);
-  const remaining = extraShopsRemaining(
-    preview.matches.length,
-    job.mailedTo?.length ?? 0,
-  );
-  const qty = Math.min(remaining, Math.max(1, Math.floor(qtyRaw)));
+  if (leadIsClosed(job)) redirect("/buyer/dashboard");
+
+  const remaining = extraQuoteSlotsRemaining({
+    mailed: job.mailedTo?.length ?? 0,
+    purchased: job.purchasedBy?.length ?? 0,
+    extraShops: job.buyerExtraShops,
+    closed: Boolean(job.closedAt),
+  });
+  const qty = Math.min(remaining, Math.max(1, Math.floor(qtyRaw || 1)));
   if (qty < 1) redirect("/buyer/dashboard");
+  const reason = parseRebidReason(String(formData.get("reason") ?? ""));
 
   const stripe = getStripe();
   const priceId = await ensureBuyerExtraShopPriceId();
@@ -134,6 +134,7 @@ export async function startSourceBuyerExtraCheckout(formData: FormData) {
       source_buyer_extra: "1",
       job_pathname: pathname,
       extra_qty: String(qty),
+      rebid_reason: reason,
     },
   });
   if (!session.url) redirect("/buyer/dashboard");

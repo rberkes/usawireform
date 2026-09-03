@@ -2,7 +2,7 @@ import { get, list, put, del } from "@vercel/blob";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
 import { SITE_URL } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
-import { SOURCE_LEAD_BUYERS_MAX } from "@/lib/source-plans";
+import { leadIsClosed, leadPurchaseSlots, waitlistedMailed } from "@/lib/source-access";
 import {
   slugifyShopName,
   sourceProfileToDirectoryCompany,
@@ -13,7 +13,7 @@ import { parseSourceBuyerFit } from "@/lib/source-fit";
 import { parseSourceSecondaries } from "@/lib/source-secondaries";
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import { filingsToFloorCells, mergeFloorFeed } from "@/lib/source-floor-feed";
-import { sendDrawingReviewedEmail } from "@/lib/leads";
+import { sendDrawingReviewedEmail, sendSourceShopWaitlistEmails } from "@/lib/leads";
 import {
   parseDrawingPrivacy,
   type SourceDrawingPrivacy,
@@ -321,6 +321,7 @@ function readBuyerExtraPurchases(raw: unknown): SourceBuyerExtraPurchase[] {
       qty: Math.floor(qty),
       paidAt: String(item.paidAt ?? ""),
       sessionId,
+      reason: typeof item.reason === "string" ? item.reason : undefined,
     });
   }
   return rows;
@@ -378,6 +379,13 @@ function readSourceJob(
             0,
           ) || undefined,
     buyerExtraPurchases: readBuyerExtraPurchases(payload.buyerExtraPurchases),
+    closedAt: payload.closedAt ? String(payload.closedAt) : undefined,
+    buyerRebidReason: payload.buyerRebidReason
+      ? String(payload.buyerRebidReason)
+      : undefined,
+    waitlistNotifiedAt: payload.waitlistNotifiedAt
+      ? String(payload.waitlistNotifiedAt)
+      : undefined,
     pathname,
   };
 }
@@ -482,27 +490,49 @@ export async function recordSourceLeadPurchase({
         row.email.trim().toLowerCase() === email.trim().toLowerCase()),
   );
   if (!offered) return { ok: false as const, reason: "not-offered" as const };
+  if (leadIsClosed(job)) return { ok: false as const, reason: "closed" as const };
   const already = (job.purchasedBy ?? []).some(
     (row) => row.userId === userId || row.sessionId === sessionId,
   );
   if (already) return { ok: true as const, job };
-  if ((job.purchasedBy ?? []).length >= SOURCE_LEAD_BUYERS_MAX) {
+  const before = job.purchasedBy?.length ?? 0;
+  const slots = leadPurchaseSlots(job);
+  if (before >= slots) {
     return { ok: false as const, reason: "sold-out" as const };
   }
+  const purchasedBy = [
+    ...(job.purchasedBy ?? []),
+    {
+      userId,
+      email,
+      company,
+      purchasedAt: new Date().toISOString(),
+      sessionId,
+    },
+  ];
   const next: SourceJobRow = {
     ...job,
-    purchasedBy: [
-      ...(job.purchasedBy ?? []),
-      {
-        userId,
-        email,
-        company,
-        purchasedAt: new Date().toISOString(),
-        sessionId,
-      },
-    ],
+    purchasedBy,
   };
+  const filled = before < slots && purchasedBy.length >= slots;
+  if (filled) {
+    next.waitlistNotifiedAt = new Date().toISOString();
+  }
   await saveSourceJob(next, pathname);
+  if (filled) {
+    const wait = waitlistedMailed(next);
+    if (wait.length > 0) {
+      await sendSourceShopWaitlistEmails({
+        shops: wait,
+        spec: {
+          diameterRaw: job.diameterRaw,
+          diameterMm: job.diameterMm,
+          kind: job.kind,
+          qty: job.qty,
+        },
+      });
+    }
+  }
   return { ok: true as const, job: next };
 }
 

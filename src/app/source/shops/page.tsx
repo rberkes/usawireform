@@ -44,7 +44,7 @@ const STEPS = [
   {
     n: "03",
     title: "Buy the lead from the dashboard",
-    body: "Listing every cell is free. A matched job shows in the shop dashboard. Unlock Buyer Leads with AI Smart Connect™. Up to 10 shops can buy the same job. A STEP opens only if the buyer released it — never attached to email.",
+    body: "Listing every cell is free. A matched job shows in the shop dashboard. Unlock Buyer Leads with AI Smart Connect™. Six shops see the teaser. First two to unlock get contact — first come. A STEP opens only if the buyer released it — never attached to email.",
   },
 ];
 
@@ -91,7 +91,8 @@ export default async function SourceShopsPage() {
             No card to file a cell. Min order, setup, stock, and lead stay
             free on the listing so a buyer can see how the plant operates.
             Matched jobs show in the dashboard. Unlock Buyer Leads with AI
-            Smart Connect™. Up to 10 shops can buy the same job.
+            Smart Connect™. Six shops see the teaser. First two to unlock
+            get contact.
           </p>
           <p className="mt-6 text-sm leading-6 text-muted">
             Already filed? <TextLink href="/sign-in">Log in</TextLink>.
@@ -104,7 +105,7 @@ export default async function SourceShopsPage() {
         items={[
           { value: "Free", label: "List every cell" },
           { value: String(usaShops.length), label: "US listings to claim" },
-          { value: "$49", label: "Per lead. Max 10 shops." },
+          { value: "$49", label: "Per lead. First two unlock." },
           { value: "US", label: "Shops on Source" },
         ]}
       />

@@ -1,7 +1,7 @@
 import "server-only";
 
 import { applyProfilesToFilings, getSourceJob, listSourceFilings, listSourceProfiles, saveSourceJob } from "@/lib/source";
-import { jobIsReleased } from "@/lib/source-access";
+import { jobIsReleased, waitlistedMailed } from "@/lib/source-access";
 import { normalizeShopEmail } from "@/lib/source-account";
 import { formatFullness, readShopCapacity } from "@/lib/source-capacity";
 import {
@@ -13,7 +13,7 @@ import {
 import { partitionLeadMatches } from "@/lib/source-leads";
 import { matchFilingsToJob, parseQty, type SourceJobSpec } from "@/lib/source-match";
 import { secondaryLabel } from "@/lib/source-secondaries";
-import { buyerShopSlots, SOURCE_BUYER_INCLUDED_SHOPS } from "@/lib/source-plans";
+import { buyerShopSlots, SOURCE_BUYER_INCLUDED_SHOPS, SOURCE_TEASER_POOL } from "@/lib/source-plans";
 import type {
   SourceFiling,
   SourceInternalMatch,
@@ -245,8 +245,8 @@ export async function previewSourceRelease(
     mailedTo: mailedTo.slice(
       0,
       alreadyReleased
-        ? Math.max(job.mailedTo?.length ?? 0, slots)
-        : slots,
+        ? Math.max(job.mailedTo?.length ?? 0, SOURCE_TEASER_POOL)
+        : SOURCE_TEASER_POOL,
     ),
   };
 }
@@ -276,28 +276,41 @@ export async function applyBuyerExtraShops({
   pathname,
   qty,
   sessionId,
+  reason,
 }: {
   pathname: string;
   qty: number;
   sessionId?: string;
+  reason?: string;
 }) {
   const job = await getSourceJob(pathname);
   if (!job) return { ok: false as const, reason: "missing" as const };
+  if (job.closedAt) return { ok: false as const, reason: "closed" as const };
   const want = Math.max(0, Math.floor(qty));
   if (want < 1) return { ok: false as const, reason: "qty" as const };
 
   const purchases = job.buyerExtraPurchases ?? [];
   if (sessionId && purchases.some((row) => row.sessionId === sessionId)) {
-    return { ok: true as const, job, added: [] as ReleaseShopPreview[] };
+    return {
+      ok: true as const,
+      job,
+      added: [] as ReleaseShopPreview[],
+      waitlist: waitlistedMailed(job),
+      opened: false,
+    };
   }
 
   const preview = await previewSourceRelease(job);
   const already = new Set(
     (job.mailedTo ?? []).map((row) => normalizeShopEmail(row.email)),
   );
-  const take = preview.matches
-    .filter((row) => !already.has(normalizeShopEmail(row.email)))
-    .slice(0, want);
+  const waitNow = waitlistedMailed(job);
+  const take =
+    waitNow.length > 0
+      ? []
+      : preview.matches
+          .filter((row) => !already.has(normalizeShopEmail(row.email)))
+          .slice(0, want);
   const addedMailed = take.map((row) => ({
     email: row.email,
     company: row.company,
@@ -307,15 +320,22 @@ export async function applyBuyerExtraShops({
   const next = {
     ...job,
     mailedTo: [...(job.mailedTo ?? []), ...addedMailed],
-    buyerExtraShops: (job.buyerExtraShops ?? 0) + take.length,
+    buyerExtraShops: (job.buyerExtraShops ?? 0) + want,
     buyerExtraPurchases: [
       ...purchases,
-      { qty: take.length, paidAt: now, sessionId },
+      { qty: want, paidAt: now, sessionId, reason },
     ],
     buyerPaidAt: now,
+    buyerRebidReason: reason,
   };
   await saveSourceJob(next, job.pathname);
-  return { ok: true as const, job: next, added: take };
+  return {
+    ok: true as const,
+    job: next,
+    added: take,
+    waitlist: waitNow.length > 0 ? waitlistedMailed(next) : [],
+    opened: true,
+  };
 }
 
 export async function recordBuyerJobPayment(pathname: string) {

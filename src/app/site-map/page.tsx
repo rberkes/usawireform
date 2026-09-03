@@ -92,7 +92,7 @@ export default function SiteMapPage() {
             {
               href: "/source/upgrade",
               title: "AI Smart Connect™",
-              body: `List every cell free. ${SOURCE_SMART_CONNECT_LINE}. Up to 10 shops can buy each job. Three secondaries $19. Six maximum $49.`,
+              body: `List every cell free. ${SOURCE_SMART_CONNECT_LINE}. Six shops see the teaser. First two to unlock. Three secondaries $19. Six maximum $49.`,
             },
             {
               href: "/source/dashboard",

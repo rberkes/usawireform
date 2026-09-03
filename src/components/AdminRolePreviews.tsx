@@ -9,9 +9,9 @@ import { SOURCE_CAPACITY_LINE } from "@/lib/source-capacity";
 import {
   SOURCE_BUYER_QUOTE_LINE,
   SOURCE_CELL_SOFT_CAP,
-  SOURCE_LEAD_BUYERS_MAX,
   SOURCE_PLAN_LINE,
   SOURCE_SMART_CONNECT,
+  SOURCE_TEASER_POOL,
   formatLeadPrice,
 } from "@/lib/source-plans";
 import { drawingPrivacyLabel } from "@/lib/source-types";
@@ -158,12 +158,19 @@ export function BuyerDashboardPreview() {
               <span className="ml-2 font-normal text-muted">2D CNC · 6 mm</span>
             </p>
             <p className="mt-1 text-muted">
-              {drawingPrivacyLabel("matched")} · 2 of 2 shops included
+              {drawingPrivacyLabel("matched")} · 6 shops on the teaser · first
+              2 to unlock
             </p>
             <p className="mt-1 text-muted">Quoting: p***@l***.com · a***@w***.com</p>
             <p className="mt-1 font-mono text-[11px] text-muted">Released to shops</p>
             <p className="mt-3 text-sm text-muted">
-              Add more shops to bid — {formatLeadPrice()} each
+              Why open another quote
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              Open one more quote — {formatLeadPrice()}
+            </p>
+            <p className="mt-2 text-sm text-muted">
+              These quotes are enough — close this print
             </p>
           </li>
         </ul>
@@ -197,7 +204,7 @@ export function ShopDashboardPreview() {
           </p>
           <p className="mt-2 text-xl font-medium">{price} each</p>
           <p className="mt-1 text-sm text-muted">
-            Up to {SOURCE_LEAD_BUYERS_MAX} shops can buy a job.
+            First two to unlock. Up to {SOURCE_TEASER_POOL} see the teaser.
           </p>
         </Panel>
         <Panel className="p-5">
@@ -227,8 +234,9 @@ export function ShopDashboardPreview() {
         <p className="mt-2 text-xl font-medium">Buy as they come</p>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
           {SOURCE_PLAN_LINE} Cell, wire, qty, and a masked buyer email show
-          here. Full name and email unlock after you pay. A STEP opens only
-          if the buyer released it.
+          here. First two shops to unlock get contact. Others wait if the
+          buyer wants another quote. A STEP opens only if the buyer released
+          it.
         </p>
       </Panel>
 
@@ -241,7 +249,7 @@ export function ShopDashboardPreview() {
             <li className="px-4 py-4 text-sm">
               <p className="font-medium">3D CNC · 8 mm · qty 5000</p>
               <p className="mt-2 text-muted">
-                Buyer a***@e***.com. Full contact unlocks at {price}.
+                Buyer a***@e***.com. First two to unlock get contact at {price}.
               </p>
               <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
                 STEP held at the desk
@@ -250,6 +258,16 @@ export function ShopDashboardPreview() {
                 <span className="inline-flex items-center justify-center rounded-sm bg-copper px-5 py-2.5 text-sm font-medium text-white opacity-80">
                   Buy this lead — {price}
                 </span>
+              </p>
+            </li>
+            <li className="px-4 py-4 text-sm">
+              <p className="font-medium">4slide · 5 mm · qty 8000</p>
+              <p className="mt-2 text-muted">
+                Two shops already unlocked this lead. You are next if the
+                buyer asks for another quote. You do not pay to wait.
+              </p>
+              <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
+                STEP held at the desk
               </p>
             </li>
             <li className="px-4 py-4 text-sm">

@@ -106,7 +106,10 @@ export function capacityScoreAdjust(
 ): number {
   const snap = readCapacity(machine);
   if (!snap?.fresh) return 0;
-  return Math.round(((100 - snap.fullPercent) / 100) * 42 - 18);
+  const hungry = Math.round(((100 - snap.fullPercent) / 100) * 42 - 18);
+  const age = Date.now() - Date.parse(snap.capacityAt);
+  const thisWeek = Number.isFinite(age) && age <= 7 * 24 * 60 * 60 * 1000 ? 12 : 0;
+  return hungry + thisWeek;
 }
 
 export function formatCapacityDay(iso: string) {

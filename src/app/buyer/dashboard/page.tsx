@@ -2,9 +2,10 @@ import { currentUser } from "@clerk/nextjs/server";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
 import { SourceBuyerForm } from "@/components/SourceBuyerForm";
 import { SourceBuyerVolumeForm } from "@/components/SourceBuyerVolumeForm";
+import { closeSourceBuyerJob } from "@/app/actions/source-accounts";
 import { SourceBuyerExtraShopsForm } from "@/components/SourceBuyerExtraShopsForm";
-import { ButtonLink, Page, PageHero, Panel } from "@/components/ui";
-import { jobsForBuyer, jobIsReleased, shopDrawingHref } from "@/lib/source-access";
+import { Button, ButtonLink, Page, PageHero, Panel } from "@/components/ui";
+import { jobsForBuyer, jobIsReleased, leadIsClosed, shopDrawingHref } from "@/lib/source-access";
 import { requireBuyer, requireSignedIn } from "@/lib/source-gate";
 import {
   buyerMayUploadExtras,
@@ -12,14 +13,12 @@ import {
   getBuyerAccount,
   saveBuyerAccount,
 } from "@/lib/source-buyer";
-import { applyProfilesToFilings, listSourceFilings, listSourceJobs, listSourceProfiles } from "@/lib/source";
-import { matchFilingsToJob } from "@/lib/source-match";
-import { jobToSpec } from "@/lib/source-release";
+import { listSourceJobs } from "@/lib/source";
 import { maskEmail } from "@/lib/mask-email";
 import {
   SOURCE_BUYER_INCLUDED_SHOPS,
   SOURCE_BUYER_QUOTE_LINE,
-  extraShopsRemaining,
+  extraQuoteSlotsRemaining,
 } from "@/lib/source-plans";
 import { stripeConfigured } from "@/lib/stripe";
 import {
@@ -45,12 +44,10 @@ export default async function BuyerDashboardPage({
     await syncCheckoutSession(sessionId);
   }
 
-  const [user, account, jobs, filingRows, profiles] = await Promise.all([
+  const [user, account, jobs] = await Promise.all([
     currentUser(),
     getBuyerAccount(userId),
     listSourceJobs(),
-    listSourceFilings(),
-    listSourceProfiles(),
   ]);
   if (account && clerkEmailIsConfirmed(user) && !account.emailConfirmedAt) {
     const confirmedAt = new Date().toISOString();
@@ -66,7 +63,6 @@ export default async function BuyerDashboardPage({
     emailConfirmed: clerkEmailIsConfirmed(user),
   });
   const mine = jobsForBuyer(jobs, { userId, email });
-  const filings = applyProfilesToFilings(filingRows, profiles);
   const canPay = stripeConfigured();
 
   return (
@@ -125,10 +121,14 @@ export default async function BuyerDashboardPage({
               const quoting = (job.purchasedBy ?? [])
                 .map((row) => maskEmail(row.email))
                 .filter(Boolean);
-              const matchCount = released
-                ? matchFilingsToJob(filings, jobToSpec(job)).length
-                : 0;
-              const remaining = extraShopsRemaining(matchCount, offered);
+              const sold = job.purchasedBy?.length ?? 0;
+              const closed = leadIsClosed(job);
+              const remaining = extraQuoteSlotsRemaining({
+                mailed: offered,
+                purchased: sold,
+                extraShops: job.buyerExtraShops,
+                closed,
+              });
               return (
                 <li
                   key={job.pathname}
@@ -143,11 +143,13 @@ export default async function BuyerDashboardPage({
                   </p>
                   <p className="mt-1 text-muted">
                     {drawingPrivacyLabel(privacy)}
-                    {offered > 0
-                      ? offered <= SOURCE_BUYER_INCLUDED_SHOPS
-                        ? ` · ${offered} of ${SOURCE_BUYER_INCLUDED_SHOPS} shops included`
-                        : ` · ${offered} shops`
-                      : " · not sent to shops yet"}
+                    {closed
+                      ? " · closed"
+                      : offered > 0
+                        ? offered <= SOURCE_BUYER_INCLUDED_SHOPS
+                          ? ` · ${offered} of ${SOURCE_BUYER_INCLUDED_SHOPS} can buy first`
+                          : ` · ${offered} shops on the teaser · first ${SOURCE_BUYER_INCLUDED_SHOPS} to unlock`
+                        : " · not sent to shops yet"}
                   </p>
                   {quoting.length > 0 ? (
                     <p className="mt-1 text-muted">
@@ -179,11 +181,16 @@ export default async function BuyerDashboardPage({
                       </a>
                     ) : null}
                   </div>
-                  {released && remaining > 0 && canPay ? (
-                    <SourceBuyerExtraShopsForm
-                      pathname={job.pathname}
-                      remaining={remaining}
-                    />
+                  {released && remaining > 0 && canPay && !closed ? (
+                    <SourceBuyerExtraShopsForm pathname={job.pathname} />
+                  ) : null}
+                  {released && !closed ? (
+                    <form action={closeSourceBuyerJob} className="mt-3">
+                      <input type="hidden" name="pathname" value={job.pathname} />
+                      <Button type="submit" variant="ghost">
+                        These quotes are enough — close this print
+                      </Button>
+                    </form>
                   ) : null}
                 </li>
               );
