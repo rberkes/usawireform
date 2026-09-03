@@ -1,4 +1,5 @@
 import { hydrateMachineFromCatalog } from "@/lib/source-iron";
+import { isHouseShop } from "@/lib/source-house";
 import { capacityScoreAdjust, formatCapacityWhy } from "@/lib/source-capacity";
 import { fitScoreAdjust, formatFitWhy } from "@/lib/source-fit";
 import { SOURCE_TEASER_POOL } from "@/lib/source-plans";
@@ -115,6 +116,7 @@ export function matchFilingsToJob(
   const ranked: Array<SourceInternalMatch & { score: number }> = [];
 
   for (const filing of filings) {
+    if (isHouseShop(filing)) continue;
     if (
       job.buyerEmail &&
       filing.email.trim().toLowerCase() === job.buyerEmail.trim().toLowerCase()

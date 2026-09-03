@@ -16,6 +16,8 @@ import { filingsToFloorCells, mergeFloorFeed } from "@/lib/source-floor-feed";
 import { sendDrawingReviewedEmail, sendSourceShopWaitlistEmails } from "@/lib/leads";
 import {
   parseDrawingPrivacy,
+  parseQuoteOutcome,
+  type SourceQuoteOutcome,
   type SourceDrawingPrivacy,
   type SourceFiling,
   type SourceFilingRow,
@@ -299,6 +301,8 @@ function readPurchasedBy(raw: unknown): SourceJobPurchase[] {
       purchasedAt: String(item.purchasedAt ?? ""),
       sessionId:
         typeof item.sessionId === "string" ? item.sessionId : undefined,
+      quoteOutcome: parseQuoteOutcome(item.quoteOutcome),
+      quoteOutcomeAt: String(item.quoteOutcomeAt ?? "") || undefined,
     });
   }
   return rows;
@@ -535,6 +539,45 @@ export async function recordSourceLeadPurchase({
     }
   }
   return { ok: true as const, job: next };
+}
+
+/**
+ * A shop that unlocked a lead tells the desk what happened. Only the shop that
+ * paid can write its own row, and the first answer stands so the record cannot
+ * be walked back once a refund is on the table.
+ */
+export async function recordSourceLeadQuoteOutcome({
+  pathname,
+  userId,
+  email,
+  outcome,
+}: {
+  pathname: string;
+  userId: string;
+  email: string;
+  outcome: SourceQuoteOutcome;
+}) {
+  const job = await getSourceJob(pathname);
+  if (!job) return { ok: false as const, reason: "missing" as const };
+  const needle = email.trim().toLowerCase();
+  const rows = job.purchasedBy ?? [];
+  const index = rows.findIndex(
+    (row) =>
+      row.userId === userId ||
+      (needle && row.email.trim().toLowerCase() === needle),
+  );
+  if (index < 0) return { ok: false as const, reason: "not-bought" as const };
+  if (rows[index].quoteOutcome) {
+    return { ok: true as const, job, already: true };
+  }
+  const purchasedBy = rows.map((row, at) =>
+    at === index
+      ? { ...row, quoteOutcome: outcome, quoteOutcomeAt: new Date().toISOString() }
+      : row,
+  );
+  const next: SourceJobRow = { ...job, purchasedBy };
+  await saveSourceJob(next, pathname);
+  return { ok: true as const, job: next, already: false };
 }
 
 export async function findSourceJobByPrivacyToken(token: string) {

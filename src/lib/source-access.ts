@@ -99,6 +99,43 @@ export function leadPurchaseCount(job: Pick<SourceJob, "purchasedBy">) {
   return job.purchasedBy?.length ?? 0;
 }
 
+export function shopLeadPurchase(
+  job: Pick<SourceJob, "purchasedBy">,
+  {
+    userId,
+    email,
+  }: { userId?: string | null; email?: string | null },
+): SourceJobPurchase | undefined {
+  const needle = normalizeShopEmail(email);
+  return (job.purchasedBy ?? []).find(
+    (row) =>
+      (userId && row.userId === userId) ||
+      (Boolean(needle) && normalizeShopEmail(row.email) === needle),
+  );
+}
+
+/** A shop that paid and has not yet said what happened still owes the desk an answer. */
+export function shopOwesLeadOutcome(
+  job: Pick<SourceJob, "purchasedBy">,
+  who: { userId?: string | null; email?: string | null },
+) {
+  const row = shopLeadPurchase(job, who);
+  return Boolean(row) && !row?.quoteOutcome;
+}
+
+export function leadOutcomeCounts(job: Pick<SourceJob, "purchasedBy">) {
+  const rows = job.purchasedBy ?? [];
+  return {
+    sold: rows.length,
+    quoted: rows.filter((row) => row.quoteOutcome === "quoted").length,
+    ghosted: rows.filter((row) => row.quoteOutcome === "no-response").length,
+    passed: rows.filter((row) => row.quoteOutcome === "not-quoting").length,
+    pending: rows.filter((row) => !row.quoteOutcome).length,
+  };
+}
+
+// Cross-job reads over the lead ledger live in `source-lead-history.ts`.
+
 export function leadIsClosed(job: Pick<SourceJob, "closedAt">) {
   return Boolean(job.closedAt);
 }

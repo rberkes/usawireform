@@ -2,6 +2,7 @@
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import {
   applyCheckoutSession,
   checkoutUrls,
@@ -18,7 +19,13 @@ import {
 import { extraQuoteSlotsRemaining, isSourcePlanId, planById, sourceBuyerSignInHref } from "@/lib/source-plans";
 import { buyerOwnsJob, jobIsReleased, leadIsClosed, shopBoughtLead, shopMayBuyLead, shopWasMailedJob } from "@/lib/source-access";
 import { parseRebidReason } from "@/lib/source-rebid";
-import { getSourceJob, getSourceProfile, setSourceProfileSecondaries } from "@/lib/source";
+import {
+  getSourceJob,
+  getSourceProfile,
+  recordSourceLeadQuoteOutcome,
+  setSourceProfileSecondaries,
+} from "@/lib/source";
+import { parseQuoteOutcome } from "@/lib/source-types";
 import { requireBuyer } from "@/lib/source-gate";
 import {
   SOURCE_SECONDARY_MAX,
@@ -83,6 +90,27 @@ export async function startSourceLeadCheckout(formData: FormData) {
   });
   if (!session.url) redirect("/source/dashboard");
   redirect(session.url);
+}
+
+/**
+ * The shop that unlocked a lead reports what came of it. This is the only
+ * signal that separates a working lead from a $49 the shop should get back.
+ */
+export async function reportSourceLeadOutcome(formData: FormData) {
+  const pathname = String(formData.get("pathname") ?? "").trim();
+  const outcome = parseQuoteOutcome(formData.get("outcome"));
+  const { userId, email } = await requireUser();
+  if (!pathname || !outcome) redirect("/source/dashboard");
+
+  const result = await recordSourceLeadQuoteOutcome({
+    pathname,
+    userId,
+    email,
+    outcome,
+  });
+  if (!result.ok) redirect("/source/dashboard");
+  revalidatePath("/source/dashboard");
+  redirect("/source/dashboard?lead=logged");
 }
 
 export async function startSourceBuyerExtraCheckout(formData: FormData) {

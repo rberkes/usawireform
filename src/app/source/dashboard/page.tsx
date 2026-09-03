@@ -1,7 +1,11 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
-import { openSourceBillingPortal, startSourceLeadCheckout } from "@/app/actions/source-billing";
+import {
+  openSourceBillingPortal,
+  reportSourceLeadOutcome,
+  startSourceLeadCheckout,
+} from "@/app/actions/source-billing";
 import { SourceAddCellsForm } from "@/components/SourceAddCellsForm";
 import { SourceFiledCells } from "@/components/SourceFiledCells";
 import { SourceWeeklyCapacityForm } from "@/components/SourceWeeklyCapacityForm";
@@ -24,10 +28,12 @@ import {
   shopBoughtLead,
   shopDrawingHref,
   shopIsWaitlisted,
+  shopLeadPurchase,
   shopMayBuyLead,
   shopMaySeeBuyerContact,
   shopMayViewDrawing,
 } from "@/lib/source-access";
+import { buyerAnswerRecord } from "@/lib/source-lead-history";
 import { requireSignedIn, requireSupplier } from "@/lib/source-gate";
 import {
   getSourceProfile,
@@ -38,7 +44,11 @@ import {
 } from "@/lib/source";
 import { secondariesForForm } from "@/lib/source-secondaries";
 import { normalizeShopWebsite, sourceAccountLocksClaim, sourceClaimPath, suggestedDirectoryClaim } from "@/lib/source-directory";
-import { parseDrawingPrivacy } from "@/lib/source-types";
+import {
+  LEAD_OUTCOMES,
+  leadOutcomeLabel,
+  parseDrawingPrivacy,
+} from "@/lib/source-types";
 import { maskEmail } from "@/lib/mask-email";
 
 export const dynamic = "force-dynamic";
@@ -244,6 +254,12 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             Card checkout is not configured. Email the desk.
           </p>
         ) : null}
+        {leadFlag === "logged" ? (
+          <p className="mt-2 text-sm leading-6 text-copper">
+            Logged. Leads a buyer never answers are the ones the desk stops
+            releasing.
+          </p>
+        ) : null}
       </Panel>
 
       <section className="mt-4">
@@ -274,6 +290,8 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                 const closed = leadIsClosed(job);
                 const canBuy = shopMayBuyLead(job, { userId, email });
                 const waiting = shopIsWaitlisted(job, { userId, email });
+                const purchase = shopLeadPurchase(job, { userId, email });
+                const record = buyerAnswerRecord(jobs, job.email);
                 const full = sold >= SOURCE_LEAD_BUYERS_MAX && !bought;
                 return (
                   <li key={job.pathname} className="px-4 py-4 text-sm">
@@ -334,6 +352,21 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                         </a>
                       </p>
                     ) : null}
+                    {!bought ? (
+                      <p
+                        className={
+                          record.reached > 0 && record.answered === 0
+                            ? "mt-2 text-copper"
+                            : "mt-2 text-muted"
+                        }
+                      >
+                        {record.reached === 0
+                          ? "No shop has reported back on this buyer yet."
+                          : `This buyer answered ${record.answered} of ${record.reached} shop${
+                              record.reached === 1 ? "" : "s"
+                            } that paid to reach them.`}
+                      </p>
+                    ) : null}
                     {canBuy ? (
                       <form action={startSourceLeadCheckout} className="mt-3">
                         <input type="hidden" name="pathname" value={job.pathname} />
@@ -346,6 +379,40 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                       <p className="mt-2 text-sm text-muted">
                         This lead is closed. {SOURCE_LEAD_BUYERS_MAX} shops
                         already bought it.
+                      </p>
+                    ) : null}
+                    {purchase && !purchase.quoteOutcome ? (
+                      <div className="mt-3 border border-line px-3 py-3">
+                        <p className="text-muted">
+                          What came of this one? The desk stops releasing prints
+                          from buyers who never answer.
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {LEAD_OUTCOMES.map((item) => (
+                            <form
+                              key={item.value}
+                              action={reportSourceLeadOutcome}
+                            >
+                              <input
+                                type="hidden"
+                                name="pathname"
+                                value={job.pathname}
+                              />
+                              <input
+                                type="hidden"
+                                name="outcome"
+                                value={item.value}
+                              />
+                              <Button type="submit" variant="ghost">
+                                {item.label}
+                              </Button>
+                            </form>
+                          ))}
+                        </div>
+                      </div>
+                    ) : purchase?.quoteOutcome ? (
+                      <p className="mt-2 font-mono text-[11px] tracking-widest text-muted uppercase">
+                        {leadOutcomeLabel(purchase.quoteOutcome)}
                       </p>
                     ) : null}
                   </li>

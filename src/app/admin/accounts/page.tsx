@@ -16,7 +16,16 @@ import {
   listSourceJobs,
   listSourceProfiles,
 } from "@/lib/source";
-import { jobIsReleased, jobsForBuyer } from "@/lib/source-access";
+import {
+  jobIsReleased,
+  jobsForBuyer,
+  leadOutcomeCounts,
+} from "@/lib/source-access";
+import {
+  buyerAnswerRecord,
+  leadRepeatSummary,
+  shopLeadRecords,
+} from "@/lib/source-lead-history";
 import {
   buyerDeskVerified,
   buyerProfileComplete,
@@ -33,6 +42,7 @@ import {
   reminderKindLabel,
 } from "@/lib/source-reminders";
 import { formatBuyerJobsPerMonth } from "@/lib/source-buyer-volume";
+import { SOURCE_LEAD_BUYERS_MAX } from "@/lib/source-plans";
 import { deskMailedShopLines, formatDeskPlace } from "@/lib/source-locale";
 import { previewSourceReleaseFrom } from "@/lib/source-release";
 import {
@@ -120,6 +130,8 @@ export default async function AdminAccountsPage({
       !job.buyerUserId &&
       !buyerEmails.has(job.email.trim().toLowerCase()),
   );
+  const leadRecords = shopLeadRecords(jobs);
+  const repeat = leadRepeatSummary(leadRecords);
   const ndaOk = shops.filter((row) => shopHasNda(row)).length;
   const accountCount = profiles.length + buyers.length;
   const lastReminder = new Map(
@@ -185,6 +197,9 @@ export default async function AdminAccountsPage({
         <a href="#files" className="text-copper hover:underline">
           STEP files ({steps.length})
           {heldCount ? ` · ${heldCount} held` : ""}
+        </a>
+        <a href="#repeat" className="text-copper hover:underline">
+          Lead repeat ({repeat.repeat}/{repeat.shops})
         </a>
         <a href="/admin/preview" className="text-muted hover:text-copper hover:underline">
           Role views
@@ -503,6 +518,8 @@ export default async function AdminAccountsPage({
                     return place ? `${name} (${place})` : name;
                   });
               const buyerPlace = formatDeskPlace(row.city, row.state);
+              const outcomes = leadOutcomeCounts(row);
+              const record = buyerAnswerRecord(jobs, row.email);
               return (
                 <li key={row.pathname} className="px-4 py-4 text-sm">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -559,19 +576,176 @@ export default async function AdminAccountsPage({
                       <AdminStepPreview src={href} name={row.fileName} />
                     </div>
                   ) : null}
+                  {record.reached > 0 ? (
+                    <p
+                      className={
+                        record.answered === 0
+                          ? "mt-1 text-copper"
+                          : "mt-1 text-muted"
+                      }
+                    >
+                      This buyer answered {record.answered} of {record.reached}{" "}
+                      shop{record.reached === 1 ? "" : "s"} that paid to reach
+                      them.
+                      {record.answered === 0
+                        ? " Shops are losing money on this buyer."
+                        : ""}
+                    </p>
+                  ) : null}
+                  {sent && outcomes.sold > 0 ? (
+                    <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
+                      {`${outcomes.sold} unlocked`}
+                      {outcomes.quoted ? ` · ${outcomes.quoted} quoted` : ""}
+                      {outcomes.ghosted
+                        ? ` · ${outcomes.ghosted} buyer never answered`
+                        : ""}
+                      {outcomes.passed ? ` · ${outcomes.passed} passed` : ""}
+                      {outcomes.pending
+                        ? ` · ${outcomes.pending} not reported`
+                        : ""}
+                    </p>
+                  ) : null}
                   {!sent && nextShops.length > 0 ? (
                     <form action={releaseSourceJob} className="mt-3">
                       <input type="hidden" name="pathname" value={row.pathname} />
+                      {nextShops.length < SOURCE_LEAD_BUYERS_MAX ? (
+                        <p className="mb-2 max-w-xl text-copper">
+                          Only {nextShops.length} shop
+                          {nextShops.length === 1 ? "" : "s"} can run this
+                          print. Releasing it fills fewer than the two quotes
+                          the buyer expects. Widen the pool or tell the buyer
+                          before you send it.
+                        </p>
+                      ) : null}
                       <Button type="submit">
                         Release to {nextShops.length} shop
                         {nextShops.length === 1 ? "" : "s"}
                       </Button>
                     </form>
                   ) : null}
+                  {!sent && nextShops.length === 0 ? (
+                    <p className="mt-3 max-w-xl text-copper">
+                      No filed cell can run this print. Releasing it sends the
+                      buyer nothing. Recruit a shop for this cell class or tell
+                      the buyer the desk cannot cover it.
+                    </p>
+                  ) : null}
                 </li>
               );
             })}
           </ul>
+        )}
+      </section>
+
+      <section id="repeat" className="mt-12 scroll-mt-24">
+        <h2 className="text-lg font-medium">Lead repeat</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+          Does a shop that pays for a lead pay again? Nothing else here says as
+          much about whether the model works — a second purchase means the shop
+          decided the first one was worth the money. Shops whose first buy is
+          under 45 days old are held out of the rate; they have not had a fair
+          chance to return yet.
+        </p>
+        {repeat.shops === 0 ? (
+          <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
+            No shop has bought a lead yet. This is the first number to watch
+            once one does.
+          </p>
+        ) : (
+          <>
+            <div className="mt-6 grid gap-4 sm:grid-cols-3">
+              <p className="border border-line px-4 py-4 text-sm">
+                <span className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
+                  Bought again
+                </span>
+                <span className="mt-2 block text-xl font-medium">
+                  {repeat.rate == null
+                    ? "—"
+                    : `${Math.round(repeat.rate * 100)}%`}
+                </span>
+                <span className="mt-1 block text-muted">
+                  {repeat.rate == null
+                    ? "No shop has had a fair chance to return yet"
+                    : `${repeat.repeat} of ${repeat.repeat + repeat.once} shops with a fair chance`}
+                </span>
+              </p>
+              <p className="border border-line px-4 py-4 text-sm">
+                <span className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
+                  Shops paying
+                </span>
+                <span className="mt-2 block text-xl font-medium">
+                  {repeat.shops}
+                </span>
+                <span className="mt-1 block text-muted">
+                  {repeat.totalPurchases} lead
+                  {repeat.totalPurchases === 1 ? "" : "s"} sold
+                  {repeat.tooNew
+                    ? ` · ${repeat.tooNew} too new to judge`
+                    : ""}
+                </span>
+              </p>
+              <p className="border border-line px-4 py-4 text-sm">
+                <span className="font-mono text-[12px] tracking-[0.22em] uppercase text-copper">
+                  Days to return
+                </span>
+                <span className="mt-2 block text-xl font-medium">
+                  {repeat.medianDaysToRepeat ?? "—"}
+                </span>
+                <span className="mt-1 block text-muted">
+                  {repeat.medianDaysToRepeat == null
+                    ? "No second purchase yet"
+                    : "Median between first and second lead"}
+                </span>
+              </p>
+            </div>
+            <ul className="mt-4 divide-y divide-line border border-line">
+              {leadRecords.map((row) => {
+                const lost = row.purchases === 1 && row.ghosted > 0;
+                return (
+                  <li key={row.key} className="px-4 py-4 text-sm">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <p className="font-medium">
+                        {row.company || row.email}
+                        <span className="ml-2 font-normal text-muted">
+                          {row.email}
+                        </span>
+                      </p>
+                      <p className="font-mono text-[11px] tracking-widest text-muted uppercase">
+                        {row.purchases} lead{row.purchases === 1 ? "" : "s"}
+                        {row.daysToRepeat != null
+                          ? ` · returned in ${row.daysToRepeat}d`
+                          : ""}
+                      </p>
+                    </div>
+                    <p className="mt-1 text-muted">
+                      {row.quoted ? `${row.quoted} quoted` : ""}
+                      {row.ghosted
+                        ? `${row.quoted ? " · " : ""}${row.ghosted} buyer never answered`
+                        : ""}
+                      {row.passed
+                        ? `${row.quoted || row.ghosted ? " · " : ""}${row.passed} passed`
+                        : ""}
+                      {row.pending
+                        ? `${row.quoted || row.ghosted || row.passed ? " · " : ""}${row.pending} not reported`
+                        : ""}
+                    </p>
+                    {lost ? (
+                      <p className="mt-1 text-copper">
+                        Bought once, got no answer, has not come back. This is a
+                        shop lost to a bad lead — worth a call.
+                      </p>
+                    ) : null}
+                    <p className="mt-1 font-mono text-[11px] text-muted">
+                      {row.firstAt ? ny(row.firstAt) : "no date"}
+                      {row.purchases > 1 && row.lastAt
+                        ? ` → ${ny(row.lastAt)}`
+                        : ""}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
         )}
       </section>
     </Page>

@@ -178,12 +178,56 @@ export type SourceJobMailedTo = {
   userId?: string;
 };
 
+export const SOURCE_QUOTE_OUTCOMES = [
+  "quoted",
+  "no-response",
+  "not-quoting",
+] as const;
+
+export type SourceQuoteOutcome = (typeof SOURCE_QUOTE_OUTCOMES)[number];
+
+export function parseQuoteOutcome(
+  raw: unknown,
+): SourceQuoteOutcome | undefined {
+  const text = String(raw ?? "").trim();
+  return SOURCE_QUOTE_OUTCOMES.find((item) => item === text);
+}
+
+/** What the shop clicks after unlocking a lead. */
+export const LEAD_OUTCOMES: Array<{
+  value: SourceQuoteOutcome;
+  label: string;
+}> = [
+  { value: "quoted", label: "I sent a quote" },
+  { value: "no-response", label: "Buyer never answered" },
+  { value: "not-quoting", label: "Not quoting it" },
+];
+
+export function leadOutcomeLabel(value: SourceQuoteOutcome) {
+  switch (value) {
+    case "quoted":
+      return "Quoted";
+    case "no-response":
+      return "Buyer never answered";
+    case "not-quoting":
+      return "Passed on it";
+  }
+}
+
 export type SourceJobPurchase = {
   userId: string;
   email: string;
   company: string;
   purchasedAt: string;
   sessionId?: string;
+  /**
+   * What came of the unlock. Without this the desk cannot tell a shop that
+   * quoted from one that paid and vanished, and a ghosted buyer looks the
+   * same as a working job. Refund eligibility and shop rank both read it.
+   */
+  quoteOutcome?: SourceQuoteOutcome;
+  /** When the shop reported the outcome. */
+  quoteOutcomeAt?: string;
 };
 
 export type SourceBuyerExtraPurchase = {
