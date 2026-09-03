@@ -108,6 +108,21 @@ const GROUPS = [
         check: "Jump Shops, Buyers, STEP files. Validate buyer to open Excel. NDA on shops.",
       },
       {
+        href: "/admin/preview",
+        label: "Role views",
+        check: "Generic buyer and shop dashboards. Sample data. Forms do not save.",
+      },
+      {
+        href: "/admin/preview/buyer",
+        label: "Buyer dashboard preview",
+        check: "Company card, 0–10+ volume slider, held vs released jobs. No shop $49.",
+      },
+      {
+        href: "/admin/preview/shop",
+        label: "Shop dashboard preview",
+        check: "Inbox teaser then unlocked contact. Cells and fullness slider. $49 unlock.",
+      },
+      {
         href: "/admin/source",
         label: "Source",
         check: "Invites, equipment JSON, and the same buyer jobs.",

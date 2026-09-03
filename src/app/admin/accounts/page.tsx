@@ -157,6 +157,9 @@ export default async function AdminAccountsPage({
         <a href="#files" className="text-copper hover:underline">
           STEP files ({steps.length})
         </a>
+        <a href="/admin/preview" className="text-muted hover:text-copper hover:underline">
+          Role views
+        </a>
         <a href="/admin/live" className="text-muted hover:text-copper hover:underline">
           Live pages
         </a>

@@ -6,7 +6,7 @@ Source matches buyers to US wire-form shops. **The desk is the gate.** Shops do 
 
 - **Buyer** — `/sign-in?as=buyer` or `/sign-up?as=buyer` → `/buyer/dashboard` → send a print on `/source`
 - **Shop** — `/sign-up?as=supplier` → NDA → file cells on `/source/equipment` or dashboard → fullness slider
-- **Desk** — `/admin/accounts` — shops, buyers, STEP files, **Validate buyer**
+- **Desk** — `/admin/accounts` — shops, buyers, STEP files, **Validate buyer**. Generic role views at `/admin/preview` (buyer + shop dashboards, sample data).
 
 ## Files
 

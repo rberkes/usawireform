@@ -54,7 +54,7 @@ export function AdminInboxNav({
   accountCount = 0,
   visitorCount,
 }: {
-  current: "quotes" | "directory" | "source" | "subscribers" | "accounts" | "live" | "visitors" | "architecture";
+  current: "quotes" | "directory" | "source" | "subscribers" | "accounts" | "live" | "visitors" | "architecture" | "preview";
   quoteCount: number;
   directoryCount: number;
   sourceCount?: number;
@@ -104,6 +104,13 @@ export function AdminInboxNav({
           waiting={false}
         >
           Accounts
+        </InboxTab>
+        <InboxTab
+          href="/admin/preview"
+          active={current === "preview"}
+          waiting={false}
+        >
+          Role views
         </InboxTab>
         <InboxTab
           href="/admin/visitors"
