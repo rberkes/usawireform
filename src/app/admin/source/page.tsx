@@ -147,7 +147,7 @@ export default async function AdminSourcePage({
                   <span className="ml-2 font-normal text-muted">{row.email}</span>
                 </p>
                 <p className="mt-1 text-muted">
-                  {[row.name, row.phone, [row.city, row.state].filter(Boolean).join(", ")]
+                  {[row.name, row.phone, [row.city, row.state, row.zip].filter(Boolean).join(", ")]
                     .filter(Boolean)
                     .join(" · ")}
                 </p>

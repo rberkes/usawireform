@@ -31,6 +31,7 @@ import { parseBuyerJob } from "@/lib/source-job-parse";
 import { parseCoilBuyer, parseRunKind } from "@/lib/source-fit";
 import { matchFilingsToJob } from "@/lib/source-match";
 import { planById } from "@/lib/source-plans";
+import { parseUsZip, stateFromZip } from "@/lib/states";
 import { isSourceSecondaryId } from "@/lib/source-secondaries";
 import {
   applyJobRelease,
@@ -896,7 +897,9 @@ export async function submitSourceJob(
   const email = String(formData.get("email") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim().slice(0, 40);
   const city = String(formData.get("city") ?? "").trim().slice(0, 80);
-  const state = String(formData.get("state") ?? "").trim().slice(0, 40);
+  const zip = parseUsZip(String(formData.get("zip") ?? ""));
+  const fromZip = zip ? stateFromZip(zip) : null;
+  const state = (fromZip?.abbr || String(formData.get("state") ?? "").trim()).slice(0, 40);
   const diameterRaw = String(formData.get("diameter") ?? "").trim().slice(0, 40);
   const kind = String(formData.get("kind") ?? "").trim().slice(0, 40);
   const oem = String(formData.get("oem") ?? "").trim().slice(0, 80);
@@ -919,6 +922,12 @@ export async function submitSourceJob(
 
   if (!isValidEmail(email)) {
     return { success: false, message: "Enter a valid email." };
+  }
+  if (!zip || !fromZip) {
+    return {
+      success: false,
+      message: "Enter a 5-digit US ZIP so we can start with shops in your state.",
+    };
   }
 
   const signedIn = await signedInShop();
@@ -956,6 +965,7 @@ export async function submitSourceJob(
     oem,
     city,
     state,
+    zip,
     notes,
     buyerEmail: email,
     qty,
@@ -987,6 +997,7 @@ export async function submitSourceJob(
     phone,
     city: parsed.spec.city,
     state: parsed.spec.state,
+    zip: parsed.spec.zip || zip,
     diameterRaw,
     diameterMm: parsed.spec.diameterMm,
     kind: parsed.spec.kind,
@@ -1032,6 +1043,7 @@ export async function submitSourceJob(
     phone,
     city: parsed.spec.city,
     state: parsed.spec.state,
+    zip: parsed.spec.zip || zip,
     diameterRaw,
     diameterMm: parsed.spec.diameterMm,
     kind: parsed.spec.kind,

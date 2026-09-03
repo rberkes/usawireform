@@ -11,16 +11,18 @@ import {
 import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
 import {
+  applyProfilesToFilings,
   listSourceFilings,
   listSourceJobs,
   listSourceProfiles,
 } from "@/lib/source";
-import { jobsForBuyer } from "@/lib/source-access";
+import { jobIsReleased, jobsForBuyer } from "@/lib/source-access";
 import {
   buyerDeskVerified,
   buyerProfileComplete,
   listBuyerAccounts,
 } from "@/lib/source-buyer";
+import { releaseSourceJob } from "@/app/actions/source";
 import { setSourceBuyerVerified } from "@/app/actions/source-accounts";
 import { SOURCE_NDA_VERSION, shopHasNda } from "@/lib/source-nda";
 import { countSourceSubscribers } from "@/lib/source-leads";
@@ -32,6 +34,7 @@ import {
 } from "@/lib/source-reminders";
 import { formatBuyerJobsPerMonth } from "@/lib/source-buyer-volume";
 import { deskMailedShopLines, formatDeskPlace } from "@/lib/source-locale";
+import { previewSourceReleaseFrom } from "@/lib/source-release";
 import {
   drawingPrivacyLabel,
   parseDrawingPrivacy,
@@ -59,9 +62,10 @@ export default async function AdminAccountsPage({
     held?: string;
     missing?: string;
     failed?: string;
+    released?: string;
   }>;
 }) {
-  const { error, reminded, held, missing, failed } = await searchParams;
+  const { error, reminded, held, missing, failed, released } = await searchParams;
   const ok = await isAdmin();
 
   if (!ok) {
@@ -138,6 +142,16 @@ export default async function AdminAccountsPage({
       state: row.state,
     })),
   ];
+  const hydrated = applyProfilesToFilings(filings, profiles);
+  const heldCount = jobs.filter((job) => !jobIsReleased(job)).length;
+  const releasedNote =
+    released === "missing"
+      ? "That job is gone."
+      : released === "already"
+        ? "That print was already sent to shops."
+        : released && /^\d+$/.test(released)
+          ? `Sent to ${released} shop${released === "1" ? "" : "s"}.`
+          : null;
 
   return (
     <Page>
@@ -170,6 +184,7 @@ export default async function AdminAccountsPage({
         </a>
         <a href="#files" className="text-copper hover:underline">
           STEP files ({steps.length})
+          {heldCount ? ` · ${heldCount} held` : ""}
         </a>
         <a href="/admin/preview" className="text-muted hover:text-copper hover:underline">
           Role views
@@ -437,6 +452,7 @@ export default async function AdminAccountsPage({
                     {job.diameterMm != null ? ` · ${job.diameterMm} mm` : ""}
                     {job.drawingPath ? " · has STEP" : " · spec only"}
                     {place ? ` · ${place}` : ""}
+                    {job.zip ? ` · ${job.zip}` : ""}
                   </p>
                 </li>
                 );
@@ -449,10 +465,15 @@ export default async function AdminAccountsPage({
       <section id="files" className="mt-12 scroll-mt-24">
         <h2 className="text-lg font-medium">STEP files</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          Source jobs from /source. Locale (buyer city and each shop’s nearest
-          metro) is on this screen only. The desk can always download. A shop
-          only opens a file after they buy the lead and the buyer released it.
+          Source jobs from /source. The buyer can release the STEP file.
+          You decide when shops see the job. Same-state shops that can run
+          it fill the six first. First two to unlock get contact.
         </p>
+        {releasedNote ? (
+          <p className="mt-3 max-w-xl text-sm leading-6 text-copper">
+            {releasedNote}
+          </p>
+        ) : null}
         {jobs.length === 0 ? (
           <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
             No Source jobs yet.
@@ -464,7 +485,23 @@ export default async function AdminAccountsPage({
               const href = row.drawingPath
                 ? adminFileHref(row.drawingPath, row.fileName)
                 : null;
-              const mailed = deskMailedShopLines(row, shopPlaces);
+              const sent = jobIsReleased(row);
+              const preview = sent
+                ? null
+                : previewSourceReleaseFrom(row, hydrated, profiles);
+              const nextShops = preview?.mailedTo ?? [];
+              const mailed = sent
+                ? deskMailedShopLines(row, shopPlaces)
+                : nextShops.map((item) => {
+                    const match = preview?.matches.find(
+                      (shop) =>
+                        shop.email.trim().toLowerCase() ===
+                        item.email.trim().toLowerCase(),
+                    );
+                    const place = formatDeskPlace(match?.city, match?.state);
+                    const name = item.company || item.email;
+                    return place ? `${name} (${place})` : name;
+                  });
               const buyerPlace = formatDeskPlace(row.city, row.state);
               return (
                 <li key={row.pathname} className="px-4 py-4 text-sm">
@@ -474,7 +511,8 @@ export default async function AdminAccountsPage({
                       <span className="ml-2 font-normal text-muted">{row.email}</span>
                     </p>
                     <p className="font-mono text-[11px] tracking-widest text-muted uppercase">
-                      {row.drawingPath ? "STEP" : "Spec only"}
+                      {sent ? "Sent to shops" : "Held"}
+                      {row.drawingPath ? " · STEP" : " · spec only"}
                     </p>
                   </div>
                   <p className="mt-1 text-muted">
@@ -482,6 +520,7 @@ export default async function AdminAccountsPage({
                       row.name,
                       row.phone,
                       buyerPlace,
+                      row.zip,
                     ]
                       .filter(Boolean)
                       .join(" · ")}
@@ -497,9 +536,13 @@ export default async function AdminAccountsPage({
                   ) : null}
                   <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
                     {drawingPrivacyLabel(privacy)}
-                    {mailed.length > 0
-                      ? ` · ${mailed.join(", ")}`
-                      : " · no match yet"}
+                    {sent
+                      ? mailed.length > 0
+                        ? ` · ${mailed.join(", ")}`
+                        : " · released, no shops mailed"
+                      : nextShops.length > 0
+                        ? ` · will send teaser to ${mailed.join(", ")}`
+                        : " · no matching shops yet"}
                     {row.buyerUserId ? " · buyer account" : " · guest"}
                     {(row.buyerExtraShops ?? 0) > 0
                       ? ` · ${row.buyerExtraShops} extra shop ${row.buyerExtraShops === 1 ? "slot" : "slots"} paid`
@@ -515,6 +558,15 @@ export default async function AdminAccountsPage({
                       </a>
                       <AdminStepPreview src={href} name={row.fileName} />
                     </div>
+                  ) : null}
+                  {!sent && nextShops.length > 0 ? (
+                    <form action={releaseSourceJob} className="mt-3">
+                      <input type="hidden" name="pathname" value={row.pathname} />
+                      <Button type="submit">
+                        Release to {nextShops.length} shop
+                        {nextShops.length === 1 ? "" : "s"}
+                      </Button>
+                    </form>
                   ) : null}
                 </li>
               );

@@ -219,8 +219,9 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         </p>
         <p className="mt-2 text-xl font-medium">Buy as they come</p>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          {SOURCE_PLAN_LINE} Others wait if the buyer wants another quote.
-          File fullness this week to sit higher in that six.
+          {SOURCE_PLAN_LINE} Same-state shops that can run the print fill
+          the six first. First two to unlock get contact. File fullness this
+          week to sit higher among those.
         </p>
         {leadFlag === "full" ? (
           <p className="mt-2 text-sm leading-6 text-copper">
@@ -254,8 +255,9 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
               No matched buyer jobs yet. When a print fits a cell you filed,
               the lead lands here. Up to {SOURCE_TEASER_POOL} shops see
-              the teaser. First two to unlock get contact. File fullness this
-              week to sit higher in that six.
+              the teaser. Same-state shops that can run it sit there first.
+              First two to unlock get contact. File fullness this week to sit
+              higher among those.
             </p>
           ) : (
             <ul className="mt-4 divide-y divide-line border border-line">

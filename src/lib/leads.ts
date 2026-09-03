@@ -566,6 +566,7 @@ export async function sendSourceJobEmails({
   phone,
   city,
   state,
+  zip,
   diameterRaw,
   diameterMm,
   kind,
@@ -584,6 +585,7 @@ export async function sendSourceJobEmails({
   phone?: string;
   city?: string;
   state?: string;
+  zip?: string;
   diameterRaw: string;
   diameterMm: number | null;
   kind: string;
@@ -644,7 +646,7 @@ export async function sendSourceJobEmails({
       html: `<p><strong>${escapeHtml(company || "Buyer")}</strong> asked Source to match a job.</p>
         <p>Email: <a href="mailto:${escapeHtml(to)}">${escapeHtml(to)}</a>${name ? ` · ${escapeHtml(name)}` : ""}</p>
         ${phone ? `<p>Phone: ${escapeHtml(phone)}</p>` : ""}
-        ${city || state ? `<p>Locale: ${escapeHtml([city, state].filter(Boolean).join(", "))}</p>` : ""}
+        ${city || state || zip ? `<p>Locale: ${escapeHtml([city, state, zip].filter(Boolean).join(", "))}</p>` : ""}
         <p>Wire: ${escapeHtml(diameterRaw || size)}${kind ? ` · ${escapeHtml(kind)}` : ""}${oem ? ` · ${escapeHtml(oem)}` : ""}${qty ? ` · qty ${escapeHtml(qty)}` : ""}</p>
         ${notes ? `<p>Notes: ${escapeHtml(notes)}</p>` : ""}
         <p><strong>${

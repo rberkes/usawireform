@@ -424,6 +424,7 @@ export const US_STATES: UsState[] = [
 
 const bySlug = new Map(US_STATES.map((state) => [state.slug, state]));
 const byAbbr = new Map(US_STATES.map((state) => [state.abbr, state]));
+const byName = new Map(US_STATES.map((state) => [state.name.toLowerCase(), state]));
 
 export function getState(slug: string) {
   return bySlug.get(slug);
@@ -431,6 +432,24 @@ export function getState(slug: string) {
 
 export function getStateByAbbr(abbr: string) {
   return byAbbr.get(abbr.toUpperCase());
+}
+
+/** OH, Ohio, and ohio all resolve. Used to rank same-state shops. */
+export function parseUsState(raw?: string | null) {
+  const text = String(raw ?? "").trim();
+  if (!text) return null;
+  if (text.length === 2) return getStateByAbbr(text) ?? null;
+  const lower = text.toLowerCase();
+  return byName.get(lower) ?? bySlug.get(lower) ?? null;
+}
+
+export function sameUsState(a?: string | null, b?: string | null) {
+  const left = parseUsState(a);
+  const right = parseUsState(b);
+  if (left && right) return left.abbr === right.abbr;
+  const x = String(a ?? "").trim().toLowerCase();
+  const y = String(b ?? "").trim().toLowerCase();
+  return Boolean(x && y && x === y);
 }
 
 export function statePath(state: UsState) {
@@ -502,10 +521,17 @@ const ZIP3_RANGES: [number, number, string][] = [
   [995, 999, "AK"],
 ];
 
-export function stateFromZip(raw: string): UsState | null {
-  const digits = raw.replace(/\D/g, "");
+/** 5-digit US ZIP. ZIP+4 is accepted; we keep the first five. */
+export function parseUsZip(raw?: string | null) {
+  const digits = String(raw ?? "").replace(/\D/g, "");
   if (digits.length < 5) return null;
-  const zip3 = Number(digits.slice(0, 3));
+  return digits.slice(0, 5);
+}
+
+export function stateFromZip(raw: string): UsState | null {
+  const zip = parseUsZip(raw);
+  if (!zip) return null;
+  const zip3 = Number(zip.slice(0, 3));
   if (!Number.isFinite(zip3)) return null;
   for (const [start, end, abbr] of ZIP3_RANGES) {
     if (zip3 >= start && zip3 <= end) return getStateByAbbr(abbr) ?? null;

@@ -22,7 +22,7 @@ const GROUPS = [
       {
         href: "/source",
         label: "Send a print",
-        check: "Buyer log in and Buyer account. No $49. Desk vs release radios. Shop line is listing free only.",
+        check: "Buyer log in and Buyer account. No $49. ZIP required, city optional. Desk vs STEP radios. Shop line is listing free only.",
       },
       {
         href: "/source/shops",
@@ -105,7 +105,7 @@ const GROUPS = [
       {
         href: "/admin/accounts",
         label: "Accounts",
-        check: "Jump Shops, Buyers, STEP files. Validate buyer to open Excel. NDA on shops.",
+        check: "Jump Shops, Buyers, STEP files. Release to shops is the desk button. Validate buyer to open Excel. NDA on shops.",
       },
       {
         href: "/admin/preview",

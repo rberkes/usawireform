@@ -169,7 +169,7 @@ export function parseDrawingPrivacy(
 export function drawingPrivacyLabel(value: SourceDrawingPrivacy) {
   return value === "matched"
     ? "STEP released to quoting shops"
-    : "Held at the desk";
+    : "STEP at the desk";
 }
 
 export type SourceJobMailedTo = {
@@ -200,6 +200,8 @@ export type SourceJob = {
   phone: string;
   city: string;
   state: string;
+  /** Buyer ZIP. Sets state for matching. Desk-only. */
+  zip?: string;
   diameterRaw: string;
   diameterMm: number | null;
   kind: string;

@@ -49,8 +49,9 @@ export default function SourceUpgradePage() {
           Pay {formatLeadPrice()} to unlock buyer contact. Up to{" "}
           {SOURCE_TEASER_POOL} shops see the teaser. First two to unlock get
           contact — first come. Others wait if the buyer wants another quote.
-          File fullness this week to sit higher in that six. A STEP opens
-          only if the buyer released it. Never attached to email.
+          File fullness this week to sit higher among same-state shops that
+          can run the print. A STEP opens only if the buyer released it.
+          Never attached to email.
         </p>
         <div className="pt-2">
           <ButtonLink href="/source/dashboard">Open the shop dashboard</ButtonLink>

@@ -10,7 +10,6 @@ import {
   stockLabel,
   type SourceBuyerFit,
 } from "@/lib/source-fit";
-import { partitionLeadMatches } from "@/lib/source-leads";
 import { matchFilingsToJob, parseQty, type SourceJobSpec } from "@/lib/source-match";
 import { secondaryLabel } from "@/lib/source-secondaries";
 import { buyerShopSlots, SOURCE_BUYER_INCLUDED_SHOPS, SOURCE_TEASER_POOL } from "@/lib/source-plans";
@@ -52,6 +51,7 @@ export function jobToSpec(job: SourceJob): SourceJobSpec {
     oem: job.oem,
     city: job.city,
     state: job.state,
+    zip: job.zip ?? "",
     buyerEmail: job.email,
     qty: parseQty(job.qty),
   };
@@ -198,16 +198,14 @@ function shopFitFlags(
   return flags;
 }
 
-export async function previewSourceRelease(
+export function previewSourceReleaseFrom(
   job: SourceJobRow,
-): Promise<ReleasePreview> {
-  const [filingRows, profiles] = await Promise.all([
-    listSourceFilings(),
-    listSourceProfiles(),
-  ]);
-  const filings = applyProfilesToFilings(filingRows, profiles);
+  filings: SourceFiling[],
+  profiles: SourceProfile[],
+): ReleasePreview {
   const internal = matchFilingsToJob(filings, jobToSpec(job));
-  const { mailed, listed } = await partitionLeadMatches(internal);
+  const mailed = internal.filter((row) => row.email.trim());
+  const listed = internal.filter((row) => !row.email.trim());
   const mailedTo: SourceJobMailedTo[] = mailed.map((row) => {
     const filing = filings.find(
       (item) =>
@@ -249,6 +247,20 @@ export async function previewSourceRelease(
         : SOURCE_TEASER_POOL,
     ),
   };
+}
+
+export async function previewSourceRelease(
+  job: SourceJobRow,
+): Promise<ReleasePreview> {
+  const [filingRows, profiles] = await Promise.all([
+    listSourceFilings(),
+    listSourceProfiles(),
+  ]);
+  return previewSourceReleaseFrom(
+    job,
+    applyProfilesToFilings(filingRows, profiles),
+    profiles,
+  );
 }
 
 export async function markJobQualified(job: SourceJobRow) {

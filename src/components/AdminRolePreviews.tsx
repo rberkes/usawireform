@@ -148,7 +148,7 @@ export function BuyerDashboardPreview() {
               {drawingPrivacyLabel("desk")} · no match yet
             </p>
             <p className="mt-1 font-mono text-[11px] text-muted">
-              Held at the desk until you Release
+              At the desk until the desk sends it to shops
             </p>
             <p className="mt-2 text-copper">Change drawing privacy</p>
           </li>

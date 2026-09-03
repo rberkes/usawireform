@@ -57,20 +57,16 @@ Desk **does not** get: Clerk sign-up itself, fullness slider moves, plant photo.
 
 ## Matching (current code)
 
-Hard filter: cell class + diameter band. Bonuses: OEM, locale, qty vs fit, fullness, filed this week. Cap **6** teasers. `src/lib/source-match.ts`.
+Hard filter: cell class + diameter band. Buyer **ZIP** sets the state. **Same-state capable shops fill the six first.** Then OEM, same city, qty vs fit, fullness this week. First two of those six to unlock get contact. `src/lib/source-match.ts`.
 
-**Still wrong vs product:** `submitSourceJob` writes `mailedTo` and emails shops immediately. Product is: save job, receipt to buyer + desk, **Release to shops** is the trigger.
+Prints **hold** on submit. Desk **Release** on `/admin/accounts` sends the six teasers.
 
 ## Agreed next (not in this push)
 
-1. Admin is the trigger — no shop mail, no shop inbox until Release
-2. Shop ping after release: “a job fits this cell” — masked buyer email, no file, no full contact
-3. Shop $49 opens spec/contact; STEP stays desk unless released **and** paid
-4. Buyer: two shops can buy first; $49 opens one waitlist slot; close the print from the dashboard
-5. Fit check on Release: cell, wire, alloy, coil, finish, qty vs MOQ, fullness
-6. Buyer form: alloy, who buys coil, need-by, finish, first-article vs production, PPAP
-7. Desk mail: shop sign-up, NDA, later cells
-8. Desk expert uses live filings + match rules; PDF/notes ok; raw STEP is not for the model
+1. Fit check on Release: alloy, coil, finish, qty vs MOQ (flags exist; desk still Releases the ranked six)
+2. Buyer form: alloy, who buys coil, need-by, finish, first-article vs production, PPAP
+3. Desk mail: shop sign-up, NDA, later cells
+4. Desk expert uses live filings + match rules; PDF/notes ok; raw STEP is not for the model
 
 **Out of that pass:** train an LLM, charge the first buyer print, buyer blasting all shops, per-machine sliders.
 

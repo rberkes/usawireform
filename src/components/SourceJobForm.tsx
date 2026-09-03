@@ -36,8 +36,8 @@ export function SourceJobForm({
             What should run this job?
           </legend>
           <p className="mt-3 text-sm leading-6 text-muted">
-            Pick the cell first. Quotes go to shops that filed that iron, year,
-            capacity, and stocked sizes — not a shop that says they form wire.
+            Pick the cell first. A ZIP starts us with shops that filed that
+            iron in your state. First two to unlock can quote.
           </p>
           <div className="mt-4">
             <SourceKindCards name="kind" required />
@@ -93,22 +93,31 @@ export function SourceJobForm({
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
+            ZIP
+            <input
+              className={`mt-1.5 ${fieldClass}`}
+              name="zip"
+              inputMode="numeric"
+              autoComplete="postal-code"
+              required
+              placeholder="44035"
+            />
+          </label>
+          <label className="block text-sm">
             City
+            <span className="font-normal text-muted"> optional</span>
             <input
               className={`mt-1.5 ${fieldClass}`}
               name="city"
               autoComplete="address-level2"
             />
           </label>
-          <label className="block text-sm">
-            State
-            <input
-              className={`mt-1.5 ${fieldClass}`}
-              name="state"
-              autoComplete="address-level1"
-            />
-          </label>
         </div>
+        <p className="text-sm leading-6 text-muted">
+          ZIP sets the state so we start with shops that can run this print
+          nearby. City is a tighter match if you have it. Shops do not see
+          this.
+        </p>
       </Panel>
 
       <Panel className="space-y-4 p-4 sm:p-5">

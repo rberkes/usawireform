@@ -2,6 +2,7 @@ import { generateText, jsonSchema, Output } from "ai";
 import { SOURCE_OEM_NAMES } from "@/lib/source-iron";
 import { SOURCE_JOB_CLASSES, isSourceJobClass } from "@/lib/source-types";
 import { parseWireMm, parseQty, roundMm, type SourceJobSpec } from "@/lib/source-match";
+import { parseUsZip, stateFromZip } from "@/lib/states";
 
 export type ParsedBuyerJob = {
   spec: SourceJobSpec;
@@ -79,6 +80,7 @@ export async function parseBuyerJob(input: {
   oem: string;
   city: string;
   state: string;
+  zip?: string;
   notes: string;
   buyerEmail: string;
   qty?: string;
@@ -87,7 +89,9 @@ export async function parseBuyerJob(input: {
   const formKind = cleanKind(input.kind);
   const formOem = cleanOem(input.oem);
   const formCity = input.city.trim();
-  const formState = input.state.trim();
+  const zip = parseUsZip(input.zip) ?? "";
+  const fromZip = zip ? stateFromZip(zip) : null;
+  const formState = (fromZip?.abbr || input.state.trim()).trim();
   const needsAi = Boolean(input.notes.trim()) || (!formMm && Boolean(input.diameterRaw.trim()));
 
   const ai = needsAi
@@ -98,6 +102,7 @@ export async function parseBuyerJob(input: {
           formOem && `OEM: ${formOem}`,
           formCity && `City: ${formCity}`,
           formState && `State: ${formState}`,
+          zip && `ZIP: ${zip}`,
           input.notes,
         ]
           .filter(Boolean)
@@ -111,12 +116,13 @@ export async function parseBuyerJob(input: {
     oem: formOem || cleanOem(ai?.oem ?? ""),
     city: formCity || (ai?.city ?? "").trim(),
     state: formState || (ai?.state ?? "").trim(),
+    zip,
     buyerEmail: input.buyerEmail,
     qty: parseQty(input.qty ?? ""),
   };
 
   const usedAi = Boolean(ai);
-  const usedForm = Boolean(formMm || formKind || formOem || formCity || formState);
+  const usedForm = Boolean(formMm || formKind || formOem || formCity || formState || zip);
   return {
     spec,
     parsedBy: usedAi && usedForm ? "form+ai" : usedAi ? "ai" : "form",

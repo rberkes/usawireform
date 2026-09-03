@@ -338,6 +338,7 @@ function readSourceJob(
     phone: String(payload.phone ?? ""),
     city: String(payload.city ?? ""),
     state: String(payload.state ?? ""),
+    zip: payload.zip ? String(payload.zip) : undefined,
     diameterRaw: String(payload.diameterRaw ?? ""),
     diameterMm:
       typeof payload.diameterMm === "number" ? payload.diameterMm : null,

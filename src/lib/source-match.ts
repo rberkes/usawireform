@@ -2,6 +2,7 @@ import { hydrateMachineFromCatalog } from "@/lib/source-iron";
 import { capacityScoreAdjust, formatCapacityWhy } from "@/lib/source-capacity";
 import { fitScoreAdjust, formatFitWhy } from "@/lib/source-fit";
 import { SOURCE_TEASER_POOL } from "@/lib/source-plans";
+import { sameUsState } from "@/lib/states";
 import { type SourceFiling, type SourceInternalMatch } from "@/lib/source-types";
 
 const BAND_SLACK_MM = 0.05;
@@ -52,6 +53,7 @@ export type SourceJobSpec = {
   oem: string;
   city: string;
   state: string;
+  zip: string;
   buyerEmail: string;
   qty: number | null;
 };
@@ -77,14 +79,17 @@ export function machineFitsJob(
   return kindMatches(job.kind, machine.kind);
 }
 
+function sameState(job: SourceJobSpec, state: string) {
+  return sameUsState(job.state, state);
+}
+
+/** Same state fills the six first. City is a within-state tiebreak. */
 function localeScore(job: SourceJobSpec, city: string, state: string) {
   let score = 0;
+  if (sameState(job, state)) score += 40;
   const jobCity = job.city.trim().toLowerCase();
-  const jobState = job.state.trim().toLowerCase();
   const cellCity = city.trim().toLowerCase();
-  const cellState = state.trim().toLowerCase();
-  if (jobState && cellState && jobState === cellState) score += 10;
-  if (jobCity && cellCity && jobCity === cellCity) score += 15;
+  if (jobCity && cellCity && jobCity === cellCity) score += 12;
   return score;
 }
 
@@ -160,7 +165,12 @@ export function matchFilingsToJob(
   }
 
   return ranked
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => {
+      const aIn = sameState(job, a.state) ? 1 : 0;
+      const bIn = sameState(job, b.state) ? 1 : 0;
+      if (aIn !== bIn) return bIn - aIn;
+      return b.score - a.score;
+    })
     .slice(0, limit)
     .map(({ score: _score, ...row }) => row);
 }
