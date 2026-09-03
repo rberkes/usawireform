@@ -94,12 +94,18 @@ export const extraDirectoryCompanies: DirectoryCompany[] = [
   {
     slug: "aaaa-specialties",
     name: "AAAA Specialties",
-    location: "Waterbury, CT",
-    state: "CT",
+    location: "Denver, CO",
+    state: "CO",
     country: "USA",
-    region: "Northeast",
-    description: "AAAA Specialties in Waterbury, CT. Fourslide and related coil work.",
-    capabilities: ["Fourslide", "Wire forms", "Stampings"],
+    region: "West",
+    description:
+      "AAAA Specialties in Denver, CO. Compression, extension, and torsion springs plus wire forms from 0.008-0.562 in round wire.",
+    capabilities: [
+      "Compression springs",
+      "Extension springs",
+      "Torsion springs",
+      "Wire forms",
+    ],
     website: "https://aaaaspecialties.com",
   },
   {
@@ -171,12 +177,13 @@ export const extraDirectoryCompanies: DirectoryCompany[] = [
   {
     slug: "quality-steel-wire",
     name: "Quality Steel and Wire",
-    location: "Walker, MI",
-    state: "MI",
+    location: "Lenexa, KS",
+    state: "KS",
     country: "USA",
     region: "Midwest",
-    description: "Quality Steel and Wire in Walker, MI. Wire forming and related coil work.",
-    capabilities: ["Wire forming", "Steel wire products"],
+    description:
+      "Quality Steel and Wire in Lenexa, KS. Precision wire and metal forming plus stamping for OEM and masonry work since 1987.",
+    capabilities: ["Wire forms", "Stampings", "Machining"],
     website: "https://qswmfg.com",
   },
   {

@@ -8,6 +8,7 @@ import { extraDirectoryCompanies } from "./directory-extra";
 import { fourslideDirectoryCompanies } from "./directory-fourslide";
 import { applyDirectoryIron } from "./directory-iron";
 import { moreDirectoryCompanies } from "./directory-more";
+import { outreachDirectoryCompanies } from "./directory-outreach";
 import { smiDirectoryCompanies } from "./directory-smi";
 import { stateBoostCompanies } from "./directory-state-boost";
 import { STATE_SHOPS } from "./state-shops";
@@ -372,12 +373,12 @@ const CORE_DIRECTORY_COMPANIES: DirectoryCompany[] = [
   {
     slug: "newcomb-spring",
     name: "Newcomb Spring Corp.",
-    location: "Multiple US locations",
-    state: "Multiple",
+    location: "Stonecrest, Georgia",
+    state: "GA",
     country: "USA",
-    region: "Midwest",
+    region: "Southeast",
     website: "https://www.newcombspring.com",
-    description: "Experienced American manufacturer of custom springs and wire forms. State-of-the-art CNC wire bending machinery for precise metal forms from samples to large production.",
+    description: "Experienced American manufacturer of custom springs and wire forms. State-of-the-art CNC wire bending machinery for precise metal forms from samples to large production. Runs plants in Georgia, California, Colorado, Connecticut, North Carolina, Tennessee, Texas and Ontario.",
     capabilities: ["Custom springs", "Wire forms", "CNC wire bending", "High volume production"],
   },
   {
@@ -1281,6 +1282,7 @@ export const directoryCompanies = mergeDirectory([
   smiDirectoryCompanies,
   fourslideDirectoryCompanies,
   moreDirectoryCompanies,
+  outreachDirectoryCompanies,
   fromStateShops(),
 ]).map(applyDirectoryIron);
 
