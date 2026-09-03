@@ -22,6 +22,8 @@ Contact/quote (this floor) stays prints-only. Code: `src/lib/drawings.ts`, `buye
 
 A drawing is never on email. Privacy default is **desk**. Shop may open a released file only after they paid for the lead (`shopMayViewDrawing`).
 
+**Names and locale stay off both dashboards.** The shop teaser is cell, wire, and qty — not buyer company, email, notes, or city. After they pay they get contact, not locale. The buyer sees that a print was offered (shop count) — not shop names or cities. Plant city and nearest major city (Elyria → Cleveland) are **desk-only** on `/admin/accounts`.
+
 ## Capacity
 
 One company slider, 0–100% full.

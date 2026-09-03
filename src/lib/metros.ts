@@ -349,3 +349,41 @@ export function clevelandMetro() {
 export function metroPath(metro: WireFormingMetro) {
   return `${METRO_HUB_PATH}/${metro.slug}`;
 }
+
+function normPlace(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+/**
+ * Desk-only nearest major city for a plant. Elyria / Akron → Cleveland.
+ * Buyers and shops do not see this.
+ */
+export function nearestMajorCity(
+  city?: string | null,
+  state?: string | null,
+): string | undefined {
+  const cityKey = normPlace(city ?? "");
+  const st = (state ?? "").trim().toUpperCase();
+  if (!cityKey && !st) return undefined;
+
+  const inState = st
+    ? WIRE_FORMING_METROS.filter((metro) => metro.stateAbbr === st)
+    : WIRE_FORMING_METROS;
+  const pool = inState.length > 0 ? inState : WIRE_FORMING_METROS;
+
+  if (cityKey) {
+    const hit = pool.find((metro) => {
+      if (normPlace(metro.city) === cityKey) return true;
+      return metro.aliases.some((alias) => {
+        const a = normPlace(alias);
+        return cityKey === a || cityKey.includes(a) || a.includes(cityKey);
+      });
+    });
+    if (hit) return hit.city;
+  }
+
+  if (inState[0]) return inState[0].city;
+  const raw = (city ?? "").trim();
+  if (raw && st) return `${raw}, ${st}`;
+  return raw || undefined;
+}

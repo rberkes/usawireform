@@ -215,8 +215,9 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
         </p>
         <p className="mt-2 text-xl font-medium">Buy as they come</p>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          {SOURCE_PLAN_LINE} Spec shows here. Buyer contact unlocks after you
-          pay. A STEP opens only if the buyer released it.
+          {SOURCE_PLAN_LINE} Cell, wire, and qty show here. Buyer name and
+          email unlock after you pay. A STEP opens only if the buyer
+          released it.
         </p>
         {leadFlag === "full" ? (
           <p className="mt-2 text-sm leading-6 text-copper">
@@ -238,8 +239,8 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
           {inbox.length === 0 ? (
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
               No matched buyer jobs yet. When a print fits a cell you filed,
-              the lead lands here. Pay {formatLeadPrice()} to unlock the
-              buyer.
+              the lead lands here. Cell, wire, and qty only until you pay{" "}
+              {formatLeadPrice()} — buyer name and email stay hidden.
             </p>
           ) : (
             <ul className="mt-4 divide-y divide-line border border-line">
@@ -261,13 +262,12 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
                       {job.diameterMm != null ? ` · ${job.diameterMm} mm` : ""}
                       {job.qty ? ` · qty ${job.qty}` : ""}
                     </p>
-                    <p className="mt-1 text-muted">
-                      {[job.city, job.state].filter(Boolean).join(", ") || "Locale on the print"}
-                      {job.oem ? ` · ${job.oem}` : ""}
-                    </p>
-                    {job.notes ? (
+                    {bought && job.oem ? (
+                      <p className="mt-1 text-muted">{job.oem}</p>
+                    ) : null}
+                    {bought && job.notes ? (
                       <p className="mt-1 max-w-2xl text-foreground/90">
-                        {bought ? job.notes : job.notes.slice(0, 140)}
+                        {job.notes}
                       </p>
                     ) : null}
                     {contact ? (

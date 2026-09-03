@@ -58,7 +58,7 @@ export function BuyerDashboardPreview() {
       <PageHero
         kicker="Source"
         title="Buyer dashboard"
-        lede="Your jobs and drawing privacy. Matched shops see the spec. You choose whether a quoting shop can open the STEP."
+        lede="Your jobs and drawing privacy. Shop names and locations stay with the desk."
       />
       <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
         Prints only for now (STEP, DXF, SLDPRT, PDF). Excel and other files
@@ -157,8 +157,7 @@ export function BuyerDashboardPreview() {
               <span className="ml-2 font-normal text-muted">2D CNC · 6 mm</span>
             </p>
             <p className="mt-1 text-muted">
-              {drawingPrivacyLabel("matched")} · offered to 3 shops · 1 shop
-              has contact
+              {drawingPrivacyLabel("matched")} · 3 shops
             </p>
             <p className="mt-1 font-mono text-[11px] text-muted">Released to shops</p>
           </li>
@@ -222,8 +221,9 @@ export function ShopDashboardPreview() {
         </p>
         <p className="mt-2 text-xl font-medium">Buy as they come</p>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          {SOURCE_PLAN_LINE} Spec shows here. Buyer contact unlocks after you pay.
-          A STEP opens only if the buyer released it.
+          {SOURCE_PLAN_LINE} Cell, wire, and qty show here. Buyer name and
+          email unlock after you pay. A STEP opens only if the buyer
+          released it.
         </p>
       </Panel>
 
@@ -235,7 +235,6 @@ export function ShopDashboardPreview() {
           <ul className="mt-4 divide-y divide-line border border-line">
             <li className="px-4 py-4 text-sm">
               <p className="font-medium">3D CNC · 8 mm · qty 5000</p>
-              <p className="mt-1 text-muted">Akron, OH</p>
               <p className="mt-2 text-muted">
                 Buyer contact unlocks at {price}.
               </p>
@@ -250,7 +249,6 @@ export function ShopDashboardPreview() {
             </li>
             <li className="px-4 py-4 text-sm">
               <p className="font-medium">2D CNC · 6 mm · qty 1200</p>
-              <p className="mt-1 text-muted">Toledo, OH</p>
               <p className="mt-2 text-foreground">
                 Midwest Stampings · Alex Rivera · buyer@example.com · 216-555-0142
               </p>

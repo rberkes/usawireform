@@ -39,7 +39,7 @@ export default async function AdminPreviewIndexPage({
           <p className="text-lg font-medium">Buyer dashboard</p>
           <p className="text-sm leading-6 text-muted">
             Company card, monthly volume slider, jobs held at the desk vs
-            released. No shop $49 on this screen.
+            released. Shop names and locations stay off this screen.
           </p>
           <ButtonLink href="/admin/preview/buyer">Open buyer view</ButtonLink>
         </Panel>
@@ -50,7 +50,8 @@ export default async function AdminPreviewIndexPage({
           <p className="text-lg font-medium">Shop dashboard</p>
           <p className="text-sm leading-6 text-muted">
             Inbox teaser, {SOURCE_SMART_CONNECT} unlock, filed cells, plant
-            fullness. Contact stays hidden until they buy the lead.
+            fullness. Buyer name and email stay hidden until they buy the lead.
+            Buyer locale stays on the desk.
           </p>
           <ButtonLink href="/admin/preview/shop">Open shop view</ButtonLink>
         </Panel>

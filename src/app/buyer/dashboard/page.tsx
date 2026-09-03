@@ -51,7 +51,7 @@ export default async function BuyerDashboardPage() {
       <PageHero
         kicker="Source"
         title="Buyer dashboard"
-        lede="Your jobs and drawing privacy. Matched shops see the spec. You choose whether a quoting shop can open the STEP."
+        lede="Your jobs and drawing privacy. Shop names and locations stay with the desk. Shops see the cell, wire, and qty — not your name or email — until they unlock the lead."
       />
       <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
         {extrasOpen
@@ -112,8 +112,8 @@ export default async function BuyerDashboardPage() {
                   <p className="mt-1 text-muted">
                     {drawingPrivacyLabel(privacy)}
                     {job.mailedTo && job.mailedTo.length > 0
-                      ? ` · offered to ${job.mailedTo.length === 1 ? "1 shop" : `${job.mailedTo.length} shops`}`
-                      : " · no match yet"}
+                      ? ` · ${job.mailedTo.length === 1 ? "1 shop" : `${job.mailedTo.length} shops`}`
+                      : " · not sent to shops yet"}
                     {job.purchasedBy && job.purchasedBy.length > 0
                       ? ` · ${job.purchasedBy.length === 1 ? "1 shop has contact" : `${job.purchasedBy.length} shops have contact`}`
                       : ""}

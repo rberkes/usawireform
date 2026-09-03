@@ -31,6 +31,7 @@ import {
   reminderKindLabel,
 } from "@/lib/source-reminders";
 import { formatBuyerJobsPerMonth } from "@/lib/source-buyer-volume";
+import { deskMailedShopLines, formatDeskPlace } from "@/lib/source-locale";
 import {
   drawingPrivacyLabel,
   parseDrawingPrivacy,
@@ -124,13 +125,26 @@ export default async function AdminAccountsPage({
     reminderLogs.map((row) => [row.key, row.sentAt.length]),
   );
   const ranReminders = reminded != null;
+  const shopPlaces = [
+    ...profiles.map((row) => ({
+      userId: row.userId,
+      city: row.city,
+      state: row.state,
+    })),
+    ...filings.map((row) => ({
+      userId: row.userId,
+      email: row.email,
+      city: row.city,
+      state: row.state,
+    })),
+  ];
 
   return (
     <Page>
       <PageHero
         kicker="Admin"
         title="Accounts"
-        lede="New shops, buyers, and Source STEP files. This-floor Contact drawings stay under Quote files. Password resets stay in Clerk."
+        lede="New shops, buyers, and Source STEP files. Locale (plant city and nearest metro) is desk-only. This-floor Contact drawings stay under Quote files. Password resets stay in Clerk."
       />
       <AdminInboxNav
         current="accounts"
@@ -311,7 +325,7 @@ export default async function AdminAccountsPage({
                 <p className="mt-1 text-muted">
                   {[
                     emailByUser.get(row.userId),
-                    [row.city, row.state].filter(Boolean).join(", "),
+                    formatDeskPlace(row.city, row.state),
                     row.slug ? `/directory/${row.slug}` : "",
                   ]
                     .filter(Boolean)
@@ -410,7 +424,9 @@ export default async function AdminAccountsPage({
           <div className="mt-6">
             <h3 className="text-sm font-medium">Guest RFQs (no buyer account)</h3>
             <ul className="mt-3 divide-y divide-line border border-line">
-              {guestJobs.slice(0, 40).map((job) => (
+              {guestJobs.slice(0, 40).map((job) => {
+                const place = formatDeskPlace(job.city, job.state);
+                return (
                 <li key={job.pathname} className="px-4 py-4 text-sm">
                   <p className="font-medium">
                     {job.company || job.email}
@@ -420,9 +436,11 @@ export default async function AdminAccountsPage({
                     {job.kind}
                     {job.diameterMm != null ? ` · ${job.diameterMm} mm` : ""}
                     {job.drawingPath ? " · has STEP" : " · spec only"}
+                    {place ? ` · ${place}` : ""}
                   </p>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </div>
         ) : null}
@@ -431,8 +449,9 @@ export default async function AdminAccountsPage({
       <section id="files" className="mt-12 scroll-mt-24">
         <h2 className="text-lg font-medium">STEP files</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          Source jobs from /source. The desk can always download. A shop only
-          opens a file after they buy the lead and the buyer released it.
+          Source jobs from /source. Locale (buyer city and each shop’s nearest
+          metro) is on this screen only. The desk can always download. A shop
+          only opens a file after they buy the lead and the buyer released it.
         </p>
         {jobs.length === 0 ? (
           <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
@@ -445,6 +464,8 @@ export default async function AdminAccountsPage({
               const href = row.drawingPath
                 ? adminFileHref(row.drawingPath, row.fileName)
                 : null;
+              const mailed = deskMailedShopLines(row, shopPlaces);
+              const buyerPlace = formatDeskPlace(row.city, row.state);
               return (
                 <li key={row.pathname} className="px-4 py-4 text-sm">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -460,7 +481,7 @@ export default async function AdminAccountsPage({
                     {[
                       row.name,
                       row.phone,
-                      [row.city, row.state].filter(Boolean).join(", "),
+                      buyerPlace,
                     ]
                       .filter(Boolean)
                       .join(" · ")}
@@ -476,8 +497,8 @@ export default async function AdminAccountsPage({
                   ) : null}
                   <p className="mt-1 font-mono text-[11px] tracking-widest text-muted uppercase">
                     {drawingPrivacyLabel(privacy)}
-                    {row.mailedTo && row.mailedTo.length > 0
-                      ? ` · ${row.mailedTo.map((shop) => shop.company || shop.email).join(", ")}`
+                    {mailed.length > 0
+                      ? ` · ${mailed.join(", ")}`
                       : " · no match yet"}
                     {row.buyerUserId ? " · buyer account" : " · guest"}
                   </p>

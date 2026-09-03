@@ -68,7 +68,7 @@ const GROUPS = [
       {
         href: "/source/dashboard",
         label: "Shop dashboard",
-        check: "Job inbox. Plant fullness slider 0–100%. Teaser until Buy this lead. Contact and STEP after $49.",
+        check: "Inbox. Cell, wire, qty until Buy this lead. Contact after $49. No buyer name or locale.",
       },
     ],
   },
@@ -79,7 +79,7 @@ const GROUPS = [
       {
         href: "/buyer/dashboard",
         label: "Buyer dashboard",
-        check: "Company form. Monthly jobs slider 0–10+. Jobs list. Prints only until desk validates. Then Excel.",
+        check: "Company form. Monthly jobs slider 0–10+. Jobs list — shop count, not names or cities.",
       },
       {
         href: "/source",
@@ -115,12 +115,12 @@ const GROUPS = [
       {
         href: "/admin/preview/buyer",
         label: "Buyer dashboard preview",
-        check: "Company card, 0–10+ volume slider, held vs released jobs. No shop $49.",
+        check: "Company card, 0–10+ volume slider, held vs released jobs. No shop names or cities.",
       },
       {
         href: "/admin/preview/shop",
         label: "Shop dashboard preview",
-        check: "Inbox teaser then unlocked contact. Cells and fullness slider. $49 unlock.",
+        check: "Inbox teaser then unlocked contact. No buyer name until $49. No buyer locale. Cells and fullness slider.",
       },
       {
         href: "/admin/source",

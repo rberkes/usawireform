@@ -562,17 +562,13 @@ export function sourceShopLeadHtml({
        [
          spec.kind ? { label: "Cell", value: spec.kind } : null,
          { label: "Wire", value: spec.diameterRaw || size },
-         spec.oem ? { label: "OEM", value: spec.oem } : null,
          spec.qty ? { label: "Qty", value: spec.qty } : null,
-         spec.notes
-           ? { label: "Notes", value: spec.notes.slice(0, 180) }
-           : null,
        ].filter((row): row is MailRow => Boolean(row)),
      )}
      ${ctaBannerRow(
        `${SITE_URL}/source/dashboard`,
        SOURCE_SMART_CONNECT_LINE,
-       "Buyer email is not in this message. The STEP is never attached.",
+       "Buyer name and email are not in this message. The STEP is never attached.",
      )}`,
   );
 }
