@@ -373,7 +373,7 @@ const CORE_DIRECTORY_COMPANIES: DirectoryCompany[] = [
   {
     slug: "newcomb-spring",
     name: "Newcomb Spring Corp.",
-    location: "Stonecrest, Georgia",
+    location: "Stonecrest, GA",
     state: "GA",
     country: "USA",
     region: "Southeast",

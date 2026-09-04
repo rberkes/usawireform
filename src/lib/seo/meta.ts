@@ -22,12 +22,19 @@ export function pageMeta({
   keywords = [],
   absoluteTitle = false,
   image,
+  noindex = false,
 }: {
   title: string;
   description: string;
   path: string;
   keywords?: string[];
   absoluteTitle?: boolean;
+  /**
+   * Keep the page out of the index but still crawlable, for pages that are
+   * real and reachable but carry nothing worth ranking yet. Stays `follow` so
+   * the links on the page still count.
+   */
+  noindex?: boolean;
   image?: {
     url: string;
     width?: number;
@@ -60,10 +67,10 @@ export function pageMeta({
     category: "manufacturing",
     alternates: { canonical: path === "/" ? "/" : path },
     robots: {
-      index: true,
+      index: !noindex,
       follow: true,
       googleBot: {
-        index: true,
+        index: !noindex,
         follow: true,
         "max-image-preview": "large",
         "max-snippet": -1,

@@ -216,6 +216,95 @@ export function ServiceSchema({
 }
 
 /**
+ * The shop a directory page is about, as its own business entity.
+ *
+ * Every listing page also carries the site-level Organization and
+ * LocalBusiness for USA Wire Form, so without this node the only business
+ * Google can attach to `/directory/<shop>` is ours. Several hundred listing
+ * pages then look like one entity described several hundred times, which reads
+ * as near-duplicate rather than as a directory of distinct manufacturers.
+ *
+ * `url` points at the shop's own site when we know it, because that is the
+ * entity's home on the web. The listing page is `mainEntityOfPage`.
+ */
+export function DirectoryShopSchema({
+  name,
+  path,
+  location,
+  state,
+  country,
+  description,
+  capabilities,
+  website,
+  linkedin,
+  phone,
+  plantStreet,
+  established,
+  photoUrl,
+  logoUrl,
+  certifications,
+}: {
+  name: string;
+  path: string;
+  location: string;
+  state: string;
+  country: "USA" | "Canada";
+  description: string;
+  capabilities: string[];
+  website?: string;
+  linkedin?: string;
+  phone?: string;
+  plantStreet?: string;
+  established?: string;
+  photoUrl?: string;
+  logoUrl?: string;
+  certifications?: string[];
+}) {
+  const pageUrl = `${SITE_URL}${path}`;
+  // `location` is stored as "City, ST"; drop the state so addressLocality is
+  // just the city and does not repeat addressRegion.
+  const suffix = `, ${state}`;
+  const city = location.toUpperCase().endsWith(suffix.toUpperCase())
+    ? location.slice(0, -suffix.length).trim()
+    : location;
+  const sameAs = [website, linkedin].filter(Boolean) as string[];
+  const knowsAbout = [...capabilities, ...(certifications ?? [])];
+
+  const data = {
+    "@context": "https://schema.org",
+    "@type": ["Organization", "LocalBusiness"],
+    "@id": `${pageUrl}#shop`,
+    name,
+    url: website || pageUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
+    description,
+    address: {
+      "@type": "PostalAddress",
+      ...(plantStreet ? { streetAddress: plantStreet } : {}),
+      // A few listings record only a province or a region, with no city.
+      ...(city && city.toUpperCase() !== state.toUpperCase()
+        ? { addressLocality: city }
+        : {}),
+      addressRegion: state,
+      addressCountry: country === "Canada" ? "CA" : "US",
+    },
+    ...(sameAs.length > 0 ? { sameAs } : {}),
+    ...(phone ? { telephone: phone } : {}),
+    ...(established ? { foundingDate: established } : {}),
+    ...(photoUrl ? { image: photoUrl } : {}),
+    ...(logoUrl ? { logo: logoUrl } : {}),
+    ...(knowsAbout.length > 0 ? { knowsAbout } : {}),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+/**
  * HowTo Schema for instructional content
  */
 export function HowToSchema({

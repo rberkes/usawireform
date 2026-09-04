@@ -5,7 +5,7 @@ import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DirectoryLeadForm } from "@/components/DirectoryLeadForm";
 import { DirectoryPhotoUpload } from "@/components/DirectoryPhotoUpload";
-import { ServiceSchema } from "@/components/SeoSchemas";
+import { DirectoryShopSchema } from "@/components/SeoSchemas";
 import {
   ButtonLink,
   Kicker,
@@ -15,8 +15,12 @@ import {
   directoryCompanies,
   getDirectoryCompany,
   getCompaniesByRegion,
+  getCompaniesByState,
   publicHost,
 } from "@/lib/directory";
+import { getStateByAbbr } from "@/lib/states";
+import { capabilityTopic } from "@/lib/directory-topics";
+import { directoryListingHasSubstance } from "@/lib/directory-substance";
 import { pageMeta } from "@/lib/seo";
 import { directoryPlantStatus } from "@/lib/plant-verify";
 import {
@@ -77,6 +81,7 @@ export async function generateMetadata({ params }: Props) {
       company.state,
       ...company.capabilities.slice(0, 3),
     ],
+    noindex: !directoryListingHasSubstance(company),
   });
 }
 
@@ -93,9 +98,27 @@ export default async function DirectoryCompanyPage({ params }: Props) {
     mine?.slug !== company.slug &&
     sourceAccountLocksClaim(mine);
 
-  const relatedCompanies = getCompaniesByRegion(company.region)
-    .filter((c) => c.slug !== slug)
-    .slice(0, 6);
+  // Same state first. A shop in the next town is more use to a buyer than one
+  // three states away, and it gives each listing a link set of its own instead
+  // of the same six names repeated across a whole region.
+  const sameState = getCompaniesByState(company.state).filter(
+    (c) => c.slug !== slug,
+  );
+  const relatedCompanies = [
+    ...sameState,
+    ...getCompaniesByRegion(company.region).filter(
+      (c) => c.slug !== slug && c.state !== company.state,
+    ),
+  ].slice(0, 6);
+
+  const stateName =
+    company.country === "USA"
+      ? getStateByAbbr(company.state)?.name
+      : undefined;
+  const stateSlug =
+    company.country === "USA"
+      ? getStateByAbbr(company.state)?.slug
+      : undefined;
 
   const specs: { label: string; value: string }[] = [
     { label: "Location", value: company.location },
@@ -124,11 +147,22 @@ export default async function DirectoryCompanyPage({ params }: Props) {
 
   return (
     <>
-      <ServiceSchema
-        name={`${company.name} - Wire Forming Company`}
+      <DirectoryShopSchema
+        name={company.name}
+        path={`/directory/${slug}`}
+        location={company.location}
+        state={company.state}
+        country={company.country}
         description={company.description}
-        url={`/directory/${slug}`}
-        serviceType="Wire Forming Manufacturing"
+        capabilities={company.capabilities}
+        website={company.website}
+        linkedin={company.linkedin}
+        phone={company.phone}
+        plantStreet={company.plantStreet}
+        established={company.established}
+        photoUrl={company.photoUrl}
+        logoUrl={company.logoUrl}
+        certifications={company.certifications}
       />
       <BreadcrumbJsonLd
         items={[
@@ -257,16 +291,34 @@ export default async function DirectoryCompanyPage({ params }: Props) {
               ) : null}
             </div>
 
+            {!company.website ? (
+              <p className="mt-5 max-w-2xl text-sm leading-6 text-muted">
+                No public website on file for this shop. Confirm capabilities
+                by phone before you send a print.
+              </p>
+            ) : null}
+
             {company.capabilities.length > 0 ? (
               <ul className="mt-8 flex flex-wrap gap-2">
-                {company.capabilities.map((cap) => (
-                  <li
-                    key={cap}
-                    className="border border-line px-3 py-1.5 text-sm"
-                  >
-                    {cap}
-                  </li>
-                ))}
+                {company.capabilities.map((cap) => {
+                  const topic = capabilityTopic(cap);
+                  return (
+                    <li key={cap}>
+                      {topic ? (
+                        <Link
+                          href={topic}
+                          className="block border border-line px-3 py-1.5 text-sm hover:border-copper hover:text-copper"
+                        >
+                          {cap}
+                        </Link>
+                      ) : (
+                        <span className="block border border-line px-3 py-1.5 text-sm">
+                          {cap}
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             ) : null}
 
@@ -310,6 +362,25 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                     );
                   })}
                 </ul>
+              </section>
+            ) : null}
+
+            {stateName && stateSlug ? (
+              <section className="mt-12">
+                <h2 className="text-lg font-medium tracking-tight">
+                  Wire forming in {stateName}
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-muted">
+                  {company.name} is{" "}
+                  {sameState.length === 0
+                    ? `the only wire forming shop we list in ${stateName}`
+                    : `one of ${sameState.length + 1} wire forming shops we list in ${stateName}`}
+                  .{" "}
+                  <Link href={`/${stateSlug}`} className="text-copper hover:underline">
+                    See what {stateName} buyers order and how freight runs
+                  </Link>
+                  .
+                </p>
               </section>
             ) : null}
 
@@ -376,7 +447,11 @@ export default async function DirectoryCompanyPage({ params }: Props) {
         {relatedCompanies.length > 0 ? (
           <section className="mt-16 border-t border-line pt-12">
             <Kicker>Nearby</Kicker>
-            <h2 className="mt-3 text-2xl tracking-tight">Other shops in {company.region}</h2>
+            <h2 className="mt-3 text-2xl tracking-tight">
+              {sameState.length > 0 && stateName
+                ? `Other shops in ${stateName}`
+                : `Other shops in ${company.region}`}
+            </h2>
             <div className="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
               {relatedCompanies.map((related) => (
                 <Link
