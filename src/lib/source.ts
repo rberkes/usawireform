@@ -1,5 +1,11 @@
 import { get, list, put, del } from "@vercel/blob";
-import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
+import {
+  adminFileHref,
+  blobAuth,
+  blobReady,
+  BLOB_ACCESS,
+  type BlobAuth,
+} from "@/lib/blob";
 import { SITE_URL } from "@/lib/company";
 import { directoryCompanies } from "@/lib/directory";
 import { leadIsClosed, leadPurchaseSlots, waitlistedMailed } from "@/lib/source-access";
@@ -138,59 +144,77 @@ export async function saveSourceFiling(filing: SourceFiling) {
   return true;
 }
 
-export async function listSourceFilings(): Promise<SourceFilingRow[]> {
-  if (!(await blobReady())) return [];
-  const result = await list({
-    prefix: "source/equipment/",
-    ...(await blobAuth()),
+const FILING_SCAN_LIMIT = 80;
+
+/** Blobs read at once. Each filing is its own round trip to the store. */
+const FILING_READ_CONCURRENCY = 8;
+
+type FilingBlob = { pathname: string; uploadedAt: Date | string };
+
+async function readSourceFilingBlob(
+  blob: FilingBlob,
+  auth: BlobAuth,
+): Promise<SourceFilingRow | null> {
+  const file = await get(blob.pathname, {
+    access: "private",
+    useCache: false,
+    ...auth,
   });
-  const rows: SourceFilingRow[] = [];
-  for (const blob of result.blobs.sort((a, b) =>
-    a.uploadedAt < b.uploadedAt ? 1 : -1,
-  ).slice(0, 80)) {
-    const file = await get(blob.pathname, {
-      access: "private",
-      useCache: false,
-      ...(await blobAuth()),
-    });
-    if (!file?.stream || file.statusCode !== 200) continue;
-    try {
-      const payload = JSON.parse(
-        await new Response(file.stream).text(),
-      ) as Partial<SourceFiling>;
-      rows.push({
-        inviteId: payload.inviteId,
-        userId:
-          typeof payload.userId === "string" ? payload.userId : undefined,
-        company: String(payload.company ?? ""),
-        name: String(payload.name ?? ""),
-        email: String(payload.email ?? ""),
-        phone: String(payload.phone ?? ""),
-        city: String(payload.city ?? ""),
-        state: String(payload.state ?? ""),
-        website: String(payload.website ?? ""),
-        machines: filedSourceMachines(
-          Array.isArray(payload.machines)
-            ? payload.machines.map((row) =>
-                withCapacity(hydrateMachineFromCatalog(row as SourceMachine)),
-              )
-            : [],
-        ),
-        notes: String(payload.notes ?? ""),
-        fileName: payload.fileName,
-        timestamp:
-          String(payload.timestamp ?? "") ||
-          (blob.uploadedAt instanceof Date
-            ? blob.uploadedAt.toISOString()
-            : String(blob.uploadedAt)),
-        pathname: blob.pathname,
-        href: adminFileHref(blob.pathname),
-      });
-    } catch {
-      /* skip */
-    }
+  if (!file?.stream || file.statusCode !== 200) return null;
+  try {
+    const payload = JSON.parse(
+      await new Response(file.stream).text(),
+    ) as Partial<SourceFiling>;
+    return {
+      inviteId: payload.inviteId,
+      userId: typeof payload.userId === "string" ? payload.userId : undefined,
+      company: String(payload.company ?? ""),
+      name: String(payload.name ?? ""),
+      email: String(payload.email ?? ""),
+      phone: String(payload.phone ?? ""),
+      city: String(payload.city ?? ""),
+      state: String(payload.state ?? ""),
+      website: String(payload.website ?? ""),
+      machines: filedSourceMachines(
+        Array.isArray(payload.machines)
+          ? payload.machines.map((row) =>
+              withCapacity(hydrateMachineFromCatalog(row as SourceMachine)),
+            )
+          : [],
+      ),
+      notes: String(payload.notes ?? ""),
+      fileName: payload.fileName,
+      timestamp:
+        String(payload.timestamp ?? "") ||
+        (blob.uploadedAt instanceof Date
+          ? blob.uploadedAt.toISOString()
+          : String(blob.uploadedAt)),
+      pathname: blob.pathname,
+      href: adminFileHref(blob.pathname),
+    };
+  } catch {
+    return null;
   }
-  return rows;
+}
+
+export async function listSourceFilings(): Promise<SourceFilingRow[]> {
+  const auth = await blobAuth();
+  if (!(auth.token || (auth.oidcToken && auth.storeId))) return [];
+  const result = await list({ prefix: "source/equipment/", ...auth });
+  const recent = result.blobs
+    .sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))
+    .slice(0, FILING_SCAN_LIMIT);
+
+  const rows: (SourceFilingRow | null)[] = new Array(recent.length).fill(null);
+  for (let i = 0; i < recent.length; i += FILING_READ_CONCURRENCY) {
+    const batch = recent.slice(i, i + FILING_READ_CONCURRENCY);
+    await Promise.all(
+      batch.map(async (blob, offset) => {
+        rows[i + offset] = await readSourceFilingBlob(blob, auth);
+      }),
+    );
+  }
+  return rows.filter((row): row is SourceFilingRow => row !== null);
 }
 
 export async function listRecentSourceFloorCells(limit = 6) {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Kicker } from "@/components/ui";
+import { HomeFloorFeedHeader } from "@/components/HomeFloorFeedHeader";
 import {
   floorMachineLabel,
   floorSentence,
@@ -51,15 +51,7 @@ export function HomeFloorFeed({ initial }: { initial: SourceFloorCell[] }) {
 
   return (
     <section className="mt-0">
-      <Kicker>Recent equipment added</Kicker>
-      <h2 className="mt-3 text-2xl tracking-tight">Newest Machine Lines</h2>
-      <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-        Live from shops around the USA.{" "}
-        <Link href="/source/equipment" className="text-copper hover:underline">
-          List a cell free
-        </Link>
-        .
-      </p>
+      <HomeFloorFeedHeader />
       <ul className="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
         {cells.map((cell) => (
           <li key={cell.id} className="bg-background">

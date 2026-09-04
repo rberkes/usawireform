@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AskBox } from "@/components/AskBox";
@@ -5,7 +6,10 @@ import { CapabilityStrip } from "@/components/CapabilityStrip";
 import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
 import { ClientCtaBand, ClientHero } from "@/components/client/ClientLanding";
 import { PlatformFlowTabs } from "@/components/client/PlatformFlowTabs";
-import { HomeFloorFeed } from "@/components/HomeFloorFeed";
+import {
+  HomeFloorFeedFallback,
+  HomeFloorFeedSection,
+} from "@/components/HomeFloorFeedSection";
 import { HomeLogin } from "@/components/HomeLogin";
 import {
   HOME_CTA_LEDE,
@@ -27,8 +31,6 @@ import { BrandLockup } from "@/components/WireMark";
 import { COMPANY } from "@/lib/company";
 import { WIRE } from "@/lib/range";
 import { pageMeta } from "@/lib/seo";
-import { listRecentSourceFloorCells } from "@/lib/source";
-import { HOME_FLOOR_CARD_COUNT } from "@/lib/source-floor-feed";
 
 export const metadata = pageMeta({
   title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
@@ -76,10 +78,7 @@ export default async function Home({
 }: {
   searchParams: Promise<{ tab?: string }>;
 }) {
-  const [{ tab: tabParam }, floorCells] = await Promise.all([
-    searchParams,
-    listRecentSourceFloorCells(HOME_FLOOR_CARD_COUNT),
-  ]);
+  const { tab: tabParam } = await searchParams;
   const tab = tabParam === "suppliers" ? "suppliers" : "buyers";
 
   return (
@@ -93,7 +92,9 @@ export default async function Home({
         aside={<HomeLogin />}
       />
       <Page>
-        <HomeFloorFeed initial={floorCells} />
+        <Suspense fallback={<HomeFloorFeedFallback />}>
+          <HomeFloorFeedSection />
+        </Suspense>
 
         <AskBox />
 
