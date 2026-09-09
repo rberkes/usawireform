@@ -1,5 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { PurchaseTracker } from "@/components/analytics/PurchaseTracker";
+import { parsePurchaseQuery, purchaseQuery } from "@/lib/analytics-events";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
 import {
   openSourceBillingPortal,
@@ -57,7 +59,16 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-type Props = { searchParams: Promise<{ session_id?: string; lead?: string }> };
+type Props = {
+  searchParams: Promise<{
+    session_id?: string;
+    lead?: string;
+    paid?: string;
+    kind?: string;
+    value?: string;
+    qty?: string;
+  }>;
+};
 
 async function ensureProfile({
   userId,
@@ -117,11 +128,15 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
   const userId = await requireSignedIn("/source/enter");
   await requireSupplier(userId);
 
-  const { session_id: sessionId, lead: leadFlag } = await searchParams;
+  const params = await searchParams;
+  const { session_id: sessionId, lead: leadFlag } = params;
   if (sessionId) {
-    await syncCheckoutSession(sessionId);
-    redirect("/source/dashboard");
+    const paid = await syncCheckoutSession(sessionId);
+    redirect(
+      paid ? `/source/dashboard?${purchaseQuery(paid)}` : "/source/dashboard",
+    );
   }
+  const sale = parsePurchaseQuery(params);
 
   const [user, plan, filings, billedSecondaries, jobs] = await Promise.all([
     currentUser(),
@@ -153,6 +168,7 @@ export default async function SourceDashboardPage({ searchParams }: Props) {
 
   return (
     <Page>
+      {sale ? <PurchaseTracker report={sale} /> : null}
       <PageHero
         kicker="Source"
         title="Shop dashboard"

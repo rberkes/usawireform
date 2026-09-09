@@ -5,6 +5,7 @@ import {
   submitSourceEquipment,
   type SourceFormState,
 } from "@/app/actions/source";
+import { useReportSubmit } from "@/components/analytics/useReportSubmit";
 import {
   SourceMachineRows,
   emptySourceMachine,
@@ -30,6 +31,9 @@ export function SourceEquipmentForm({
   const [machines, setMachines] = useState<SourceMachine[]>([
     emptySourceMachine(),
   ]);
+  useReportSubmit("list_equipment", state.success, {
+    cells: machines.length,
+  });
 
   return (
     <form action={action} className="space-y-6">

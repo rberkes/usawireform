@@ -1,4 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { PurchaseTracker } from "@/components/analytics/PurchaseTracker";
+import { parsePurchaseQuery, purchaseQuery } from "@/lib/analytics-events";
 import { syncCheckoutSession } from "@/app/actions/source-billing";
 import { SourceBuyerForm } from "@/components/SourceBuyerForm";
 import { SourceBuyerVolumeForm } from "@/components/SourceBuyerVolumeForm";
@@ -35,14 +38,25 @@ export const metadata = {
 export default async function BuyerDashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{
+    session_id?: string;
+    paid?: string;
+    kind?: string;
+    value?: string;
+    qty?: string;
+  }>;
 }) {
   const userId = await requireSignedIn("/buyer/dashboard", { as: "buyer" });
   await requireBuyer(userId);
-  const { session_id: sessionId } = await searchParams;
+  const params = await searchParams;
+  const { session_id: sessionId } = params;
   if (sessionId) {
-    await syncCheckoutSession(sessionId);
+    const paid = await syncCheckoutSession(sessionId);
+    redirect(
+      paid ? `/buyer/dashboard?${purchaseQuery(paid)}` : "/buyer/dashboard",
+    );
   }
+  const sale = parsePurchaseQuery(params);
 
   const [user, account, jobs] = await Promise.all([
     currentUser(),
@@ -67,6 +81,7 @@ export default async function BuyerDashboardPage({
 
   return (
     <Page>
+      {sale ? <PurchaseTracker report={sale} /> : null}
       <PageHero
         kicker="Source"
         title="Buyer dashboard"

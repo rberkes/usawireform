@@ -5,6 +5,7 @@ import {
   submitSourceJob,
   type SourceFormState,
 } from "@/app/actions/source";
+import { useReportSubmit } from "@/components/analytics/useReportSubmit";
 import { StepUpload } from "@/components/StepUpload";
 import { Button, fieldClass, Panel } from "@/components/ui";
 import { DRAWING_FREE_STEP } from "@/lib/drawings";
@@ -27,6 +28,10 @@ export function SourceJobForm({
 }) {
   const [state, action, pending] = useActionState(submitSourceJob, initial);
   const [file, setFile] = useState<File | null>(null);
+  useReportSubmit("generate_lead", state.success, {
+    form: "source_job",
+    with_drawing: Boolean(file),
+  });
 
   return (
     <form action={action} className="space-y-6">

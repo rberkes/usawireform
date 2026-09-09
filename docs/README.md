@@ -8,6 +8,7 @@ How this site is built, and how Source is supposed to work. Read these before ch
 | [SOURCE.md](./SOURCE.md) | Buyers, shops, desk, files, money, what is live vs still to build |
 | [STRATEGY.md](./STRATEGY.md) | Why wire forming first, the four gates before expanding, what is parked |
 | [DIRECTORY.md](./DIRECTORY.md) | Where the 529 shops come from, how to regenerate, inclusion rules |
+| [ANALYTICS.md](./ANALYTICS.md) | GA4 events, which count as conversions, how purchases survive the Stripe redirect |
 
 Live URL tree (password): `/admin/architecture`. Public flat list: `/site-map`.
 

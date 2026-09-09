@@ -1,5 +1,6 @@
 "use server";
 
+import type Stripe from "stripe";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -35,6 +36,7 @@ import {
   parseSourceSecondaries,
 } from "@/lib/source-secondaries";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
+import type { PurchaseKind, PurchaseReport } from "@/lib/analytics-events";
 
 async function requireUser() {
   const { userId, isAuthenticated } = await auth();
@@ -255,17 +257,42 @@ export async function openSourceBillingPortal() {
   redirect(session.url);
 }
 
-export async function syncCheckoutSession(sessionId: string) {
+function outcomeFromSession(
+  session: Stripe.Checkout.Session,
+): PurchaseReport | null {
+  if (session.payment_status !== "paid") return null;
+  const meta = session.metadata ?? {};
+  const kind: PurchaseKind = meta.source_lead
+    ? "lead_unlock"
+    : meta.source_buyer_extra
+      ? "buyer_extra_quote"
+      : meta.source_secondaries
+        ? "secondaries"
+        : meta.source_plan
+          ? "cells"
+          : "other";
+  return {
+    transactionId: session.id,
+    kind,
+    value: (session.amount_total ?? 0) / 100,
+    quantity: Number(meta.extra_qty) || 1,
+  };
+}
+
+export async function syncCheckoutSession(
+  sessionId: string,
+): Promise<PurchaseReport | null> {
   const { userId } = await requireUser();
-  if (!sessionId || !stripeConfigured()) return;
+  if (!sessionId || !stripeConfigured()) return null;
   const session = await getStripe().checkout.sessions.retrieve(sessionId);
   if (
     session.client_reference_id &&
     session.client_reference_id !== userId
   ) {
-    return;
+    return null;
   }
   await applyCheckoutSession(session);
+  return outcomeFromSession(session);
 }
 
 export async function saveSourceSecondaries(

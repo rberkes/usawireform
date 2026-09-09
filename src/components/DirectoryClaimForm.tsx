@@ -5,6 +5,7 @@ import {
   claimDirectoryListing,
   type SourceFormState,
 } from "@/app/actions/source";
+import { useReportSubmit } from "@/components/analytics/useReportSubmit";
 import { PlantCheckList } from "@/components/PlantCheckList";
 import { Button, fieldClass } from "@/components/ui";
 
@@ -21,6 +22,7 @@ export function DirectoryClaimForm({
     claimDirectoryListing,
     initial,
   );
+  useReportSubmit("claim_listing", state.success, { slug, company });
 
   return (
     <form action={action} className="mt-8 space-y-4">
