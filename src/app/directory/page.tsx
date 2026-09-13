@@ -17,7 +17,8 @@ import { listPublishedSourceDirectoryCompanies } from "@/lib/source";
 import { mergeDirectoryList } from "@/lib/source-directory";
 import type { DirectoryCompany } from "@/lib/directory-types";
 
-export const dynamic = "force-dynamic";
+/** ISR: cache for 5 minutes so Source shop data stays reasonably fresh. */
+export const revalidate = 300;
 
 export const metadata = pageMeta({
   title: "Wire Forming Companies Directory — USA & Canada",
