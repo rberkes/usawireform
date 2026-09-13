@@ -35,13 +35,14 @@ import { getSourceDirectoryCompany, getSourceProfile } from "@/lib/source";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamic = "force-dynamic";
-
 export function generateStaticParams() {
   return directoryCompanies.map((company) => ({ slug: company.slug }));
 }
 
 export const dynamicParams = true;
+
+/** ISR: revalidate every hour so pages stay fresh but cacheable. */
+export const revalidate = 3600;
 
 async function resolveDirectoryCompany(slug: string) {
   const listed = getDirectoryCompany(slug);

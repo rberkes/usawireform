@@ -15,6 +15,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 export default function ProcessesIndexPage() {
   const groups = processesByCategory();
   const breadcrumbItems = [{ label: "Processes" }];

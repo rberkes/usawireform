@@ -16,6 +16,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 export default function RailroadPage() {
   return (
     <IndustryQuotePage

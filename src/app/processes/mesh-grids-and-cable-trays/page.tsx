@@ -18,6 +18,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 const toc = [
   { id: "what", label: "What we run" },
   { id: "grids", label: "Mesh grids" },

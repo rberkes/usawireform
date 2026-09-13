@@ -14,6 +14,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 const toc = [
   { id: "straight", label: "Cut-to-length" },
   { id: "letters", label: "L, U, J, S, C, V, Z" },

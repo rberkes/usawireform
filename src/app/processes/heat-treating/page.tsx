@@ -17,6 +17,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 const toc = [
   { id: "two", label: "Two different things" },
   { id: "form", label: "Treating the form" },

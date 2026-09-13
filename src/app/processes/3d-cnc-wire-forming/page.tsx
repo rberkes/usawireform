@@ -26,6 +26,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 const faqs = [
   {
     question: "Is 3D CNC wire forming the same as 3D CNC wire bending?",

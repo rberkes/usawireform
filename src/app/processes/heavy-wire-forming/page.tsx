@@ -15,6 +15,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 const toc = [
   { id: "band", label: "The 4–14 mm band" },
   { id: "why", label: "Why this range" },
