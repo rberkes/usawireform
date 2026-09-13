@@ -71,7 +71,8 @@ export const metadata = pageMeta({
   ],
 });
 
-export const dynamic = "force-dynamic";
+/** ISR: cache the page for 5 minutes so the floor feed stays reasonably fresh. */
+export const revalidate = 300;
 
 export default async function Home({
   searchParams,
