@@ -34,6 +34,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 export default function ContactPage() {
   return (
     <Page className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">

@@ -22,6 +22,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 const faqs = [
   {
     question: "What is fourslide manufacturing?",

@@ -14,6 +14,9 @@ export const metadata = pageMeta({
   ],
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 export default function ManufacturingOemPage() {
   return (
     <IndustryQuotePage

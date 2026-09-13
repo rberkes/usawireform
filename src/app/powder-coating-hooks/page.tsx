@@ -32,6 +32,9 @@ export const metadata = pageMeta({
   },
 });
 
+/** Static page — no dynamic data. */
+export const revalidate = false;
+
 const faqs = [
   {
     question: "What kind of hooks do powder coating shops use?",
