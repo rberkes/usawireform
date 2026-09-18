@@ -8,7 +8,8 @@ Related: [ARCHITECTURE.md](./ARCHITECTURE.md) (how it is built),
 [SOURCE.md](./SOURCE.md) (how Source is supposed to work),
 [STRATEGY.md](./STRATEGY.md) (why wire forming first),
 [DIRECTORY.md](./DIRECTORY.md) (the 539-shop list),
-[ANALYTICS.md](./ANALYTICS.md) (what GA actually counts).
+[ANALYTICS.md](./ANALYTICS.md) (what GA actually counts),
+[COMPETITION.md](./COMPETITION.md) (vs IQS, MFG.com, Thomas).
 
 ---
 
