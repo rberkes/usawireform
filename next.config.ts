@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   compress: true,
   allowedDevOrigins: ["127.0.0.1"],
   experimental: {
+    // Homepage CSS is ~11 KB. Inlining removes the render-blocking stylesheet
+    // request that Lighthouse measured at 190 ms on Slow 4G.
+    inlineCss: true,
     serverActions: {
       bodySizeLimit: "50mb",
     },

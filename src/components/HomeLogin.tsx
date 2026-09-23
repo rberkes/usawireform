@@ -1,11 +1,9 @@
-"use client";
-
-import { useUser } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { btn, fieldClass } from "@/components/ui";
 
-export function HomeLogin() {
-  const { isSignedIn } = useUser();
+export async function HomeLogin() {
+  const { userId } = await auth();
 
   return (
     <aside
@@ -20,7 +18,7 @@ export function HomeLogin() {
         Shops and buyers. Active Wireworks and every other Source shop use this
         same login.
       </p>
-      {isSignedIn ? (
+      {userId ? (
         <p className="mt-6">
           <Link href="/source/enter" className={btn.primary}>
             Go to dashboard
@@ -44,7 +42,7 @@ export function HomeLogin() {
           </button>
         </form>
       )}
-      {isSignedIn ? null : (
+      {userId ? null : (
         <p className="mt-4 text-sm leading-6 text-[#111]/70">
           New shop?{" "}
           <Link href="/sign-up?as=supplier" className="text-[#0b6bcb] hover:underline">

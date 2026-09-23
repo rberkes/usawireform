@@ -1,7 +1,6 @@
-import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { VisitTracker } from "@/components/VisitTracker";
 import { Footer } from "@/components/Footer";
@@ -10,7 +9,6 @@ import { SourceAccountBar } from "@/components/SourceAccountBar";
 import { JsonLd } from "@/components/JsonLd";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BackToTop } from "@/components/BackToTop";
-import { clerkAppearance } from "@/lib/clerk-appearance";
 import { COMPANY, QUOTE_EMAIL, SITE_PITCH, SITE_URL } from "@/lib/company";
 import { CORE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
@@ -18,7 +16,8 @@ import "./globals.css";
 const ibmSans = IBM_Plex_Sans({
   variable: "--font-ibm-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
+  display: "optional",
   adjustFontFallback: true,
 });
 
@@ -26,6 +25,7 @@ const ibmMono = IBM_Plex_Mono({
   variable: "--font-ibm-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "optional",
   adjustFontFallback: true,
 });
 
@@ -91,28 +91,33 @@ const GA_MEASUREMENT_ID =
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <ClerkProvider appearance={clerkAppearance} afterSignOutUrl="/">
-      <html
-        lang="en"
-        className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
-      >
-        <head>
-          <link rel="dns-prefetch" href="https://www.youtube.com" />
-        </head>
-        <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
-          <SkipToContent />
-          <JsonLd />
-          <Header account={<SourceAccountBar />} />
-          <div id="main-content" className="flex-1">
-            {children}
-          </div>
-          <Footer />
-          <BackToTop />
-          <VisitTracker />
-          <Analytics />
-        </body>
-        <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
-      </html>
-    </ClerkProvider>
+    <html
+      lang="en"
+      className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
+    >
+      <head>
+        <link rel="dns-prefetch" href="https://www.youtube.com" />
+      </head>
+      <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
+        <SkipToContent />
+        <JsonLd />
+        <Header account={<SourceAccountBar />} />
+        <div id="main-content" className="flex-1">
+          {children}
+        </div>
+        <Footer />
+        <BackToTop />
+        <VisitTracker />
+        <Analytics />
+        <Script id="ga-init" strategy="lazyOnload">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}');`}
+        </Script>
+        <Script
+          id="ga-loader"
+          strategy="lazyOnload"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        />
+      </body>
+    </html>
   );
 }

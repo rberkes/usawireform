@@ -1,5 +1,6 @@
 import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
+import { ClerkShell } from "@/components/ClerkShell";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { Page, PageHero } from "@/components/ui";
 import { safeSourceNext } from "@/lib/source-gate";
@@ -30,6 +31,7 @@ export default async function SignUpPage({ searchParams }: Props) {
       : "/sign-in";
 
   return (
+    <ClerkShell>
     <Page>
       <PageHero
         kicker="Source"
@@ -82,5 +84,6 @@ export default async function SignUpPage({ searchParams }: Props) {
         />
       </div>
     </Page>
+    </ClerkShell>
   );
 }
