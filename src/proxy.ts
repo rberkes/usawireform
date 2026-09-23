@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { SITE_HOST, SITE_URL } from "@/lib/company";
 import {
   hitFromRequest,
   newVisitorId,
@@ -8,6 +9,20 @@ import {
   VISITOR_COOKIE,
   VISITOR_COOKIE_MAX_AGE,
 } from "@/lib/visitor-log";
+
+const productionParties = [SITE_URL, `https://www.${SITE_HOST}`];
+
+function partiesFor(req: NextRequest) {
+  if (process.env.VERCEL_ENV === "production") return productionParties;
+  const host =
+    req.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+    req.nextUrl.host;
+  const local = host.startsWith("localhost") || host.startsWith("127.0.0.1");
+  const origin = `${local ? "http" : "https"}://${host}`;
+  return productionParties.includes(origin)
+    ? productionParties
+    : [...productionParties, origin];
+}
 
 const isProtectedRoute = createRouteMatcher([
   "/source/dashboard(.*)",
@@ -56,7 +71,7 @@ export default clerkMiddleware(async (auth, req) => {
     .catch((error) => console.error("[Visit proxy]", error));
 
   return res;
-});
+}, (req) => ({ authorizedParties: partiesFor(req) }));
 
 export const config = {
   matcher: [
