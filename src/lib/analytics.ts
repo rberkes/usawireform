@@ -20,7 +20,7 @@ function pushGa(
   event: string,
   params: Record<string, unknown>,
 ) {
-  const w = window as Window & { dataLayer?: IArguments[] };
+  const w = window as Window & { dataLayer?: unknown[] };
   w.dataLayer = w.dataLayer || [];
-  w.dataLayer.push(arguments);
+  w.dataLayer.push([command, event, params]);
 }

@@ -1,3 +1,4 @@
+import { ClerkShell } from "@/components/ClerkShell";
 import { SourceAccountProfile } from "@/components/SourceAccountProfile";
 import { ButtonLink, Page, PageHero } from "@/components/ui";
 import { getSourceRole } from "@/lib/source-role";
@@ -27,7 +28,9 @@ export default async function SourceAccountPage() {
         </ButtonLink>
       </div>
       <div className="mt-10">
-        <SourceAccountProfile />
+        <ClerkShell>
+          <SourceAccountProfile />
+        </ClerkShell>
       </div>
     </Page>
   );

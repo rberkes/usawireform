@@ -1,9 +1,7 @@
-import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
-import { AppClerk } from "@/components/AppClerk";
 import { VisitTracker } from "@/components/VisitTracker";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -91,39 +89,35 @@ export const metadata: Metadata = {
 const GA_MEASUREMENT_ID =
   process.env.NEXT_PUBLIC_GA_ID ?? "G-2J3FGMRF7E";
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const { userId } = await auth();
-
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <AppClerk signedIn={Boolean(userId)}>
-      <html
-        lang="en"
-        className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
-      >
-        <head>
-          <link rel="dns-prefetch" href="https://www.youtube.com" />
-        </head>
-        <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
-          <SkipToContent />
-          <JsonLd />
-          <Header account={<SourceAccountBar />} />
-          <div id="main-content" className="flex-1">
-            {children}
-          </div>
-          <Footer />
-          <BackToTop />
-          <VisitTracker />
-          <Analytics />
-          <Script id="ga-init" strategy="lazyOnload">
-            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}');`}
-          </Script>
-          <Script
-            id="ga-loader"
-            strategy="lazyOnload"
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          />
-        </body>
-      </html>
-    </AppClerk>
+    <html
+      lang="en"
+      className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
+    >
+      <head>
+        <link rel="dns-prefetch" href="https://www.youtube.com" />
+      </head>
+      <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
+        <SkipToContent />
+        <JsonLd />
+        <Header account={<SourceAccountBar />} />
+        <div id="main-content" className="flex-1">
+          {children}
+        </div>
+        <Footer />
+        <BackToTop />
+        <VisitTracker />
+        <Analytics />
+        <Script id="ga-init" strategy="lazyOnload">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}');`}
+        </Script>
+        <Script
+          id="ga-loader"
+          strategy="lazyOnload"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        />
+      </body>
+    </html>
   );
 }
