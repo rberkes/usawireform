@@ -1,8 +1,9 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { AppClerk } from "@/components/AppClerk";
 import { VisitTracker } from "@/components/VisitTracker";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -10,7 +11,6 @@ import { SourceAccountBar } from "@/components/SourceAccountBar";
 import { JsonLd } from "@/components/JsonLd";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BackToTop } from "@/components/BackToTop";
-import { clerkAppearance } from "@/lib/clerk-appearance";
 import { COMPANY, QUOTE_EMAIL, SITE_PITCH, SITE_URL } from "@/lib/company";
 import { CORE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
@@ -18,7 +18,8 @@ import "./globals.css";
 const ibmSans = IBM_Plex_Sans({
   variable: "--font-ibm-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
+  display: "optional",
   adjustFontFallback: true,
 });
 
@@ -26,6 +27,7 @@ const ibmMono = IBM_Plex_Mono({
   variable: "--font-ibm-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "optional",
   adjustFontFallback: true,
 });
 
@@ -89,9 +91,11 @@ export const metadata: Metadata = {
 const GA_MEASUREMENT_ID =
   process.env.NEXT_PUBLIC_GA_ID ?? "G-2J3FGMRF7E";
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const { userId } = await auth();
+
   return (
-    <ClerkProvider appearance={clerkAppearance} afterSignOutUrl="/">
+    <AppClerk signedIn={Boolean(userId)}>
       <html
         lang="en"
         className={`${ibmSans.variable} ${ibmMono.variable} h-full antialiased`}
@@ -110,9 +114,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <BackToTop />
           <VisitTracker />
           <Analytics />
+          <Script id="ga-init" strategy="lazyOnload">
+            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}');`}
+          </Script>
+          <Script
+            id="ga-loader"
+            strategy="lazyOnload"
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          />
         </body>
-        <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
       </html>
-    </ClerkProvider>
+    </AppClerk>
   );
 }

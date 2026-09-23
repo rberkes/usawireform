@@ -6,13 +6,12 @@ import { getSourceProfile } from "@/lib/source";
 
 export async function SourceAccountBar() {
   const { userId } = await auth();
-  const [profile, role, buyer] = userId
-    ? await Promise.all([
-        getSourceProfile(userId),
-        getSourceRole(),
-        getBuyerAccount(userId),
-      ])
-    : [null, null, null];
+  if (!userId) return null;
+  const [profile, role, buyer] = await Promise.all([
+    getSourceProfile(userId),
+    getSourceRole(),
+    getBuyerAccount(userId),
+  ]);
   return (
     <SourceAccountNav
       shopName={profile?.company || buyer?.company || undefined}
