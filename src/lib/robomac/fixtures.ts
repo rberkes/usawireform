@@ -161,4 +161,48 @@ export const TWIN_FIXTURES: TwinFixture[] = [
       ],
     },
   },
+  {
+    id: "wipe-shallow",
+    title: "1/2 in 10° wipe-head kink",
+    expect: "REVIEW",
+    expectFailure: "wipe_angle_shallow",
+    geometry: {
+      diameterMm: 12.7,
+      materialId: "1018",
+      segments: [
+        straight("S1", 150),
+        bend(1, 10, 19.05),
+        straight("S2", 150),
+      ],
+    },
+  },
+  {
+    id: "push-ring-half-inch",
+    title: "1/2 in 180° push ring at 6 in CL",
+    expect: "PASS",
+    geometry: {
+      diameterMm: 12.7,
+      materialId: "1018",
+      segments: [
+        straight("S1", 80),
+        bend(1, 180, 146.05),
+        straight("S2", 80),
+      ],
+    },
+  },
+  {
+    id: "push-ring-too-tight",
+    title: "1/2 in 180° ring inside 6 in",
+    expect: "FAIL",
+    expectFailure: "push_ring_too_tight",
+    geometry: {
+      diameterMm: 12.7,
+      materialId: "1018",
+      segments: [
+        straight("S1", 80),
+        bend(1, 180, 80),
+        straight("S2", 80),
+      ],
+    },
+  },
 ];

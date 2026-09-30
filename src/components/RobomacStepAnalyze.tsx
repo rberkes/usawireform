@@ -81,6 +81,16 @@ export function RobomacStepAnalyze({
               {state.sequence}
             </pre>
           ) : null}
+          {state.dfm.heads.length > 0 ? (
+            <ul className="mt-4 space-y-1 text-muted">
+              {state.dfm.heads.map((row) => (
+                <li key={row.segmentId}>
+                  B{row.bend} {row.head} · CL R {row.centerlineRadiusMm} mm ·{" "}
+                  {row.note}
+                </li>
+              ))}
+            </ul>
+          ) : null}
           {state.dfm.issues.length > 0 ? (
             <ul className="mt-4 space-y-2 text-muted">
               {state.dfm.issues.map((issue) => (

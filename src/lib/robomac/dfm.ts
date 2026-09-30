@@ -2,6 +2,7 @@ import { COMMON_SIZES, WIRE } from "@/lib/range";
 import { TOOLING } from "@/lib/price";
 import {
   bendsOf,
+  centerlineRadiusMm,
   developedLengthMm,
   firstAndLastLegs,
   isBend,
@@ -10,18 +11,24 @@ import {
 } from "./geometry";
 import {
   CAPABILITIES,
+  HEADS,
   MATERIALS,
+  PUSH_RING_MIN_RADIUS_MM,
+  PUSH_RING_WIRE_MM,
   ROBOMAC_214TF,
   ROBOMAC_MACHINE_ID,
   TOOLING_ROWS,
+  WIPE_ANGLE_MIN_DEG,
 } from "./tables";
 import type {
+  BendHeadAssignment,
   DfmCheckKind,
   DfmIssue,
   DfmResult,
   DfmStatus,
   MaterialFamilyRow,
   WireFormGeometry,
+  WireSegment,
 } from "./types";
 
 const PHASE2_PENDING: DfmCheckKind[] = [
@@ -367,10 +374,162 @@ function envelopeCheck(geometry: WireFormGeometry): DfmIssue {
   });
 }
 
+function isHalfInch(diameterMm: number) {
+  return Math.abs(diameterMm - PUSH_RING_WIRE_MM) < 0.15;
+}
+
+const WIPE_ANGLE_MAX_FOR_PASS = 180;
+
+/** Wipe = pin / angle head. Push = rings and large-radius sweeps. */
+export function assignBendHead(
+  geometry: WireFormGeometry,
+  segment: Extract<WireSegment, { kind: "bend" }>,
+): BendHeadAssignment {
+  const angleDeg = Math.abs(segment.angleDeg);
+  const cl = centerlineRadiusMm(segment.insideRadiusMm, geometry.diameterMm);
+  const pushMin = HEADS.find((row) => row.kind === "push")?.minRingRadiusMm
+    ?? PUSH_RING_MIN_RADIUS_MM;
+  const sweep = angleDeg >= 180 && cl >= 6 * geometry.diameterMm;
+  const ring =
+    cl >= pushMin - 0.5 ||
+    angleDeg >= 300 ||
+    sweep ||
+    Boolean(geometry.closed && angleDeg >= 180);
+  if (ring) {
+    return {
+      bend: segment.index,
+      segmentId: segment.id,
+      head: "push",
+      angleDeg: segment.angleDeg,
+      insideRadiusMm: segment.insideRadiusMm,
+      centerlineRadiusMm: Math.round(cl * 10) / 10,
+      note: "Push head — ring / large radius",
+    };
+  }
+  return {
+    bend: segment.index,
+    segmentId: segment.id,
+    head: "wipe",
+    angleDeg: segment.angleDeg,
+    insideRadiusMm: segment.insideRadiusMm,
+    centerlineRadiusMm: Math.round(cl * 10) / 10,
+    note: "Wipe / pin head — regular angle bend",
+  };
+}
+
+function headChecks(geometry: WireFormGeometry): DfmIssue[] {
+  const push = HEADS.find((row) => row.kind === "push");
+  const minCl = push?.minRingRadiusMm ?? PUSH_RING_MIN_RADIUS_MM;
+  return bendsOf(geometry).map((segment) => {
+    const assigned = assignBendHead(geometry, segment);
+    const wrap = Math.abs(segment.angleDeg);
+    if (assigned.head === "push") {
+      if (isHalfInch(geometry.diameterMm) && assigned.centerlineRadiusMm < minCl) {
+        const delta = Math.round((minCl - assigned.centerlineRadiusMm) * 10) / 10;
+        return issue({
+          check: "bend_head",
+          status: "FAIL",
+          failure: "push_ring_too_tight",
+          bend: segment.index,
+          segmentId: segment.id,
+          availableMm: assigned.centerlineRadiusMm,
+          requiredMm: minCl,
+          recommendedChangeMm: delta,
+          recommendedChange: `Open the ring to at least 6 in centerline (R${minCl} mm) or form it on a different process.`,
+          problem: `Bend ${segment.index} is a push-head ring tighter than 6 in on 1/2 in.`,
+          cause: `Centerline R ${assigned.centerlineRadiusMm} mm < ${minCl} mm (6 in) on ${geometry.diameterMm} mm.`,
+          customerExplanation: `The push head on this Robomac needs a 6 in minimum ring radius in 1/2 in wire. Bend ${segment.index} is about ${(assigned.centerlineRadiusMm / 25.4).toFixed(2)} in centerline. Open it to 6 in or talk to the desk — that size does not push-bend here.`,
+        });
+      }
+      if (!isHalfInch(geometry.diameterMm)) {
+        return issue({
+          check: "bend_head",
+          status: "REVIEW",
+          failure: "push_ring_unmeasured",
+          bend: segment.index,
+          segmentId: segment.id,
+          availableMm: assigned.centerlineRadiusMm,
+          requiredMm: minCl,
+          problem: `Bend ${segment.index} looks like a push-head ring. Min radius is only stated for 1/2 in.`,
+          cause: `${geometry.diameterMm} mm wire. 6 in floor is for 12.7 mm only.`,
+          customerExplanation: `This looks like a push-head ring. We have a 6 in minimum on 1/2 in. ${geometry.diameterMm} mm is not on that card — the desk has to say if it pushes.`,
+        });
+      }
+      return issue({
+        check: "bend_head",
+        status: "PASS",
+        bend: segment.index,
+        segmentId: segment.id,
+        availableMm: assigned.centerlineRadiusMm,
+        requiredMm: minCl,
+        problem: `Bend ${segment.index} is on the push head.`,
+        cause: `Centerline R ${assigned.centerlineRadiusMm} mm ≥ ${minCl} mm on 1/2 in.`,
+        customerExplanation: `Bend ${segment.index} is a push-head ring at or above the 6 in floor on 1/2 in.`,
+      });
+    }
+    if (wrap > 0 && wrap < WIPE_ANGLE_MIN_DEG) {
+      return issue({
+        check: "bend_head",
+        status: "REVIEW",
+        failure: "wipe_angle_shallow",
+        bend: segment.index,
+        segmentId: segment.id,
+        availableMm: wrap,
+        requiredMm: WIPE_ANGLE_MIN_DEG,
+        problem: `Bend ${segment.index} is a shallow wipe-head corner.`,
+        cause: `${wrap}° < ${WIPE_ANGLE_MIN_DEG}° typical wipe range.`,
+        customerExplanation: `The wipe head on this Robomac is for regular corners, about 20–180°. Bend ${segment.index} is ${wrap}°. That can run, but it is a desk look — shallow kinks mark and spring differently.`,
+      });
+    }
+    return issue({
+      check: "bend_head",
+      status: "PASS",
+      bend: segment.index,
+      segmentId: segment.id,
+      availableMm: wrap,
+      requiredMm: WIPE_ANGLE_MAX_FOR_PASS,
+      problem: `Bend ${segment.index} is on the wipe / pin head.`,
+      cause: `${wrap}° on the regular angle-bend head.`,
+      customerExplanation:
+        wrap <= 180
+          ? `Bend ${segment.index} at ${wrap}° is a regular wipe-head corner.`
+          : `Bend ${segment.index} at ${wrap}° is a wrap on the wipe head (eyes / S-hooks), not a push ring.`,
+    });
+  });
+}
+
 function wrapChecks(geometry: WireFormGeometry): DfmIssue[] {
   const reviewAt = capability("max_bend_angle_deg")?.max ?? 270;
   return bendsOf(geometry).map((segment) => {
+    const assigned = assignBendHead(geometry, segment);
     const wrap = Math.abs(segment.angleDeg);
+    if (assigned.head === "push") {
+      if (wrap > 360) {
+        return issue({
+          check: "rotation_constraint",
+          status: "FAIL",
+          failure: "wrap_over_360",
+          bend: segment.index,
+          segmentId: segment.id,
+          availableMm: wrap,
+          requiredMm: 360,
+          problem: `Bend ${segment.index} wraps more than a full turn.`,
+          cause: `${wrap}°.`,
+          customerExplanation: `Bend ${segment.index} is ${wrap}°. That is a coil, not a ring on the push head.`,
+        });
+      }
+      return issue({
+        check: "rotation_constraint",
+        status: "PASS",
+        bend: segment.index,
+        segmentId: segment.id,
+        availableMm: wrap,
+        requiredMm: 360,
+        problem: `Bend ${segment.index} is a push-head ring, not a wipe-head wrap.`,
+        cause: `${wrap}° on the push head. The 270° eye ceiling does not apply.`,
+        customerExplanation: `Bend ${segment.index} at ${wrap}° is formed on the push head. Eye-wrap limits are for the wipe head.`,
+      });
+    }
     if (wrap > 360) {
       return issue({
         check: "rotation_constraint",
@@ -510,9 +669,13 @@ export function evaluateWireForm(
     ...closedCheck(geometry),
     envelopeCheck(geometry),
     ...wrapChecks(geometry),
+    ...headChecks(geometry),
     ...sequenceCheck(geometry),
     springbackInfo(geometry, family),
   ];
+  const heads = bendsOf(geometry).map((segment) =>
+    assignBendHead(geometry, segment),
+  );
 
   const stock = stockToolFor(geometry.diameterMm);
   const status = rollup(checks);
@@ -540,5 +703,6 @@ export function evaluateWireForm(
         }
       : undefined,
     pendingPhase2: PHASE2_PENDING,
+    heads,
   };
 }

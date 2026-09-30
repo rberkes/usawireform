@@ -30,6 +30,13 @@ export function validateTwin(): ValidationError[] {
     ids.add(id);
   }
 
+  if (ROBOMAC_214TF.headCount !== 2) {
+    errors.push({
+      where: "machine",
+      message: `This floor has two heads, not ${ROBOMAC_214TF.headCount}`,
+    });
+  }
+
   if (ROBOMAC_214TF.id !== ROBOMAC_MACHINE_ID) {
     errors.push({
       where: "machine",
@@ -48,6 +55,19 @@ export function validateTwin(): ValidationError[] {
   }
 
   for (const row of tables.machines) takeId("machines", row.id);
+  for (const row of tables.machine_heads) {
+    takeId("heads", row.id);
+    if (row.machineId !== ROBOMAC_MACHINE_ID) {
+      errors.push({ where: row.id, message: `head machineId ${row.machineId}` });
+    }
+    if (!row.provenance?.kind || !row.provenance.source) {
+      errors.push({ where: row.id, message: "Missing provenance" });
+    }
+  }
+  const kinds = tables.machine_heads.map((row) => row.kind).sort().join(",");
+  if (kinds !== "push,wipe") {
+    errors.push({ where: "heads", message: `Expected wipe+push, got ${kinds}` });
+  }
   for (const row of tables.machine_capabilities) {
     takeId("capabilities", row.id);
     if (row.machineId !== ROBOMAC_MACHINE_ID) {
