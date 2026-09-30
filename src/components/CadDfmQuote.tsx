@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import {
   analyzePublicStep,
   type PublicCadDfmState,
@@ -17,11 +17,34 @@ export function CadDfmQuote({
 }: {
   materials: { id: string; label: string; shopRun?: boolean }[];
 }) {
-  const [state, action, pending] = useActionState(analyzePublicStep, initial);
+  const fileRef = useRef<File | null>(null);
+  const [fileName, setFileName] = useState("");
+  const [materialId, setMaterialId] = useState("1018");
   const [qty, setQty] = useState(String(ESTIMATE.qtyMin));
+  const [state, action, pending] = useActionState(
+    async (prev: PublicCadDfmState | null, formData: FormData) => {
+      const incoming = formData.get("file");
+      if (incoming instanceof File && incoming.size > 0) {
+        fileRef.current = incoming;
+      } else if (fileRef.current) {
+        formData.set("file", fileRef.current);
+      }
+      return analyzePublicStep(prev, formData);
+    },
+    initial,
+  );
+
+  useEffect(() => {
+    const quoted = state?.geometry?.materialId;
+    if (quoted) setMaterialId(quoted);
+  }, [state]);
 
   return (
-    <form action={action} className="space-y-8">
+    <form
+      action={action}
+      className="space-y-8"
+      onReset={(event) => event.preventDefault()}
+    >
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <Panel>
           <p className="mb-5 text-sm font-medium text-copper">
@@ -37,15 +60,26 @@ export function CadDfmQuote({
                 type="file"
                 name="file"
                 accept=".step,.stp,application/step,model/step"
-                required
+                required={!fileRef.current}
                 className={`${fieldClass} mt-1.5`}
+                onChange={(event) => {
+                  const next = event.target.files?.[0] ?? null;
+                  fileRef.current = next;
+                  setFileName(next?.name ?? "");
+                }}
               />
+              {fileName ? (
+                <span className="mt-1.5 block text-sm leading-6 text-muted">
+                  Held: {fileName}
+                </span>
+              ) : null}
             </label>
             <label className="block text-sm sm:col-span-2">
               Material
               <select
                 name="materialId"
-                defaultValue="1018"
+                value={materialId}
+                onChange={(event) => setMaterialId(event.target.value)}
                 className={`${fieldClass} mt-1.5`}
               >
                 {materials.map((row) => (
@@ -167,7 +201,7 @@ function CadResult({
             value="Not filed for this alloy"
           />
         )}
-        {quote.materialPending ? (
+        {quote.formingFiled && quote.materialPending ? (
           <Row label="Material $/lb" value="Later input — not in the piece" />
         ) : null}
         {state.discountRate && state.discountRate > 0 ? (
