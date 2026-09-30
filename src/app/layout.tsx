@@ -11,6 +11,8 @@ import { BackToTop } from "@/components/BackToTop";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { SiteChrome } from "@/components/SiteChrome";
 import { COMPANY, QUOTE_EMAIL, SITE_PITCH, SITE_URL } from "@/lib/company";
+import { AUDIENCE_HEADER, type SiteAudience } from "@/lib/hosts";
+import { headers } from "next/headers";
 import { CORE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
 
@@ -88,7 +90,11 @@ export const metadata: Metadata = {
 const GA_MEASUREMENT_ID =
   process.env.NEXT_PUBLIC_GA_ID ?? "G-2J3FGMRF7E";
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const headerList = await headers();
+  const audience: SiteAudience =
+    headerList.get(AUDIENCE_HEADER) === "supplier" ? "supplier" : "buyer";
+
   return (
     <ClerkProvider appearance={clerkAppearance} afterSignOutUrl="/">
       <html
@@ -101,7 +107,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
           <SkipToContent />
           <JsonLd />
-          <SiteChrome account={<SourceAccountBar />}>
+          <SiteChrome account={<SourceAccountBar />} audience={audience}>
             <div id="main-content" className="flex-1">
               {children}
             </div>
