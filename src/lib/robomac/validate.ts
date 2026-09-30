@@ -141,6 +141,35 @@ export function validateTwin(): ValidationError[] {
       errors.push({ where: row.id, message: "minInsideRadiusXd must be > 0" });
     }
   }
+  const shopRun = tables.materials
+    .filter((row) => row.shopRun)
+    .map((row) => row.id)
+    .sort()
+    .join(",");
+  if (shopRun !== "1018,304,330,6061") {
+    errors.push({
+      where: "materials",
+      message: `Shop-run coils must be 1018, 304, 330, 6061-T6. Got ${shopRun}`,
+    });
+  }
+  for (const row of tables.material_prices) {
+    takeId("prices", row.id);
+    if (row.shopRun && row.materialId === "1018") {
+      if (row.cutUsd == null || row.bendUsd == null || row.inchUsd == null) {
+        errors.push({ where: row.id, message: "1018 card must have filed rates" });
+      }
+    }
+    if (
+      row.shopRun &&
+      row.materialId !== "1018" &&
+      (row.cutUsd != null || row.bendUsd != null || row.inchUsd != null)
+    ) {
+      errors.push({
+        where: row.id,
+        message: "Do not invent 304 / 330 / 6061 dollars until the desk files them",
+      });
+    }
+  }
 
   const unknownCount = [
     ...tables.machine_capabilities,

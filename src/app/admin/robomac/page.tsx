@@ -11,6 +11,7 @@ import {
   CAPABILITIES,
   COLLISION_SCENARIOS,
   HEADS,
+  MATERIAL_PRICES,
   MATERIALS,
   ROBOMAC_214TF,
   RULES,
@@ -62,7 +63,7 @@ export default async function AdminRobomacPage({
     ...fixture,
     result: evaluateWireForm(fixture.geometry),
   }));
-  const unknowns = [...CAPABILITIES, ...RULES].filter(
+  const unknowns = [...CAPABILITIES, ...RULES, ...MATERIAL_PRICES].filter(
     (row) => row.provenance.kind === "unknown",
   );
   const implemented = RULES.filter((row) => row.implemented).length;
@@ -164,12 +165,43 @@ export default async function AdminRobomacPage({
           {MATERIALS.map((row) => (
             <li key={row.id} className="px-4 py-3">
               <p className="font-medium">
-                {row.label} · ≥ {row.minInsideRadiusXd}×D · springback{" "}
+                {row.shopRun ? "Shop run" : "Coil-ok"} · {row.label} · ≥{" "}
+                {row.minInsideRadiusXd}×D · springback{" "}
                 {row.springbackDegAt1xD.min}–{row.springbackDegAt1xD.max}°
               </p>
               <p className="mt-1 text-muted">{row.notes}</p>
             </li>
           ))}
+        </ul>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-sm font-medium">Material prices</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">
+          Each shop-run alloy has its own card. 1018 is the published Ask rate.
+          304, 330, and 6061-T6 are empty until the desk files dollars. Do not
+          invent a multiplier.
+        </p>
+        <ul className="mt-4 divide-y divide-line border border-line text-sm">
+          {MATERIAL_PRICES.map((row) => {
+            const filed =
+              row.cutUsd != null && row.bendUsd != null && row.inchUsd != null;
+            return (
+              <li key={row.id} className="px-4 py-3">
+                <p className="font-medium">
+                  {filed ? "Filed" : "Not filed"} · {row.materialId}
+                </p>
+                <p className="mt-1 text-muted">
+                  {filed
+                    ? `$${row.cutUsd?.toFixed(2)} / cut · $${row.bendUsd?.toFixed(2)} / bend · $${row.inchUsd?.toFixed(2)} / in`
+                    : "No dollars. Do not quote the 1018 card."}
+                </p>
+                <p className="mt-1 text-xs text-muted">
+                  {row.provenance.kind} · {row.notes}
+                </p>
+              </li>
+            );
+          })}
         </ul>
       </section>
 
@@ -198,7 +230,11 @@ export default async function AdminRobomacPage({
           {unknowns.map((row) => (
             <li key={row.id} className="px-4 py-3">
               <p className="font-medium">
-                {"label" in row ? row.label : row.title}
+                {"label" in row
+                  ? row.label
+                  : "title" in row
+                    ? row.title
+                    : `${row.materialId} forming rate`}
               </p>
               <p className="mt-1 text-muted">{row.provenance.notes ?? row.provenance.source}</p>
             </li>
@@ -237,6 +273,11 @@ export default async function AdminRobomacPage({
                 {fixture.result.heads.length
                   ? ` · ${fixture.result.heads.map((row) => `B${row.bend} ${row.head}`).join(", ")}`
                   : ""}
+                {fixture.result.price.filed
+                  ? ` · ${fixture.result.price.materialId} card filed`
+                  : fixture.result.price.shopRun
+                    ? ` · ${fixture.result.price.materialId} price not filed`
+                    : ""}
               </p>
               {fixture.result.issues.length > 0 ? (
                 <ul className="mt-2 space-y-1 text-muted">

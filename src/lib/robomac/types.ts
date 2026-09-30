@@ -150,10 +150,34 @@ export type MaterialFamilyRow = {
   label: string;
   alloys: string[];
   coilOk: boolean;
+  /** This floor regularly runs this alloy on the 214TF. */
+  shopRun?: boolean;
   minInsideRadiusXd: number;
   springbackDegAt1xD: { min: number; max: number };
   notes: string;
   provenance: Provenance;
+};
+
+export type MaterialPriceRow = {
+  id: string;
+  machineId: string;
+  materialId: string;
+  shopRun: boolean;
+  cutUsd?: number;
+  bendUsd?: number;
+  inchUsd?: number;
+  notes: string;
+  provenance: Provenance;
+};
+
+export type MaterialPriceQuote = {
+  materialId: string;
+  shopRun: boolean;
+  filed: boolean;
+  cutUsd?: number;
+  bendUsd?: number;
+  inchUsd?: number;
+  note: string;
 };
 
 export type CollisionScenarioRow = {
@@ -234,6 +258,7 @@ export type DfmResult = {
   };
   pendingPhase2: DfmCheckKind[];
   heads: BendHeadAssignment[];
+  price: MaterialPriceQuote;
 };
 
 export type TwinTables = {
@@ -243,6 +268,7 @@ export type TwinTables = {
   machine_tooling: MachineToolingRow[];
   machine_rules: MachineRuleRow[];
   materials: MaterialFamilyRow[];
+  material_prices: MaterialPriceRow[];
   collision_scenarios: CollisionScenarioRow[];
   actual_cycle_times: ProductionObservationRow[];
   actual_setup_times: ProductionObservationRow[];

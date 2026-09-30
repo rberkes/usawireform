@@ -81,6 +81,13 @@ export function RobomacStepAnalyze({
               {state.sequence}
             </pre>
           ) : null}
+          {state.dfm.price ? (
+            <p className="mt-3 text-muted">
+              {state.dfm.price.filed
+                ? `${state.dfm.price.materialId} card: $${state.dfm.price.cutUsd?.toFixed(2)} / cut · $${state.dfm.price.bendUsd?.toFixed(2)} / bend · $${state.dfm.price.inchUsd?.toFixed(2)} / in`
+                : state.dfm.price.note}
+            </p>
+          ) : null}
           {state.dfm.heads.length > 0 ? (
             <ul className="mt-4 space-y-1 text-muted">
               {state.dfm.heads.map((row) => (
