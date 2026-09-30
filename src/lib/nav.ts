@@ -97,27 +97,49 @@ export const NAV_PROCESSES: NavSection = {
 };
 
 export const NAV_FACTORIES: NavSection = {
-  label: "Factories",
+  label: "Shops",
   href: "/directory",
   items: [
     { href: "/directory", label: "Company directory" },
     { href: "/wire-form-factories-in-usa", label: "USA factories" },
     { href: "/find-factories-by-machine", label: "Machine or secondary" },
-    { href: "/source", label: "Match a print" },
-    { href: "/source/shops", label: "Add a cell (free)" },
+    { href: "/source", label: "Upload a print" },
     { href: "/directory/new", label: "Newest Source shops" },
     { href: "/directory/areas", label: "Wire forming cities" },
     { href: "/wire-forming-companies-near-me", label: "Companies near me" },
   ],
 };
 
+export const NAV_SUPPLIER: NavSection[] = [
+  {
+    label: "How it works",
+    href: "/suppliers#how",
+    items: [
+      { href: "/suppliers#how", label: "Matching" },
+      { href: "/suppliers#leads", label: "Leads" },
+      { href: "/source/upgrade", label: "AI Smart Connect™" },
+    ],
+  },
+  {
+    label: "Your plant",
+    href: "/source/equipment",
+    items: [
+      { href: "/source/equipment", label: "File equipment" },
+      { href: "/source/shops", label: "Claim a listing" },
+      { href: "/source/dashboard", label: "Shop dashboard" },
+      { href: "/directory", label: "Directory" },
+    ],
+  },
+];
+
 export const NAV_LEARN: NavSection = {
   label: "Learn",
-  href: "/guide/design-for-wire-forming",
+  href: "/guide/how-to-order",
   groups: [
     {
       title: "Guides",
       items: [
+        { href: "/guide/how-to-order", label: "How to order" },
         { href: "/guide/design-for-wire-forming", label: "Design guide" },
         { href: "/materials", label: "Materials" },
         { href: "/sizes", label: "Wire sizes" },
@@ -147,7 +169,7 @@ export const NAV_LEARN: NavSection = {
   ],
 };
 
-/** Header and mobile menu. Four jobs: buy a form, find a plant, learn, this floor. */
+/** Buyer chrome. Shop filing lives on the supplier host / `/suppliers`. */
 export const navSections: NavSection[] = [
   NAV_PRODUCTS,
   NAV_INDUSTRIES,
@@ -155,6 +177,8 @@ export const navSections: NavSection[] = [
   NAV_FACTORIES,
   NAV_LEARN,
 ];
+
+export const supplierNavSections: NavSection[] = NAV_SUPPLIER;
 
 export function navSectionLinks(section: NavSection): NavLink[] {
   if (section.groups?.length) {

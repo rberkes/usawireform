@@ -1,7 +1,7 @@
 import { get, list, put } from "@vercel/blob";
 import { Resend } from "resend";
 import { adminFileHref, blobAuth, blobReady, BLOB_ACCESS } from "@/lib/blob";
-import { COMPANY, QUOTE_EMAIL, SITE_URL } from "@/lib/company";
+import { COMPANY, DESK_FROM, QUOTE_EMAIL, SITE_HOST, SITE_URL } from "@/lib/company";
 import {
   customerThanksHtml,
   drawingReviewedHtml,
@@ -14,6 +14,7 @@ import {
   sourceFiledReceiptHtml,
   sourceIncompleteReminderHtml,
   sourceInviteHtml,
+  sourceBuyerReadyHtml,
   sourceJobReceiptHtml,
   sourceShopLeadHtml,
   sourceShopWaitlistHtml,
@@ -42,10 +43,16 @@ export function shopNotifyEmails() {
 }
 
 export function resendFromEmail() {
-  return (
-    process.env.RESEND_FROM_EMAIL?.trim() ||
-    `${COMPANY} <beth.t@example.com>`
-  );
+  const raw = process.env.RESEND_FROM_EMAIL?.trim();
+  if (!raw) return `${DESK_FROM} <noreply@${SITE_HOST}>`;
+  const named = raw.match(/^(.*)<([^>]+)>\s*$/);
+  if (named) {
+    const email = named[2].trim();
+    const existing = named[1].trim();
+    if (existing && existing !== COMPANY) return raw;
+    return `${DESK_FROM} <${email}>`;
+  }
+  return `${DESK_FROM} <${raw}>`;
 }
 
 export type DirectoryLeadRecord = {
@@ -563,6 +570,7 @@ export async function sendSourceJobEmails({
   to,
   company,
   name,
+  fileName,
   phone,
   city,
   state,
@@ -582,6 +590,7 @@ export async function sendSourceJobEmails({
   to: string;
   company: string;
   name?: string;
+  fileName?: string;
   phone?: string;
   city?: string;
   state?: string;
@@ -669,6 +678,8 @@ export async function sendSourceJobEmails({
       replyTo: QUOTE_EMAIL,
       subject: `Receipt: your Source job — ${COMPANY}`,
       html: sourceJobReceiptHtml({
+        name,
+        fileName,
         matchCount: mailed.length,
         diameterMm,
         drawingPrivacy,
@@ -778,14 +789,11 @@ export async function sendSourceBuyerPayEmail({
   company: string;
   name?: string;
 }) {
-  const hello = name ? escapeHtml(name) : "there";
   return sendResendMail({
     to,
     replyTo: QUOTE_EMAIL,
     subject: `Your Source print is ready — ${COMPANY}`,
-    html: `<p>Hi ${hello},</p>
-      <p>Two shops can buy first — first come. Another quote is $49 from the buyer dashboard.</p>
-      <p><a href="${SITE_URL}/buyer/dashboard">${SITE_URL}/buyer/dashboard</a></p>`,
+    html: sourceBuyerReadyHtml({ name }),
   });
 }
 

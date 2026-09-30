@@ -2,6 +2,7 @@ import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { Page, PageHero } from "@/components/ui";
+import { isSupplierPath } from "@/lib/hosts";
 import { safeSourceNext } from "@/lib/source-gate";
 
 export const metadata = {
@@ -15,8 +16,11 @@ type Props = {
 
 export default async function SignInPage({ searchParams }: Props) {
   const { redirect_url: raw, as } = await searchParams;
-  const buyer = as === "buyer";
-  const next = safeSourceNext(raw) || (buyer ? "/buyer/dashboard" : "");
+  const nextHint = safeSourceNext(raw);
+  const buyer =
+    as === "buyer" ||
+    (as !== "supplier" && !isSupplierPath(nextHint || ""));
+  const next = nextHint || (buyer ? "/buyer/dashboard" : "");
   const after = next || "/source/enter";
   const signUpHref = buyer
     ? "/sign-up?as=buyer"

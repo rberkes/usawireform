@@ -12,4 +12,4 @@ How this site is built, and how Source is supposed to work. Read these before ch
 
 Live URL tree (password): `/admin/architecture`. Public flat list: `/site-map`.
 
-Site: [usawireform.com](https://usawireform.com). GitHub: `rberkes/usawireform` (Vercel deploys from here). Cursor remote: `origin`.
+Site: [usawireform.com](https://usawireform.com) (buyers). Shop portal: `/suppliers` and `suppliers.usawireform.com` once DNS is live. GitHub: `rberkes/usawireform` (Vercel deploys from here). Cursor remote: `origin`.

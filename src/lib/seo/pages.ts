@@ -57,7 +57,7 @@ function record(
 export const staticSeoPages: SeoRecord[] = [
   record({
     path: "/",
-    title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+    title: `${COMPANY} — Custom CNC Wire Forming from Your File`,
     description: SITE_PITCH,
     section: "home",
     absoluteTitle: true,
@@ -71,6 +71,24 @@ export const staticSeoPages: SeoRecord[] = [
       "wire forming directory",
       "CNC wire forming machines",
       "Numalliance Robomac",
+      "upload STEP wire form",
+      "custom CNC wire forming",
+    ],
+  }),
+  record({
+    path: "/suppliers",
+    title: `${COMPANY} — Supplier Portal`,
+    description:
+      "File CNC cells free. Buyers upload a STEP; jobs that fit your machines show in the shop dashboard. Unlock a lead when you want the contact.",
+    section: "company",
+    absoluteTitle: true,
+    changeFrequency: "weekly",
+    priority: 0.8,
+    keywords: [
+      "wire form suppliers",
+      "list CNC wire machines",
+      "wire shop leads",
+      "file wire forming capacity",
     ],
   }),
   record({
@@ -457,6 +475,19 @@ export const staticSeoPages: SeoRecord[] = [
     description:
       "Process index for 4–14 mm wire forming: 2D and 3D CNC, straightening, cutoff, end forming, weld, finish, and inspection.",
     section: "processes",
+  }),
+  record({
+    path: "/guide/how-to-order",
+    title: "How to Order Wire Forms",
+    description:
+      "How to order custom CNC wire forms: upload a STEP or PDF 3-view, use the website for the lowest price, and when a desk quote is required.",
+    section: "processes",
+    keywords: [
+      "how to order wire forms",
+      "upload STEP wire form",
+      "CNC wire forming quote",
+    ],
+    priority: 0.9,
   }),
   record({
     path: "/guide/design-for-wire-forming",

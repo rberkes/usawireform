@@ -10,8 +10,8 @@ Live: [usawireform.com](https://usawireform.com). Desk mail: `info@usawireform.c
 
 | Who | Sign-in | Home |
 | --- | --- | --- |
-| **Buyer** | `/sign-in?as=buyer` or `/sign-up?as=buyer` | `/buyer/dashboard` → send a print on `/source` |
-| **Shop** | `/sign-up?as=supplier` → NDA → file cells | `/source/dashboard` |
+| **Buyer** | `/sign-in?as=buyer` or `/sign-up?as=buyer` | Apex `/` → `/buyer/dashboard` → send a print on `/source` |
+| **Shop** | `/sign-up?as=supplier` → NDA → file cells | `/suppliers` (and `suppliers.usawireform.com`) → `/source/dashboard` |
 | **Desk** | Admin password | `/admin/accounts` — shops, buyers, STEP files, **Validate buyer**, **Release to shops** |
 
 One shop per account. Instant estimate on this site is still this floor (4–14 mm Robomac). Source is other US shops.
@@ -204,6 +204,8 @@ Desk **does** get: Source job (held, with recommended shops), first equipment li
 Desk **does not** get: Clerk sign-up itself, fullness slider moves, plant photo.
 
 Shop mail after **your** Release: teaser, waitlist, rebid (one-line why), closed. STEP never attached.
+
+Buyer receipts (drawing thanks, Source job, instant estimate, drawing reviewed) follow the nurture loop in `src/lib/buyer-nurture.ts`: first name, format coach (CAD vs PDF vs other — we still accept PDF 3-view, not STEP-only), website is cheapest, How to order + design guide, signed by `DESK_FIRST_NAME` (default Ron). From display is `Ron at USA Wire Form`. Walkthrough: `/guide/how-to-order`.
 
 ---
 
