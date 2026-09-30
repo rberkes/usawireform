@@ -1,11 +1,11 @@
 import { ESTIMATE, quantityDiscount } from "@/lib/quoting";
 import { MATERIAL_MARKUP_RATE } from "@/lib/robomac/tables";
 
-/** V-hooks only: shop buys the wire. Other forms stay customer coil. */
+/** Shop-steel mill card: V, 90° V, CV, 90° CV. C and S stay customer coil. */
 export const V_HOOK_SUPPLY = {
   /** Ask card only — not in the shop piece formula. */
   cutUsd: 1,
-  /** Bends stay on the drawing. They are not billed on V-hooks. */
+  /** Bends stay on the drawing. They are not billed on shop-steel hooks. */
   bendUsd: 0,
   /** 3/8 in forming inch rate. Heavier stock × (d / 0.375)². */
   inchUsd: 0.09,
@@ -22,7 +22,7 @@ export const V_HOOK_FORMULA =
   "piece = lengthIn×inchUsd + weightLb×materialUsdPerLb×(1 + 0.30)";
 
 export function isShopSteelHook(type: string) {
-  return type === "v" || type === "90v";
+  return type === "v" || type === "90v" || type === "cv" || type === "90cv";
 }
 
 export function vHookInchUsd(diameterIn: number) {

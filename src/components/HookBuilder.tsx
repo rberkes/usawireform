@@ -97,11 +97,11 @@ export function HookBuilder({
         {PRICE_LINE}{" "}
         {shopSteel ? (
           <>
-            V-hooks: we buy the steel — 1018, galvanized, 304, or 316 is in the
-            estimate. Shop formula: $0.09 per developed inch on 3/8 in (heavier
-            wire scales by section) + material + 30% markup on material. Bends
-            are in the drawing, not billed. 7/16 and 1/2 in are stock on this
-            cell.
+            V-hooks and CV-hooks: we buy the steel — 1018, galvanized, 304, or
+            316 is in the estimate. Shop formula: $0.09 per developed inch on
+            3/8 in (heavier wire scales by section) + material + 30% markup on
+            material. Bends are in the drawing, not billed. 7/16 and 1/2 in are
+            stock on this cell.
           </>
         ) : (
           <>

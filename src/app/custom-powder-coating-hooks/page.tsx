@@ -42,12 +42,12 @@ const faqs = [
   {
     question: "Do you have an online custom hook builder?",
     answer:
-      "Yes. Pick style, wire size in 4–14 mm, overall length, and leg ID. V-hooks and 90° V: $0.09 per developed inch on 3/8 in (heavier wire scales by section) + the steel we buy + 30% markup on material. 7/16 and 1/2 in are stock. C, CV, and S: $1 per cut, $0.50 per bend, $0.05 per developed inch — you buy the coil. 100-piece minimum. All instant quotes are subject to quote department review.",
+      "Yes. Pick style, wire size in 4–14 mm, overall length, and leg ID. V-hooks, 90° V, CV-hooks, and 90° CV: $0.09 per developed inch on 3/8 in (heavier wire scales by section) + the steel we buy + 30% markup on material. 7/16 and 1/2 in are stock. C and S: $1 per cut, $0.50 per bend, $0.05 per developed inch — you buy the coil. 100-piece minimum. All instant quotes are subject to quote department review.",
   },
   {
     question: "Who supplies the wire?",
     answer:
-      "V-hooks and 90° V: we buy the steel — 1018, galvanized, 304, or 316 is in the estimate. C-hooks, CV-hooks, S-hooks, and other CNC forms: you buy the coil and bring it to Northeast Ohio.",
+      "V-hooks, 90° V, CV-hooks, and 90° CV: we buy the steel — 1018, galvanized, 304, or 316 is in the estimate. C-hooks, S-hooks, and other CNC forms: you buy the coil and bring it to Northeast Ohio.",
   },
 ];
 
@@ -81,7 +81,7 @@ export default function CustomPowderCoatingHooksPage() {
           <PageHero
             kicker="Custom"
             title="Custom powder coating hooks"
-            lede={`${PRICE_LINE} Build a V, C, CV, S, or 90° hook. Live drawing and estimate. ${WIRE.short}. V-hooks: we buy the steel. Other styles: you buy the coil.`}
+            lede={`${PRICE_LINE} Build a V, C, CV, S, or 90° hook. Live drawing and estimate. ${WIRE.short}. V-hooks and CV-hooks: we buy the steel. C and S: you buy the coil.`}
           />
           <PowderHookStyleGrid caption="Custom V, C, CV, and S — length and openings on the print." />
         </div>
