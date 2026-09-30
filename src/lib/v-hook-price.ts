@@ -1,7 +1,7 @@
 import { ESTIMATE, quantityDiscount } from "@/lib/quoting";
 import { MATERIAL_MARKUP_RATE } from "@/lib/robomac/tables";
 
-/** Shop-steel mill card: V, 90° V, CV, 90° CV. C and S stay customer coil. */
+/** Shop-steel mill card for custom V, C, CV, S, and 90° hooks. */
 export const V_HOOK_SUPPLY = {
   /** Ask card only — not in the shop piece formula. */
   cutUsd: 1,
@@ -22,7 +22,15 @@ export const V_HOOK_FORMULA =
   "piece = lengthIn×inchUsd + weightLb×materialUsdPerLb×(1 + 0.30)";
 
 export function isShopSteelHook(type: string) {
-  return type === "v" || type === "90v" || type === "cv" || type === "90cv";
+  return (
+    type === "v" ||
+    type === "90v" ||
+    type === "cv" ||
+    type === "90cv" ||
+    type === "c" ||
+    type === "90c" ||
+    type === "s"
+  );
 }
 
 export function vHookInchUsd(diameterIn: number) {

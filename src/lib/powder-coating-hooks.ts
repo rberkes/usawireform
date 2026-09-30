@@ -241,7 +241,7 @@ export const POWDER_HOOK_STYLES: PowderHookStyle[] = [
     hang: "Same V, C, or CV openings, rotated 90°. Call the rotation, both insides, and length.",
     body: [
       "90° hooks are still powder coating hooks — V, C, or CV — with a right-angle offset so the part hangs off the bar instead of in line with it. That is a 2D or 3D CNC program, not a different product family.",
-      `Wire stays ${WIRE.short}. Stock ${STOCK}. Stainless when the washer demands it. 90° V and 90° CV: we buy the steel. 90° C: you buy the coil.`,
+      `Wire stays ${WIRE.short}. Stock ${STOCK}. Stainless when the washer demands it. Custom 90° V, C, and CV: we buy the steel.`,
     ],
     jobs: [
       "90° V-hooks for centered hang off the bar",
