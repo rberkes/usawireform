@@ -92,7 +92,7 @@ export function siteArchitectureTree(): ArchNode[] {
       note: "What we run in Northeast Ohio",
       kind: "branch",
       children: [
-        leaf("/instant-quote", "Estimate on the 214TF"),
+        leaf("/instant-quote", "STEP DFM + shop quote; cut/bend fallback"),
         leaf("/contact", "Send a STEP"),
         leaf("/quoting", "Tooling and coil"),
         leaf("/capabilities", "4–14 mm cell"),

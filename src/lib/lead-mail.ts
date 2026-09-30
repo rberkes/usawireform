@@ -124,13 +124,17 @@ function ctaBannerRow(href: string, label: string, hint?: string) {
 }
 
 function estimateForwardMailto(estimate: EstimateMailCopy) {
-  const part = estimate.hookType ?? "wire form";
+  const part = estimate.cadDfm
+    ? estimate.fileName ?? "STEP"
+    : estimate.hookType ?? "wire form";
   const lines = [
     `USA Wire Form estimate — ${part}`,
     "",
     ...estimateFactRows(estimate).map((row) => `${row.label}: ${row.value}`),
     "",
-    `Builder: ${SITE_URL}/custom-powder-coating-hooks`,
+    estimate.cadDfm
+      ? `CAD quote: ${SITE_URL}/instant-quote`
+      : `Builder: ${SITE_URL}/custom-powder-coating-hooks`,
     "Not a production quote. Reply to USA Wire Form if you want a STEP reviewed.",
   ];
   const subject = `${COMPANY} estimate — ${part}`;
@@ -278,9 +282,14 @@ export type EstimateMailCopy = {
   overallIn?: string;
   legIdIn?: string;
   notes?: string;
+  /** Public STEP → DFM → shop formula on /instant-quote. */
+  cadDfm?: boolean;
+  dfmStatus?: string;
+  fileName?: string;
 };
 
 function estimateFactRows(estimate: EstimateMailCopy): MailRow[] {
+  if (estimate.cadDfm) return cadDfmFactRows(estimate);
   const qty = estimate.quantity.toLocaleString("en-US");
   const material = estimate.shopSteel
     ? `${estimate.materialLabel} — shop steel${
@@ -345,19 +354,78 @@ function estimateFactRows(estimate: EstimateMailCopy): MailRow[] {
   return rows;
 }
 
+function cadDfmFactRows(estimate: EstimateMailCopy): MailRow[] {
+  const qty = estimate.quantity.toLocaleString("en-US");
+  const buyable = estimate.piece !== "—";
+  const rows: MailRow[] = [
+    ...(estimate.fileName ? [{ label: "STEP", value: estimate.fileName }] : []),
+    ...(estimate.dfmStatus ? [{ label: "DFM", value: estimate.dfmStatus }] : []),
+    { label: "Wire", value: estimate.diameterLabel },
+    {
+      label: "Material",
+      value: `${estimate.materialLabel} — shop formula (inch + material × 1.30)`,
+    },
+    { label: "Quantity", value: `${qty} pcs` },
+    {
+      label: "Piece",
+      value: buyable ? `${estimate.piece} / piece` : "No buyable price",
+    },
+    {
+      label: "Lot",
+      value: buyable ? `${estimate.lot} for ${qty} pcs` : "—",
+    },
+    {
+      label: "Forming",
+      value: `${estimate.lengthIn} in — ${estimate.forming}`,
+    },
+    { label: "Cuts", value: "Not billed — shop formula is per inch" },
+    {
+      label: "Bends",
+      value: `${estimate.bends} on the centerline — not billed`,
+    },
+  ];
+  if (estimate.steelLb) {
+    rows.push({ label: "Carbon mass", value: `${estimate.steelLb} lb` });
+  }
+  if (estimate.discount) {
+    rows.push({ label: "Qty break", value: estimate.discount });
+  }
+  if (!estimate.stock) {
+    rows.push({
+      label: "Tooling",
+      value: `Non-stock · ${TOOLING.newLead} · ${TOOLING.newCostLabel}. Not in the piece price.`,
+    });
+  }
+  if (estimate.notes) {
+    rows.push({ label: "Notes", value: estimate.notes });
+  }
+  return rows;
+}
+
 /** Client copy — a receipt to keep. */
 export function estimateReceiptHtml(estimate: EstimateMailCopy) {
+  const cta = estimate.cadDfm
+    ? ctaBannerRow(
+        `${SITE_URL}/instant-quote`,
+        "Upload another STEP",
+        "Shop formula from the centerline. Not a production PO.",
+      )
+    : ctaBannerRow(
+        `${SITE_URL}/contact`,
+        "Send a STEP",
+        "This estimate is not a production quote. A print still goes through the desk.",
+      );
   return shell(
     "Save this estimate for your files.",
     `${kickerRow()}
      ${headingRow("Your estimate receipt")}
-     ${copyRow("Keep this email. It is not a production quote. Reply if you want the shop to look at a STEP.")}
-     ${mailRowsHtml(estimateFactRows(estimate))}
-     ${ctaBannerRow(
-       `${SITE_URL}/contact`,
-       "Send a STEP",
-       "This estimate is not a production quote. A print still goes through the desk.",
+     ${copyRow(
+       estimate.cadDfm
+         ? "Keep this email. Shop formula from your STEP. It is not a production PO. Reply if you want the desk on the print."
+         : "Keep this email. It is not a production quote. Reply if you want the shop to look at a STEP.",
      )}
+     ${mailRowsHtml(estimateFactRows(estimate))}
+     ${cta}
      ${copyRow(`<span style="color:#5c5c5c"><a href="${escapeHtml(estimateForwardMailto(estimate))}" style="color:#0b6bcb;text-decoration:none">Forward to a coworker</a> · ${QUOTE_REVIEW}</span>`)}`,
   );
 }

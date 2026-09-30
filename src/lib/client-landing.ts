@@ -8,7 +8,7 @@ export const CLIENT_STEPS = [
   },
   {
     title: "Get a quote with review",
-    body: `Instant estimate is cuts, bends, and inches. Production quote is a person on the print. ${PRICE_LINE}`,
+    body: `Upload a STEP on /instant-quote for 214TF DFM and a shop-formula estimate. Typed cuts, bends, and inches stay the Ask card on the same page. Production quote is a person on the print. ${PRICE_LINE}`,
   },
   {
     title: "Manufacturing begins",
@@ -20,7 +20,7 @@ export const CLIENT_STEPS = [
   },
 ] as const;
 
-export const CLIENT_CTA_LEDE = `Upload a STEP and get quotes from cells that can run it. No STEP? We convert a PDF 3-view for free. Instant quote is still there for cuts, bends, and inches. ${PRICE_LINE}`;
+export const CLIENT_CTA_LEDE = `Upload a STEP on /instant-quote for DFM and a shop-formula number. No STEP? Count cuts, bends, and inches on the same page, or we convert a PDF 3-view for free. ${PRICE_LINE}`;
 
 export const HOME_QUOTE_NOTE =
   "Get wire forming quotes from suppliers that are ready to run! No STEP file? We convert PDF 3-view drawings for free.";

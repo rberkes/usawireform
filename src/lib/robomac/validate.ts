@@ -5,6 +5,7 @@
 
 import { COMMON_SIZES, WIRE } from "@/lib/range";
 import { evaluateWireForm } from "./dfm";
+import { carbonWeightLb, priceCadDfm } from "./cad-quote";
 import { QUOTE_FORMULA, quoteRobomacPiece } from "./quote";
 import { TWIN_FIXTURES } from "./fixtures";
 import {
@@ -237,6 +238,62 @@ export function validateTwin(): ValidationError[] {
       where: "quote-formula",
       message: "304 must not emit a piece price until its inch rate is filed.",
     });
+  }
+
+  const brief = TWIN_FIXTURES.find((row) => row.id === "brief-example");
+  const short = TWIN_FIXTURES.find((row) => row.id === "short-straight");
+  const tightSs = TWIN_FIXTURES.find((row) => row.id === "tight-stainless");
+  if (brief) {
+    const dfm = evaluateWireForm(brief.geometry);
+    const priced = priceCadDfm(brief.geometry, dfm, 100);
+    const expectedForming = Math.round((dfm.developedLengthMm / 25.4) * 0.05 * 100) / 100;
+    if (!priced.buyable || priced.pieceUsd !== expectedForming) {
+      errors.push({
+        where: "cad-dfm",
+        message: `PASS 1018 CAD should be buyable forming ${expectedForming}. Got ${priced.pieceUsd}`,
+      });
+    }
+    const volume = priceCadDfm(brief.geometry, dfm, 1000);
+    const broken = Math.round(expectedForming * 0.95 * 100) / 100;
+    if (volume.pieceUsd !== broken) {
+      errors.push({
+        where: "cad-dfm",
+        message: `1,000 pc CAD should be −5%. Got ${volume.pieceUsd}, expected ${broken}`,
+      });
+    }
+    const mass = carbonWeightLb(priced.lengthIn, priced.diameterIn, "1018");
+    if (mass == null || mass <= 0) {
+      errors.push({
+        where: "cad-dfm",
+        message: "1018 CAD must emit carbon mass from the V-hook density.",
+      });
+    }
+    if (carbonWeightLb(priced.lengthIn, priced.diameterIn, "304") != null) {
+      errors.push({
+        where: "cad-dfm",
+        message: "Do not invent 304 density.",
+      });
+    }
+  }
+  if (short) {
+    const dfm = evaluateWireForm(short.geometry);
+    const priced = priceCadDfm(short.geometry, dfm, 100);
+    if (priced.buyable || priced.pieceUsd != null) {
+      errors.push({
+        where: "cad-dfm",
+        message: "FAIL must not emit a buyable CAD price.",
+      });
+    }
+  }
+  if (tightSs) {
+    const dfm = evaluateWireForm(tightSs.geometry);
+    const priced = priceCadDfm(tightSs.geometry, dfm, 100);
+    if (priced.buyable || priced.quote.formingFiled || priced.pieceUsd != null) {
+      errors.push({
+        where: "cad-dfm",
+        message: "304 CAD must not emit a piece price.",
+      });
+    }
   }
 
   const unknownCount = [
