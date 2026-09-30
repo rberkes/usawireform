@@ -186,7 +186,7 @@ export const POWDER_HOOK_EPSI: PowderHookNode[] = [
         id: "print",
         heading: "Custom CV",
         body: [
-          "Listed boxes include carbon. Custom CV outside this grid: you buy the coil. Builder on /powder-coating-hooks/cv-hooks.",
+          "Listed boxes include carbon. Custom CV outside this grid: we buy the steel. Shop formula: inch + material + 30% markup. Builder on /powder-coating-hooks/cv-hooks.",
         ],
       },
     ],

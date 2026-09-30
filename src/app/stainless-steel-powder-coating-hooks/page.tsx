@@ -39,7 +39,7 @@ const faqs = [
   },
   {
     question: "Do you form stainless V-hooks, C-hooks, and S-hooks?",
-    answer: `Yes. Same styles as steel powder coating hooks, from 304 or 316 in ${WIRE.short}. 100-piece minimum. Stainless V-hooks: we buy the steel. C, CV, and S: you buy the coil.`,
+    answer: `Yes. Same styles as steel powder coating hooks, from 304 or 316 in ${WIRE.short}. 100-piece minimum. Stainless V-hooks and CV-hooks: we buy the steel. C and S: you buy the coil.`,
   },
 ];
 
@@ -114,8 +114,8 @@ export default function StainlessSteelPowderCoatingHooksPage() {
           <Link href="/custom-powder-coating-hooks">
             custom powder coating hooks
           </Link>
-          . Stock {STOCK} in {WIRE.short}. Stainless V-hooks: we buy the steel.
-          Other styles: you buy the coil.
+          . Stock {STOCK} in {WIRE.short}. Stainless V-hooks and CV-hooks: we
+          buy the steel. C and S: you buy the coil.
         </p>
 
         <h2 id="faq">FAQ</h2>

@@ -500,7 +500,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         id: "both",
         heading: "Clearance and locate, offset",
         body: [
-          "90° CV-hooks keep C clearance and V locate, then rotate the hang. Tight racks. Mixed part families. You buy the coil. Both insides, rotation, length, diameter on the print.",
+          "90° CV-hooks keep C clearance and V locate, then rotate the hang. Tight racks. Mixed part families. We buy the steel. Shop formula: inch + material + 30% markup. Both insides, rotation, length, diameter on the print.",
         ],
       },
     ],
@@ -560,7 +560,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
     faqs: [
       {
         question: "Can 90° hooks be C or CV?",
-        answer: "Yes. 90° V we buy the steel. 90° C and CV: you buy the coil.",
+        answer: "Yes. 90° V and 90° CV: we buy the steel. 90° C: you buy the coil.",
       },
     ],
   },
@@ -605,7 +605,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         id: "cv",
         heading: "Mixed hang, offset",
         body: [
-          "90° CV when mixed parts need C or V on the same hook family and the rack is tight. Your coil. Both insides and rotation on the print.",
+          "90° CV when mixed parts need C or V on the same hook family and the rack is tight. We buy the steel. Both insides and rotation on the print.",
         ],
       },
     ],
@@ -636,7 +636,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         heading: "304 or 316",
         body: [
           "Stainless powder coating hooks are 304 unless the print says 316. Same styles as carbon: V, C, CV, S, 90°, square hang if the diameter is in band.",
-          "Listed 4–10 mm bags are carbon. Stainless is a print. Custom V: we buy the stainless. Custom C, CV, S outside the grid: you buy the coil. Full lander: /stainless-steel-powder-coating-hooks.",
+          "Listed 4–10 mm bags are carbon. Stainless is a print. Custom V and CV: we buy the stainless. Custom C and S outside the grid: you buy the coil. Full lander: /stainless-steel-powder-coating-hooks.",
         ],
       },
     ],
@@ -720,7 +720,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         heading: "What to name",
         body: [
           "Style (V, C, CV, S, 90°), overall length, openings, diameter, alloy. STEP or PDF. 100-piece minimum.",
-          "Builder: /custom-powder-coating-hooks. Listed 4–10 mm V/S/C bags include carbon. Custom V: we buy the steel. Custom C, CV, S outside the grid: you buy the coil.",
+          "Builder: /custom-powder-coating-hooks. Listed 4–10 mm V/S/C bags include carbon. Custom V and CV: we buy the steel. Custom C and S outside the grid: you buy the coil.",
         ],
       },
     ],

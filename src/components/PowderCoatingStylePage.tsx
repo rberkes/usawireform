@@ -153,12 +153,12 @@ export function PowderCoatingStylePage({ style }: { style: PowderHookStyle }) {
             stainless steel powder coating hooks
           </Link>
           . Band: {WIRE.label}.{" "}
-          {style.id === "v-hooks"
-            ? "Listed 4–10 mm V lots include carbon. Custom V: we still buy the steel."
+          {style.id === "v-hooks" || style.id === "cv-hooks"
+            ? "Listed 4–10 mm lots include carbon. Custom V and CV: we buy the steel. Shop formula: inch + material + 30% markup."
             : style.id === "s-hooks" || style.id === "c-hooks"
-              ? "Listed 4–10 mm lots include carbon. Custom C, CV, and S outside the grid: you buy the coil."
+              ? "Listed 4–10 mm lots include carbon. Custom C and S outside the grid: you buy the coil."
               : style.id === "90-degree-hooks"
-              ? "90° V: we buy the steel. 90° C and CV: you buy the coil."
+              ? "90° V and 90° CV: we buy the steel. 90° C: you buy the coil."
               : "You buy the coil."}
         </p>
 
