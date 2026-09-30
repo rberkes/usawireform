@@ -1,4 +1,5 @@
 export { evaluateWireForm } from "./dfm";
+export { extractWireForm, isStepName } from "./extract";
 export { TWIN_FIXTURES } from "./fixtures";
 export {
   bend,
@@ -19,6 +20,7 @@ export {
   twinTables,
 } from "./tables";
 export { twinSummary, validateTwin } from "./validate";
+export type { ExtractResult } from "./extract";
 export type {
   DfmIssue,
   DfmResult,

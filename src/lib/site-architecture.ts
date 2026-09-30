@@ -346,7 +346,7 @@ export function siteArchitectureTree(): ArchNode[] {
         leaf("/admin/visitors", "Visitor IPs and referrers", "desk"),
         leaf("/admin/live", "Live page checklist", "desk"),
         leaf("/admin/architecture", "This tree", "desk"),
-        leaf("/admin/robomac", "214TF digital twin", "desk"),
+        leaf("/admin/robomac", "214TF twin + STEP DFM", "desk"),
         leaf("/api/visit", "Visitor log", "desk"),
         leaf("/api/machine-factories", "Machine typeahead", "desk"),
         leaf("/api/directory-lead", "Listing RFQ", "desk"),
