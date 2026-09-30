@@ -57,7 +57,7 @@ export const ROBOMAC_214TF: MachineRow = {
 
 /** Shop: push-head min ring radius on 1/2 in. Encoded as centerline R. */
 export const PUSH_RING_MIN_RADIUS_IN = 6;
-export const PUSH_RING_MIN_RADIUS_MM = PUSH_RING_MIN_RADIUS_IN * 25.4;
+export const PUSH_RING_MIN_RADIUS_MM = 152.4;
 export const PUSH_RING_WIRE_IN = 0.5;
 export const PUSH_RING_WIRE_MM = 12.7;
 export const WIPE_ANGLE_MIN_DEG = 20;

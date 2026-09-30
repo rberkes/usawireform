@@ -121,7 +121,7 @@ export default async function AdminRobomacPage({
                   ? `Typical ${row.angleMinDeg}–${row.angleMaxDeg}°`
                   : null}
                 {row.kind === "push" && row.minRingRadiusIn
-                  ? `Min ring R ${row.minRingRadiusIn} in on ${row.minRingRadiusWireIn} in wire (${row.minRingRadiusMm} mm CL)`
+                  ? `Min ring R ${row.minRingRadiusIn} in on ${row.minRingRadiusWireIn} in wire (${row.minRingRadiusMm?.toFixed(1)} mm CL)`
                   : null}
                 {` · ${row.provenance.kind}`}
               </p>
