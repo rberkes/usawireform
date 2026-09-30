@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { priceCadDfm } from "./cad-quote";
 import { evaluateWireForm } from "./dfm";
 import { developedLengthMm, formatSequence } from "./geometry";
 import { extractWireFormFromStep } from "./step-extract";
@@ -85,6 +86,13 @@ export function validateExtract(verbose = false) {
     }
     if (dfm.status === "FAIL") {
       errors.push({ where: goldenPath, message: `DFM ${dfm.status}` });
+    }
+    const priced = priceCadDfm(golden.geometry, dfm, 100);
+    if (!priced.buyable || priced.pieceUsd == null) {
+      errors.push({
+        where: goldenPath,
+        message: "Golden L 1018 must emit a buyable shop-formula piece.",
+      });
     }
     if (verbose) {
       console.log(`\n${goldenPath}`);

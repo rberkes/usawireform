@@ -2,7 +2,7 @@
 
 First engineering layer for CAD → DFM → quote. **Not a site redesign.**
 
-The customer-facing upload page is later. This file is the machine.
+Public CAD path is `/instant-quote` (STEP → DFM → shop formula). Desk inspector remains `/admin/robomac`. This file is the machine.
 
 ## Principle
 
@@ -21,6 +21,7 @@ AI = explanation only. It does not decide whether a part fits the 214TF.
 | Validate | `npx tsx src/lib/robomac/validate.ts` |
 | STEP → centerline | `src/lib/robomac/step-extract.ts` |
 | Desk inspector | `/admin/robomac` (password) |
+| Public CAD quote | `/instant-quote` — STEP → DFM → shop formula |
 
 Rows are typed like Postgres tables (`machines`, `machine_capabilities`, `machine_tooling`, `machine_rules`, `materials`, plus empty production-feedback tables). The site still stores jobs in Blob. Do not stand up Supabase until the twin is being written from the floor.
 
@@ -85,7 +86,7 @@ Phase 2 checks are listed on every result as `pendingPhase2` and stay unimplemen
 5. Split the polyline into S / B / ROT by turning angle.
 6. Hand the geometry to `evaluateWireForm()`.
 
-Desk path: `/admin/robomac` upload. CLI: `npx tsx src/lib/robomac/extract-cli.ts path/to/part.step [materialId]`.
+Public path: `/instant-quote` (`analyzePublicStep` → `priceCadDfm` → `quoteRobomacPiece`). Desk path: `/admin/robomac` upload (no pieceUsd). CLI: `npx tsx src/lib/robomac/extract-cli.ts path/to/part.step [materialId]`.
 
 The golden fixture `src/lib/robomac/fixtures/l-hook.step` is a 12.7 mm L: 120 mm, 90° at R12.7, 80 mm. Catalog STEPs under `public/models/` are used to lock diameter (CadQuery polyline sweeps discretize crowns — sequence quality is best on analytic SolidWorks cylinders/tori).
 
@@ -93,7 +94,7 @@ IGES, SLDPRT, and `.stpz` are out of this pass.
 
 ## What not to do yet
 
-- Do not redesign USAWireForm.com around this.
-- Do not tell Ask or public pages that CAD DFM is live.
 - Do not treat estimated tripwires (2 m / 6 m developed length, 2×D cutoff) as plate limits.
+- Do not invent 304 / 330 / 6061-T6 inch rates, densities, or coil dollars.
 - Do not fold a named-band Source schema migration into this work. See [STRATEGY.md](./STRATEGY.md).
+- Do not reuse the $0.09 hook mill card on general CAD.

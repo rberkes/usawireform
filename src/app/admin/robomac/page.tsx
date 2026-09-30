@@ -261,7 +261,7 @@ export default async function AdminRobomacPage({
       <section className="mt-12">
         <h2 className="text-sm font-medium">Fixture DFM</h2>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">
-          Same engine the CAD path will call. These are not customer quotes.
+          Same engine /instant-quote calls. These rows are fixtures, not customer quotes.
         </p>
         <ul className="mt-4 divide-y divide-line border border-line text-sm">
           {fixtures.map((fixture) => (

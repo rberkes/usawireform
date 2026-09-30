@@ -12,6 +12,13 @@ export {
 export { assignBendHead } from "./dfm";
 export { QUOTE_FORMULA, quoteRobomacPiece } from "./quote";
 export {
+  CARBON_DENSITY_LB_PER_IN3,
+  carbonWeightLb,
+  materialFamilyId,
+  priceCadDfm,
+} from "./cad-quote";
+export type { CadDfmPriced } from "./cad-quote";
+export {
   CAPABILITIES,
   COLLISION_SCENARIOS,
   formingRatesFor,
