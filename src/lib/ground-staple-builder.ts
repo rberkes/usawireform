@@ -268,11 +268,15 @@ export function buildStapleQuote(input: {
       title,
       bag: true,
       estimate: {
+        formula: "8 ga bag · 5% under published USA 8 ga",
         inchRate: 0,
         cut: 0,
         bendCost: 0,
         forming: 0,
         subtotal: bag.listEach * quantity,
+        materialCostUsd: 0,
+        materialMarkupUsd: 0,
+        materialMarkupRate: 0,
         beatRate: 0.05,
         beatUsd,
         steelLb: 0,
@@ -294,7 +298,6 @@ export function buildStapleQuote(input: {
     diameterIn: wireIn,
     quantity,
     materialId,
-    cuts,
   });
 
   return {

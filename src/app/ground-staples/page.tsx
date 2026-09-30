@@ -160,8 +160,8 @@ export default function GroundStaplesHubPage() {
         <h2 id="heavy">Heavy-duty</h2>
         <p>
           Stock tooling is {STOCK}. 7/16 in and 1/2 in almost never have a
-          public bag. We form them as CNC Us, buy the steel, then 5% off mill
-          math.{" "}
+          public bag. We form them as CNC Us, buy the steel, and use the shop
+          formula: inch + material + 30% markup.{" "}
           <Link href="/ground-staples/heavy-duty">Heavy-duty ground staples</Link>
           .
         </p>

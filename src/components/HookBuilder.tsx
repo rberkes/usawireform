@@ -98,9 +98,10 @@ export function HookBuilder({
         {shopSteel ? (
           <>
             V-hooks: we buy the steel — 1018, galvanized, 304, or 316 is in the
-            estimate. $1.00 per cut, $0.09 per developed inch on 3/8 in (heavier
-            wire scales by section), then 5% off. Bends are in the drawing, not
-            billed. 7/16 and 1/2 in are stock on this cell.
+            estimate. Shop formula: $0.09 per developed inch on 3/8 in (heavier
+            wire scales by section) + material + 30% markup on material. Bends
+            are in the drawing, not billed. 7/16 and 1/2 in are stock on this
+            cell.
           </>
         ) : (
           <>
@@ -168,15 +169,15 @@ export function HookBuilder({
                 {built.estimate.shopSteel && built.estimate.steelUsd != null ? (
                   <SumRow
                     label="Steel (shop)"
-                    value={`${built.estimate.steelLb?.toFixed(3)} lb · ${usd2(built.estimate.steelUsd)}`}
+                    value={`${built.estimate.steelLb?.toFixed(3)} lb · ${usd2(built.estimate.materialCostUsd ?? built.estimate.steelUsd)}`}
                   />
                 ) : (
                   <SumRow label="Coil" value="You buy it — not in the price" />
                 )}
-                {built.estimate.shopSteel && built.estimate.beatUsd ? (
+                {built.estimate.shopSteel && built.estimate.materialMarkupUsd ? (
                   <SumRow
-                    label="5% under boxed 3/8"
-                    value={`−${usd2(built.estimate.beatUsd)}`}
+                    label="30% material markup"
+                    value={usd2(built.estimate.materialMarkupUsd)}
                   />
                 ) : null}
                 <SumRow label="Per piece" value={usd2(built.estimate.piece)} />

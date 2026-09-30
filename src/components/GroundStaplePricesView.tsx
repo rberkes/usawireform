@@ -26,7 +26,7 @@ const faqs = [
   {
     question: "Where are 3/8, 7/16, and 1/2 in?",
     answer:
-      "Those diameters almost never have a public bag card. They run on the custom builder: shop steel, $1 per cut, $0.09 per developed inch on 3/8 in scaled by section, then 5% off.",
+      "Those diameters almost never have a public bag card. They run on the custom builder: shop steel, $0.09 per developed inch on 3/8 in scaled by section, plus steel × 1.30.",
   },
 ];
 

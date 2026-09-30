@@ -128,6 +128,9 @@ export type HookBuildOk = {
     shopSteel?: boolean;
     beatUsd?: number;
     beatRate?: number;
+    materialCostUsd?: number;
+    materialMarkupUsd?: number;
+    materialMarkupRate?: number;
     subtotal?: number;
   };
 };
@@ -273,7 +276,6 @@ export function buildHookQuote(input: HookBuildInput): HookBuildOk | HookBuildEr
           diameterIn: wireIn,
           quantity,
           materialId: input.materialId ?? "1018",
-          cuts,
         });
         return {
           inchRate: priced.inchRate,
@@ -289,8 +291,9 @@ export function buildHookQuote(input: HookBuildInput): HookBuildOk | HookBuildEr
           steelLb: priced.steelLb,
           steelUsd: priced.steelUsd,
           shopSteel: true as const,
-          beatUsd: priced.beatUsd,
-          beatRate: priced.beatRate,
+          materialCostUsd: priced.materialCostUsd,
+          materialMarkupUsd: priced.materialMarkupUsd,
+          materialMarkupRate: priced.materialMarkupRate,
           subtotal: priced.subtotal,
         };
       })()
