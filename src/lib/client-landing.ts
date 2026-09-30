@@ -28,6 +28,33 @@ export const HOME_QUOTE_NOTE =
 export const HOME_HERO_LEDE =
   "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production.";
 
+/** Homepage front door — this cell, not Source matching. */
+export const HOME_CAD_HERO_LEDE =
+  "Upload a round-wire STEP. This Robomac 214TF runs DFM and a shop-formula estimate. 1018 is $0.05/in forming only — material $/lb is not filed. Not a cart. Instant is this cell. Source is other floors.";
+
+export const HOME_CAD_STEPS = [
+  {
+    title: "Upload a STEP",
+    body: "Round-wire .step or .stp. Analytic cylinders and tori extract cleanly. No STEP? Count cuts, bends, and inches on the same page.",
+  },
+  {
+    title: "214TF DFM",
+    body: "PASS, REVIEW, or FAIL. Geometry is truth. FAIL is not a buyable price.",
+  },
+  {
+    title: "Shop number",
+    body: "Inches × $0.05 on 1018 + material × 1.30 when $/lb is filed. Email the desk. 100-piece minimum.",
+  },
+] as const;
+
+export const HOME_CAD_CTA_TITLE = "Upload a STEP";
+
+export const HOME_CAD_CTA_LEDE =
+  "Instant quote is this 214TF — DFM and a shop-formula number. Source matches other shops that filed the cell. Do not mix the two.";
+
+export const HOME_CAD_SPLIT =
+  "Instant is this 214TF. Source is other floors.";
+
 export const HOME_BUYER_STEPS = [
   {
     title: "Upload STEP",
