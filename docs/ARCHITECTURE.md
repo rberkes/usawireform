@@ -1,9 +1,19 @@
 # How this website is built
 
-USA Wire Form is a Next.js 16 App Router site. Two products share one deploy:
+USA Wire Form is a Next.js 16 App Router site. Two audiences share one deploy,
+split the way SendCutSend keeps fabrication on the homepage and selling on a
+side door:
 
-1. **This floor** — Northeast Ohio shop. Instant quote, production quote, catalog, processes.
-2. **Source** — marketplace. Shops file cells. Buyers send prints. The desk is the gate. See [SOURCE.md](./SOURCE.md).
+1. **Buyers (apex `usawireform.com`)** — Upload a file, instant quote, catalog, directory. The homepage sells getting parts, not filing machines.
+2. **Suppliers (`suppliers.usawireform.com`, path `/suppliers` until DNS is live)** — Claim a listing, file cells, shop dashboard, $49 lead unlocks.
+3. **This floor** — Northeast Ohio 214TF still quotes on `/instant-quote` and `/production-quote`.
+4. **Source** — matching engine behind both sides. Desk is the gate. See [SOURCE.md](./SOURCE.md).
+
+Host routing lives in `src/proxy.ts` + `src/lib/hosts.ts`. Set
+`SUPPLIER_HOST_LIVE=1` and `NEXT_PUBLIC_SUPPLIER_HOST_LIVE=1` after the
+`suppliers` CNAME points at Vercel. Until then, shop chrome is path-based so
+preview and local keep working. Add `suppliers.usawireform.com` as an allowed
+origin on the same Clerk application (not a satellite domain).
 
 ## Stack
 

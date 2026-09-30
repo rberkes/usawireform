@@ -57,7 +57,7 @@ function record(
 export const staticSeoPages: SeoRecord[] = [
   record({
     path: "/",
-    title: `${COMPANY} — Wire Forming Resource for the United States and Beyond`,
+    title: `${COMPANY} — Custom CNC Wire Forming from Your File`,
     description: SITE_PITCH,
     section: "home",
     absoluteTitle: true,
@@ -71,6 +71,24 @@ export const staticSeoPages: SeoRecord[] = [
       "wire forming directory",
       "CNC wire forming machines",
       "Numalliance Robomac",
+      "upload STEP wire form",
+      "custom CNC wire forming",
+    ],
+  }),
+  record({
+    path: "/suppliers",
+    title: `${COMPANY} — Supplier Portal`,
+    description:
+      "File CNC cells free. Buyers upload a STEP; jobs that fit your machines show in the shop dashboard. Unlock a lead when you want the contact.",
+    section: "company",
+    absoluteTitle: true,
+    changeFrequency: "weekly",
+    priority: 0.8,
+    keywords: [
+      "wire form suppliers",
+      "list CNC wire machines",
+      "wire shop leads",
+      "file wire forming capacity",
     ],
   }),
   record({

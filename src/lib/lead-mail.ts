@@ -1,4 +1,5 @@
 import { COMPANY, SITE_HOST, SITE_URL } from "@/lib/company";
+import { publicSupplierUrl } from "@/lib/hosts";
 import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
 import { SOURCE_PLAN_LINE, SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 import { maskEmail } from "@/lib/mask-email";
@@ -169,7 +170,7 @@ export function customerThanksHtml({
         )
       : kind === "machine"
         ? ctaBannerRow(
-            `${SITE_URL}/source/equipment`,
+            publicSupplierUrl("/source/equipment"),
             "File your cells on Source",
             "List every cell free. Jobs match the iron on the floor.",
           )
@@ -518,7 +519,7 @@ export function sourceJobReceiptHtml({
        "Send another job",
        "Wire size, 2D or 3D, locale. We introduce — emails stay with the desk.",
      )}
-     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${SITE_URL}/source/shops" style="color:#0b6bcb;text-decoration:none">List every cell free</a>. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
+     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${publicSupplierUrl("/suppliers")}" style="color:#0b6bcb;text-decoration:none">Open the supplier portal</a>. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
   );
 }
 

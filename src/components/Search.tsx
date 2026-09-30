@@ -128,6 +128,7 @@ const searchItems: SearchItem[] = [
   { title: "Wire Form Factories in the USA", href: "/wire-form-factories-in-usa", category: "Resources", description: "U.S. wire form factories as company cards. CNC, fourslide, multi-slide, spring shops." },
   { title: "Find factories by machine", href: "/find-factories-by-machine", category: "Resources", description: "Type fourslide, Robomac, powder coating, TIG, zinc. Three or four plants drop as you type." },
   { title: "Find a wire form shop", href: "/source", category: "Pages", description: "Send the print. We introduce shops that listed a machine that can run it." },
+  { title: "Supplier portal", href: "/suppliers", category: "Pages", description: "Shop home. File cells free, claim a listing, unlock matched leads." },
   { title: "Add a machine cell", href: "/source/shops", category: "Pages", description: "Add one machine cell free. File how the plant operates free. Claim the listing or file a cell." },
   { title: "Upload equipment", href: "/source/equipment", category: "Pages", description: "Register the shop and file one row per CNC cell." },
   { title: "AI Smart Connect™", href: "/source/upgrade", category: "Pages", description: `List every cell free. ${SOURCE_SMART_CONNECT_LINE}. Six shops see the teaser. First two to unlock. Three secondaries $19/mo. Six maximum $49/mo.` },

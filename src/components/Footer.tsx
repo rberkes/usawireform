@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { COMPANY, QUOTE_EMAIL, SITE_LINE } from "@/lib/company";
+import { COMPANY, QUOTE_EMAIL, SITE_LINE, SUPPLIER_LINE } from "@/lib/company";
+import type { SiteChromeHrefs } from "@/lib/hosts";
 import { DRAWING_LIST } from "@/lib/drawings";
 import { BrandLockup } from "./WireMark";
 import { Container } from "./ui";
@@ -48,10 +49,7 @@ const factories = [
   { href: "/directory", label: "Company Directory" },
   { href: "/wire-form-factories-in-usa", label: "Wire form factories in the USA" },
   { href: "/find-factories-by-machine", label: "Find by machine or secondary" },
-  { href: "/source", label: "Find a wire form shop" },
-  { href: "/source/shops", label: "Add a machine cell" },
-  { href: "/#login", label: "Log in" },
-  { href: "/source/upgrade", label: "AI Smart Connect™" },
+  { href: "/source", label: "Upload a print" },
   { href: "/directory/new", label: "Newest Source shops" },
   { href: "/directory/areas", label: "Wire forming cities" },
   { href: "/ohio", label: "Ohio cities" },
@@ -114,12 +112,83 @@ const equipmentMfrs = [
   { href: "https://www.witels-albert-usa.com", label: "witels-albert" },
 ];
 
-export function Footer() {
+const supplierLinks = [
+  { href: "/source/equipment", label: "File equipment" },
+  { href: "/source/shops", label: "Claim a listing" },
+  { href: "/source/dashboard", label: "Shop dashboard" },
+  { href: "/source/upgrade", label: "AI Smart Connect™" },
+  { href: "/source/account", label: "Account" },
+  { href: "/directory", label: "Directory" },
+];
+
+export function Footer({ chrome }: { chrome: SiteChromeHrefs }) {
+  const supplier = chrome.audience === "supplier";
+  const homeHref = supplier ? chrome.supplierHome : chrome.buyerHome;
+
+  if (supplier) {
+    return (
+      <footer className="border-t border-line">
+        <Container className="flex flex-col gap-8 py-10 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <Link href={homeHref}>
+              <BrandLockup />
+            </Link>
+            <p className="mt-1 font-mono text-[10px] tracking-[0.18em] text-muted uppercase">
+              Supplier portal
+            </p>
+            <p className="mt-3 max-w-xs text-sm leading-6 text-muted">
+              {SUPPLIER_LINE}
+            </p>
+            <p className="mt-4 flex flex-wrap gap-4 text-sm">
+              <Link href="/privacy" className="text-foreground/90 hover:text-copper">
+                Privacy
+              </Link>
+              <Link href="/terms" className="text-foreground/90 hover:text-copper">
+                User Agreement
+              </Link>
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-10 text-sm sm:gap-16">
+            <NavCol title="Portal" links={supplierLinks} />
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[11px] tracking-widest text-muted uppercase">
+                Buyers
+              </span>
+              <Link href={chrome.buyerHome} className="text-foreground/90 hover:text-copper">
+                Buyer site
+              </Link>
+              <Link href="/source" className="text-foreground/90 hover:text-copper">
+                Upload a print
+              </Link>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[11px] tracking-widest text-muted uppercase">
+                Desk
+              </span>
+              <a
+                href={`mailto:${QUOTE_EMAIL}`}
+                className="text-foreground/90 hover:text-copper"
+              >
+                {QUOTE_EMAIL}
+              </a>
+            </div>
+          </div>
+        </Container>
+        <div className="border-t border-line">
+          <p className="mx-auto max-w-6xl px-5 py-4 font-mono text-[11px] tracking-wide text-muted">
+            © {new Date().getFullYear()} {COMPANY}. All rights reserved. {COMPANY}™,
+            USAWF™, and AI Smart Connect™ are trademarks of {COMPANY}.
+          </p>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="border-t border-line">
       <Container className="flex flex-col gap-8 py-10 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <Link href="/">
+          <Link href={homeHref}>
             <BrandLockup />
           </Link>
           <p className="mt-3 max-w-xs text-sm leading-6 text-muted">
@@ -165,6 +234,12 @@ export function Footer() {
               {QUOTE_EMAIL}
             </a>
             <p className="text-muted">{DRAWING_LIST}</p>
+            <Link
+              href={chrome.supplierHome}
+              className="mt-2 text-foreground/90 hover:text-copper"
+            >
+              Supplier portal
+            </Link>
           </div>
         </div>
       </Container>

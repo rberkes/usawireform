@@ -10,8 +10,8 @@ Live: [usawireform.com](https://usawireform.com). Desk mail: `info@usawireform.c
 
 | Who | Sign-in | Home |
 | --- | --- | --- |
-| **Buyer** | `/sign-in?as=buyer` or `/sign-up?as=buyer` | `/buyer/dashboard` → send a print on `/source` |
-| **Shop** | `/sign-up?as=supplier` → NDA → file cells | `/source/dashboard` |
+| **Buyer** | `/sign-in?as=buyer` or `/sign-up?as=buyer` | Apex `/` → `/buyer/dashboard` → send a print on `/source` |
+| **Shop** | `/sign-up?as=supplier` → NDA → file cells | `/suppliers` (and `suppliers.usawireform.com`) → `/source/dashboard` |
 | **Desk** | Admin password | `/admin/accounts` — shops, buyers, STEP files, **Validate buyer**, **Release to shops** |
 
 One shop per account. Instant estimate on this site is still this floor (4–14 mm Robomac). Source is other US shops.

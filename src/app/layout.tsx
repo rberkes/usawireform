@@ -4,13 +4,12 @@ import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import { VisitTracker } from "@/components/VisitTracker";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
 import { SourceAccountBar } from "@/components/SourceAccountBar";
 import { JsonLd } from "@/components/JsonLd";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BackToTop } from "@/components/BackToTop";
 import { clerkAppearance } from "@/lib/clerk-appearance";
+import { SiteChrome } from "@/components/SiteChrome";
 import { COMPANY, QUOTE_EMAIL, SITE_PITCH, SITE_URL } from "@/lib/company";
 import { CORE_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
@@ -32,7 +31,7 @@ const ibmMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
+    default: `Custom CNC Wire Forming from Your File | ${COMPANY}`,
     template: `%s — ${COMPANY}`,
   },
   description: SITE_PITCH,
@@ -72,12 +71,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: COMPANY,
-    title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
+    title: `Custom CNC Wire Forming from Your File | ${COMPANY}`,
     description: SITE_PITCH,
   },
   twitter: {
     card: "summary_large_image",
-    title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
+    title: `Custom CNC Wire Forming from Your File | ${COMPANY}`,
     description: SITE_PITCH,
   },
   icons: {
@@ -102,11 +101,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <body className="flex min-h-full flex-col pb-16 font-sans sm:pb-0">
           <SkipToContent />
           <JsonLd />
-          <Header account={<SourceAccountBar />} />
-          <div id="main-content" className="flex-1">
-            {children}
-          </div>
-          <Footer />
+          <SiteChrome account={<SourceAccountBar />}>
+            <div id="main-content" className="flex-1">
+              {children}
+            </div>
+          </SiteChrome>
           <BackToTop />
           <VisitTracker />
           <Analytics />

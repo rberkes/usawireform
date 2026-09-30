@@ -88,15 +88,20 @@ export function ClientSection({
   lede,
   children,
   inset = false,
+  id,
 }: {
   kicker?: string;
   title: string;
   lede?: string;
   children: ReactNode;
   inset?: boolean;
+  id?: string;
 }) {
   return (
-    <section className={inset ? "bg-inset" : "bg-background"}>
+    <section
+      id={id}
+      className={cx(inset ? "bg-inset" : "bg-background", id && "scroll-mt-24")}
+    >
       <Container className="py-16 sm:py-20">
         {kicker ? (
           <p className="font-mono text-[12px] tracking-[0.22em] text-copper uppercase">
