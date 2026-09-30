@@ -1,6 +1,7 @@
 import { isAdmin } from "../actions";
 import { AdminLogin } from "../login-form";
 import { AdminInboxNav } from "@/components/AdminInboxNav";
+import { RobomacStepAnalyze } from "@/components/RobomacStepAnalyze";
 import { Page, PageHero, StatRow } from "@/components/ui";
 import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
@@ -92,6 +93,10 @@ export default async function AdminRobomacPage({
             label: "Fixture fails",
           },
         ]}
+      />
+
+      <RobomacStepAnalyze
+        materials={MATERIALS.map((row) => ({ id: row.id, label: row.label }))}
       />
 
       <section className="mt-12 max-w-3xl text-sm leading-6">

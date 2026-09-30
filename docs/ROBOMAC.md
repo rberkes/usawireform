@@ -19,6 +19,7 @@ AI = explanation only. It does not decide whether a part fits the 214TF.
 | DFM engine | `src/lib/robomac/dfm.ts` |
 | Fixtures | `src/lib/robomac/fixtures.ts` |
 | Validate | `npx tsx src/lib/robomac/validate.ts` |
+| STEP → centerline | `src/lib/robomac/step-extract.ts` |
 | Desk inspector | `/admin/robomac` (password) |
 
 Rows are typed like Postgres tables (`machines`, `machine_capabilities`, `machine_tooling`, `machine_rules`, `materials`, plus empty production-feedback tables). The site still stores jobs in Blob. Do not stand up Supabase until the twin is being written from the floor.
@@ -66,6 +67,23 @@ B3 90° R19.05
 and returns PASS / REVIEW / FAIL plus structured issues (`problem`, `cause`, `availableMm`, `requiredMm`, `recommendedChange`, `customerExplanation`).
 
 Phase 2 checks are listed on every result as `pendingPhase2` and stay unimplemented.
+
+## STEP → centerline
+
+`extractWireForm(bytes, fileName, materialId)` reads a round-wire solid STEP (ISO-10303-21). It does **not** mesh the file.
+
+1. Parse cylinders and tori.
+2. Take the modal minor/cylinder radius as wire diameter. Units come from `SI_UNIT(.MILLI.,.METRE.)` or `CONVERSION_BASED_UNIT('INCH')`.
+3. Walk each `ADVANCED_FACE` so only that face’s vertices set axis length / torus sweep.
+4. Chain pieces whose endpoints sit within a few wire radii.
+5. Split the polyline into S / B / ROT by turning angle.
+6. Hand the geometry to `evaluateWireForm()`.
+
+Desk path: `/admin/robomac` upload. CLI: `npx tsx src/lib/robomac/extract-cli.ts path/to/part.step [materialId]`.
+
+The golden fixture `src/lib/robomac/fixtures/l-hook.step` is a 12.7 mm L: 120 mm, 90° at R12.7, 80 mm. Catalog STEPs under `public/models/` are used to lock diameter (CadQuery polyline sweeps discretize crowns — sequence quality is best on analytic SolidWorks cylinders/tori).
+
+IGES, SLDPRT, and `.stpz` are out of this pass.
 
 ## What not to do yet
 
