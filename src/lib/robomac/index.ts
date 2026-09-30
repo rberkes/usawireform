@@ -9,10 +9,15 @@ export {
   rot,
   straight,
 } from "./geometry";
+export { assignBendHead } from "./dfm";
 export {
   CAPABILITIES,
   COLLISION_SCENARIOS,
+  HEADS,
   MATERIALS,
+  PUSH_RING_MAX_DIAMETER_MM,
+  PUSH_RING_MIN_RADIUS_MM,
+  WIPE_PIN_DIAMETER_IN,
   ROBOMAC_214TF,
   ROBOMAC_MACHINE_ID,
   RULES,
@@ -22,6 +27,7 @@ export {
 export { twinSummary, validateTwin } from "./validate";
 export type { ExtractResult } from "./extract";
 export type {
+  BendHeadAssignment,
   DfmIssue,
   DfmResult,
   DfmStatus,

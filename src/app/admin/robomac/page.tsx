@@ -10,6 +10,7 @@ import { TWIN_FIXTURES } from "@/lib/robomac/fixtures";
 import {
   CAPABILITIES,
   COLLISION_SCENARIOS,
+  HEADS,
   MATERIALS,
   ROBOMAC_214TF,
   RULES,
@@ -103,9 +104,33 @@ export default async function AdminRobomacPage({
         <h2 className="font-medium">Cell</h2>
         <p className="mt-3 text-muted">
           {ROBOMAC_214TF.notes} Plate: {ROBOMAC_214TF.tensileRatingNmm2} N/mm².
-          Feed from {ROBOMAC_214TF.feedFrom}. Orbit head:{" "}
-          {ROBOMAC_214TF.orbitHead ? "yes" : "no"}.
+          Feed from {ROBOMAC_214TF.feedFrom}. Heads: {ROBOMAC_214TF.headCount}.
+          Orbit: {ROBOMAC_214TF.orbitHead ? "yes" : "no"}.
         </p>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-sm font-medium">Heads</h2>
+        <ul className="mt-4 divide-y divide-line border border-line text-sm">
+          {HEADS.map((row) => (
+            <li key={row.id} className="px-4 py-3">
+              <p className="font-medium">{row.label}</p>
+              <p className="mt-1 text-muted">{row.notes}</p>
+              <p className="mt-1 text-xs text-muted">
+                {row.kind === "wipe" && row.angleMinDeg != null
+                  ? `Typical ${row.angleMinDeg}–${row.angleMaxDeg}°`
+                  : null}
+                {row.kind === "wipe" && row.pinDiameterIn
+                  ? ` · pin Ø ${row.pinDiameterIn.toFixed(3)} in`
+                  : null}
+                {row.kind === "push" && row.minRingRadiusIn
+                  ? `Min R ${row.minRingRadiusIn} in · max Ø ${row.maxRingDiameterIn} in on ${row.minRingRadiusWireIn} in wire`
+                  : null}
+                {` · ${row.provenance.kind}`}
+              </p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="mt-12">
@@ -209,6 +234,9 @@ export default async function AdminRobomacPage({
                 {fixture.geometry.diameterMm} mm · {fixture.geometry.materialId} ·{" "}
                 {fixture.result.bendCount} bends · developed{" "}
                 {fixture.result.developedLengthMm} mm
+                {fixture.result.heads.length
+                  ? ` · ${fixture.result.heads.map((row) => `B${row.bend} ${row.head}`).join(", ")}`
+                  : ""}
               </p>
               {fixture.result.issues.length > 0 ? (
                 <ul className="mt-2 space-y-1 text-muted">

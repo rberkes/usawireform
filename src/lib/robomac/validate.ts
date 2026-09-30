@@ -30,6 +30,13 @@ export function validateTwin(): ValidationError[] {
     ids.add(id);
   }
 
+  if (ROBOMAC_214TF.headCount !== 2) {
+    errors.push({
+      where: "machine",
+      message: `This floor has two heads, not ${ROBOMAC_214TF.headCount}`,
+    });
+  }
+
   if (ROBOMAC_214TF.id !== ROBOMAC_MACHINE_ID) {
     errors.push({
       where: "machine",
@@ -48,6 +55,30 @@ export function validateTwin(): ValidationError[] {
   }
 
   for (const row of tables.machines) takeId("machines", row.id);
+  for (const row of tables.machine_heads) {
+    takeId("heads", row.id);
+    if (row.machineId !== ROBOMAC_MACHINE_ID) {
+      errors.push({ where: row.id, message: `head machineId ${row.machineId}` });
+    }
+    if (!row.provenance?.kind || !row.provenance.source) {
+      errors.push({ where: row.id, message: "Missing provenance" });
+    }
+  }
+  const kinds = tables.machine_heads.map((row) => row.kind).sort().join(",");
+  if (kinds !== "push,wipe") {
+    errors.push({ where: "heads", message: `Expected wipe+push, got ${kinds}` });
+  }
+  const wipe = tables.machine_heads.find((row) => row.kind === "wipe");
+  const push = tables.machine_heads.find((row) => row.kind === "push");
+  if (wipe?.pinDiameterIn !== 0.5) {
+    errors.push({ where: "head-wipe", message: "Wipe pin must be 0.500 in" });
+  }
+  if (!push || push.maxRingDiameterIn !== 30 || push.minRingRadiusIn !== 6) {
+    errors.push({
+      where: "head-push",
+      message: "Push envelope on 1/2 in is 6 in min R to 30 in max Ø",
+    });
+  }
   for (const row of tables.machine_capabilities) {
     takeId("capabilities", row.id);
     if (row.machineId !== ROBOMAC_MACHINE_ID) {

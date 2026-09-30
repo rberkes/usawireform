@@ -3,6 +3,7 @@ import { COMMON_SIZES, WIRE } from "@/lib/range";
 import type {
   CollisionScenarioRow,
   MachineCapabilityRow,
+  MachineHeadRow,
   MachineRow,
   MachineRuleRow,
   MachineToolingRow,
@@ -43,13 +44,69 @@ export const ROBOMAC_214TF: MachineRow = {
   cellKind: "3D CNC",
   location: "Northeast Ohio — USA Wire Form floor",
   feedFrom: "coil",
-  headCount: 1,
+  headCount: 2,
   tensileRatingNmm2: 600,
   orbitHead: true,
   notes:
-    "This floor runs one Robomac 214TF. Instant estimate and production quotes are this cell. Catalog family allows 1–3 heads; the shop cell is a single orbit head from coil.",
-  provenance: catalog(NUMALLIANCE_TF, "Head count and location are shop_practice."),
+    "This floor runs one Robomac 214TF with two heads: a wipe / pin head for regular angle bends (about 20–180°), and a push head for rings. Instant estimate and production quotes are this cell.",
+  provenance: catalog(
+    NUMALLIANCE_TF,
+    "Two heads and location are shop_practice. Catalog family allows 1–3 heads.",
+  ),
 };
+
+/** Shop: push-head min ring radius on 1/2 in. Encoded as centerline R. */
+export const PUSH_RING_MIN_RADIUS_IN = 6;
+export const PUSH_RING_MIN_RADIUS_MM = 152.4;
+export const PUSH_RING_MAX_DIAMETER_IN = 30;
+export const PUSH_RING_MAX_DIAMETER_MM = 762;
+export const PUSH_RING_MAX_RADIUS_IN = 15;
+export const PUSH_RING_MAX_RADIUS_MM = 381;
+export const PUSH_RING_WIRE_IN = 0.5;
+export const PUSH_RING_WIRE_MM = 12.7;
+export const WIPE_PIN_DIAMETER_IN = 0.5;
+export const WIPE_PIN_DIAMETER_MM = 12.7;
+export const WIPE_ANGLE_MIN_DEG = 20;
+export const WIPE_ANGLE_MAX_DEG = 180;
+
+export const HEADS: MachineHeadRow[] = [
+  {
+    id: "head-wipe",
+    machineId: MACHINE_ID,
+    kind: "wipe",
+    label: "Wipe / pin head — regular angle bends",
+    angleMinDeg: WIPE_ANGLE_MIN_DEG,
+    angleMaxDeg: WIPE_ANGLE_MAX_DEG,
+    pinDiameterIn: WIPE_PIN_DIAMETER_IN,
+    pinDiameterMm: WIPE_PIN_DIAMETER_MM,
+    notes:
+      "Everyday corners: about 20–180° on a 0.500 in pin. Eyes / S-hook wraps (~240°) still run on this head. Not the ring head. Pin Ø is tooling — not a 0.5×D override of the material radius floor.",
+    provenance: shop(
+      "Shop floor — Robomac 214TF wipe head, 0.500 in pin",
+      "Typical angle-bend range, not a measured axis stop. Wraps above 180° stay on this head until 270° Phase 1 ceiling.",
+    ),
+  },
+  {
+    id: "head-push",
+    machineId: MACHINE_ID,
+    kind: "push",
+    label: "Push head — rings / large radius",
+    minRingRadiusIn: PUSH_RING_MIN_RADIUS_IN,
+    minRingRadiusMm: PUSH_RING_MIN_RADIUS_MM,
+    maxRingDiameterIn: PUSH_RING_MAX_DIAMETER_IN,
+    maxRingDiameterMm: PUSH_RING_MAX_DIAMETER_MM,
+    maxRingRadiusIn: PUSH_RING_MAX_RADIUS_IN,
+    maxRingRadiusMm: PUSH_RING_MAX_RADIUS_MM,
+    minRingRadiusWireIn: PUSH_RING_WIRE_IN,
+    minRingRadiusWireMm: PUSH_RING_WIRE_MM,
+    notes:
+      "Push bending for rings in 1/2 in wire: min 6 in centerline radius, max 30 in centerline diameter. Other wire sizes are not stated — do not scale.",
+    provenance: shop(
+      "Shop floor — Robomac 214TF push head",
+      "6 in min R and 30 in max Ø are for 1/2 in (12.7 mm). Diameter encoded as centerline.",
+    ),
+  },
+];
 
 export const CAPABILITIES: MachineCapabilityRow[] = [
   {
@@ -255,6 +312,71 @@ export const CAPABILITIES: MachineCapabilityRow[] = [
     confidence: "high",
     provenance: shop(`src/lib/price.ts TOOLING.newCostUsd = ${TOOLING.newCostUsd}`),
   },
+  {
+    id: "cap-head-count",
+    machineId: MACHINE_ID,
+    key: "head_count",
+    label: "Bending heads on this cell",
+    unit: "count",
+    value: 2,
+    phase: 1,
+    confidence: "high",
+    provenance: shop("Shop floor — Robomac 214TF has a wipe head and a push head."),
+  },
+  {
+    id: "cap-wipe-angle",
+    machineId: MACHINE_ID,
+    key: "wipe_angle_deg",
+    label: "Wipe head typical angle-bend range",
+    unit: "deg",
+    min: WIPE_ANGLE_MIN_DEG,
+    max: WIPE_ANGLE_MAX_DEG,
+    phase: 1,
+    confidence: "high",
+    provenance: shop(
+      "Shop floor — wipe head",
+      "Regular corners. Eyes still wrap past 180° on this head.",
+    ),
+  },
+  {
+    id: "cap-push-ring-min-1-2",
+    machineId: MACHINE_ID,
+    key: "push_min_ring_radius_mm",
+    label: "Push-head min ring radius on 1/2 in",
+    unit: "mm",
+    min: PUSH_RING_MIN_RADIUS_MM,
+    phase: 1,
+    confidence: "high",
+    provenance: shop(
+      "Shop floor — push head, 1/2 in wire",
+      "6 in centerline. Not measured for 3/8 or 7/16.",
+    ),
+  },
+  {
+    id: "cap-wipe-pin",
+    machineId: MACHINE_ID,
+    key: "wipe_pin_diameter_mm",
+    label: "Wipe-head pin diameter",
+    unit: "mm",
+    value: WIPE_PIN_DIAMETER_MM,
+    phase: 1,
+    confidence: "high",
+    provenance: shop("Shop floor — regular bending pin is 0.500 in."),
+  },
+  {
+    id: "cap-push-ring-max-1-2",
+    machineId: MACHINE_ID,
+    key: "push_max_ring_diameter_mm",
+    label: "Push-head max ring diameter on 1/2 in",
+    unit: "mm",
+    max: PUSH_RING_MAX_DIAMETER_MM,
+    phase: 1,
+    confidence: "high",
+    provenance: shop(
+      "Shop floor — push head, 1/2 in wire",
+      "30 in centerline diameter. Not measured for 3/8 or 7/16.",
+    ),
+  },
 ];
 
 const stock3_8 = COMMON_SIZES[0];
@@ -305,9 +427,13 @@ export const TOOLING_ROWS: MachineToolingRow[] = [
     use: "general",
     insideRadiusMm: 15.85,
     insideRadiusIn: 0.624,
+    pinDiameterMm: WIPE_PIN_DIAMETER_MM,
+    pinDiameterIn: WIPE_PIN_DIAMETER_IN,
     notes:
-      "Stock. Inside R 0.624 in is documented for staple crowns. Pin diameter is not on the card — measure it.",
-    provenance: shop("src/lib/ground-staple-builder.ts STAPLE_PINS 1/2 in"),
+      "Regular wipe pin on this cell is 0.500 in. Staple-crown IR 0.624 in is a different wrap — do not swap the two.",
+    provenance: shop(
+      "Shop floor — 0.500 in wipe pin; staple IR from src/lib/ground-staple-builder.ts STAPLE_PINS 1/2 in",
+    ),
   },
   {
     id: "tool-staple-3-8",
@@ -563,6 +689,53 @@ export const RULES: MachineRuleRow[] = [
     ),
   },
   {
+    id: "rule-wipe-angle",
+    machineId: MACHINE_ID,
+    check: "bend_head",
+    severity: "review",
+    title: "Wipe-head corners below about 20°",
+    expression: "head = wipe && |angleDeg| < 20 → REVIEW",
+    phase: 1,
+    implemented: true,
+    confidence: "high",
+    provenance: shop(
+      "Shop floor — wipe head typical 20–180°",
+      "Shallow kinks are possible; they need a desk look. 180–270° wraps stay on this head.",
+    ),
+  },
+  {
+    id: "rule-push-ring",
+    machineId: MACHINE_ID,
+    check: "bend_head",
+    severity: "fail",
+    title: "Push-head ring tighter than 6 in on 1/2 in",
+    expression:
+      "head = push && diameter ≈ 12.7 mm && centerlineR < 152.4 mm → FAIL",
+    phase: 1,
+    implemented: true,
+    confidence: "high",
+    provenance: shop(
+      "Shop floor — push head min ring R 6 in on 1/2 in",
+      "Other wire sizes: REVIEW, do not scale 6 in.",
+    ),
+  },
+  {
+    id: "rule-push-ring-max",
+    machineId: MACHINE_ID,
+    check: "bend_head",
+    severity: "fail",
+    title: "Push-head ring larger than 30 in on 1/2 in",
+    expression:
+      "head = push && diameter ≈ 12.7 mm && centerlineØ > 762 mm → FAIL",
+    phase: 1,
+    implemented: true,
+    confidence: "high",
+    provenance: shop(
+      "Shop floor — push head max 30 in diameter ring on 1/2 in",
+      "Other wire sizes: REVIEW, do not scale 30 in.",
+    ),
+  },
+  {
     id: "rule-sequence",
     machineId: MACHINE_ID,
     check: "sequence_feasibility",
@@ -675,6 +848,7 @@ export const COLLISION_SCENARIOS: CollisionScenarioRow[] = [
 export function twinTables(): TwinTables {
   return {
     machines: [ROBOMAC_214TF],
+    machine_heads: HEADS,
     machine_capabilities: CAPABILITIES,
     machine_tooling: TOOLING_ROWS,
     machine_rules: RULES,

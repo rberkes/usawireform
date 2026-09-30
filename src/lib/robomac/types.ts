@@ -41,7 +41,8 @@ export type DfmCheckKind =
   | "machine_envelope"
   | "springback"
   | "closed_form"
-  | "secondary_operations";
+  | "secondary_operations"
+  | "bend_head";
 
 export type DfmPhase = 1 | 2 | 3 | 4 | 5;
 
@@ -74,6 +75,41 @@ export type MachineCapabilityRow = {
   phase: DfmPhase;
   confidence: Confidence;
   provenance: Provenance;
+};
+
+export type BendHeadKind = "wipe" | "push";
+
+export type MachineHeadRow = {
+  id: string;
+  machineId: string;
+  kind: BendHeadKind;
+  label: string;
+  angleMinDeg?: number;
+  angleMaxDeg?: number;
+  pinDiameterMm?: number;
+  pinDiameterIn?: number;
+  /** Centerline ring radius. Only filled where the floor stated a number. */
+  minRingRadiusMm?: number;
+  minRingRadiusIn?: number;
+  /** Shop said “30 in diameter rings.” Stored as centerline diameter. */
+  maxRingDiameterMm?: number;
+  maxRingDiameterIn?: number;
+  maxRingRadiusMm?: number;
+  maxRingRadiusIn?: number;
+  minRingRadiusWireMm?: number;
+  minRingRadiusWireIn?: number;
+  notes: string;
+  provenance: Provenance;
+};
+
+export type BendHeadAssignment = {
+  bend: number;
+  segmentId: string;
+  head: BendHeadKind;
+  angleDeg: number;
+  insideRadiusMm: number;
+  centerlineRadiusMm: number;
+  note: string;
 };
 
 export type ToolingUse = "general" | "staple_crown";
@@ -197,10 +233,12 @@ export type DfmResult = {
     note: string;
   };
   pendingPhase2: DfmCheckKind[];
+  heads: BendHeadAssignment[];
 };
 
 export type TwinTables = {
   machines: MachineRow[];
+  machine_heads: MachineHeadRow[];
   machine_capabilities: MachineCapabilityRow[];
   machine_tooling: MachineToolingRow[];
   machine_rules: MachineRuleRow[];
