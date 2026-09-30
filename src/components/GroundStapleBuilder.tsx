@@ -119,9 +119,9 @@ export function GroundStapleBuilder({
       <p className="text-sm leading-6 text-muted">
         {PRICE_LINE} We buy the steel. Square-top U with a corner radius — not a
         sharp square, not a round-top pin. 8 ga + 1 in crown + 6 or 12 in legs +
-        carbon: 5% under the published USA 8 ga bag. Everything else: $1.00 per
-        cut, $0.09 per developed inch on 3/8 in (heavier wire scales by
-        section), plus the steel, then 5% off. {WIRE.short} only. 11 ga and 9 ga
+        carbon: 5% under the published USA 8 ga bag. Everything else: shop
+        formula — $0.09 per developed inch on 3/8 in (heavier wire scales by
+        section) + steel + 30% markup on material. {WIRE.short} only. 11 ga and 9 ga
         are under 4 mm — no. {QUOTE_REVIEW}
       </p>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -198,10 +198,16 @@ export function GroundStapleBuilder({
                     value={`5% under USA 8 ga · nearest ${built.estimate.bagQty?.toLocaleString("en-US")} pc bag`}
                   />
                 ) : (
-                  <SumRow
-                    label="Steel"
-                    value={`${built.estimate.steelLb.toFixed(3)} lb · ${usd2(built.estimate.steelUsd)}`}
-                  />
+                  <>
+                    <SumRow
+                      label="Steel"
+                      value={`${built.estimate.steelLb.toFixed(3)} lb · ${usd2(built.estimate.materialCostUsd)}`}
+                    />
+                    <SumRow
+                      label="30% material markup"
+                      value={usd2(built.estimate.materialMarkupUsd)}
+                    />
+                  </>
                 )}
               </dl>
             ) : (

@@ -42,7 +42,7 @@ const faqs = [
   {
     question: "Do you have an online custom hook builder?",
     answer:
-      "Yes. Pick style, wire size in 4–14 mm, overall length, and leg ID. V-hooks and 90° V: $1 per cut, $0.09 per developed inch on 3/8 in (heavier wire scales by section), plus the steel we buy, then 5% off. 7/16 and 1/2 in are stock. C, CV, and S: $1 per cut, $0.50 per bend, $0.05 per developed inch — you buy the coil. 100-piece minimum. All instant quotes are subject to quote department review.",
+      "Yes. Pick style, wire size in 4–14 mm, overall length, and leg ID. V-hooks and 90° V: $0.09 per developed inch on 3/8 in (heavier wire scales by section) + the steel we buy + 30% markup on material. 7/16 and 1/2 in are stock. C, CV, and S: $1 per cut, $0.50 per bend, $0.05 per developed inch — you buy the coil. 100-piece minimum. All instant quotes are subject to quote department review.",
   },
   {
     question: "Who supplies the wire?",

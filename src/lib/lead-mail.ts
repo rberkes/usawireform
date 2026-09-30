@@ -273,6 +273,7 @@ export type EstimateMailCopy = {
   steelLb?: string;
   steelUsd?: string;
   beatUsd?: string;
+  markupUsd?: string;
   hookType?: string;
   overallIn?: string;
   legIdIn?: string;
@@ -306,10 +307,14 @@ function estimateFactRows(estimate: EstimateMailCopy): MailRow[] {
       label: "Forming",
       value: `${estimate.lengthIn} in — ${estimate.forming}`,
     },
-    {
-      label: "Cuts",
-      value: `${estimate.cuts} — ${estimate.cut}`,
-    },
+    ...(estimate.shopSteel
+      ? [{ label: "Cuts", value: `${estimate.cuts} — not billed` }]
+      : [
+          {
+            label: "Cuts",
+            value: `${estimate.cuts} — ${estimate.cut}`,
+          },
+        ]),
   ];
   if (estimate.shopSteel) {
     rows.push({ label: "Bends", value: "On the drawing — not billed" });
@@ -322,8 +327,11 @@ function estimateFactRows(estimate: EstimateMailCopy): MailRow[] {
   if (estimate.discount) {
     rows.push({ label: "Qty break", value: estimate.discount });
   }
+  if (estimate.shopSteel && estimate.markupUsd) {
+    rows.push({ label: "30% material markup", value: estimate.markupUsd });
+  }
   if (estimate.shopSteel && estimate.beatUsd) {
-    rows.push({ label: "5% under boxed 3/8", value: `−${estimate.beatUsd}` });
+    rows.push({ label: "5% under published bag", value: `−${estimate.beatUsd}` });
   }
   if (!estimate.stock) {
     rows.push({

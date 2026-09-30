@@ -56,7 +56,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
         heading: "4–14 mm, not catalog 0.120 in",
         body: [
           `Catalog 0.080 in and 0.120 in V-hooks are below this cell. Production is ${WIRE.label}. 4 mm (0.157 in) is the step up from 0.120 in. Stock tooling is ${STOCK}. 3/8 in (0.375 in) is the everyday heavy powder coating V-hook.`,
-          "We buy the steel. 3/8 in is 5% under boxed 0.375 in. 7/16 and 1/2 in are stock on this cell. 100-piece minimum. Lowest prices guaranteed — we will not be beat.",
+          "We buy the steel. Shop formula: per-inch forming + material + 30% markup on material. 7/16 and 1/2 in are stock on this cell. 100-piece minimum. Lowest prices guaranteed — we will not be beat.",
         ],
       },
     ],
@@ -93,7 +93,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
         id: "stock",
         heading: "Stock 3/8 in",
         body: [
-          "0.375 in is 9.53 mm. It sits in the band and on stock tooling — no new die for the wire size. Length, leg ID, and 90° rotation are still the print. We buy the steel — it is in the price, then 5% under boxed 0.375 in.",
+          "0.375 in is 9.53 mm. It sits in the band and on stock tooling — no new die for the wire size. Length, leg ID, and 90° rotation are still the print. We buy the steel — it is in the price with 30% material markup.",
           "Heavier than catalog 0.120 and 0.180. Lighter than 7/16 and 1/2 in when those are more hook than the part.",
         ],
       },
@@ -206,7 +206,7 @@ export const V_HOOK_LANDERS: VHookLander[] = [
     h1: "USA made heavy-duty powder coat V-hooks",
     kicker: '3/8" · 7/16" · 1/2"',
     description: `USA made heavy-duty powder coat V-hooks in 3/8, 7/16, and 1/2 in. We buy the steel. Live 3-column estimate. CNC in ${WIRE.short}. 100-piece minimum. Northeast Ohio.`,
-    lede: "Heavy-duty powder coat V-hooks in the three stock sizes: 3/8, 7/16, and 1/2 in. Made in the USA. We buy the steel — it is in the price. 3/8 in is 5% under boxed 0.375 in. 7/16 and 1/2 in are stock on this cell.",
+    lede: "Heavy-duty powder coat V-hooks in the three stock sizes: 3/8, 7/16, and 1/2 in. Made in the USA. We buy the steel — it is in the price. Shop formula: per-inch forming + material + 30% markup on material. 7/16 and 1/2 in are stock on this cell.",
     keywords: [
       "USA made heavy-duty powder coat V-hooks",
       "heavy duty powder coat V-hooks",
@@ -222,8 +222,8 @@ export const V_HOOK_LANDERS: VHookLander[] = [
         id: "sizes",
         heading: "3/8, 7/16, and 1/2 in",
         body: [
-          "Three stock columns. We buy the steel. 3/8 in (0.375 in) is $1.00 per cut and $0.09 per developed inch, plus the wire, then 5% under boxed 0.375 in. Bends are in the drawing, not billed.",
-          "7/16 in and 1/2 in are stock on this cell — not a boxed 0.375 catalog size. The inch rate is the 3/8 in rate times (d ÷ 3/8)², plus more steel, then the same 5% off.",
+          "Three stock columns. We buy the steel. 3/8 in (0.375 in) is $0.09 per developed inch plus the wire, then 30% markup on material. Bends are in the drawing, not billed.",
+          "7/16 in and 1/2 in are stock on this cell — not a boxed 0.375 catalog size. The inch rate is the 3/8 in rate times (d ÷ 3/8)², plus more steel, then the same 30% material markup.",
           `Catalog 0.044–0.120 in V-hooks are below this cell. 0.180 in and 0.250 in are 4.57 mm and 6.35 mm — bag prices on /powder-coating-hooks/prices. Production is ${WIRE.label}. Steel is in the estimate.`,
         ],
       },
@@ -243,12 +243,12 @@ export const V_HOOK_LANDERS: VHookLander[] = [
       {
         question: "How is 3/8 in priced?",
         answer:
-          "One cut at $1.00, plus $0.09 per developed inch on 3/8 in, plus the steel we buy, then 5% off boxed 0.375 in. Quantity −5% at 1,000 and −10% at 10,000. Steel is included.",
+          "$0.09 per developed inch on 3/8 in, plus the steel we buy, then 30% markup on material. Quantity −5% at 1,000 and −10% at 10,000. Steel is included.",
       },
       {
         question: "How are 7/16 in and 1/2 in priced?",
         answer:
-          "Same cut as 3/8 in. Those sizes are stock here. The inch rate scales with section: 7/16 in is (7/16 ÷ 3/8)² times the 3/8 in inch rate. 1/2 in is (1/2 ÷ 3/8)². Steel mass scales with diameter. Same 5% off. We buy the wire.",
+          "Those sizes are stock here. The inch rate scales with section: 7/16 in is (7/16 ÷ 3/8)² times the 3/8 in inch rate. 1/2 in is (1/2 ÷ 3/8)². Steel mass scales with diameter. Same 30% material markup. We buy the wire.",
       },
     ],
   },

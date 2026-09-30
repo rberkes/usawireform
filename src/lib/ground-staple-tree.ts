@@ -142,7 +142,7 @@ export const GROUND_STAPLE_TREE: GroundStapleNode[] = [
           id: "band",
           heading: "In this cell",
           body: [
-            "Published USA 8 ga landscape staples, 6 in and 12 in legs, sit in the 4 mm floor. We list those bags 5% under the public USA ladder. 1/4 in and stock 3/8, 7/16, 1/2 in are mill math — shop steel, $1/cut, $0.09/in on 3/8 in scaled by section, then 5% off.",
+            "Published USA 8 ga landscape staples, 6 in and 12 in legs, sit in the 4 mm floor. We list those bags 5% under the public USA ladder. 1/4 in and stock 3/8, 7/16, 1/2 in are mill math — shop steel, $0.09/in on 3/8 in scaled by section, plus steel × 1.30.",
             "11 ga contractor boxes are a different mill. We do not race them.",
           ],
         },
@@ -618,7 +618,7 @@ export const GROUND_STAPLE_TREE: GroundStapleNode[] = [
           id: "tooling",
           heading: "Tooling",
           body: [
-            "1/4 in is in band. It is not 3/8, 7/16, or 1/2 stock. New tooling if we have not run it. Price is V-hook mill math: shop steel, $1/cut, inch rate scaled by section, then 5% off.",
+            "1/4 in is in band. It is not 3/8, 7/16, or 1/2 stock. New tooling if we have not run it. Price is V-hook mill math: shop steel, inch rate scaled by section, plus steel × 1.30.",
           ],
         },
       ],
@@ -669,7 +669,7 @@ export const GROUND_STAPLE_TREE: GroundStapleNode[] = [
           id: "stock",
           heading: "Stock diameters",
           body: [
-            `Stock tooling is ${TOOLING}. 7/16 in and 1/2 in almost never have a published bag card. We form them as CNC Us, buy the steel, $1/cut, $0.09/in on 3/8 in scaled by (d/0.375)², then 5% off.`,
+            `Stock tooling is ${TOOLING}. 7/16 in and 1/2 in almost never have a published bag card. We form them as CNC Us, buy the steel, $0.09/in on 3/8 in scaled by (d/0.375)², plus steel × 1.30.`,
             "8 ga is not heavy-duty. It is the light end of this cell, on a bag card.",
           ],
         },
@@ -996,7 +996,7 @@ export const GROUND_STAPLE_TREE: GroundStapleNode[] = [
           id: "builder",
           heading: "Builder",
           body: [
-            "Live estimate on /custom-ground-staples. Square-top with a corner radius. 8 ga + 1 in crown + 6 or 12 in legs + carbon uses the bag card. Everything else: shop steel, $1/cut, 3/8 in inch rate scaled by section, then 5% off.",
+            "Live estimate on /custom-ground-staples. Square-top with a corner radius. 8 ga + 1 in crown + 6 or 12 in legs + carbon uses the bag card. Everything else: shop steel, 3/8 in inch rate scaled by section, plus steel × 1.30.",
           ],
         },
       ],

@@ -10,7 +10,7 @@ export const HEAVY_DUTY_V_SIZES = [
     inches: 0.375,
     mm: 9.53,
     formula: "base",
-    rateCopy: "$0.09 per developed inch + steel, then 5% off",
+    rateCopy: "$0.09 / in + steel × 1.30",
   },
   {
     id: "7-16",
@@ -19,7 +19,7 @@ export const HEAVY_DUTY_V_SIZES = [
     inches: 0.4375,
     mm: 11.11,
     formula: "area",
-    rateCopy: "3/8 in rate × (7/16 ÷ 3/8)² + steel, then 5% off",
+    rateCopy: "3/8 in rate × (7/16 ÷ 3/8)² + steel × 1.30",
   },
   {
     id: "1-2",
@@ -28,7 +28,7 @@ export const HEAVY_DUTY_V_SIZES = [
     inches: 0.5,
     mm: 12.7,
     formula: "area",
-    rateCopy: "3/8 in rate × (1/2 ÷ 3/8)² + steel, then 5% off",
+    rateCopy: "3/8 in rate × (1/2 ÷ 3/8)² + steel × 1.30",
   },
 ] as const;
 

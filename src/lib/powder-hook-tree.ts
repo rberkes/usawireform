@@ -334,7 +334,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         id: "band",
         heading: "3/8 to 1/2 in",
         body: [
-          `Catalog 0.044–0.120 in is not this cell. Heavy-duty V-hooks here are ${TOOLING}. Live three-column estimate on /heavy-duty-v-hooks. We buy the steel, then 5% under boxed 0.375 in on 3/8 in.`,
+          `Catalog 0.044–0.120 in is not this cell. Heavy-duty V-hooks here are ${TOOLING}. Live three-column estimate on /heavy-duty-v-hooks. We buy the steel. Shop formula: per-inch forming + material + 30% markup on material.`,
           "7/16 and 1/2 in are stock on this cell — not a boxed 0.375 catalog size. Inch rate scales with section.",
         ],
       },
@@ -343,7 +343,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
       {
         question: "Where is the heavy-duty calculator?",
         answer:
-          " /heavy-duty-v-hooks — 3/8, 7/16, and 1/2 in columns. Cuts, developed inches, shop steel, then 5% off.",
+          " /heavy-duty-v-hooks — 3/8, 7/16, and 1/2 in columns. Developed inches, shop steel, 30% material markup.",
       },
     ],
   },
@@ -1019,7 +1019,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         id: "stock",
         heading: "Stock 3/8 in V",
         body: [
-          "3/8 in is 0.375 in is 9.53 mm. Stock V tooling. Custom length. We buy the steel, then 5% under boxed 0.375 in on the heavy-duty calculator. Square hanging 0.375 in is a separate bag card on /powder-coating-hooks/square-hanging-hooks.",
+          "3/8 in is 0.375 in is 9.53 mm. Stock V tooling. Custom length. We buy the steel. Shop formula on the heavy-duty calculator: inch + material + 30% markup. Square hanging 0.375 in is a separate bag card on /powder-coating-hooks/square-hanging-hooks.",
           "Lander: /375-v-hooks.",
         ],
       },

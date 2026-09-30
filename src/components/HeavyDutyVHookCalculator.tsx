@@ -65,10 +65,11 @@ export function HeavyDutyVHookCalculator() {
     <form id="calculator" action={formAction} className="scroll-mt-24 space-y-6">
       <p className="text-sm leading-6 text-muted">
         {PRICE_LINE} USA made heavy-duty powder coat V-hooks in 3/8, 7/16, and
-        1/2 in. We buy the steel — it is in the price. 3/8 in: $1.00 per cut,
-        $0.09 per developed inch, then 5% off boxed 0.375 in. 7/16 and 1/2 in
-        are stock here — they scale the inch rate by section vs 3/8 in. Bends
-        are in the drawing, not billed.
+        1/2 in. We buy the steel — it is in the price. Shop formula: per-inch
+        forming + material + 30% markup on material. 3/8 in is $0.09 per
+        developed inch. 7/16 and 1/2 in scale that inch rate by section vs 3/8
+        in. Bends are in the drawing, not billed. Ask still publishes $1/cut
+        for other instant estimates — not this card.
       </p>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
@@ -178,7 +179,6 @@ export function HeavyDutyVHookCalculator() {
                 {selected.label} · steel in
               </p>
               <dl className="mt-4 space-y-2 text-sm">
-                <SumRow label="Cuts" value={`${built.cuts} × $1.00`} />
                 <SumRow
                   label="Developed length"
                   value={`${built.developedIn.toFixed(2)} in`}
@@ -199,11 +199,11 @@ export function HeavyDutyVHookCalculator() {
                 />
                 <SumRow
                   label="Steel (shop)"
-                  value={`${selectedColumn.price.steelLb.toFixed(3)} lb · ${usd2(selectedColumn.price.steelUsd)}`}
+                  value={`${selectedColumn.price.steelLb.toFixed(3)} lb · ${usd2(selectedColumn.price.materialCostUsd)}`}
                 />
                 <SumRow
-                  label="5% under boxed 3/8"
-                  value={`−${usd2(selectedColumn.price.beatUsd)}`}
+                  label="30% material markup"
+                  value={usd2(selectedColumn.price.materialMarkupUsd)}
                 />
                 <SumRow label="Per piece" value={usd2(selectedColumn.price.piece)} />
                 <SumRow label="Lot" value={usd2(selectedColumn.price.lot)} />

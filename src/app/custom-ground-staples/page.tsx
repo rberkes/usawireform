@@ -32,7 +32,7 @@ const faqs = [
   {
     question: "Do you have an online staple builder?",
     answer:
-      "Yes. 8 ga with a 1 in crown and 6 or 12 in legs on carbon uses the published USA 8 ga bag, 5% under. Other sizes: $1 per cut, $0.09 per developed inch on 3/8 in (heavier wire scales by section), plus the steel we buy, then 5% off. Square-top with a set corner radius. 100-piece minimum. Instant quotes are subject to quote department review.",
+      "Yes. 8 ga with a 1 in crown and 6 or 12 in legs on carbon uses the published USA 8 ga bag, 5% under. Other sizes: $0.09 per developed inch on 3/8 in (heavier wire scales by section) + the steel we buy + 30% markup on material. Square-top with a set corner radius. 100-piece minimum. Instant quotes are subject to quote department review.",
   },
   {
     question: "Do you form 11 gauge sod staples?",

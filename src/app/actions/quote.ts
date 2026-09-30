@@ -525,7 +525,6 @@ export async function submitInstantQuote(
           diameterIn: input.diameterIn,
           quantity: input.quantity,
           materialId: input.materialId,
-          cuts: input.cuts,
         })
       : estimatePiece({
           bends: input.bends,
@@ -553,7 +552,7 @@ export async function submitInstantQuote(
       bag
         ? `8 ga bag card · USAWF-GS-8-${overallIn.padStart(2, "0")} · 5% under published USA 8 ga · −${usd2(Math.round((bag.listEach - bag.ourEach) * input.quantity * 100) / 100)}`
         : shopSteel && "steelUsd" in result
-          ? `V-hook shop steel · ${input.diameterLabel} · ${result.steelLb.toFixed(3)} lb · ${usd2(result.steelUsd)} steel · forming ${usd2(result.forming)} · 5% beat −${usd2(result.beatUsd)}`
+          ? `V-hook shop steel · ${input.diameterLabel} · ${result.steelLb.toFixed(3)} lb · ${usd2(result.steelUsd)} steel · forming ${usd2(result.forming)} · 30% markup ${usd2("materialMarkupUsd" in result ? result.materialMarkupUsd : 0)}`
           : "",
       hookNotes,
     ]
@@ -608,8 +607,12 @@ export async function submitInstantQuote(
             ? usd2(result.steelUsd)
             : undefined,
         beatUsd:
-          shopSteel && "beatUsd" in result
+          shopSteel && "beatUsd" in result && result.beatUsd
             ? usd2(result.beatUsd)
+            : undefined,
+        markupUsd:
+          shopSteel && "materialMarkupUsd" in result && result.materialMarkupUsd
+            ? usd2(result.materialMarkupUsd)
             : undefined,
         hookType: hookType || undefined,
         overallIn: overallIn || undefined,
