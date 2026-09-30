@@ -1,4 +1,4 @@
-import { TOOLING } from "@/lib/price";
+import { FORMING_RATES, TOOLING } from "@/lib/price";
 import { COMMON_SIZES, WIRE } from "@/lib/range";
 import type {
   CollisionScenarioRow,
@@ -8,6 +8,8 @@ import type {
   MachineRuleRow,
   MachineToolingRow,
   MaterialFamilyRow,
+  MaterialPriceQuote,
+  MaterialPriceRow,
   Provenance,
   TwinTables,
 } from "./types";
@@ -472,10 +474,11 @@ export const MATERIALS: MaterialFamilyRow[] = [
     label: "Low-carbon steel (1010 / 1018 / 1008)",
     alloys: ["1010", "1018", "1006", "1008", "galvanized"],
     coilOk: true,
+    shopRun: true,
     minInsideRadiusXd: 1,
     springbackDegAt1xD: { min: 2, max: 4 },
     notes:
-      "Default carbon. 1×D inside radius on mild coil. Galvanized marks in the straightener and burns back at welds.",
+      "Shop-run coil on this 214TF. Default carbon. 1×D inside radius on mild coil. Galvanized marks in the straightener and burns back at welds.",
     provenance: shop(
       "/guide/design-for-wire-forming; src/lib/materials.ts lowCarbon",
     ),
@@ -493,12 +496,14 @@ export const MATERIALS: MaterialFamilyRow[] = [
   },
   {
     id: "304",
-    label: "300-series stainless (301 / 302 / 304 / 304L)",
+    label: "304 / 304L stainless",
     alloys: ["301", "302", "304", "304L", "305"],
     coilOk: true,
+    shopRun: true,
     minInsideRadiusXd: 1.5,
     springbackDegAt1xD: { min: 6, max: 10 },
-    notes: "Often 1.5–2×D. Work-hardens. Do not copy a 1018 radius.",
+    notes:
+      "Shop-run coil on this 214TF. Often 1.5–2×D. Work-hardens. Do not copy a 1018 radius or a 1018 price.",
     provenance: shop("/guide/design-for-wire-forming; /materials/300-series-stainless"),
   },
   {
@@ -516,20 +521,24 @@ export const MATERIALS: MaterialFamilyRow[] = [
     label: "330 high-temp (N08330)",
     alloys: ["330", "N08330"],
     coilOk: true,
+    shopRun: true,
     minInsideRadiusXd: 2,
     springbackDegAt1xD: { min: 8, max: 14 },
-    notes: "Heat-treat baskets. Its own animal — not 304 with a bigger number.",
+    notes:
+      "Shop-run coil on this 214TF. Heat-treat baskets. Its own animal — not 304 with a bigger number or a 304 price.",
     provenance: shop("src/lib/materials.ts; /guide/design-for-wire-forming"),
   },
   {
     id: "6061",
-    label: "Aluminum coil (incl. 6061-T6)",
+    label: "6061-T6 aluminum",
     alloys: ["6061", "6061-T6", "aluminum"],
     coilOk: true,
+    shopRun: true,
     minInsideRadiusXd: 0.75,
     springbackDegAt1xD: { min: 1, max: 3 },
-    notes: "Can go tighter than carbon. Watch marking. Any aluminum alloy on coil is in.",
-    provenance: shop("src/lib/ask-prompt.ts; design guide copper/aluminum note"),
+    notes:
+      "Shop-run coil on this 214TF. Can go tighter than carbon. Watch marking. Other aluminum on coil is still in — this row is the priced 6061-T6 card.",
+    provenance: shop("Shop floor — 6061-T6 on the Robomac; src/lib/ask-prompt.ts"),
   },
   {
     id: "brass",
@@ -552,6 +561,101 @@ export const MATERIALS: MaterialFamilyRow[] = [
     provenance: shop("src/lib/materials.ts copperAlloys"),
   },
 ];
+
+export const SHOP_RUN_MATERIAL_IDS = ["1018", "304", "330", "6061"] as const;
+
+/** Shop: 30% markup on material cost. */
+export const MATERIAL_MARKUP_RATE = 0.3;
+
+export const MATERIAL_PRICES: MaterialPriceRow[] = [
+  {
+    id: "price-1018",
+    machineId: MACHINE_ID,
+    materialId: "1018",
+    shopRun: true,
+    cutUsd: FORMING_RATES.cutUsd,
+    bendUsd: FORMING_RATES.bendUsd,
+    inchUsd: FORMING_RATES.inchUsd,
+    notes:
+      "Shop formula is per-inch forming + material + 30% material markup. Ask still publishes $1/cut and $0.50/bend for instant estimates. Material $/lb is a later input.",
+    provenance: shop(
+      "src/lib/price.ts FORMING_RATES — $1/cut, $0.50/bend, $0.05/in",
+      "1018 forming only. Do not invent coil dollars.",
+    ),
+  },
+  {
+    id: "price-304",
+    machineId: MACHINE_ID,
+    materialId: "304",
+    shopRun: true,
+    notes:
+      "304 / 304L has its own inch rate and material $/lb. Neither is filed. Do not multiply the 1018 card.",
+    provenance: unknown(
+      "Shop runs 304 on this 214TF. File inch rate and material $/lb.",
+    ),
+  },
+  {
+    id: "price-330",
+    machineId: MACHINE_ID,
+    materialId: "330",
+    shopRun: true,
+    notes:
+      "330 has its own inch rate and material $/lb. Neither is filed. Do not copy 304 or 1018.",
+    provenance: unknown(
+      "Shop runs 330 on this 214TF. File inch rate and material $/lb.",
+    ),
+  },
+  {
+    id: "price-6061",
+    machineId: MACHINE_ID,
+    materialId: "6061",
+    shopRun: true,
+    notes:
+      "6061-T6 has its own inch rate and material $/lb. Neither is filed. Do not copy 1018.",
+    provenance: unknown(
+      "Shop runs 6061-T6 on this 214TF. File inch rate and material $/lb.",
+    ),
+  },
+];
+
+export function formingRatesFor(materialId: string): MaterialPriceQuote {
+  const family = MATERIALS.find(
+    (row) =>
+      row.id === materialId ||
+      row.alloys.some((alloy) => alloy.toLowerCase() === materialId.toLowerCase()),
+  );
+  const row = MATERIAL_PRICES.find(
+    (price) => price.materialId === (family?.id ?? materialId),
+  );
+  const formingFiled = Boolean(row && row.inchUsd != null);
+  const materialFiled = Boolean(row && row.materialUsdPerLb != null);
+  if (!row) {
+    return {
+      materialId: family?.id ?? materialId,
+      shopRun: Boolean(family?.shopRun),
+      formingFiled: false,
+      materialFiled: false,
+      filed: false,
+      note: family?.shopRun
+        ? "Shop-run alloy with no price row. Do not quote."
+        : "No dedicated rate. Coil-ok is not a price.",
+    };
+  }
+  return {
+    materialId: row.materialId,
+    shopRun: row.shopRun,
+    formingFiled,
+    materialFiled,
+    filed: formingFiled,
+    cutUsd: row.cutUsd,
+    bendUsd: row.bendUsd,
+    inchUsd: row.inchUsd,
+    materialUsdPerLb: row.materialUsdPerLb,
+    note: formingFiled
+      ? row.notes
+      : `${row.notes} Do not emit an instant price.`,
+  };
+}
 
 export const RULES: MachineRuleRow[] = [
   {
@@ -853,6 +957,7 @@ export function twinTables(): TwinTables {
     machine_tooling: TOOLING_ROWS,
     machine_rules: RULES,
     materials: MATERIALS,
+    material_prices: MATERIAL_PRICES,
     collision_scenarios: COLLISION_SCENARIOS,
     actual_cycle_times: [],
     actual_setup_times: [],

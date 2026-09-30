@@ -150,10 +150,61 @@ export type MaterialFamilyRow = {
   label: string;
   alloys: string[];
   coilOk: boolean;
+  /** This floor regularly runs this alloy on the 214TF. */
+  shopRun?: boolean;
   minInsideRadiusXd: number;
   springbackDegAt1xD: { min: number; max: number };
   notes: string;
   provenance: Provenance;
+};
+
+export type MaterialPriceRow = {
+  id: string;
+  machineId: string;
+  materialId: string;
+  shopRun: boolean;
+  /** Published Ask card only — not in the shop piece formula. */
+  cutUsd?: number;
+  bendUsd?: number;
+  inchUsd?: number;
+  /** Coil / stock dollars. Empty until the desk files it. */
+  materialUsdPerLb?: number;
+  notes: string;
+  provenance: Provenance;
+};
+
+export type MaterialPriceQuote = {
+  materialId: string;
+  shopRun: boolean;
+  formingFiled: boolean;
+  materialFiled: boolean;
+  /** Inch rate is filed. Material $/lb is a separate later input. */
+  filed: boolean;
+  /** Published Ask card only — not in the shop piece formula. */
+  cutUsd?: number;
+  bendUsd?: number;
+  inchUsd?: number;
+  materialUsdPerLb?: number;
+  note: string;
+};
+
+export type RobomacPieceQuote = {
+  materialId: string;
+  formula: string;
+  lengthIn: number;
+  weightLb?: number;
+  inchUsd?: number;
+  materialUsdPerLb?: number;
+  materialMarkupRate: number;
+  formingUsd?: number;
+  materialCostUsd?: number;
+  materialMarkupUsd?: number;
+  materialUsd?: number;
+  pieceUsd?: number;
+  formingFiled: boolean;
+  materialFiled: boolean;
+  materialPending: boolean;
+  note: string;
 };
 
 export type CollisionScenarioRow = {
@@ -234,6 +285,7 @@ export type DfmResult = {
   };
   pendingPhase2: DfmCheckKind[];
   heads: BendHeadAssignment[];
+  price: MaterialPriceQuote;
 };
 
 export type TwinTables = {
@@ -243,6 +295,7 @@ export type TwinTables = {
   machine_tooling: MachineToolingRow[];
   machine_rules: MachineRuleRow[];
   materials: MaterialFamilyRow[];
+  material_prices: MaterialPriceRow[];
   collision_scenarios: CollisionScenarioRow[];
   actual_cycle_times: ProductionObservationRow[];
   actual_setup_times: ProductionObservationRow[];

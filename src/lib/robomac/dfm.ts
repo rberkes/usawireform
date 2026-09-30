@@ -11,6 +11,7 @@ import {
 } from "./geometry";
 import {
   CAPABILITIES,
+  formingRatesFor,
   HEADS,
   MATERIALS,
   PUSH_RING_MAX_DIAMETER_MM,
@@ -123,7 +124,9 @@ function materialCheck(geometry: WireFormGeometry): DfmIssue {
       status: "PASS",
       problem: "Named coil family.",
       cause: family.label,
-      customerExplanation: `${family.label} on coil is in. We form it on the 214TF.`,
+      customerExplanation: family.shopRun
+        ? `${family.label} is a shop-run coil on this 214TF.`
+        : `${family.label} on coil is in. We form it on the 214TF.`,
     });
   }
   return issue({
@@ -724,5 +727,6 @@ export function evaluateWireForm(
       : undefined,
     pendingPhase2: PHASE2_PENDING,
     heads,
+    price: formingRatesFor(geometry.materialId),
   };
 }
