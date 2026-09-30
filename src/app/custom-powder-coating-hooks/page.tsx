@@ -42,12 +42,12 @@ const faqs = [
   {
     question: "Do you have an online custom hook builder?",
     answer:
-      "Yes. Pick style, wire size in 4–14 mm, overall length, and leg ID. V-hooks, 90° V, CV-hooks, and 90° CV: $0.09 per developed inch on 3/8 in (heavier wire scales by section) + the steel we buy + 30% markup on material. 7/16 and 1/2 in are stock. C and S: $1 per cut, $0.50 per bend, $0.05 per developed inch — you buy the coil. 100-piece minimum. All instant quotes are subject to quote department review.",
+      "Yes. Pick style, wire size in 4–14 mm, overall length, and leg ID. V, C, CV, S, and 90°: $0.09 per developed inch on 3/8 in (heavier wire scales by section) + the steel we buy + 30% markup on material. 7/16 and 1/2 in are stock. Listed 0.180 / 0.250 bags stay 5% under. InstantQuote for other CNC forms is still $1/cut, $0.50/bend, $0.05/in — you buy that coil. 100-piece minimum. All instant quotes are subject to quote department review.",
   },
   {
     question: "Who supplies the wire?",
     answer:
-      "V-hooks, 90° V, CV-hooks, and 90° CV: we buy the steel — 1018, galvanized, 304, or 316 is in the estimate. C-hooks, S-hooks, and other CNC forms: you buy the coil and bring it to Northeast Ohio.",
+      "Custom V, C, CV, S, and 90° hooks: we buy the steel — 1018, galvanized, 304, or 316 is in the estimate. Other CNC forms on InstantQuote: you buy the coil and bring it to Northeast Ohio.",
   },
 ];
 
@@ -81,7 +81,7 @@ export default function CustomPowderCoatingHooksPage() {
           <PageHero
             kicker="Custom"
             title="Custom powder coating hooks"
-            lede={`${PRICE_LINE} Build a V, C, CV, S, or 90° hook. Live drawing and estimate. ${WIRE.short}. V-hooks and CV-hooks: we buy the steel. C and S: you buy the coil.`}
+            lede={`${PRICE_LINE} Build a V, C, CV, S, or 90° hook. Live drawing and estimate. ${WIRE.short}. We buy the steel. Shop formula: inch + material + 30% markup.`}
           />
           <PowderHookStyleGrid caption="Custom V, C, CV, and S — length and openings on the print." />
         </div>

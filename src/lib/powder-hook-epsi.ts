@@ -63,7 +63,7 @@ export const POWDER_HOOK_EPSI: PowderHookNode[] = [
         id: "print",
         heading: "Custom C outside the card",
         body: [
-          "Listed boxes include carbon. Custom C outside this grid: you buy the coil. 100-piece minimum. Builder on /powder-coating-hooks/c-hooks.",
+          "Listed boxes include carbon. Custom C outside this grid: we buy the steel. Shop formula: inch + material + 30% markup. 100-piece minimum. Builder on /powder-coating-hooks/c-hooks.",
         ],
       },
     ],
@@ -107,7 +107,7 @@ export const POWDER_HOOK_EPSI: PowderHookNode[] = [
         id: "print",
         heading: "Custom S",
         body: [
-          "Listed boxes include carbon. Custom S outside this grid: you buy the coil. Builder on /powder-coating-hooks/s-hooks.",
+          "Listed boxes include carbon. Custom S outside this grid: we buy the steel. Shop formula: inch + material + 30% markup. Builder on /powder-coating-hooks/s-hooks.",
         ],
       },
     ],

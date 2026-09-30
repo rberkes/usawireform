@@ -47,7 +47,7 @@ const faqs = [
   },
   {
     question: "Can you make custom powder coating hooks?",
-    answer: `Yes. Style, length, openings, 90° rotation, and alloy are the print. 100-piece minimum. Listed 4–10 mm V, S, and C bags include carbon. Custom V, 90° V, CV, and 90° CV: we buy the steel. Custom C and S outside the grid: you buy the coil. Send a STEP or PDF on /contact.`,
+    answer: `Yes. Style, length, openings, 90° rotation, and alloy are the print. 100-piece minimum. Listed 4–10 mm V, S, and C bags include carbon. Custom V, C, CV, S, and 90°: we buy the steel. Send a STEP or PDF on /contact.`,
   },
   {
     question: "Do you make stainless steel powder coating hooks?",
@@ -257,9 +257,8 @@ export default function PowderCoatingHooksPage() {
             Custom powder coating hooks
           </Link>
           : builder on this site — style, wire in {WIRE.short}, overall length,
-          leg ID. Listed 4–10 mm V, S, and C bags include carbon. Custom V and
-          CV: we buy the steel. Custom C and S outside the grid: you buy the
-          coil.
+          leg ID. Listed 4–10 mm V, S, and C bags include carbon. Custom V, C,
+          CV, and S: we buy the steel.
         </p>
 
         <h2 id="choose">How to choose</h2>

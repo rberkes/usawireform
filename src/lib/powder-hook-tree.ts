@@ -446,7 +446,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         id: "coil",
         heading: "Custom C, your coil",
         body: [
-          "Listed 4–10 mm C bags are carbon and include steel. Custom stainless C outside that grid: you buy the coil. 100-piece minimum.",
+          "Listed 4–10 mm C bags are carbon and include steel. Custom C outside that grid: we buy the steel. Shop formula: inch + material + 30% markup. 100-piece minimum.",
           `Open throat, gap, inside radius on the print. ${CELL}.`,
         ],
       },
@@ -481,7 +481,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
       {
         question: "Do 90° C-hooks include steel?",
         answer:
-          "Listed 4–10 mm C bags include carbon. Custom 90° C outside the grid: you buy the coil.",
+          "Listed 4–10 mm C bags include carbon. Custom 90° C outside the grid: we buy the steel.",
       },
     ],
   },
@@ -527,7 +527,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         id: "eyes",
         heading: "Open or closed",
         body: [
-          "Listed 4–10 mm S bags are carbon and include steel. Custom stainless S outside the grid: you buy the coil. Open eyes for speed. Closed when the hook must stay on a ring.",
+          "Listed 4–10 mm S bags are carbon and include steel. Custom S outside the grid: we buy the steel. Shop formula: inch + material + 30% markup. Open eyes for speed. Closed when the hook must stay on a ring.",
         ],
       },
     ],
@@ -560,7 +560,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
     faqs: [
       {
         question: "Can 90° hooks be C or CV?",
-        answer: "Yes. 90° V and 90° CV: we buy the steel. 90° C: you buy the coil.",
+        answer: "Yes. 90° V, 90° C, and 90° CV: we buy the steel.",
       },
     ],
   },
@@ -636,7 +636,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         heading: "304 or 316",
         body: [
           "Stainless powder coating hooks are 304 unless the print says 316. Same styles as carbon: V, C, CV, S, 90°, square hang if the diameter is in band.",
-          "Listed 4–10 mm bags are carbon. Stainless is a print. Custom V and CV: we buy the stainless. Custom C and S outside the grid: you buy the coil. Full lander: /stainless-steel-powder-coating-hooks.",
+          "Listed 4–10 mm bags are carbon. Stainless is a print. Custom V, C, CV, and S: we buy the stainless. Full lander: /stainless-steel-powder-coating-hooks.",
         ],
       },
     ],
@@ -720,7 +720,7 @@ const POWDER_HOOK_CORE: PowderHookNode[] = [
         heading: "What to name",
         body: [
           "Style (V, C, CV, S, 90°), overall length, openings, diameter, alloy. STEP or PDF. 100-piece minimum.",
-          "Builder: /custom-powder-coating-hooks. Listed 4–10 mm V/S/C bags include carbon. Custom V and CV: we buy the steel. Custom C and S outside the grid: you buy the coil.",
+          "Builder: /custom-powder-coating-hooks. Listed 4–10 mm V/S/C bags include carbon. Custom V, C, CV, and S: we buy the steel.",
         ],
       },
     ],
