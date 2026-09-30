@@ -1,3 +1,13 @@
+import {
+  deskSignOff,
+  educationFooterHtml,
+  formatCoachHtml,
+  gettingStartedHtml,
+  helloLine,
+  lookingForwardHtml,
+  SOURCE_UPLOAD_HREF,
+  websitePriceHtml,
+} from "@/lib/buyer-nurture";
 import { COMPANY, SITE_HOST, SITE_URL } from "@/lib/company";
 import { publicSupplierUrl } from "@/lib/hosts";
 import { QUOTE_REVIEW, TOOLING } from "@/lib/price";
@@ -104,6 +114,12 @@ export function mailRowsHtml(rows: MailRow[]) {
   </tr>`;
 }
 
+function nurtureCloseRows() {
+  return `${copyRow(gettingStartedHtml())}
+     ${copyRow(`${lookingForwardHtml()}<br /><br />${deskSignOff()}`)}
+     ${copyRow(`<span style="color:#5c5c5c">${educationFooterHtml()}</span>`)}`;
+}
+
 function ctaBannerRow(href: string, label: string, hint?: string) {
   const hintHtml = hint
     ? `<p style="margin:14px 0 0;font-family:${FONT};font-size:13px;line-height:1.5;color:#5c5c5c;text-align:center">${escapeHtml(hint)}</p>`
@@ -149,18 +165,20 @@ export function customerThanksHtml({
   hasPreview: boolean;
   kind: "quote" | "quick" | "directory" | "machine";
 }) {
-  const who = name?.trim() ? escapeHtml(name.trim()) : "";
-  const hello = who ? `Hi ${who},` : "Hi,";
+  const hello = helloLine(name);
   const drawing = kind === "quote" || kind === "quick";
   const heading = drawing ? "We have your drawing" : "We received your note";
+  const file = fileName?.trim()
+    ? `<strong>${escapeHtml(fileName.trim())}</strong>`
+    : "the file";
   const intro = drawing
-    ? `${hello}<br /><br />Thank you for your time, and for the upload. USA Wire Form has ${fileName ? `<strong>${escapeHtml(fileName)}</strong>` : "the file"}. We'll be with you shortly — usually within 24 hours.`
+    ? `${hello}<br /><br />Thank you for reaching out and sending that over. ${COMPANY} has ${file}. ${formatCoachHtml(fileName)}`
     : kind === "directory"
-      ? `${hello}<br /><br />Thank you for your time. We received the intro and will follow up if we can help.`
-      : `${hello}<br /><br />Thank you for your time. We received the machine note and will route it.`;
+      ? `${hello}<br /><br />Thank you for reaching out. We received the intro and will follow up if we can help.`
+      : `${hello}<br /><br />Thank you for reaching out. We received the machine note and will route it.`;
   const follow = drawing
-    ? `If this isn't the part, reply with the right STEP, Solid file, or PDF. No STEP? We'll model one free.`
-    : `Reply to this email if you need to add a note.`;
+    ? websitePriceHtml()
+    : "Reply to this email if you need to add a note.";
   const cta =
     kind === "directory"
       ? ctaBannerRow(
@@ -175,21 +193,22 @@ export function customerThanksHtml({
             "List every cell free. Jobs match the iron on the floor.",
           )
         : ctaBannerRow(
-            `${SITE_URL}/contact`,
-            "Send another drawing",
-            "STEP, IGES, or a print. We'll look at the form.",
+            SOURCE_UPLOAD_HREF,
+            "Upload on the website",
+            "Self-serve quoting is the lowest price. Desk quotes are for parts outside typical limits.",
           );
 
   return shell(
     drawing
-      ? "Thank you for the upload. We'll be with you within 24 hours."
+      ? "Thank you for the upload. The website is the lowest price."
       : "Thank you for your time. We'll be with you shortly.",
     `${kickerRow()}
      ${headingRow(heading)}
      ${copyRow(intro)}
      ${drawing ? drawingRow(fileName, hasPreview) : ""}
      ${cta}
-     ${copyRow(`<span style="color:#5c5c5c">${follow}</span>`)}`,
+     ${copyRow(follow)}
+     ${drawing ? nurtureCloseRows() : copyRow(`${lookingForwardHtml()}<br /><br />${deskSignOff()}`)}`,
   );
 }
 
@@ -200,19 +219,23 @@ export function drawingReviewedHtml({
   name?: string;
   fileName?: string;
 }) {
-  const who = name?.trim() ? escapeHtml(name.trim()) : "";
-  const hello = who ? `Hi ${who},` : "Hi,";
   const file = fileName?.trim()
     ? `<strong>${escapeHtml(fileName.trim())}</strong>`
     : "your drawing";
-  const intro = `${hello}<br /><br />A quote team specialist opened ${file}. We have the file in review and will be in touch.`;
+  const intro = `${helloLine(name)}<br /><br />A quote specialist opened ${file}. We have the file in review. ${formatCoachHtml(fileName)}`;
   return shell(
-    "A quote team specialist opened your drawing.",
+    "A quote specialist opened your drawing.",
     `${kickerRow()}
      ${headingRow("Your drawing is with the quote team")}
      ${copyRow(intro)}
      ${drawingRow(fileName, false)}
-     ${copyRow(`<span style="color:#5c5c5c">Reply if this isn't the right file, or if anything on the print changed.</span>`)}`,
+     ${copyRow(websitePriceHtml())}
+     ${ctaBannerRow(
+       SOURCE_UPLOAD_HREF,
+       "Upload on the website",
+       "Self-serve quoting is the lowest price. Reply if this is the wrong file.",
+     )}
+     ${nurtureCloseRows()}`,
   );
 }
 
@@ -257,6 +280,7 @@ export function shopLeadHtml({
 
 export type EstimateMailCopy = {
   to: string;
+  name?: string;
   diameterLabel: string;
   materialLabel: string;
   cuts: number;
@@ -344,14 +368,16 @@ export function estimateReceiptHtml(estimate: EstimateMailCopy) {
     "Save this estimate for your files.",
     `${kickerRow()}
      ${headingRow("Your estimate receipt")}
-     ${copyRow("Keep this email. It is not a production quote. Reply if you want the shop to look at a STEP.")}
+     ${copyRow(`${helloLine(estimate.name)}<br /><br />Thank you for reaching out. Keep this email. It is not a production quote — ${QUOTE_REVIEW}`)}
      ${mailRowsHtml(estimateFactRows(estimate))}
+     ${copyRow(websitePriceHtml())}
      ${ctaBannerRow(
-       `${SITE_URL}/contact`,
-       "Send a STEP",
-       "This estimate is not a production quote. A print still goes through the desk.",
+       SOURCE_UPLOAD_HREF,
+       "Upload the print on the website",
+       "A STEP, DXF, or PDF 3-view turns this estimate into a real quote.",
      )}
-     ${copyRow(`<span style="color:#5c5c5c"><a href="${escapeHtml(estimateForwardMailto(estimate))}" style="color:#0b6bcb;text-decoration:none">Forward to a coworker</a> · ${QUOTE_REVIEW}</span>`)}`,
+     ${copyRow(`<span style="color:#5c5c5c"><a href="${escapeHtml(estimateForwardMailto(estimate))}" style="color:#0b6bcb;text-decoration:none">Forward to a coworker</a></span>`)}
+     ${nurtureCloseRows()}`,
   );
 }
 
@@ -473,12 +499,16 @@ export function sourceClaimedReceiptHtml({
 }
 
 export function sourceJobReceiptHtml({
+  name,
+  fileName,
   matchCount,
   diameterMm,
   drawingPrivacy = "desk",
   privacyHref,
   held = false,
 }: {
+  name?: string;
+  fileName?: string;
   matchCount: number;
   diameterMm?: number | null;
   drawingPrivacy?: "desk" | "matched";
@@ -489,6 +519,9 @@ export function sourceJobReceiptHtml({
     diameterMm != null
       ? `${diameterMm.toLocaleString("en-US")} mm`
       : "this print";
+  const file = fileName?.trim()
+    ? `<strong>${escapeHtml(fileName.trim())}</strong>`
+    : "the print";
   const chairs = held
     ? `The desk has ${size}. Shops are not notified until we release the print.`
     : matchCount === 0
@@ -508,18 +541,36 @@ export function sourceJobReceiptHtml({
       )
     : "";
   return shell(
-    "Your Source job is in.",
+    "Your Source job is in. The website is the lowest price.",
     `${kickerRow()}
      ${headingRow("Your Source job is in")}
+     ${copyRow(`${helloLine(name)}<br /><br />Thank you for reaching out and sending ${file}. ${formatCoachHtml(fileName)}`)}
      ${copyRow(chairs)}
      ${copyRow(privacy)}
+     ${copyRow(websitePriceHtml())}
      ${privacyCta}
      ${ctaBannerRow(
-       `${SITE_URL}/source`,
-       "Send another job",
+       SOURCE_UPLOAD_HREF,
+       "Upload another print",
        "Wire size, 2D or 3D, locale. We introduce — emails stay with the desk.",
      )}
-     ${copyRow(`<span style="color:#5c5c5c">Run a shop? <a href="${publicSupplierUrl("/suppliers")}" style="color:#0b6bcb;text-decoration:none">Open the supplier portal</a>. Instant estimate on this site is still this floor — 4–14 mm Robomac.</span>`)}`,
+     ${nurtureCloseRows()}`,
+  );
+}
+
+export function sourceBuyerReadyHtml({ name }: { name?: string }) {
+  return shell(
+    "Your Source print is ready.",
+    `${kickerRow()}
+     ${headingRow("Your Source print is ready")}
+     ${copyRow(`${helloLine(name)}<br /><br />Thank you for sending that over. Two shops can buy first — first come. Another quote is $49 from the buyer dashboard.`)}
+     ${ctaBannerRow(
+       `${SITE_URL}/buyer/dashboard`,
+       "Open the buyer dashboard",
+       "Shop names stay with the desk until a shop unlocks.",
+     )}
+     ${copyRow(websitePriceHtml())}
+     ${nurtureCloseRows()}`,
   );
 }
 

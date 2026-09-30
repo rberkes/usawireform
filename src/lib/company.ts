@@ -5,6 +5,11 @@ export const SITE_HOST = "usawireform.com";
 export const SITE_URL = `https://${SITE_HOST}`;
 export const QUOTE_EMAIL = `info@${SITE_HOST}`;
 
+/** Named desk on buyer nurture mail — the SendCutSend “Kegan” line. */
+export const DESK_FIRST_NAME =
+  process.env.DESK_FIRST_NAME?.trim() || "Ron";
+export const DESK_FROM = `${DESK_FIRST_NAME} at ${COMPANY}`;
+
 /**
  * Buyer-facing pitch on the apex. The shop portal is a separate host
  * (`suppliers.usawireform.com`) so this line never asks a purchaser to

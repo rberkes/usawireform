@@ -205,6 +205,8 @@ Desk **does not** get: Clerk sign-up itself, fullness slider moves, plant photo.
 
 Shop mail after **your** Release: teaser, waitlist, rebid (one-line why), closed. STEP never attached.
 
+Buyer receipts (drawing thanks, Source job, instant estimate, drawing reviewed) follow the nurture loop in `src/lib/buyer-nurture.ts`: first name, format coach (CAD vs PDF vs other — we still accept PDF 3-view, not STEP-only), website is cheapest, How to order + design guide, signed by `DESK_FIRST_NAME` (default Ron). From display is `Ron at USA Wire Form`. Walkthrough: `/guide/how-to-order`.
+
 ---
 
 ## What not to build (on purpose)

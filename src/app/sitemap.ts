@@ -20,6 +20,7 @@ const highPriorityPaths = new Set([
   "/instant-quote",
   "/contact",
   "/products",
+  "/guide/how-to-order",
   "/guide/design-for-wire-forming",
   "/careers",
   "/330-stainless-wire-bending-usa-parts",

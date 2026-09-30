@@ -133,6 +133,15 @@ export function BuyerHome() {
       <ClientSection
         kicker="How it works"
         title="From file to finished form."
+        lede={
+          <>
+            Step by step on{" "}
+            <Link href="/guide/how-to-order" className="text-copper hover:underline">
+              How to order
+            </Link>
+            . The website is the lowest price.
+          </>
+        }
         inset
       >
         <ClientHowItWorks steps={[...CLIENT_STEPS]} />

@@ -92,7 +92,7 @@ export function ClientSection({
 }: {
   kicker?: string;
   title: string;
-  lede?: string;
+  lede?: ReactNode;
   children: ReactNode;
   inset?: boolean;
   id?: string;

@@ -42,6 +42,7 @@ const library = [
   { href: "/materials", label: "Materials" },
   { href: "/processes/heavy-wire-forming", label: "4–14 mm" },
   { href: "/processes", label: "All processes" },
+  { href: "/guide/how-to-order", label: "How to order" },
   { href: "/guide/design-for-wire-forming", label: "Design guide" },
 ];
 

@@ -66,7 +66,7 @@ Private JSON and files, not a SQL database.
 
 ## Mail
 
-Resend. Desk copies go to `info@usawireform.com` and `LEADS_NOTIFY_EMAIL` (default `rberkes@gmail.com`). A STEP is never attached to email. Shops that bought a lead open a released file in the dashboard only.
+Resend. Desk copies go to `info@usawireform.com` and `LEADS_NOTIFY_EMAIL` (default `rberkes@gmail.com`). Buyer receipts are signed `DESK_FIRST_NAME` (default Ron) via `src/lib/buyer-nurture.ts`. A STEP is never attached to email. Shops that bought a lead open a released file in the dashboard only.
 
 Daily cron `0 14 * * *` → `/api/cron/source-reminders` (`CRON_SECRET`): incomplete-shop reminders, plus plant-fullness mail on the 1st and 15th Eastern.
 

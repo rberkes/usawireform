@@ -88,3 +88,30 @@ export function isAcceptedUpload(name: string, extras: boolean) {
 export function isPdfDrawing(name: string) {
   return drawingExtOf(name) === "pdf";
 }
+
+const CAD_EXTENSIONS = [
+  "step",
+  "stp",
+  "stpz",
+  "iges",
+  "igs",
+  "dxf",
+  "dwg",
+  "sldprt",
+  "sldasm",
+] as const;
+
+export type DrawingKind = "cad" | "pdf" | "other" | "none";
+
+export function isCadDrawing(name: string) {
+  const ext = drawingExtOf(name);
+  return CAD_EXTENSIONS.some((accepted) => accepted === ext);
+}
+
+export function drawingKindOf(name?: string): DrawingKind {
+  const trimmed = name?.trim();
+  if (!trimmed) return "none";
+  if (isCadDrawing(trimmed)) return "cad";
+  if (isPdfDrawing(trimmed)) return "pdf";
+  return "other";
+}

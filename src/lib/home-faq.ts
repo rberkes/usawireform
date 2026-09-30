@@ -11,7 +11,7 @@ export const BUYER_HOME_FAQS = [
   {
     question: "How do I get a quote?",
     answer:
-      "Upload on /source for quotes from shops whose filed cells can form the job. Instant quote on this site is a ballpark for the Northeast Ohio 214TF — cuts, bends, and inches. A production quote is a person on the print.",
+      "Upload on /source. How to order (/guide/how-to-order) is the walkthrough. The website is the lowest price — a desk quote is only for parts outside typical limits. Instant quote on this site is a ballpark for the Northeast Ohio 214TF.",
   },
   {
     question: "What wire diameters can you form?",

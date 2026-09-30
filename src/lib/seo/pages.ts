@@ -477,6 +477,19 @@ export const staticSeoPages: SeoRecord[] = [
     section: "processes",
   }),
   record({
+    path: "/guide/how-to-order",
+    title: "How to Order Wire Forms",
+    description:
+      "How to order custom CNC wire forms: upload a STEP or PDF 3-view, use the website for the lowest price, and when a desk quote is required.",
+    section: "processes",
+    keywords: [
+      "how to order wire forms",
+      "upload STEP wire form",
+      "CNC wire forming quote",
+    ],
+    priority: 0.9,
+  }),
+  record({
     path: "/guide/design-for-wire-forming",
     title: "Design for Wire Forming",
     description:

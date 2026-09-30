@@ -134,11 +134,12 @@ export const NAV_SUPPLIER: NavSection[] = [
 
 export const NAV_LEARN: NavSection = {
   label: "Learn",
-  href: "/guide/design-for-wire-forming",
+  href: "/guide/how-to-order",
   groups: [
     {
       title: "Guides",
       items: [
+        { href: "/guide/how-to-order", label: "How to order" },
         { href: "/guide/design-for-wire-forming", label: "Design guide" },
         { href: "/materials", label: "Materials" },
         { href: "/sizes", label: "Wire sizes" },

@@ -111,6 +111,7 @@ export function siteArchitectureTree(): ArchNode[] {
       note: "How a print becomes a form",
       kind: "branch",
       children: [
+        leaf("/guide/how-to-order", "How to order"),
         leaf("/guide/design-for-wire-forming", "Design guide"),
         leaf("/guide/s-hooks-vs-v-hooks-vs-c-hooks", "S vs V vs C"),
         leaf("/processes", `Process hub · ${s.processes} pages`),

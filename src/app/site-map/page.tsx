@@ -208,6 +208,11 @@ export default function SiteMapPage() {
               body: "Coil grades from carbon through stainless and brass.",
             },
             {
+              href: "/guide/how-to-order",
+              title: "How to order",
+              body: "Upload a STEP or PDF. Website quoting is the lowest price.",
+            },
+            {
               href: "/guide/design-for-wire-forming",
               title: "Design guide",
               body: "Radius, legs, springback, datums.",
