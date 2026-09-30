@@ -84,7 +84,7 @@ export function RobomacStepAnalyze({
           {state.dfm.price ? (
             <p className="mt-3 text-muted">
               {state.dfm.price.filed
-                ? `${state.dfm.price.materialId} forming: $${state.dfm.price.cutUsd?.toFixed(2)} / cut · $${state.dfm.price.bendUsd?.toFixed(2)} / bend · $${state.dfm.price.inchUsd?.toFixed(2)} / in. Material $/lb is a later input.`
+                ? `${state.dfm.price.materialId}: $${state.dfm.price.inchUsd?.toFixed(2)} / in + material + 30% markup. Material $/lb is a later input.`
                 : state.dfm.price.note}
             </p>
           ) : null}

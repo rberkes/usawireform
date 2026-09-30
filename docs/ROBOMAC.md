@@ -39,7 +39,7 @@ Every number has provenance: `published_catalog`, `shop_practice`, `shop_measure
 - Closed loops trap on the mandrel unless there is a gap, a weld, or a strip sequence.
 - Shop eyes / S-hooks wrap ~240°. Phase 1 ceiling 270°.
 - Shop-run coils on this cell: **1018, 304, 330, 6061-T6**. Each alloy has its own price.
-- Quote formula: `piece = cuts×cutUsd + bends×bendUsd + lengthIn×inchUsd + weightLb×materialUsdPerLb`. Material $/lb is a later input. Only 1018 forming is filed ($1/cut, $0.50/bend, $0.05/in). Do not invent coil dollars or 304 / 330 / 6061-T6 forming rates.
+- Quote formula: `piece = lengthIn×inchUsd + weightLb×materialUsdPerLb×1.30`. Per-inch forming + material + 30% markup on material. Material $/lb is a later input. Only 1018 inch rate is filed ($0.05/in). Ask still publishes $1/cut and $0.50/bend for instant estimates — those are a separate card. Do not invent coil dollars or 304 / 330 / 6061-T6 inch rates.
 
 ## What is not measured
 
@@ -52,7 +52,7 @@ Do not ship collision DFM until these are tape / program values from this 214TF:
 - Work-envelope / fence / decoiler
 - Springback by alloy × diameter × pin (current table is a starting guess)
 - Actual cycle time, setup, scrap
-- Forming dollars for 304, 330, and 6061-T6 (1018 uses the published Ask card)
+- Inch rates for 304, 330, and 6061-T6 (1018 uses the published $0.05/in)
 - Material $/lb for every alloy (plug into the formula when the desk has it)
 
 The brief’s “bend 7, 28 mm required / 19 mm available” is the **shape** of a Phase 2 issue, not a number from this floor.

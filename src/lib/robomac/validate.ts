@@ -5,9 +5,14 @@
 
 import { COMMON_SIZES, WIRE } from "@/lib/range";
 import { evaluateWireForm } from "./dfm";
-import { quoteRobomacPiece } from "./quote";
+import { QUOTE_FORMULA, quoteRobomacPiece } from "./quote";
 import { TWIN_FIXTURES } from "./fixtures";
-import { ROBOMAC_214TF, ROBOMAC_MACHINE_ID, twinTables } from "./tables";
+import {
+  MATERIAL_MARKUP_RATE,
+  ROBOMAC_214TF,
+  ROBOMAC_MACHINE_ID,
+  twinTables,
+} from "./tables";
 
 type ValidationError = {
   where: string;
@@ -156,8 +161,8 @@ export function validateTwin(): ValidationError[] {
   for (const row of tables.material_prices) {
     takeId("prices", row.id);
     if (row.shopRun && row.materialId === "1018") {
-      if (row.cutUsd == null || row.bendUsd == null || row.inchUsd == null) {
-        errors.push({ where: row.id, message: "1018 card must have filed rates" });
+      if (row.inchUsd == null) {
+        errors.push({ where: row.id, message: "1018 card must have a filed inch rate" });
       }
     }
     if (
@@ -178,34 +183,59 @@ export function validateTwin(): ValidationError[] {
     }
   }
 
+  if (MATERIAL_MARKUP_RATE !== 0.3) {
+    errors.push({
+      where: "quote-formula",
+      message: `Shop material markup must be 30%. Got ${MATERIAL_MARKUP_RATE}`,
+    });
+  }
+  if (!QUOTE_FORMULA.includes("1 + 0.30")) {
+    errors.push({
+      where: "quote-formula",
+      message: `Shop formula must be inch + material × 1.30. Got ${QUOTE_FORMULA}`,
+    });
+  }
   const formingOnly = quoteRobomacPiece({
     materialId: "1018",
-    cuts: 1,
-    bends: 2,
     lengthIn: 10,
   });
   if (
-    formingOnly.formingUsd !== 2.5 ||
-    formingOnly.pieceUsd !== 2.5 ||
+    formingOnly.formingUsd !== 0.5 ||
+    formingOnly.pieceUsd !== 0.5 ||
     !formingOnly.materialPending
   ) {
     errors.push({
       where: "quote-formula",
-      message: `1018 forming-only should be $2.50 pending material. Got ${formingOnly.pieceUsd}`,
+      message: `1018 inch-only should be $0.50 pending material. Got ${formingOnly.pieceUsd}`,
     });
   }
   const withCoil = quoteRobomacPiece({
     materialId: "1018",
-    cuts: 1,
-    bends: 2,
     lengthIn: 10,
     weightLb: 2,
     materialUsdPerLb: 1.25,
   });
-  if (withCoil.materialUsd !== 2.5 || withCoil.pieceUsd !== 5) {
+  if (
+    withCoil.materialCostUsd !== 2.5 ||
+    withCoil.materialMarkupUsd !== 0.75 ||
+    withCoil.materialUsd !== 3.25 ||
+    withCoil.pieceUsd !== 3.75
+  ) {
     errors.push({
       where: "quote-formula",
-      message: `1018 + $1.25/lb × 2 lb should be $5.00. Got ${withCoil.pieceUsd}`,
+      message: `1018 + $1.25/lb × 2 lb × 1.30 should be $3.75. Got ${withCoil.pieceUsd}`,
+    });
+  }
+  const stainless = quoteRobomacPiece({
+    materialId: "304",
+    lengthIn: 10,
+    weightLb: 2,
+    materialUsdPerLb: 1.25,
+  });
+  if (stainless.formingFiled || stainless.pieceUsd != null) {
+    errors.push({
+      where: "quote-formula",
+      message: "304 must not emit a piece price until its inch rate is filed.",
     });
   }
 

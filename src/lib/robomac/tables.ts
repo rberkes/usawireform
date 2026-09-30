@@ -564,6 +564,9 @@ export const MATERIALS: MaterialFamilyRow[] = [
 
 export const SHOP_RUN_MATERIAL_IDS = ["1018", "304", "330", "6061"] as const;
 
+/** Shop: 30% markup on material cost. */
+export const MATERIAL_MARKUP_RATE = 0.3;
+
 export const MATERIAL_PRICES: MaterialPriceRow[] = [
   {
     id: "price-1018",
@@ -574,7 +577,7 @@ export const MATERIAL_PRICES: MaterialPriceRow[] = [
     bendUsd: FORMING_RATES.bendUsd,
     inchUsd: FORMING_RATES.inchUsd,
     notes:
-      "Published Ask forming card for carbon. Material $/lb is a later input — not on this card.",
+      "Shop formula is per-inch forming + material + 30% material markup. Ask still publishes $1/cut and $0.50/bend for instant estimates. Material $/lb is a later input.",
     provenance: shop(
       "src/lib/price.ts FORMING_RATES — $1/cut, $0.50/bend, $0.05/in",
       "1018 forming only. Do not invent coil dollars.",
@@ -586,9 +589,9 @@ export const MATERIAL_PRICES: MaterialPriceRow[] = [
     materialId: "304",
     shopRun: true,
     notes:
-      "304 / 304L has its own forming card and material $/lb. Neither is filed. Do not multiply the 1018 card.",
+      "304 / 304L has its own inch rate and material $/lb. Neither is filed. Do not multiply the 1018 card.",
     provenance: unknown(
-      "Shop runs 304 on this 214TF. File cut / bend / inch and material $/lb.",
+      "Shop runs 304 on this 214TF. File inch rate and material $/lb.",
     ),
   },
   {
@@ -597,9 +600,9 @@ export const MATERIAL_PRICES: MaterialPriceRow[] = [
     materialId: "330",
     shopRun: true,
     notes:
-      "330 has its own forming card and material $/lb. Neither is filed. Do not copy 304 or 1018.",
+      "330 has its own inch rate and material $/lb. Neither is filed. Do not copy 304 or 1018.",
     provenance: unknown(
-      "Shop runs 330 on this 214TF. File cut / bend / inch and material $/lb.",
+      "Shop runs 330 on this 214TF. File inch rate and material $/lb.",
     ),
   },
   {
@@ -608,9 +611,9 @@ export const MATERIAL_PRICES: MaterialPriceRow[] = [
     materialId: "6061",
     shopRun: true,
     notes:
-      "6061-T6 has its own forming card and material $/lb. Neither is filed. Do not copy 1018.",
+      "6061-T6 has its own inch rate and material $/lb. Neither is filed. Do not copy 1018.",
     provenance: unknown(
-      "Shop runs 6061-T6 on this 214TF. File cut / bend / inch and material $/lb.",
+      "Shop runs 6061-T6 on this 214TF. File inch rate and material $/lb.",
     ),
   },
 ];
@@ -624,12 +627,7 @@ export function formingRatesFor(materialId: string): MaterialPriceQuote {
   const row = MATERIAL_PRICES.find(
     (price) => price.materialId === (family?.id ?? materialId),
   );
-  const formingFiled = Boolean(
-    row &&
-      row.cutUsd != null &&
-      row.bendUsd != null &&
-      row.inchUsd != null,
-  );
+  const formingFiled = Boolean(row && row.inchUsd != null);
   const materialFiled = Boolean(row && row.materialUsdPerLb != null);
   if (!row) {
     return {

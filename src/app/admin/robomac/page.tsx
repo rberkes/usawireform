@@ -7,6 +7,7 @@ import { countDirectoryLeads } from "@/lib/leads";
 import { countQuoteSubmissions } from "@/lib/quotes";
 import { evaluateWireForm } from "@/lib/robomac/dfm";
 import { TWIN_FIXTURES } from "@/lib/robomac/fixtures";
+import { QUOTE_FORMULA } from "@/lib/robomac/quote";
 import {
   CAPABILITIES,
   COLLISION_SCENARIOS,
@@ -178,18 +179,19 @@ export default async function AdminRobomacPage({
       <section className="mt-12">
         <h2 className="text-sm font-medium">Material prices</h2>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">
-          Formula:{" "}
+          Shop formula:{" "}
           <span className="font-mono text-xs text-foreground">
-            piece = cuts×cut + bends×bend + in×inch + lb×material $/lb
+            {QUOTE_FORMULA}
           </span>
-          . Material $/lb is an input you file later. Without it the quote is
-          forming only. 1018 forming is the published Ask card. 304, 330, and
-          6061-T6 forming are empty. Do not invent a multiplier.
+          . Per-inch forming + material + 30% markup on material. Material $/lb
+          is an input you file later. Without it the quote is inch-only. 1018
+          inch rate is the published $0.05/in. 304, 330, and 6061-T6 inch rates
+          are empty. Do not invent a multiplier. Ask still publishes $1/cut and
+          $0.50/bend for instant estimates — those are a separate card.
         </p>
         <ul className="mt-4 divide-y divide-line border border-line text-sm">
           {MATERIAL_PRICES.map((row) => {
-            const filed =
-              row.cutUsd != null && row.bendUsd != null && row.inchUsd != null;
+            const filed = row.inchUsd != null;
             return (
               <li key={row.id} className="px-4 py-3">
                 <p className="font-medium">
@@ -197,8 +199,8 @@ export default async function AdminRobomacPage({
                 </p>
                 <p className="mt-1 text-muted">
                   {filed
-                    ? `$${row.cutUsd?.toFixed(2)} / cut · $${row.bendUsd?.toFixed(2)} / bend · $${row.inchUsd?.toFixed(2)} / in · material $/lb not filed`
-                    : "Forming not filed. Material $/lb not filed. Do not quote the 1018 card."}
+                    ? `$${row.inchUsd?.toFixed(2)} / in · 30% material markup · material $/lb not filed`
+                    : "Inch rate not filed. Material $/lb not filed. Do not quote the 1018 card."}
                 </p>
                 <p className="mt-1 text-xs text-muted">
                   {row.provenance.kind} · {row.notes}

@@ -163,6 +163,7 @@ export type MaterialPriceRow = {
   machineId: string;
   materialId: string;
   shopRun: boolean;
+  /** Published Ask card only — not in the shop piece formula. */
   cutUsd?: number;
   bendUsd?: number;
   inchUsd?: number;
@@ -177,8 +178,9 @@ export type MaterialPriceQuote = {
   shopRun: boolean;
   formingFiled: boolean;
   materialFiled: boolean;
-  /** Forming card is complete. Material $/lb is a separate later input. */
+  /** Inch rate is filed. Material $/lb is a separate later input. */
   filed: boolean;
+  /** Published Ask card only — not in the shop piece formula. */
   cutUsd?: number;
   bendUsd?: number;
   inchUsd?: number;
@@ -189,15 +191,14 @@ export type MaterialPriceQuote = {
 export type RobomacPieceQuote = {
   materialId: string;
   formula: string;
-  cuts: number;
-  bends: number;
   lengthIn: number;
   weightLb?: number;
-  cutUsd?: number;
-  bendUsd?: number;
   inchUsd?: number;
   materialUsdPerLb?: number;
+  materialMarkupRate: number;
   formingUsd?: number;
+  materialCostUsd?: number;
+  materialMarkupUsd?: number;
   materialUsd?: number;
   pieceUsd?: number;
   formingFiled: boolean;
