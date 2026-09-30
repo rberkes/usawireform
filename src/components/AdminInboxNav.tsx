@@ -54,7 +54,7 @@ export function AdminInboxNav({
   accountCount = 0,
   visitorCount,
 }: {
-  current: "quotes" | "directory" | "source" | "subscribers" | "accounts" | "live" | "visitors" | "architecture" | "preview";
+  current: "quotes" | "directory" | "source" | "subscribers" | "accounts" | "live" | "visitors" | "architecture" | "preview" | "robomac";
   quoteCount: number;
   directoryCount: number;
   sourceCount?: number;
@@ -133,6 +133,13 @@ export function AdminInboxNav({
           waiting={false}
         >
           Architecture
+        </InboxTab>
+        <InboxTab
+          href="/admin/robomac"
+          active={current === "robomac"}
+          waiting={false}
+        >
+          214TF
         </InboxTab>
       </nav>
       {current === "directory" && quoteCount > 0 ? (

@@ -27,10 +27,13 @@ src/app/            routes (page.tsx) and Server Actions
   api/              cron, stripe webhook, ask, recent-cells
 src/components/     UI (forms, header, Source widgets)
 src/lib/            data + rules (matching, mail, catalog, directory)
+src/lib/robomac/    214TF digital twin + Phase 1 DFM (see [ROBOMAC.md](./ROBOMAC.md))
 docs/               this folder — operating memory for humans and agents
 ```
 
 Catalog, directory, processes, and SEO landers live in `src/lib/*.ts` and `src/lib/seo/pages.ts`. Do not invent shop capacity or machines that were not filed.
+
+The Robomac 214TF twin is table-shaped TypeScript (`machines`, `machine_tooling`, `machine_rules`). Desk view: `/admin/robomac`. It is not a public CAD quoter yet. Unknown machine geometry stays unknown.
 
 ## Auth split
 
