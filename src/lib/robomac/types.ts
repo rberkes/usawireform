@@ -166,6 +166,8 @@ export type MaterialPriceRow = {
   cutUsd?: number;
   bendUsd?: number;
   inchUsd?: number;
+  /** Coil / stock dollars. Empty until the desk files it. */
+  materialUsdPerLb?: number;
   notes: string;
   provenance: Provenance;
 };
@@ -173,10 +175,34 @@ export type MaterialPriceRow = {
 export type MaterialPriceQuote = {
   materialId: string;
   shopRun: boolean;
+  formingFiled: boolean;
+  materialFiled: boolean;
+  /** Forming card is complete. Material $/lb is a separate later input. */
   filed: boolean;
   cutUsd?: number;
   bendUsd?: number;
   inchUsd?: number;
+  materialUsdPerLb?: number;
+  note: string;
+};
+
+export type RobomacPieceQuote = {
+  materialId: string;
+  formula: string;
+  cuts: number;
+  bends: number;
+  lengthIn: number;
+  weightLb?: number;
+  cutUsd?: number;
+  bendUsd?: number;
+  inchUsd?: number;
+  materialUsdPerLb?: number;
+  formingUsd?: number;
+  materialUsd?: number;
+  pieceUsd?: number;
+  formingFiled: boolean;
+  materialFiled: boolean;
+  materialPending: boolean;
   note: string;
 };
 

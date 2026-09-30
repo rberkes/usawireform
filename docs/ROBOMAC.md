@@ -38,7 +38,8 @@ Every number has provenance: `published_catalog`, `shop_practice`, `shop_measure
 - Straights: fail below 2×D, review 2–3×D, pass at ≥ 3×D.
 - Closed loops trap on the mandrel unless there is a gap, a weld, or a strip sequence.
 - Shop eyes / S-hooks wrap ~240°. Phase 1 ceiling 270°.
-- Shop-run coils on this cell: **1018, 304, 330, 6061-T6**. Each alloy has its own price. Only the 1018 card is filed ($1/cut, $0.50/bend, $0.05/in). Do not invent 304 / 330 / 6061-T6 dollars.
+- Shop-run coils on this cell: **1018, 304, 330, 6061-T6**. Each alloy has its own price.
+- Quote formula: `piece = cuts×cutUsd + bends×bendUsd + lengthIn×inchUsd + weightLb×materialUsdPerLb`. Material $/lb is a later input. Only 1018 forming is filed ($1/cut, $0.50/bend, $0.05/in). Do not invent coil dollars or 304 / 330 / 6061-T6 forming rates.
 
 ## What is not measured
 
@@ -52,6 +53,7 @@ Do not ship collision DFM until these are tape / program values from this 214TF:
 - Springback by alloy × diameter × pin (current table is a starting guess)
 - Actual cycle time, setup, scrap
 - Forming dollars for 304, 330, and 6061-T6 (1018 uses the published Ask card)
+- Material $/lb for every alloy (plug into the formula when the desk has it)
 
 The brief’s “bend 7, 28 mm required / 19 mm available” is the **shape** of a Phase 2 issue, not a number from this floor.
 

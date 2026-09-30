@@ -574,10 +574,10 @@ export const MATERIAL_PRICES: MaterialPriceRow[] = [
     bendUsd: FORMING_RATES.bendUsd,
     inchUsd: FORMING_RATES.inchUsd,
     notes:
-      "Published Ask card for carbon / customer-coil jobs. Other shop-run alloys do not use this card.",
+      "Published Ask forming card for carbon. Material $/lb is a later input — not on this card.",
     provenance: shop(
       "src/lib/price.ts FORMING_RATES — $1/cut, $0.50/bend, $0.05/in",
-      "This is the 1018 card only.",
+      "1018 forming only. Do not invent coil dollars.",
     ),
   },
   {
@@ -585,25 +585,32 @@ export const MATERIAL_PRICES: MaterialPriceRow[] = [
     machineId: MACHINE_ID,
     materialId: "304",
     shopRun: true,
-    notes: "304 / 304L has its own rate. Not filed. Do not multiply the 1018 card.",
-    provenance: unknown("Shop runs 304 on this 214TF. File cut / bend / inch dollars."),
+    notes:
+      "304 / 304L has its own forming card and material $/lb. Neither is filed. Do not multiply the 1018 card.",
+    provenance: unknown(
+      "Shop runs 304 on this 214TF. File cut / bend / inch and material $/lb.",
+    ),
   },
   {
     id: "price-330",
     machineId: MACHINE_ID,
     materialId: "330",
     shopRun: true,
-    notes: "330 has its own rate. Not filed. Do not copy 304 or 1018.",
-    provenance: unknown("Shop runs 330 on this 214TF. File cut / bend / inch dollars."),
+    notes:
+      "330 has its own forming card and material $/lb. Neither is filed. Do not copy 304 or 1018.",
+    provenance: unknown(
+      "Shop runs 330 on this 214TF. File cut / bend / inch and material $/lb.",
+    ),
   },
   {
     id: "price-6061",
     machineId: MACHINE_ID,
     materialId: "6061",
     shopRun: true,
-    notes: "6061-T6 has its own rate. Not filed. Do not copy 1018.",
+    notes:
+      "6061-T6 has its own forming card and material $/lb. Neither is filed. Do not copy 1018.",
     provenance: unknown(
-      "Shop runs 6061-T6 on this 214TF. File cut / bend / inch dollars.",
+      "Shop runs 6061-T6 on this 214TF. File cut / bend / inch and material $/lb.",
     ),
   },
 ];
@@ -617,16 +624,19 @@ export function formingRatesFor(materialId: string): MaterialPriceQuote {
   const row = MATERIAL_PRICES.find(
     (price) => price.materialId === (family?.id ?? materialId),
   );
-  const filed = Boolean(
+  const formingFiled = Boolean(
     row &&
       row.cutUsd != null &&
       row.bendUsd != null &&
       row.inchUsd != null,
   );
+  const materialFiled = Boolean(row && row.materialUsdPerLb != null);
   if (!row) {
     return {
       materialId: family?.id ?? materialId,
       shopRun: Boolean(family?.shopRun),
+      formingFiled: false,
+      materialFiled: false,
       filed: false,
       note: family?.shopRun
         ? "Shop-run alloy with no price row. Do not quote."
@@ -636,11 +646,14 @@ export function formingRatesFor(materialId: string): MaterialPriceQuote {
   return {
     materialId: row.materialId,
     shopRun: row.shopRun,
-    filed,
+    formingFiled,
+    materialFiled,
+    filed: formingFiled,
     cutUsd: row.cutUsd,
     bendUsd: row.bendUsd,
     inchUsd: row.inchUsd,
-    note: filed
+    materialUsdPerLb: row.materialUsdPerLb,
+    note: formingFiled
       ? row.notes
       : `${row.notes} Do not emit an instant price.`,
   };

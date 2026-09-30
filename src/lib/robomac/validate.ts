@@ -5,6 +5,7 @@
 
 import { COMMON_SIZES, WIRE } from "@/lib/range";
 import { evaluateWireForm } from "./dfm";
+import { quoteRobomacPiece } from "./quote";
 import { TWIN_FIXTURES } from "./fixtures";
 import { ROBOMAC_214TF, ROBOMAC_MACHINE_ID, twinTables } from "./tables";
 
@@ -169,6 +170,43 @@ export function validateTwin(): ValidationError[] {
         message: "Do not invent 304 / 330 / 6061 dollars until the desk files them",
       });
     }
+    if (row.materialUsdPerLb != null) {
+      errors.push({
+        where: row.id,
+        message: "Material $/lb is a later input. Do not invent coil dollars.",
+      });
+    }
+  }
+
+  const formingOnly = quoteRobomacPiece({
+    materialId: "1018",
+    cuts: 1,
+    bends: 2,
+    lengthIn: 10,
+  });
+  if (
+    formingOnly.formingUsd !== 2.5 ||
+    formingOnly.pieceUsd !== 2.5 ||
+    !formingOnly.materialPending
+  ) {
+    errors.push({
+      where: "quote-formula",
+      message: `1018 forming-only should be $2.50 pending material. Got ${formingOnly.pieceUsd}`,
+    });
+  }
+  const withCoil = quoteRobomacPiece({
+    materialId: "1018",
+    cuts: 1,
+    bends: 2,
+    lengthIn: 10,
+    weightLb: 2,
+    materialUsdPerLb: 1.25,
+  });
+  if (withCoil.materialUsd !== 2.5 || withCoil.pieceUsd !== 5) {
+    errors.push({
+      where: "quote-formula",
+      message: `1018 + $1.25/lb × 2 lb should be $5.00. Got ${withCoil.pieceUsd}`,
+    });
   }
 
   const unknownCount = [

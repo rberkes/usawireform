@@ -10,6 +10,7 @@ export {
   straight,
 } from "./geometry";
 export { assignBendHead } from "./dfm";
+export { QUOTE_FORMULA, quoteRobomacPiece } from "./quote";
 export {
   CAPABILITIES,
   COLLISION_SCENARIOS,
@@ -35,6 +36,7 @@ export type {
   DfmResult,
   DfmStatus,
   MaterialPriceQuote,
+  RobomacPieceQuote,
   TwinTables,
   WireFormGeometry,
 } from "./types";

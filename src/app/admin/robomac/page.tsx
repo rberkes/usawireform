@@ -178,9 +178,13 @@ export default async function AdminRobomacPage({
       <section className="mt-12">
         <h2 className="text-sm font-medium">Material prices</h2>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">
-          Each shop-run alloy has its own card. 1018 is the published Ask rate.
-          304, 330, and 6061-T6 are empty until the desk files dollars. Do not
-          invent a multiplier.
+          Formula:{" "}
+          <span className="font-mono text-xs text-foreground">
+            piece = cuts×cut + bends×bend + in×inch + lb×material $/lb
+          </span>
+          . Material $/lb is an input you file later. Without it the quote is
+          forming only. 1018 forming is the published Ask card. 304, 330, and
+          6061-T6 forming are empty. Do not invent a multiplier.
         </p>
         <ul className="mt-4 divide-y divide-line border border-line text-sm">
           {MATERIAL_PRICES.map((row) => {
@@ -193,8 +197,8 @@ export default async function AdminRobomacPage({
                 </p>
                 <p className="mt-1 text-muted">
                   {filed
-                    ? `$${row.cutUsd?.toFixed(2)} / cut · $${row.bendUsd?.toFixed(2)} / bend · $${row.inchUsd?.toFixed(2)} / in`
-                    : "No dollars. Do not quote the 1018 card."}
+                    ? `$${row.cutUsd?.toFixed(2)} / cut · $${row.bendUsd?.toFixed(2)} / bend · $${row.inchUsd?.toFixed(2)} / in · material $/lb not filed`
+                    : "Forming not filed. Material $/lb not filed. Do not quote the 1018 card."}
                 </p>
                 <p className="mt-1 text-xs text-muted">
                   {row.provenance.kind} · {row.notes}
