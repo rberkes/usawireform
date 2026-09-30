@@ -246,8 +246,8 @@ function cutoffCheck(geometry: WireFormGeometry): DfmIssue {
   const min = (capability("min_end_leg_xd")?.min ?? 2) * geometry.diameterMm;
   const { first, last } = firstAndLastLegs(geometry);
   const short = [first, last].filter(
-    (leg): leg is NonNullable<typeof leg> =>
-      Boolean(leg) && leg.lengthMm < min,
+    (leg): leg is NonNullable<typeof first> =>
+      leg != null && leg.lengthMm < min,
   );
   if (short.length === 0) {
     return issue({
@@ -423,9 +423,10 @@ function sequenceCheck(geometry: WireFormGeometry): DfmIssue[] {
     let nextBend = undefined;
     let straightMm = 0;
     for (let j = i + 1; j < segs.length; j++) {
-      if (isStraight(segs[j])) straightMm += segs[j].kind === "straight" ? segs[j].lengthMm : 0;
-      if (isBend(segs[j])) {
-        nextBend = segs[j];
+      const next = segs[j];
+      if (isStraight(next)) straightMm += next.lengthMm;
+      if (isBend(next)) {
+        nextBend = next;
         break;
       }
     }
