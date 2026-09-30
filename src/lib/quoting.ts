@@ -11,7 +11,7 @@ export const QUOTE = {
   exampleNonStockMm: 5.5,
 } as const;
 
-/** Instant estimate: same card as Ask — $1/cut, $0.50/bend, $0.05/in. */
+/** Instant estimate rates — keep these off public Instant Quote copy. */
 export const ESTIMATE = {
   cut: FORMING_RATES.cutUsd,
   bend: FORMING_RATES.bendUsd,
