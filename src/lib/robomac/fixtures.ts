@@ -205,4 +205,33 @@ export const TWIN_FIXTURES: TwinFixture[] = [
       ],
     },
   },
+  {
+    id: "push-ring-30in",
+    title: "1/2 in 180° push ring at 30 in CL Ø",
+    expect: "PASS",
+    geometry: {
+      diameterMm: 12.7,
+      materialId: "1018",
+      segments: [
+        straight("S1", 80),
+        bend(1, 180, 374.65),
+        straight("S2", 80),
+      ],
+    },
+  },
+  {
+    id: "push-ring-too-large",
+    title: "1/2 in 180° ring past 30 in",
+    expect: "FAIL",
+    expectFailure: "push_ring_too_large",
+    geometry: {
+      diameterMm: 12.7,
+      materialId: "1018",
+      segments: [
+        straight("S1", 80),
+        bend(1, 180, 400),
+        straight("S2", 80),
+      ],
+    },
+  },
 ];

@@ -30,8 +30,8 @@ Every number has provenance: `published_catalog`, `shop_practice`, `shop_measure
 
 - Plate: Numalliance Robomac R214TF, 4–14 mm at 600 N/mm² (85 ksi). 3D from coil. Head orbits the wire.
 - This floor: one cell, Northeast Ohio, **two heads**. Instant estimate is this machine.
-- Wipe / pin head: regular angle bends, about 20–180°. Eyes / S-hooks (~240°) still wrap on this head.
-- Push head: rings and large-radius sweeps. **Minimum ring radius 6 in on 1/2 in wire** (encoded as 152.4 mm centerline). Other diameters are not stated — do not scale.
+- Wipe / pin head: regular angle bends, about 20–180°, **0.500 in pin**. Eyes / S-hooks (~240°) still wrap on this head. Pin Ø is tooling — not a 0.5×D override of the material radius floor.
+- Push head: rings in **1/2 in** wire, **6 in min centerline radius** to **30 in max centerline diameter**. Other diameters are not stated — do not scale.
 - Stock pins: 3/8, 7/16, 1/2 in. Other sizes in band: 7–10 days, about $3,500.
 - Staple-crown wraps on those pins are documented in `ground-staple-builder.ts`. The 3/8 in 0.200 in IR is **staple only** — not a general 0.5×D override.
 - Design-guide floors: mild carbon ≥ 1×D inside radius; stainless / high-tensile 1.5–2×D; soft copper / aluminum can go tighter and marks.

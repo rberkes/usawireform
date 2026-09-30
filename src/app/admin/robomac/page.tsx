@@ -120,8 +120,11 @@ export default async function AdminRobomacPage({
                 {row.kind === "wipe" && row.angleMinDeg != null
                   ? `Typical ${row.angleMinDeg}–${row.angleMaxDeg}°`
                   : null}
+                {row.kind === "wipe" && row.pinDiameterIn
+                  ? ` · pin Ø ${row.pinDiameterIn.toFixed(3)} in`
+                  : null}
                 {row.kind === "push" && row.minRingRadiusIn
-                  ? `Min ring R ${row.minRingRadiusIn} in on ${row.minRingRadiusWireIn} in wire (${row.minRingRadiusMm?.toFixed(1)} mm CL)`
+                  ? `Min R ${row.minRingRadiusIn} in · max Ø ${row.maxRingDiameterIn} in on ${row.minRingRadiusWireIn} in wire`
                   : null}
                 {` · ${row.provenance.kind}`}
               </p>

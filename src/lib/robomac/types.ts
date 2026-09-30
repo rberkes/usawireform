@@ -86,9 +86,16 @@ export type MachineHeadRow = {
   label: string;
   angleMinDeg?: number;
   angleMaxDeg?: number;
+  pinDiameterMm?: number;
+  pinDiameterIn?: number;
   /** Centerline ring radius. Only filled where the floor stated a number. */
   minRingRadiusMm?: number;
   minRingRadiusIn?: number;
+  /** Shop said “30 in diameter rings.” Stored as centerline diameter. */
+  maxRingDiameterMm?: number;
+  maxRingDiameterIn?: number;
+  maxRingRadiusMm?: number;
+  maxRingRadiusIn?: number;
   minRingRadiusWireMm?: number;
   minRingRadiusWireIn?: number;
   notes: string;

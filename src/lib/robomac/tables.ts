@@ -58,8 +58,14 @@ export const ROBOMAC_214TF: MachineRow = {
 /** Shop: push-head min ring radius on 1/2 in. Encoded as centerline R. */
 export const PUSH_RING_MIN_RADIUS_IN = 6;
 export const PUSH_RING_MIN_RADIUS_MM = 152.4;
+export const PUSH_RING_MAX_DIAMETER_IN = 30;
+export const PUSH_RING_MAX_DIAMETER_MM = 762;
+export const PUSH_RING_MAX_RADIUS_IN = 15;
+export const PUSH_RING_MAX_RADIUS_MM = 381;
 export const PUSH_RING_WIRE_IN = 0.5;
 export const PUSH_RING_WIRE_MM = 12.7;
+export const WIPE_PIN_DIAMETER_IN = 0.5;
+export const WIPE_PIN_DIAMETER_MM = 12.7;
 export const WIPE_ANGLE_MIN_DEG = 20;
 export const WIPE_ANGLE_MAX_DEG = 180;
 
@@ -71,10 +77,12 @@ export const HEADS: MachineHeadRow[] = [
     label: "Wipe / pin head — regular angle bends",
     angleMinDeg: WIPE_ANGLE_MIN_DEG,
     angleMaxDeg: WIPE_ANGLE_MAX_DEG,
+    pinDiameterIn: WIPE_PIN_DIAMETER_IN,
+    pinDiameterMm: WIPE_PIN_DIAMETER_MM,
     notes:
-      "Everyday corners: about 20–180°. Eyes / S-hook wraps (~240°) still run on this head. Not the ring head.",
+      "Everyday corners: about 20–180° on a 0.500 in pin. Eyes / S-hook wraps (~240°) still run on this head. Not the ring head. Pin Ø is tooling — not a 0.5×D override of the material radius floor.",
     provenance: shop(
-      "Shop floor — Robomac 214TF wipe head",
+      "Shop floor — Robomac 214TF wipe head, 0.500 in pin",
       "Typical angle-bend range, not a measured axis stop. Wraps above 180° stay on this head until 270° Phase 1 ceiling.",
     ),
   },
@@ -85,13 +93,17 @@ export const HEADS: MachineHeadRow[] = [
     label: "Push head — rings / large radius",
     minRingRadiusIn: PUSH_RING_MIN_RADIUS_IN,
     minRingRadiusMm: PUSH_RING_MIN_RADIUS_MM,
+    maxRingDiameterIn: PUSH_RING_MAX_DIAMETER_IN,
+    maxRingDiameterMm: PUSH_RING_MAX_DIAMETER_MM,
+    maxRingRadiusIn: PUSH_RING_MAX_RADIUS_IN,
+    maxRingRadiusMm: PUSH_RING_MAX_RADIUS_MM,
     minRingRadiusWireIn: PUSH_RING_WIRE_IN,
     minRingRadiusWireMm: PUSH_RING_WIRE_MM,
     notes:
-      "Push bending for rings. Minimum ring radius 6 in on 1/2 in wire. Other diameters are not stated — do not scale.",
+      "Push bending for rings in 1/2 in wire: min 6 in centerline radius, max 30 in centerline diameter. Other wire sizes are not stated — do not scale.",
     provenance: shop(
       "Shop floor — Robomac 214TF push head",
-      "6 in is centerline radius on 1/2 in (12.7 mm). Confirm if the floor meant inside diameter.",
+      "6 in min R and 30 in max Ø are for 1/2 in (12.7 mm). Diameter encoded as centerline.",
     ),
   },
 ];
@@ -340,6 +352,31 @@ export const CAPABILITIES: MachineCapabilityRow[] = [
       "6 in centerline. Not measured for 3/8 or 7/16.",
     ),
   },
+  {
+    id: "cap-wipe-pin",
+    machineId: MACHINE_ID,
+    key: "wipe_pin_diameter_mm",
+    label: "Wipe-head pin diameter",
+    unit: "mm",
+    value: WIPE_PIN_DIAMETER_MM,
+    phase: 1,
+    confidence: "high",
+    provenance: shop("Shop floor — regular bending pin is 0.500 in."),
+  },
+  {
+    id: "cap-push-ring-max-1-2",
+    machineId: MACHINE_ID,
+    key: "push_max_ring_diameter_mm",
+    label: "Push-head max ring diameter on 1/2 in",
+    unit: "mm",
+    max: PUSH_RING_MAX_DIAMETER_MM,
+    phase: 1,
+    confidence: "high",
+    provenance: shop(
+      "Shop floor — push head, 1/2 in wire",
+      "30 in centerline diameter. Not measured for 3/8 or 7/16.",
+    ),
+  },
 ];
 
 const stock3_8 = COMMON_SIZES[0];
@@ -390,9 +427,13 @@ export const TOOLING_ROWS: MachineToolingRow[] = [
     use: "general",
     insideRadiusMm: 15.85,
     insideRadiusIn: 0.624,
+    pinDiameterMm: WIPE_PIN_DIAMETER_MM,
+    pinDiameterIn: WIPE_PIN_DIAMETER_IN,
     notes:
-      "Stock. Inside R 0.624 in is documented for staple crowns. Pin diameter is not on the card — measure it.",
-    provenance: shop("src/lib/ground-staple-builder.ts STAPLE_PINS 1/2 in"),
+      "Regular wipe pin on this cell is 0.500 in. Staple-crown IR 0.624 in is a different wrap — do not swap the two.",
+    provenance: shop(
+      "Shop floor — 0.500 in wipe pin; staple IR from src/lib/ground-staple-builder.ts STAPLE_PINS 1/2 in",
+    ),
   },
   {
     id: "tool-staple-3-8",
@@ -676,6 +717,22 @@ export const RULES: MachineRuleRow[] = [
     provenance: shop(
       "Shop floor — push head min ring R 6 in on 1/2 in",
       "Other wire sizes: REVIEW, do not scale 6 in.",
+    ),
+  },
+  {
+    id: "rule-push-ring-max",
+    machineId: MACHINE_ID,
+    check: "bend_head",
+    severity: "fail",
+    title: "Push-head ring larger than 30 in on 1/2 in",
+    expression:
+      "head = push && diameter ≈ 12.7 mm && centerlineØ > 762 mm → FAIL",
+    phase: 1,
+    implemented: true,
+    confidence: "high",
+    provenance: shop(
+      "Shop floor — push head max 30 in diameter ring on 1/2 in",
+      "Other wire sizes: REVIEW, do not scale 30 in.",
     ),
   },
   {

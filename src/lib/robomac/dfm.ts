@@ -13,6 +13,7 @@ import {
   CAPABILITIES,
   HEADS,
   MATERIALS,
+  PUSH_RING_MAX_DIAMETER_MM,
   PUSH_RING_MIN_RADIUS_MM,
   PUSH_RING_WIRE_MM,
   ROBOMAC_214TF,
@@ -420,9 +421,11 @@ export function assignBendHead(
 function headChecks(geometry: WireFormGeometry): DfmIssue[] {
   const push = HEADS.find((row) => row.kind === "push");
   const minCl = push?.minRingRadiusMm ?? PUSH_RING_MIN_RADIUS_MM;
+  const maxDia = push?.maxRingDiameterMm ?? PUSH_RING_MAX_DIAMETER_MM;
   return bendsOf(geometry).map((segment) => {
     const assigned = assignBendHead(geometry, segment);
     const wrap = Math.abs(segment.angleDeg);
+    const clDia = Math.round(assigned.centerlineRadiusMm * 2 * 10) / 10;
     if (assigned.head === "push") {
       if (isHalfInch(geometry.diameterMm) && assigned.centerlineRadiusMm < minCl) {
         const delta = Math.round((minCl - assigned.centerlineRadiusMm) * 10) / 10;
@@ -439,6 +442,23 @@ function headChecks(geometry: WireFormGeometry): DfmIssue[] {
           problem: `Bend ${segment.index} is a push-head ring tighter than 6 in on 1/2 in.`,
           cause: `Centerline R ${assigned.centerlineRadiusMm} mm < ${minCl} mm (6 in) on ${geometry.diameterMm} mm.`,
           customerExplanation: `The push head on this Robomac needs a 6 in minimum ring radius in 1/2 in wire. Bend ${segment.index} is about ${(assigned.centerlineRadiusMm / 25.4).toFixed(2)} in centerline. Open it to 6 in or talk to the desk — that size does not push-bend here.`,
+        });
+      }
+      if (isHalfInch(geometry.diameterMm) && clDia > maxDia) {
+        const delta = Math.round((clDia - maxDia) * 10) / 10;
+        return issue({
+          check: "bend_head",
+          status: "FAIL",
+          failure: "push_ring_too_large",
+          bend: segment.index,
+          segmentId: segment.id,
+          availableMm: clDia,
+          requiredMm: maxDia,
+          recommendedChangeMm: delta,
+          recommendedChange: `Bring the ring down to 30 in centerline diameter (${maxDia} mm) or less.`,
+          problem: `Bend ${segment.index} is a push-head ring larger than 30 in on 1/2 in.`,
+          cause: `Centerline Ø ${clDia} mm > ${maxDia} mm (30 in) on ${geometry.diameterMm} mm.`,
+          customerExplanation: `The push head on this Robomac maxes out at a 30 in ring in 1/2 in wire. Bend ${segment.index} is about ${(clDia / 25.4).toFixed(1)} in centerline. That is past what this cell push-bends.`,
         });
       }
       if (!isHalfInch(geometry.diameterMm)) {
@@ -463,8 +483,8 @@ function headChecks(geometry: WireFormGeometry): DfmIssue[] {
         availableMm: assigned.centerlineRadiusMm,
         requiredMm: minCl,
         problem: `Bend ${segment.index} is on the push head.`,
-        cause: `Centerline R ${assigned.centerlineRadiusMm} mm ≥ ${minCl} mm on 1/2 in.`,
-        customerExplanation: `Bend ${segment.index} is a push-head ring at or above the 6 in floor on 1/2 in.`,
+        cause: `Centerline R ${assigned.centerlineRadiusMm} mm ≥ ${minCl} mm and Ø ${clDia} mm ≤ ${maxDia} mm on 1/2 in.`,
+        customerExplanation: `Bend ${segment.index} is a push-head ring in the 6 in radius to 30 in diameter window on 1/2 in.`,
       });
     }
     if (wrap > 0 && wrap < WIPE_ANGLE_MIN_DEG) {
