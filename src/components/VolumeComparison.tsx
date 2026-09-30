@@ -2,7 +2,6 @@
 
 import { useMemo } from "react";
 import { estimatePiece, usd2, ESTIMATE } from "@/lib/quoting";
-import { FORMING_RATES } from "@/lib/price";
 import { cx } from "@/lib/cx";
 
 type VolumeComparisonProps = {
@@ -98,8 +97,7 @@ export function VolumeComparison({
         </table>
       </div>
       <p className="mt-3 text-xs text-muted">
-        {FORMING_RATES.cutLabel}, {FORMING_RATES.bendLabel},{" "}
-        {FORMING_RATES.inchLabel}. Material not included.{" "}
+        Material not included.{" "}
         {ESTIMATE.qtyBreaks
           .map((b) => `−${Math.round(b.rate * 100)}% at ${b.qty.toLocaleString()}`)
           .join(". ")}

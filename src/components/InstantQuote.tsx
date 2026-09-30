@@ -80,10 +80,9 @@ export function InstantQuote() {
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <Panel>
           <p className="mb-5 text-sm font-medium text-copper">
-            $1.00 per cut, $0.50 per bend, $0.05 per inch. Material is not
-            in the price — you buy coil and bring it in. The estimate
-            updates as you type. Email it to yourself when the number looks
-            right.
+            The estimate updates as you type. Material is not in the price —
+            you buy coil and bring it in. Email it to yourself when the
+            number looks right.
           </p>
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block text-sm">
@@ -225,27 +224,13 @@ export function InstantQuote() {
                   {usd2(result.lot)} for {quantity.toLocaleString("en-US")} pcs
                 </p>
               ) : null}
-              <dl className="mt-8 space-y-3 border-t border-line pt-6 text-sm">
-                <Row
-                  label={`Forming · ${length} in · ${usd2(result.inchRate)}/in`}
-                  value={usd2(result.forming)}
-                />
-                <Row
-                  label={`${result.cutCount} cut${result.cutCount === 1 ? "" : "s"} · ${usd2(ESTIMATE.cut)} each`}
-                  value={usd2(result.cut)}
-                />
-                <Row
-                  label={`${bendCount} bend${bendCount === 1 ? "" : "s"} · ${usd2(ESTIMATE.bend)} each`}
-                  value={usd2(result.bendCost)}
-                />
-                {result.discountRate > 0 ? (
-                  <Row
-                    label={`Qty break · −${Math.round(result.discountRate * 100)}%`}
-                    value={`−${usd2(result.gross - result.piece)}`}
-                  />
-                ) : null}
-              </dl>
-              <label className="mt-6 block text-sm">
+              {result.discountRate > 0 ? (
+                <p className="mt-2 text-sm text-muted">
+                  Includes a −{Math.round(result.discountRate * 100)}% quantity
+                  break.
+                </p>
+              ) : null}
+              <label className="mt-8 block text-sm">
                 Email this estimate
                 <input
                   className={`mt-1.5 ${fieldClass}`}
@@ -302,14 +287,5 @@ export function InstantQuote() {
         </Panel>
       )}
     </form>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-4">
-      <dt className="text-muted">{label}</dt>
-      <dd className="font-mono">{value}</dd>
-    </div>
   );
 }

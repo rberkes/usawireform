@@ -128,7 +128,7 @@ function estimateForwardMailto(estimate: EstimateMailCopy) {
   const lines = [
     `USA Wire Form estimate — ${part}`,
     "",
-    ...estimateFactRows(estimate).map((row) => `${row.label}: ${row.value}`),
+    ...estimateJobRows(estimate).map((row) => `${row.label}: ${row.value}`),
     "",
     `Builder: ${SITE_URL}/custom-powder-coating-hooks`,
     "Not a production quote. Reply to USA Wire Form if you want a STEP reviewed.",
@@ -279,15 +279,8 @@ export type EstimateMailCopy = {
   notes?: string;
 };
 
-function estimateFactRows(estimate: EstimateMailCopy): MailRow[] {
+function estimateJobRows(estimate: EstimateMailCopy): MailRow[] {
   const qty = estimate.quantity.toLocaleString("en-US");
-  const material = estimate.shopSteel
-    ? `${estimate.materialLabel} — shop steel${
-        estimate.steelLb && estimate.steelUsd
-          ? ` · ${estimate.steelLb} lb · ${estimate.steelUsd}`
-          : ""
-      }`
-    : `${estimate.materialLabel} — customer coil`;
   const part = [
     estimate.hookType,
     estimate.overallIn ? `${estimate.overallIn} in overall` : "",
@@ -298,32 +291,26 @@ function estimateFactRows(estimate: EstimateMailCopy): MailRow[] {
   const rows: MailRow[] = [
     ...(part ? [{ label: "Part", value: part }] : []),
     { label: "Wire", value: estimate.diameterLabel },
-    { label: "Material", value: material },
+    {
+      label: "Material",
+      value: estimate.shopSteel
+        ? `${estimate.materialLabel} — shop steel`
+        : `${estimate.materialLabel} — customer coil`,
+    },
+    { label: "Length", value: `${estimate.lengthIn} in` },
+    { label: "Cuts", value: String(estimate.cuts) },
+    {
+      label: "Bends",
+      value: estimate.shopSteel
+        ? "On the drawing — not billed"
+        : String(estimate.bends),
+    },
     { label: "Quantity", value: `${qty} pcs` },
     { label: "Piece", value: `${estimate.piece} / piece` },
     { label: "Lot", value: `${estimate.lot} for ${qty} pcs` },
-    {
-      label: "Forming",
-      value: `${estimate.lengthIn} in — ${estimate.forming}`,
-    },
-    {
-      label: "Cuts",
-      value: `${estimate.cuts} — ${estimate.cut}`,
-    },
   ];
-  if (estimate.shopSteel) {
-    rows.push({ label: "Bends", value: "On the drawing — not billed" });
-  } else {
-    rows.push({
-      label: "Bends",
-      value: `${estimate.bends} — ${estimate.bend}`,
-    });
-  }
   if (estimate.discount) {
     rows.push({ label: "Qty break", value: estimate.discount });
-  }
-  if (estimate.shopSteel && estimate.beatUsd) {
-    rows.push({ label: "5% under boxed 3/8", value: `−${estimate.beatUsd}` });
   }
   if (!estimate.stock) {
     rows.push({
@@ -337,6 +324,36 @@ function estimateFactRows(estimate: EstimateMailCopy): MailRow[] {
   return rows;
 }
 
+/** Desk-only lines. Do not put these on the customer receipt. */
+function estimateShopRateRows(estimate: EstimateMailCopy): MailRow[] {
+  const rows: MailRow[] = [
+    {
+      label: "Forming",
+      value: `${estimate.lengthIn} in — ${estimate.forming}`,
+    },
+    {
+      label: "Cuts",
+      value: `${estimate.cuts} — ${estimate.cut}`,
+    },
+  ];
+  if (!estimate.shopSteel) {
+    rows.push({
+      label: "Bends",
+      value: `${estimate.bends} — ${estimate.bend}`,
+    });
+  }
+  if (estimate.shopSteel && estimate.steelLb && estimate.steelUsd) {
+    rows.push({
+      label: "Shop steel",
+      value: `${estimate.steelLb} lb · ${estimate.steelUsd}`,
+    });
+  }
+  if (estimate.shopSteel && estimate.beatUsd) {
+    rows.push({ label: "5% under boxed 3/8", value: `−${estimate.beatUsd}` });
+  }
+  return rows;
+}
+
 /** Client copy — a receipt to keep. */
 export function estimateReceiptHtml(estimate: EstimateMailCopy) {
   return shell(
@@ -344,7 +361,7 @@ export function estimateReceiptHtml(estimate: EstimateMailCopy) {
     `${kickerRow()}
      ${headingRow("Your estimate receipt")}
      ${copyRow("Keep this email. It is not a production quote. Reply if you want the shop to look at a STEP.")}
-     ${mailRowsHtml(estimateFactRows(estimate))}
+     ${mailRowsHtml(estimateJobRows(estimate))}
      ${ctaBannerRow(
        `${SITE_URL}/contact`,
        "Send a STEP",
@@ -369,7 +386,8 @@ export function estimateLeadHtml(estimate: EstimateMailCopy) {
         value: estimate.to,
         href: `mailto:${estimate.to}`,
       },
-      ...estimateFactRows(estimate),
+      ...estimateJobRows(estimate),
+      ...estimateShopRateRows(estimate),
     ],
   });
 }
