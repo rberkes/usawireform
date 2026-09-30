@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cx } from "@/lib/cx";
-import { HOME_QUOTE_NOTE } from "@/lib/client-landing";
+import { HOME_CAD_SPLIT, HOME_QUOTE_NOTE } from "@/lib/client-landing";
 import { SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 
 export const INSTANT_QUOTE_HREF = "/instant-quote";
@@ -44,7 +44,7 @@ export function ClientQuoteCtas({
 }: {
   tone?: "light" | "dark";
   size?: keyof typeof sizes;
-  variant?: "quote" | "home";
+  variant?: "quote" | "home" | "cad";
   audience?: "buyers" | "suppliers" | "both";
   className?: string;
 }) {
@@ -71,7 +71,16 @@ export function ClientQuoteCtas({
   const twoUp = showBuyers && showSuppliers;
 
   const buttons =
-    variant === "home" ? (
+    variant === "cad" ? (
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <Link href={INSTANT_QUOTE_HREF} className={primary}>
+          Upload a STEP
+        </Link>
+        <Link href="/source" className={secondary}>
+          Find a shop
+        </Link>
+      </div>
+    ) : variant === "home" ? (
       <div
         className={cx(
           "grid w-full max-w-xl grid-cols-1 gap-5",
@@ -127,7 +136,9 @@ export function ClientQuoteCtas({
   return (
     <div className={cx("flex flex-col gap-3", className)}>
       {buttons}
-      {variant === "home" && size !== "band" ? (
+      {variant === "cad" ? (
+        <p className={cx("max-w-xl text-sm leading-6", note)}>{HOME_CAD_SPLIT}</p>
+      ) : variant === "home" && size !== "band" ? (
         <p className={cx("max-w-xl text-sm leading-6", note)}>
           {audience === "suppliers"
             ? `File every cell free. Matched leads show in the shop dashboard. ${SOURCE_SMART_CONNECT_LINE}.`

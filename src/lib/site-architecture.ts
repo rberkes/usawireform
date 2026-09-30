@@ -83,7 +83,7 @@ export function siteArchitectureTree(): ArchNode[] {
       id: "home",
       name: "/",
       href: "/",
-      note: "Home — resource + this floor",
+      note: "Home — STEP DFM door; Source second",
       kind: "page",
     },
     {
