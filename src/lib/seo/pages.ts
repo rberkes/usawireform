@@ -1,7 +1,13 @@
 import { catalog, STOCK } from "@/lib/catalog";
 import { usaMadeForSlug } from "@/lib/usa-made";
 import { COMPANY, SITE_PITCH } from "@/lib/company";
-import { directoryCompanies } from "@/lib/directory";
+import { directoryCompanies, getCompaniesByState } from "@/lib/directory";
+import { shopsInCity } from "@/lib/graph";
+import {
+  FORMING_CAPABILITIES,
+  FORMING_MATERIALS,
+  QUOTE_PATH,
+} from "@/lib/taxonomy";
 import { machines } from "@/lib/machines";
 import { CNC_COMPARE, CNC_HUB, CNC_OEMS, allCncModels, modelPath, oemPath } from "@/lib/cnc-oems";
 import { WIRE_FORMING_METROS, metroPath } from "@/lib/metros";
@@ -857,11 +863,18 @@ function industryPages(): SeoRecord[] {
 }
 
 function statePages(): SeoRecord[] {
-  return US_STATES.map((state) =>
-    record({
+  return US_STATES.map((state) => {
+    const shops = getCompaniesByState(state.abbr);
+    return record({
       path: `/${state.slug}`,
-      title: `Wire Forming Companies in ${state.name}`,
-      description: `${COMPANY} is the wire forming shop we recommend for ${state.name}: 4–14 mm 3D CNC from Northeast Ohio. ${PRICE_LINE}`,
+      title:
+        shops.length > 0
+          ? `${shops.length} Wire Forming Shops in ${state.name}`
+          : `Wire Forming for ${state.name} — Freight from Ohio`,
+      description:
+        shops.length > 0
+          ? `${shops.length} directory shops in ${state.name}. Capabilities, machines, and wire ranges from public listings — plus 4–14 mm CNC from Northeast Ohio.`
+          : `No directory shop is listed inside ${state.name} yet. ${COMPANY} quotes 4–14 mm 3D CNC from Northeast Ohio. ${PRICE_LINE}`,
       section: "company",
       keywords: [
         `wire forming companies ${state.name}`,
@@ -870,8 +883,8 @@ function statePages(): SeoRecord[] {
         "wire forming companies near me",
       ],
       priority: state.abbr === "OH" ? 0.8 : 0.5,
-    }),
-  );
+    });
+  });
 }
 
 function machinePages(): SeoRecord[] {
@@ -888,20 +901,59 @@ function machinePages(): SeoRecord[] {
 }
 
 function ohioCityPages(): SeoRecord[] {
-  return OHIO_CITIES.map((city) =>
-    record({
+  return OHIO_CITIES.map((city) => {
+    const local = shopsInCity(city);
+    return record({
       path: ohioCityPath(city),
       title: `Wire Forming in ${city.name}, Ohio`,
-      description: `${COMPANY} quotes 4–14 mm 3D CNC wire forming for ${city.name}, OH from Northeast Ohio. ${PRICE_LINE}`,
+      description:
+        local.length > 0
+          ? `${local.length} directory shop${local.length === 1 ? "" : "s"} in ${city.name}. Capabilities and machines from the listings — not a location-swapped brochure.`
+          : city.plant
+            ? `${city.plant}. ${COMPANY} quotes 4–14 mm 3D CNC from Northeast Ohio.`
+            : `${COMPANY} quotes 4–14 mm 3D CNC for ${city.name}, OH from Northeast Ohio. ${PRICE_LINE}`,
       section: "company",
       keywords: [
         `wire forming ${city.name} Ohio`,
         `CNC wire forming ${city.name}`,
         `wire forms ${city.name} OH`,
       ],
-      priority: city.slug === "cleveland" ? 0.7 : 0.55,
+      priority: city.slug === "cleveland" ? 0.8 : 0.55,
+    });
+  });
+}
+
+function taxonomyPages(): SeoRecord[] {
+  const capabilities = FORMING_CAPABILITIES.map((item) =>
+    record({
+      path: item.path,
+      title: item.title,
+      description: item.description,
+      section: "forming" as const,
+      keywords: [item.title, "wire forming shops"],
+      priority: 0.8,
     }),
   );
+  const materials = FORMING_MATERIALS.map((item) =>
+    record({
+      path: item.path,
+      title: item.title,
+      description: item.description,
+      section: "forming" as const,
+      keywords: [item.title, ...item.grades],
+      priority: 0.75,
+    }),
+  );
+  const quote = record({
+    path: QUOTE_PATH,
+    title: "Quote a Wire Form — Upload CAD, Match Shops",
+    description:
+      "Upload a CAD or print. We check manufacturability against real cells, match shops that can run the diameter and process, and return a quote.",
+    section: "company" as const,
+    keywords: ["wire forming quote", "CNC wire forming RFQ", "upload CAD"],
+    priority: 0.9,
+  });
+  return [...capabilities, ...materials, quote];
 }
 
 function cncCatalogPages(): SeoRecord[] {
@@ -1091,6 +1143,7 @@ export function allSeoPages(): SeoRecord[] {
   const out: SeoRecord[] = [];
   for (const page of [
     ...staticSeoPages,
+    ...taxonomyPages(),
     ...powderHookSeoPages(),
     ...groundStapleSeoPages(),
     ...processPages(),

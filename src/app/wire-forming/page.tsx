@@ -91,8 +91,34 @@ export default function WireFormingPillarPage() {
       </table>
       <p>
         Process pages for each lane:{" "}
-        <Link href="/processes">all wire form processes</Link>.
+        <Link href="/processes">all wire form processes</Link>. Shop lists
+        for each capability — who actually runs it — live under this URL:
       </p>
+      <ul>
+        <li>
+          <Link href="/wire-forming/cnc-wire-forming">CNC wire forming</Link>
+        </li>
+        <li>
+          <Link href="/wire-forming/2d-wire-forming">2D wire forming</Link>
+        </li>
+        <li>
+          <Link href="/wire-forming/3d-wire-forming">3D wire forming</Link>
+        </li>
+        <li>
+          <Link href="/wire-forming/wire-bending">Wire bending</Link>
+        </li>
+        <li>
+          <Link href="/wire-forming/wire-straightening">Wire straightening</Link>
+        </li>
+        <li>
+          <Link href="/wire-forming/wire-welding">Wire welding</Link>
+        </li>
+        <li>
+          <Link href="/wire-forming/prototype-wire-forming">
+            Prototype wire forming
+          </Link>
+        </li>
+      </ul>
 
       <h2 id="cnc">Why CNC is the center of gravity</h2>
       <p>

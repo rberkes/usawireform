@@ -95,6 +95,24 @@ export const industries = [
     summary:
       "Fan and HVAC guards with a 3/8 to 1/2 in frame. Light infill named, not a residential register.",
   },
+  {
+    slug: "medical",
+    title: "Medical",
+    summary:
+      "Wire forms for medical equipment and fixtures. Directory shops that name medical — confirm certs and diameter, not a clip catalog.",
+  },
+  {
+    slug: "aerospace",
+    title: "Aerospace",
+    summary:
+      "Precision wire forms for aerospace and aviation. Directory shops that name aerospace — AS9100 when the listing has it.",
+  },
+  {
+    slug: "retail-displays",
+    title: "Retail displays",
+    summary:
+      "Display and fixture wire: hooks, grids, and frames. Directory shops that name retail, display, or fixtures.",
+  },
 ] as const;
 
 export const shopLines = [

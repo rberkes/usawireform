@@ -21,7 +21,7 @@ USA Wire Form is a Next.js 16 App Router site. Two products share one deploy:
 ```
 src/app/            routes (page.tsx) and Server Actions
   actions/          quote, source, careers
-  admin/            desk (password)
+  admin/            desk (password) — architecture + index audit
   buyer/            buyer dashboard
   source/           Source public + shop dashboards
   api/              cron, stripe webhook, ask, recent-cells

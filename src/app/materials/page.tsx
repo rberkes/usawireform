@@ -21,6 +21,7 @@ export const metadata = pageMeta({
 });
 
 const toc = [
+  { id: "shops", label: "Shop pages" },
   { id: "run", label: "What we run" },
   { id: "spec", label: "How to spec" },
   { id: "carbon", label: "1010, 1018, low carbon" },
@@ -68,6 +69,32 @@ export default function MaterialsPage() {
       lede="Cold-roll 1010 and 1018, medium-to-high spring steels, the 300-series stainlesses including 330, brass, and copper — all from coil, in the 4–14 mm band, with 3/8, 7/16, and 1/2 in as stock diameters."
       toc={toc}
     >
+      <h2 id="shops">Material pages that connect to shops</h2>
+      <p>
+        These URLs exist because buyers search them and because directory
+        shops actually name the coil. Not every grade × process pair.
+      </p>
+      <ul>
+        <li>
+          <Link href="/materials/stainless-steel">Stainless steel</Link>
+        </li>
+        <li>
+          <Link href="/materials/304-stainless">304 stainless</Link>
+        </li>
+        <li>
+          <Link href="/materials/carbon-steel">Carbon steel</Link>
+        </li>
+        <li>
+          <Link href="/materials/aluminum">Aluminum</Link>
+        </li>
+        <li>
+          <Link href="/materials/music-wire">Music wire</Link>
+        </li>
+        <li>
+          <Link href="/materials/galvanized">Galvanized</Link>
+        </li>
+      </ul>
+
       <h2 id="run">What we process from coil</h2>
       <p>
         Wire forming starts with a coil, not a bar. The cert on that coil

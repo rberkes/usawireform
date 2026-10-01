@@ -233,11 +233,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/get-a-quote",
-        destination: "/work-with-us",
-        permanent: false,
-      },
-      {
         source: "/start-production-quote",
         destination: "/production-quote",
         permanent: false,
@@ -246,6 +241,36 @@ const nextConfig: NextConfig = {
         source: "/architecture",
         destination: "/admin/architecture",
         permanent: false,
+      },
+      {
+        source: "/cnc-wire-forming",
+        destination: "/wire-forming/cnc-wire-forming",
+        permanent: true,
+      },
+      {
+        source: "/cnc-wire-bending",
+        destination: "/wire-forming/wire-bending",
+        permanent: true,
+      },
+      {
+        source: "/directory/areas/cleveland",
+        destination: "/ohio/cleveland",
+        permanent: true,
+      },
+      {
+        source: "/equipment/cnc-manufacturers/:oem",
+        destination: "/equipment/:oem",
+        permanent: true,
+      },
+      {
+        source: "/equipment/cnc-manufacturers/:oem/:model",
+        destination: "/equipment/:oem/:model",
+        permanent: true,
+      },
+      {
+        source: "/get-a-quote",
+        destination: "/quote",
+        permanent: true,
       },
     ];
   },

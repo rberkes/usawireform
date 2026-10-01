@@ -1,5 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -55,17 +56,11 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  alternates: { canonical: "/" },
   verification: process.env.GOOGLE_SITE_VERIFICATION
     ? { google: process.env.GOOGLE_SITE_VERIFICATION }
     : undefined,
   other: {
     "contact:email": QUOTE_EMAIL,
-    // Geo-targeting for Northeast Ohio / USA
-    "geo.region": "US-OH",
-    "geo.placename": "Cleveland",
-    "geo.position": "41.4993;-81.6944",
-    "ICBM": "41.4993, -81.6944",
   },
   openGraph: {
     type: "website",
@@ -89,7 +84,11 @@ export const metadata: Metadata = {
 const GA_MEASUREMENT_ID =
   process.env.NEXT_PUBLIC_GA_ID ?? "G-2J3FGMRF7E";
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <ClerkProvider appearance={clerkAppearance} afterSignOutUrl="/">
       <html

@@ -12,19 +12,19 @@
  * ones ("mesh grids" before "mesh", "resistance welding" before "welding").
  */
 const TOPICS: { match: RegExp; href: string }[] = [
-  { match: /\b3-?d\b/i, href: "/processes/3d-cnc-wire-forming" },
-  { match: /\b2-?d\b/i, href: "/processes/2d-cnc-wire-forming" },
-  { match: /(cut[- ]to[- ]length|straighten)/i, href: "/processes/cut-to-length" },
+  { match: /\b3-?d\b/i, href: "/wire-forming/3d-wire-forming" },
+  { match: /\b2-?d\b/i, href: "/wire-forming/2d-wire-forming" },
+  { match: /(cut[- ]to[- ]length|straighten)/i, href: "/wire-forming/wire-straightening" },
   { match: /(four-?slide|multi-?slide)/i, href: "/processes/fourslide" },
   { match: /(mesh grid|cable tray)/i, href: "/processes/mesh-grids-and-cable-trays" },
-  { match: /(resistance weld|spot weld)/i, href: "/processes/resistance-welding" },
-  { match: /(mig|tig)\b/i, href: "/processes/mig-tig-assembly" },
+  { match: /(resistance weld|spot weld|mig|tig)\b/i, href: "/wire-forming/wire-welding" },
+  { match: /prototype/i, href: "/wire-forming/prototype-wire-forming" },
   { match: /heavy/i, href: "/processes/heavy-wire-forming" },
   { match: /mesh/i, href: "/wire-mesh" },
   { match: /\brod\b/i, href: "/rod-bending" },
-  { match: /cnc/i, href: "/processes/2d-cnc-wire-forming" },
-  { match: /wire form/i, href: "/processes/wire-form-shapes" },
-  { match: /wire bend/i, href: "/processes/wire-form-shapes" },
+  { match: /cnc/i, href: "/wire-forming/cnc-wire-forming" },
+  { match: /wire bend/i, href: "/wire-forming/wire-bending" },
+  { match: /wire form/i, href: "/wire-forming/cnc-wire-forming" },
 ];
 
 /** Process page that explains this capability, when one exists. */
