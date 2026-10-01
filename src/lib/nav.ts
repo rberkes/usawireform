@@ -101,6 +101,7 @@ export const NAV_FACTORIES: NavSection = {
   href: "/directory",
   items: [
     { href: "/directory", label: "Company directory" },
+    { href: "/quote", label: "Upload a print" },
     { href: "/wire-form-factories-in-usa", label: "USA factories" },
     { href: "/find-factories-by-machine", label: "Machine or secondary" },
     { href: "/source", label: "Match a print" },
@@ -119,6 +120,8 @@ export const NAV_LEARN: NavSection = {
       title: "Guides",
       items: [
         { href: "/guide/design-for-wire-forming", label: "Design guide" },
+        { href: "/wire-forming", label: "Wire forming map" },
+        { href: "/wire-forming/3d-wire-forming", label: "3D wire forming shops" },
         { href: "/materials", label: "Materials" },
         { href: "/sizes", label: "Wire sizes" },
         { href: "/330-stainless-wire-bending-usa-parts", label: "330 stainless" },
@@ -130,6 +133,7 @@ export const NAV_LEARN: NavSection = {
       items: [
         { href: "/equipment", label: "This floor" },
         { href: "/equipment/cnc-manufacturers", label: "CNC catalog" },
+        { href: "/equipment/numalliance/robomac-214tf", label: "Robomac 214TF" },
         { href: "/equipment/machine-comparison", label: "Machine comparison" },
         { href: "/models", label: "3D models" },
         { href: "/past-projects", label: "Past projects" },

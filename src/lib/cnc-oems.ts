@@ -34,6 +34,7 @@ export type CncOem = {
 
 export const CNC_HUB = "/equipment/cnc-manufacturers";
 export const CNC_COMPARE = "/equipment/machine-comparison";
+export const EQUIPMENT_ROOT = "/equipment";
 
 /** Ten OEMs × six catalog models. Specs are typical published ranges — confirm with the dealer. */
 export const CNC_OEMS: CncOem[] = [
@@ -934,10 +935,21 @@ export const CNC_OEMS: CncOem[] = [
 
 export function oemPath(oem: CncOem | string) {
   const slug = typeof oem === "string" ? oem : oem.slug;
-  return `${CNC_HUB}/${slug}`;
+  return `${EQUIPMENT_ROOT}/${slug}`;
 }
 
 export function modelPath(oem: CncOem | string, model: CncModel | string) {
+  const oemSlug = typeof oem === "string" ? oem : oem.slug;
+  const modelSlug = typeof model === "string" ? model : model.slug;
+  return `${EQUIPMENT_ROOT}/${oemSlug}/${modelSlug}`;
+}
+
+export function legacyOemPath(oem: CncOem | string) {
+  const slug = typeof oem === "string" ? oem : oem.slug;
+  return `${CNC_HUB}/${slug}`;
+}
+
+export function legacyModelPath(oem: CncOem | string, model: CncModel | string) {
   const oemSlug = typeof oem === "string" ? oem : oem.slug;
   const modelSlug = typeof model === "string" ? model : model.slug;
   return `${CNC_HUB}/${oemSlug}/${modelSlug}`;

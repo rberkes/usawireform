@@ -19,8 +19,16 @@ import {
   publicHost,
 } from "@/lib/directory";
 import { getStateByAbbr } from "@/lib/states";
+import { GraphPills, GraphTrail } from "@/components/GraphLinks";
 import { capabilityTopic } from "@/lib/directory-topics";
 import { directoryListingHasSubstance } from "@/lib/directory-substance";
+import {
+  companyCapabilities,
+  companyIndustries,
+  companyMaterials,
+  companyModels,
+  relatedLinks,
+} from "@/lib/graph";
 import { pageMeta } from "@/lib/seo";
 import { directoryPlantStatus } from "@/lib/plant-verify";
 import {
@@ -264,6 +272,8 @@ export default async function DirectoryCompanyPage({ params }: Props) {
               {company.description}
             </p>
 
+            <GraphTrail nodes={relatedLinks(company)} />
+
             <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
               {company.website ? (
                 <a
@@ -329,14 +339,47 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                   {source ? "Filed cells" : "Equipment"}
                 </h2>
                 <ul className="mt-4 divide-y divide-line border-y border-line">
-                  {company.machines.map((machine) => (
-                    <li key={machine} className="py-3 text-sm leading-6">
-                      {machine}
-                    </li>
-                  ))}
+                  {company.machines.map((machine) => {
+                    const hit = companyModels(company).find(
+                      (row) =>
+                        machine.toLowerCase().includes(row.model.name.toLowerCase()) ||
+                        machine.toLowerCase().includes(row.oem.name.toLowerCase()),
+                    );
+                    return (
+                      <li key={machine} className="py-3 text-sm leading-6">
+                        {hit ? (
+                          <Link
+                            href={`/equipment/${hit.oem.slug}/${hit.model.slug}`}
+                            className="text-copper hover:underline"
+                          >
+                            {machine}
+                          </Link>
+                        ) : (
+                          machine
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </section>
             ) : null}
+
+            <GraphPills
+              title="Capabilities in the taxonomy"
+              nodes={companyCapabilities(company).map((item) => ({
+                href: item.path,
+                label: item.title,
+                kind: "capability" as const,
+              }))}
+            />
+            <GraphPills
+              title="Materials"
+              nodes={companyMaterials(company).map((item) => ({
+                href: item.path,
+                label: item.title.replace(/ Wire Forming$/, ""),
+                kind: "material" as const,
+              }))}
+            />
 
             {company.secondaries && company.secondaries.length > 0 ? (
               <section className="mt-12">
@@ -388,9 +431,29 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             {company.industries && company.industries.length > 0 ? (
               <section className="mt-12">
                 <h2 className="text-lg font-medium tracking-tight">Industries</h2>
-                <p className="mt-4 text-sm leading-7 text-muted">
-                  {company.industries.join(" · ")}
-                </p>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {company.industries.map((label) => {
+                    const topic = companyIndustries(company).find((item) =>
+                      item.match.test(label),
+                    );
+                    return (
+                      <li key={label}>
+                        {topic ? (
+                          <Link
+                            href={topic.path}
+                            className="border border-line px-3 py-1.5 text-sm hover:border-copper hover:text-copper"
+                          >
+                            {label}
+                          </Link>
+                        ) : (
+                          <span className="border border-line px-3 py-1.5 text-sm">
+                            {label}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
               </section>
             ) : null}
 

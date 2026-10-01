@@ -7,6 +7,9 @@ import { StateGrid } from "./StateGrid";
 
 const library = [
   { href: "/wire-forming", label: "Wire forming" },
+  { href: "/wire-forming/cnc-wire-forming", label: "CNC wire forming shops" },
+  { href: "/wire-forming/3d-wire-forming", label: "3D wire forming shops" },
+  { href: "/quote", label: "Quote / upload CAD" },
   { href: "/custom-wire-forming", label: "Custom wire forming" },
   { href: "/custom-cnc-wire-forming-services", label: "Custom CNC wire forming services" },
   { href: "/powder-coating-hooks", label: "Powder coating hooks" },
@@ -48,6 +51,7 @@ const factories = [
   { href: "/directory", label: "Company Directory" },
   { href: "/wire-form-factories-in-usa", label: "Wire form factories in the USA" },
   { href: "/find-factories-by-machine", label: "Find by machine or secondary" },
+  { href: "/quote", label: "Upload a print" },
   { href: "/source", label: "Find a wire form shop" },
   { href: "/source/shops", label: "Add a machine cell" },
   { href: "/#login", label: "Log in" },

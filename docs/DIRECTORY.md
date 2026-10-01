@@ -8,6 +8,10 @@ problem.
 Count it with `directoryCompanies.length`. Never by grepping one file —
 `directory.ts` merges seven sources plus `fromStateShops()`.
 
+Listings feed the topical graph in `src/lib/graph.ts`: capability,
+material, OEM/model, and place. A page should not invent those
+relationships in copy. See [INDEX.md](./INDEX.md).
+
 Today: **539** entries (517 US, 22 Canada, 43 states and provinces), 441 with a
 working website.
 

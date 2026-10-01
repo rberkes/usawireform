@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/company";
 import { allSeoPages } from "@/lib/seo";
-import { directoryCompanies } from "@/lib/directory";
-import { directoryListingHasSubstance } from "@/lib/directory-substance";
+import { shouldIndexPath } from "@/lib/index-policy";
 import { listPublishedSourceDirectoryCompanies } from "@/lib/source";
 
 type ChangeFreq =
@@ -37,35 +36,24 @@ const highPriorityPaths = new Set([
   "/directory/areas",
   "/wire-form-factories-in-usa",
   "/find-factories-by-machine",
+  "/quote",
+  "/wire-forming",
+  "/materials",
 ]);
 
 /**
- * Listing pages that carry no fact of their own are served with `noindex`, so
- * submitting them here would ask Google to crawl what we just told it to skip.
- * They stay linked from `/directory` and the HTML site map.
+ * Pages served with `noindex` stay out of the XML sitemap. Submitting them
+ * would ask Google to crawl what we just told it to skip.
  */
-function noindexDirectoryPaths() {
-  const paths = new Set<string>();
-  for (const company of directoryCompanies) {
-    if (!directoryListingHasSubstance(company)) {
-      paths.add(`/directory/${company.slug}`);
-    }
-  }
-  return paths;
-}
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
   const allUrls = new Map<string, MetadataRoute.Sitemap[number]>();
-  const skip = noindexDirectoryPaths();
 
   for (const page of allSeoPages()) {
-    if (skip.has(page.path)) continue;
+    if (!shouldIndexPath(page.path)) continue;
     const url = page.path === "/" ? SITE_URL : `${SITE_URL}${page.path}`;
     const boosted = highPriorityPaths.has(page.path);
     allUrls.set(url, {
       url,
-      lastModified: now,
       changeFrequency: (page.changeFrequency ??
         (page.path === "/" ? "weekly" : "monthly")) as ChangeFreq,
       priority: boosted
@@ -83,7 +71,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (allUrls.has(url)) continue;
       allUrls.set(url, {
         url,
-        lastModified: now,
         changeFrequency: "weekly",
         priority: 0.6,
       });

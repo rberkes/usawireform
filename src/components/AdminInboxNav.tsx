@@ -54,7 +54,7 @@ export function AdminInboxNav({
   accountCount = 0,
   visitorCount,
 }: {
-  current: "quotes" | "directory" | "source" | "subscribers" | "accounts" | "live" | "visitors" | "architecture" | "preview";
+  current: "quotes" | "directory" | "source" | "subscribers" | "accounts" | "live" | "visitors" | "architecture" | "preview" | "index";
   quoteCount: number;
   directoryCount: number;
   sourceCount?: number;
@@ -133,6 +133,13 @@ export function AdminInboxNav({
           waiting={false}
         >
           Architecture
+        </InboxTab>
+        <InboxTab
+          href="/admin/index"
+          active={current === "index"}
+          waiting={false}
+        >
+          Index
         </InboxTab>
       </nav>
       {current === "directory" && quoteCount > 0 ? (
