@@ -26,7 +26,7 @@ export const HOME_QUOTE_NOTE =
   "Upload a STEP or 3-view. We check the cell, then match shops that filed it. No STEP? We convert a PDF 3-view free. Shops quote the print — not an instant multi-shop price.";
 
 export const HOME_HERO_LEDE =
-  "Drop a STEP or a 3-view. We check diameter, 2D vs 3D, and material against real cells — this Ohio floor when it fits, or shops that filed the matching iron.";
+  "STEP, SolidWorks, or a 3-view PDF. 4–14 mm 3D can run on this Ohio Robomac. Anything else matches shops that filed that cell.";
 
 export const HOME_BUYER_STEPS = [
   {

@@ -1,10 +1,4 @@
-import Link from "next/link";
-import { ClientHero } from "@/components/client/ClientLanding";
-import { HomePrintHero } from "@/components/HomePrintHero";
-import { HOME_BUYER_STEPS, HOME_HERO_LEDE } from "@/lib/client-landing";
-import { SOURCE_EQUIPMENT_HREF } from "@/components/client/ClientQuoteCtas";
-import { Page } from "@/components/ui";
-import { BrandLockup } from "@/components/WireMark";
+import { HomeHero } from "@/components/HomeHero";
 import { COMPANY } from "@/lib/company";
 import { pageMeta } from "@/lib/seo";
 
@@ -32,49 +26,5 @@ export const metadata = pageMeta({
 });
 
 export default async function Home() {
-  return (
-    <>
-      <ClientHero
-        kicker="Upload a print"
-        title={<BrandLockup size="hero" tone="onDark" />}
-        lede={HOME_HERO_LEDE}
-        cta={false}
-        aside={<HomePrintHero />}
-      />
-      <Page className="py-12 sm:py-16">
-        <ol className="grid gap-6 sm:grid-cols-3">
-          {HOME_BUYER_STEPS.map((step, index) => (
-            <li key={step.title}>
-              <p className="font-mono text-[11px] tracking-[0.22em] text-copper uppercase">
-                0{index + 1}
-              </p>
-              <h2 className="mt-2 text-lg tracking-tight">{step.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-muted">{step.body}</p>
-            </li>
-          ))}
-        </ol>
-
-        <p
-          id="login"
-          className="mt-12 scroll-mt-24 max-w-2xl text-sm leading-6 text-muted"
-        >
-          <Link href="/directory" className="text-copper hover:underline">
-            Browse shops
-          </Link>
-          {" · "}
-          <Link href="/instant-quote" className="text-copper hover:underline">
-            This-floor estimate
-          </Link>
-          {" · "}
-          <Link href={SOURCE_EQUIPMENT_HREF} className="text-copper hover:underline">
-            File a cell free
-          </Link>
-          {" · "}
-          <Link href="/sign-in" className="text-copper hover:underline">
-            Log in
-          </Link>
-        </p>
-      </Page>
-    </>
-  );
+  return <HomeHero />;
 }
