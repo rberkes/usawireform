@@ -176,12 +176,22 @@ const fuse = new Fuse(searchItems, {
   includeScore: true,
 });
 
-export function SearchButton({ onClick }: { onClick: () => void }) {
+export function SearchButton({
+  onClick,
+  tone = "light",
+}: {
+  onClick: () => void;
+  tone?: "light" | "dark";
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex h-9 items-center gap-2 rounded-sm border border-line bg-background px-3 text-sm text-muted transition-colors hover:border-copper/50 hover:text-foreground"
+      className={
+        tone === "dark"
+          ? "flex h-9 items-center gap-2 rounded-sm border border-white/20 bg-transparent px-3 text-sm text-white/70 transition-colors hover:border-white/50 hover:text-white"
+          : "flex h-9 items-center gap-2 rounded-sm border border-line bg-background px-3 text-sm text-muted transition-colors hover:border-copper/50 hover:text-foreground"
+      }
       aria-label="Search"
     >
       <SearchIcon />
