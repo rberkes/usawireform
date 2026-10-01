@@ -23,6 +23,9 @@ export function SourceJobForm({
     name?: string;
     email?: string;
     phone?: string;
+    diameter?: string;
+    kind?: string;
+    notes?: string;
   };
   allowExtras?: boolean;
 }) {
@@ -45,7 +48,7 @@ export function SourceJobForm({
             iron in your state. First two to unlock can quote.
           </p>
           <div className="mt-4">
-            <SourceKindCards name="kind" required />
+            <SourceKindCards name="kind" required defaultValue={defaults?.kind} />
           </div>
         </fieldset>
       </Panel>
@@ -153,6 +156,7 @@ export function SourceJobForm({
               name="diameter"
               placeholder="8 mm or 3/8 in"
               required
+              defaultValue={defaults?.diameter}
             />
           </label>
           <label className="block text-sm">
@@ -182,6 +186,7 @@ export function SourceJobForm({
             className={`${fieldClass} mt-1.5 min-h-24`}
             name="notes"
             placeholder="3/8 3D V-hook, 5k pcs, Midwest."
+            defaultValue={defaults?.notes}
           />
         </label>
         <fieldset className="space-y-3">

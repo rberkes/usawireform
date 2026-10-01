@@ -13,6 +13,7 @@ import {
   type NavSection,
 } from "@/lib/nav";
 import { sourceHomeLoginHref } from "@/lib/source-plans";
+import { UPLOAD_PRINT_HREF } from "@/lib/print-fit";
 
 const SearchDialog = dynamic(
   () => import("./Search").then((mod) => ({ default: mod.SearchDialog })),
@@ -122,10 +123,10 @@ export function Header({ account }: { account: ReactNode }) {
             </Link>
             {account}
             <Link
-              href="/instant-quote"
+              href={UPLOAD_PRINT_HREF}
               className={cx(btn.quote, "hidden whitespace-nowrap sm:inline-flex")}
             >
-              Instant quote
+              Upload a print
             </Link>
 
             <button
@@ -162,10 +163,10 @@ export function Header({ account }: { account: ReactNode }) {
 
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-background p-3 sm:hidden">
         <Link
-          href="/instant-quote"
+          href={UPLOAD_PRINT_HREF}
           className={cx(btn.quote, "w-full justify-center")}
         >
-          Get instant quote
+          Upload a print
         </Link>
       </div>
 
@@ -325,11 +326,11 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           Source shop
         </Link>
         <Link
-          href="/instant-quote"
+          href={UPLOAD_PRINT_HREF}
           className={`${btn.quote} mt-4 w-full justify-center`}
           onClick={onClose}
         >
-          Instant quote
+          Upload a print
         </Link>
       </div>
     </nav>

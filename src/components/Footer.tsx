@@ -72,7 +72,7 @@ const shop = [
   { href: "/past-projects", label: "Our past projects" },
   { href: "/videos", label: "Videos" },
   { href: "/blog", label: "Blog" },
-  { href: "/instant-quote", label: "Instant quote" },
+  { href: "/instant-quote", label: "This-floor estimate" },
   { href: "/quoting", label: "Tooling & coil" },
   { href: "/about", label: "About" },
   { href: "/cleveland", label: "Northeast Ohio" },

@@ -50,10 +50,10 @@ export default function NotFound() {
             </li>
             <li>
               <Link
-                href="/instant-quote"
+                href="/#upload"
                 className="text-copper hover:underline"
               >
-                Instant quote
+                Upload a print
               </Link>
             </li>
             <li>

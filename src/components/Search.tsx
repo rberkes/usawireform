@@ -62,7 +62,8 @@ const searchItems: SearchItem[] = [
     })),
   // Static pages
   { title: "Contact", href: "/contact", category: "Pages", description: "Request a quote for custom CNC wire forms." },
-  { title: "Instant Quote", href: "/instant-quote", category: "Pages", description: "Get an instant estimate for wire forming." },
+  { title: "This-floor estimate", href: "/instant-quote", category: "Pages", description: "Ballpark for 4–14 mm on this Ohio Robomac — cuts, bends, and inches." },
+  { title: "Upload a print", href: "/#upload", category: "Pages", description: "Drop a STEP or 3-view. Check the cell, then match shops on Source." },
   { title: "CNC Machine Catalog", href: "/equipment/cnc-manufacturers", category: "Equipment", description: "Ten OEMs, sixty 2D/3D CNC models. Dealer leads — we run a Robomac 214TF." },
   { title: "Machine Comparison", href: "/equipment/machine-comparison", category: "Equipment", description: "Which cells win small springs, heavy 3D, cut-to-length, and 5–8 mm parts." },
   { title: "Equipment", href: "/equipment", category: "Pages", description: "Our CNC wire forming equipment and machines." },

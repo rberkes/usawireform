@@ -15,6 +15,8 @@ import { getBuyerAccount, buyerMayUploadExtras, clerkEmailIsConfirmed } from "@/
 import { listNewestSourceDirectoryCompanies } from "@/lib/source";
 import { sourceBuyerSignInHref, sourceBuyerSignUpHref } from "@/lib/source-plans";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { SOURCE_STOCK_MATERIALS } from "@/lib/source-fit";
+import { isSourceJobClass } from "@/lib/source-types";
 
 export const dynamic = "force-dynamic";
 
@@ -49,25 +51,47 @@ const STEPS = [
   },
 ];
 
-export default async function SourcePage() {
+function materialNote(material: string | undefined) {
+  if (!material) return undefined;
+  const row = SOURCE_STOCK_MATERIALS.find((item) => item.id === material);
+  return `Material: ${row?.label ?? material}`;
+}
+
+export default async function SourcePage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    kind?: string;
+    diameter?: string;
+    material?: string;
+  }>;
+}) {
+  const params = await searchParams;
   const newest = await listNewestSourceDirectoryCompanies(6);
   const { userId } = await auth();
   const [buyer, user] = userId
     ? await Promise.all([getBuyerAccount(userId), currentUser()])
     : [null, null];
+  const printDefaults = {
+    diameter: params.diameter?.slice(0, 40),
+    kind: params.kind && isSourceJobClass(params.kind) ? params.kind : undefined,
+    notes: materialNote(params.material),
+  };
   const defaults = buyer
     ? {
         company: buyer.company,
         name: buyer.name,
         email: buyer.email,
         phone: buyer.phone,
+        ...printDefaults,
       }
     : user
       ? {
           email: user.primaryEmailAddress?.emailAddress ?? "",
           name: user.fullName ?? "",
+          ...printDefaults,
         }
-      : undefined;
+      : printDefaults;
   const allowExtras = buyerMayUploadExtras(buyer, {
     emailConfirmed: clerkEmailIsConfirmed(user),
   });
@@ -122,7 +146,7 @@ export default async function SourcePage() {
             to unlock can quote.
           </p>
           <p className="mt-4 text-sm leading-6 text-muted">
-            Instant estimate on this site is still this floor — 4–14 mm on the
+            This-floor estimate is still this Ohio cell — 4–14 mm on the
             Robomac. Source is other US shops.
           </p>
         </div>

@@ -105,9 +105,14 @@ export default function SiteMapPage() {
               body: "Weld, plate, powder, ends, inspect.",
             },
             {
+              href: "/#upload",
+              title: "Upload a print",
+              body: "Drop a STEP or 3-view. Check the cell, then match shops.",
+            },
+            {
               href: "/instant-quote",
-              title: "Instant quote",
-              body: "Estimate from diameter, bends, length, and material.",
+              title: "This-floor estimate",
+              body: "Ballpark from diameter, bends, length, and material on this Ohio cell.",
             },
             {
               href: "/equipment/machines",

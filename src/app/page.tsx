@@ -3,14 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { AskBox } from "@/components/AskBox";
 import { CapabilityStrip } from "@/components/CapabilityStrip";
-import { ClientQuoteCtas } from "@/components/client/ClientQuoteCtas";
+import { ClientQuoteCtas, SOURCE_EQUIPMENT_HREF } from "@/components/client/ClientQuoteCtas";
 import { ClientCtaBand, ClientHero } from "@/components/client/ClientLanding";
-import { PlatformFlowTabs } from "@/components/client/PlatformFlowTabs";
 import {
   HomeFloorFeedFallback,
   HomeFloorFeedSection,
 } from "@/components/HomeFloorFeedSection";
 import { HomeLogin } from "@/components/HomeLogin";
+import { HomePrintHero } from "@/components/HomePrintHero";
 import {
   HOME_CTA_LEDE,
   HOME_CTA_TITLE,
@@ -34,7 +34,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
-  description: `${COMPANY}: Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity. Upload a STEP; quotes come from equipment that can form it.`,
+  description: `${COMPANY}: Upload a STEP or 3-view. We check diameter, 2D vs 3D, and material against real cells — this Ohio floor when it fits, or shops that filed the matching iron.`,
   path: "/",
   absoluteTitle: true,
   image: {
@@ -74,24 +74,28 @@ export const metadata = pageMeta({
 /** ISR: cache the page for 5 minutes so the floor feed stays reasonably fresh. */
 export const revalidate = 300;
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ tab?: string }>;
-}) {
-  const { tab: tabParam } = await searchParams;
-  const tab = tabParam === "suppliers" ? "suppliers" : "buyers";
-
+export default async function Home() {
   return (
     <>
       <ClientHero
-        kicker="Source fast. Source easy."
+        kicker="Upload a print"
         title={<BrandLockup size="hero" tone="onDark" />}
         lede={HOME_HERO_LEDE}
-        flow={<PlatformFlowTabs tab={tab} />}
         cta={false}
-        aside={<HomeLogin />}
-      />
+        aside={<HomePrintHero />}
+      >
+        <ul className="mt-8 max-w-xl space-y-2 text-sm leading-6 text-white/70">
+          <li>
+            Diameter, 2D vs 3D, and material decide the cell — not a rendered
+            marketing image.
+          </li>
+          <li>4–14 mm 3D can run on this Northeast Ohio Robomac.</li>
+          <li>
+            Everything else matches shops that filed that iron. They quote. We
+            do not invent a multi-shop price.
+          </li>
+        </ul>
+      </ClientHero>
       <Page>
         <Suspense fallback={<HomeFloorFeedFallback />}>
           <HomeFloorFeedSection />
@@ -100,12 +104,34 @@ export default async function Home({
         <AskBox />
 
         <Section
-          kicker="The platform"
-          title="Where suppliers, manufacturers, and buyers meet."
+          kicker="Accounts"
+          title="Shops and buyers use the same login."
+        >
+          <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
+            <div>
+              <p className="max-w-2xl text-sm leading-6 text-muted">
+                File OEM, year, capacity, and stocked wire sizes. Listing a cell
+                is free. Jobs that fit that iron come to the shop dashboard —
+                not to the first screen.
+              </p>
+              <p className="mt-6">
+                <Link href={SOURCE_EQUIPMENT_HREF} className="text-copper hover:underline">
+                  List machines free
+                </Link>
+              </p>
+            </div>
+            <HomeLogin tone="page" />
+          </div>
+        </Section>
+
+        <Section
+          kicker="The path"
+          title="Upload. Check the cell. Match a shop."
         >
           <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-            Shops upload capability and capacity. Buyers send a STEP. Quotes go
-            to shops with the right machine and open capacity.
+            One print. A manufacturability check against real machines. Then
+            shops that filed the matching cell — or this Ohio floor when the
+            print is 4–14 mm 3D.
           </p>
           <LinkList
             className="mt-8"
@@ -141,8 +167,8 @@ export default async function Home({
                 body: "Grades from coil, mill and drawer links, and what this cell actually runs.",
               },
               {
-                href: "/source",
-                title: "Upload a STEP for quotes",
+                href: "/#upload",
+                title: "Upload a print",
                 body: HOME_QUOTE_NOTE,
               },
             ]}
