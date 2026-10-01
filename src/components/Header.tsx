@@ -3,6 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useRef, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { BrandLockup } from "./WireMark";
 import { SearchButton } from "./Search";
 import { btn, Container } from "./ui";
@@ -13,6 +14,7 @@ import {
   type NavSection,
 } from "@/lib/nav";
 import { sourceHomeLoginHref } from "@/lib/source-plans";
+import { UPLOAD_PRINT_HREF } from "@/lib/print-fit";
 
 const SearchDialog = dynamic(
   () => import("./Search").then((mod) => ({ default: mod.SearchDialog })),
@@ -20,6 +22,8 @@ const SearchDialog = dynamic(
 );
 
 export function Header({ account }: { account: ReactNode }) {
+  const pathname = usePathname();
+  const dark = pathname === "/";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -53,10 +57,17 @@ export function Header({ account }: { account: ReactNode }) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-line bg-background/85 backdrop-blur-md">
+      <header
+        className={cx(
+          "sticky top-0 z-50 border-b backdrop-blur-md",
+          dark
+            ? "border-white/10 bg-[#0b1f33]"
+            : "border-line bg-background/85",
+        )}
+      >
         <Container className="flex h-16 items-center justify-between">
           <Link href="/" onClick={() => setMobileOpen(false)}>
-            <BrandLockup />
+            <BrandLockup tone={dark ? "onDark" : "default"} />
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" ref={dropdownRef}>
@@ -68,7 +79,9 @@ export function Header({ account }: { account: ReactNode }) {
                     "flex items-center gap-1 px-3 py-2 text-sm transition-colors",
                     activeDropdown === section.label
                       ? "text-copper"
-                      : "text-muted hover:text-foreground"
+                      : dark
+                        ? "text-white/70 hover:text-white"
+                        : "text-muted hover:text-foreground"
                   )}
                   onClick={() =>
                     setActiveDropdown(
@@ -106,31 +119,55 @@ export function Header({ account }: { account: ReactNode }) {
             ))}
             <Link
               href="/contact"
-              className="px-3 py-2 text-sm text-muted transition-colors hover:text-foreground"
+              className={cx(
+                "px-3 py-2 text-sm transition-colors",
+                dark
+                  ? "text-white/70 hover:text-white"
+                  : "text-muted hover:text-foreground",
+              )}
             >
               Contact
             </Link>
           </nav>
 
           <div className="flex items-center gap-2">
-            <SearchButton onClick={() => setSearchOpen(true)} />
+            <SearchButton
+              onClick={() => setSearchOpen(true)}
+              tone={dark ? "dark" : "light"}
+            />
             <Link
               href={sourceHomeLoginHref()}
-              className="hidden px-2 py-2 text-sm text-muted transition-colors hover:text-foreground sm:inline"
+              className={cx(
+                "hidden px-2 py-2 text-sm transition-colors sm:inline",
+                dark
+                  ? "text-white/70 hover:text-white"
+                  : "text-muted hover:text-foreground",
+              )}
             >
               Log in
             </Link>
-            {account}
+            <div
+              className={
+                dark
+                  ? "[&_a]:text-white/70 [&_a:hover]:text-white"
+                  : undefined
+              }
+            >
+              {account}
+            </div>
             <Link
-              href="/instant-quote"
+              href={UPLOAD_PRINT_HREF}
               className={cx(btn.quote, "hidden whitespace-nowrap sm:inline-flex")}
             >
-              Instant quote
+              Upload a print
             </Link>
 
             <button
               type="button"
-              className="flex h-10 w-10 items-center justify-center text-foreground lg:hidden"
+              className={cx(
+                "flex h-10 w-10 items-center justify-center lg:hidden",
+                dark ? "text-white" : "text-foreground",
+              )}
               aria-expanded={mobileOpen}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               onClick={() => setMobileOpen((value) => !value)}
@@ -157,15 +194,17 @@ export function Header({ account }: { account: ReactNode }) {
           </div>
         </Container>
 
-        {mobileOpen && <MobileMenu onClose={() => setMobileOpen(false)} />}
+        {mobileOpen && (
+          <MobileMenu onClose={() => setMobileOpen(false)} dark={dark} />
+        )}
       </header>
 
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-background p-3 sm:hidden">
         <Link
-          href="/instant-quote"
+          href={UPLOAD_PRINT_HREF}
           className={cx(btn.quote, "w-full justify-center")}
         >
-          Get instant quote
+          Upload a print
         </Link>
       </div>
 
@@ -253,11 +292,22 @@ function DropdownMenu({
   );
 }
 
-function MobileMenu({ onClose }: { onClose: () => void }) {
+function MobileMenu({
+  onClose,
+  dark = false,
+}: {
+  onClose: () => void;
+  dark?: boolean;
+}) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   return (
-    <nav className="border-t border-line bg-background px-5 py-4 lg:hidden">
+    <nav
+      className={cx(
+        "border-t px-5 py-4 lg:hidden",
+        dark ? "border-white/10 bg-[#0b1f33]" : "border-line bg-background",
+      )}
+    >
       <div className="mx-auto flex max-w-6xl flex-col gap-2">
         {navSections.map((section) => {
           const links = navSectionLinks(section);
@@ -268,7 +318,10 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
             <div key={section.label}>
               <button
                 type="button"
-                className="flex w-full items-center justify-between py-2 text-base text-foreground"
+                className={cx(
+                  "flex w-full items-center justify-between py-2 text-base",
+                  dark ? "text-white" : "text-foreground",
+                )}
                 onClick={() =>
                   setExpandedSection(open ? null : section.label)
                 }
@@ -280,7 +333,12 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
                 />
               </button>
               {open ? (
-                <div className="ml-4 border-l border-line pl-4">
+                <div
+                  className={cx(
+                    "ml-4 border-l pl-4",
+                    dark ? "border-white/15" : "border-line",
+                  )}
+                >
                   <Link
                     href={section.href}
                     className="block py-2 text-sm text-copper"
@@ -292,7 +350,10 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-2 text-sm text-muted"
+                      className={cx(
+                        "block py-2 text-sm",
+                        dark ? "text-white/65" : "text-muted",
+                      )}
                       onClick={onClose}
                     >
                       {item.label}
@@ -305,31 +366,40 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
         })}
         <Link
           href="/contact"
-          className="py-2 text-base text-foreground"
+          className={cx(
+            "py-2 text-base",
+            dark ? "text-white" : "text-foreground",
+          )}
           onClick={onClose}
         >
           Contact
         </Link>
         <Link
           href={sourceHomeLoginHref()}
-          className="py-2 text-base text-foreground"
+          className={cx(
+            "py-2 text-base",
+            dark ? "text-white" : "text-foreground",
+          )}
           onClick={onClose}
         >
           Log in
         </Link>
         <Link
           href="/source/enter"
-          className="py-2 text-base text-foreground"
+          className={cx(
+            "py-2 text-base",
+            dark ? "text-white" : "text-foreground",
+          )}
           onClick={onClose}
         >
           Source shop
         </Link>
         <Link
-          href="/instant-quote"
+          href={UPLOAD_PRINT_HREF}
           className={`${btn.quote} mt-4 w-full justify-center`}
           onClick={onClose}
         >
-          Instant quote
+          Upload a print
         </Link>
       </div>
     </nav>

@@ -36,9 +36,9 @@ const faqs = [
 ];
 
 export const metadata = pageMeta({
-  title: "Instant Quote",
+  title: "This-floor estimate",
   description:
-    `Get an instant wire forming estimate in seconds. ${PRICE_LINE} Enter diameter, bends, length & quantity for 4–14 mm CNC wire forms. No signup required.`,
+    `Ballpark for this Ohio cell — 4–14 mm on the Robomac. ${PRICE_LINE} Not a multi-shop checkout. Upload a print on the homepage to check the cell first.`,
   path: "/instant-quote",
   keywords: [
     "wire forming quote",
@@ -53,14 +53,20 @@ export const metadata = pageMeta({
 /** Static page — no dynamic data. */
 export const revalidate = false;
 
-export default function InstantQuotePage() {
+export default async function InstantQuotePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ diameter?: string }>;
+}) {
+  const { diameter } = await searchParams;
+
   return (
     <>
       <FAQSchema questions={faqs} />
       <ClientPage>
         <ClientHero
-          kicker="Quote"
-          title="Instant estimate"
+          kicker="This floor"
+          title="This-floor estimate"
           lede={`$1.00 per cut, $0.50 per bend, $0.05 per inch. Email yourself the number. Instant is a ballpark. Production quote is a person on the print. ${QUOTE_REVIEW}`}
         />
 
@@ -71,7 +77,7 @@ export default function InstantQuotePage() {
         >
           <PricePromise titled={false} />
           <div className="mt-10">
-            <InstantQuote />
+            <InstantQuote initialDiameterMm={diameter} />
           </div>
           <p className="mt-10 max-w-2xl text-sm leading-6 text-muted">
             For a production number, start a{" "}

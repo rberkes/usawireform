@@ -4,19 +4,39 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { btn, fieldClass } from "@/components/ui";
 
-export function HomeLogin() {
+export function HomeLogin({
+  tone = "hero",
+}: {
+  tone?: "hero" | "page";
+}) {
   const { isSignedIn } = useUser();
 
   return (
     <aside
       id="login"
-      className="scroll-mt-24 rounded-sm border border-white/15 bg-white p-5 text-[#111] sm:p-6"
+      className={
+        tone === "page"
+          ? "scroll-mt-24 rounded-sm border border-line bg-inset p-5 text-foreground sm:p-6"
+          : "scroll-mt-24 rounded-sm border border-white/15 bg-white p-5 text-[#111] sm:p-6"
+      }
     >
-      <p className="font-mono text-[11px] tracking-[0.22em] text-[#0b1f33]/55 uppercase">
+      <p
+        className={
+          tone === "page"
+            ? "font-mono text-[11px] tracking-[0.22em] text-muted uppercase"
+            : "font-mono text-[11px] tracking-[0.22em] text-[#0b1f33]/55 uppercase"
+        }
+      >
         Log in
       </p>
       <h2 className="mt-2 text-xl font-medium tracking-tight">Source account</h2>
-      <p className="mt-2 text-sm leading-6 text-[#111]/70">
+      <p
+        className={
+          tone === "page"
+            ? "mt-2 text-sm leading-6 text-muted"
+            : "mt-2 text-sm leading-6 text-[#111]/70"
+        }
+      >
         Shops and buyers. Active Wireworks and every other Source shop use this
         same login.
       </p>
@@ -45,7 +65,13 @@ export function HomeLogin() {
         </form>
       )}
       {isSignedIn ? null : (
-        <p className="mt-4 text-sm leading-6 text-[#111]/70">
+        <p
+          className={
+            tone === "page"
+              ? "mt-4 text-sm leading-6 text-muted"
+              : "mt-4 text-sm leading-6 text-[#111]/70"
+          }
+        >
           New shop?{" "}
           <Link href="/sign-up?as=supplier" className="text-[#0b6bcb] hover:underline">
             Shop sign-up

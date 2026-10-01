@@ -23,10 +23,10 @@ export const CLIENT_STEPS = [
 export const CLIENT_CTA_LEDE = `Upload a STEP and get quotes from cells that can run it. No STEP? We convert a PDF 3-view for free. Instant quote is still there for cuts, bends, and inches. ${PRICE_LINE}`;
 
 export const HOME_QUOTE_NOTE =
-  "Get wire forming quotes from suppliers that are ready to run! No STEP file? We convert PDF 3-view drawings for free.";
+  "Upload a STEP or 3-view. We check the cell, then match shops that filed it. No STEP? We convert a PDF 3-view free. Shops quote the print — not an instant multi-shop price.";
 
 export const HOME_HERO_LEDE =
-  "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity — lowest cost, quickest time to production.";
+  "STEP, SolidWorks, or a 3-view PDF. 4–14 mm 3D can run on this Ohio Robomac. Anything else matches shops that filed that cell.";
 
 export const HOME_BUYER_STEPS = [
   {
@@ -34,12 +34,12 @@ export const HOME_BUYER_STEPS = [
     body: "Drop a STEP, SLDPRT, DXF, or a PDF 3-view. No STEP? We convert the print for free.",
   },
   {
-    title: "Smart Matching",
-    body: "Finds the cells that can run your job — machine class, wire size, and open capacity.",
+    title: "Check the cell",
+    body: "Diameter, 2D vs 3D, and material. This Ohio floor when it is 4–14 mm 3D; otherwise a filed Source cell.",
   },
   {
-    title: "Find Suppliers",
-    body: "Shops that fit your print quote in seconds.",
+    title: "Match shops",
+    body: "Shops that can run it quote the print. We do not invent a price across the directory.",
   },
 ] as const;
 
@@ -58,7 +58,7 @@ export const HOME_SUPPLIER_STEPS = [
   },
 ] as const;
 
-export const HOME_CTA_TITLE = "Source by capability and capacity.";
+export const HOME_CTA_TITLE = "Upload the print. Match a cell.";
 
 export const HOME_CTA_LEDE = HOME_QUOTE_NOTE;
 

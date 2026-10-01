@@ -5,11 +5,13 @@ import { SOURCE_JOB_CLASSES } from "@/lib/source-types";
 export function SourceKindCards({
   name,
   value,
+  defaultValue,
   onChange,
   required,
 }: {
   name?: string;
   value?: string;
+  defaultValue?: string;
   onChange?: (kind: string) => void;
   required?: boolean;
 }) {
@@ -42,6 +44,7 @@ export function SourceKindCards({
               name={name}
               value={row.kind}
               required={required}
+              defaultChecked={defaultValue === row.kind}
               className="sr-only"
             />
             <span className="text-sm font-medium">{row.label}</span>

@@ -77,7 +77,7 @@ export function PlatformFlowTabs({
               href={SOURCE_JOB_HREF}
               className="inline-flex w-full max-w-md items-center justify-center rounded-sm bg-zoom px-7 py-3.5 text-center text-base font-medium text-white transition-colors hover:bg-white hover:text-[#0b1f33]"
             >
-              Get a Quote
+              Upload a print
             </Link>
           ) : (
             <div className="flex max-w-md flex-col gap-3">

@@ -3,6 +3,7 @@
 import { useActionState, useMemo, useState } from "react";
 import { submitInstantQuote, type QuoteFormState } from "@/app/actions/quote";
 import { COMMON_SIZES, WIRE } from "@/lib/range";
+import { parseWireMm } from "@/lib/source-match";
 import {
   ESTIMATE,
   ESTIMATE_MATERIALS,
@@ -22,13 +23,18 @@ const stockOptions = COMMON_SIZES.map((size) => ({
 
 const initialState: QuoteFormState = { success: false, message: "" };
 
-export function InstantQuote() {
+export function InstantQuote({
+  initialDiameterMm,
+}: {
+  initialDiameterMm?: string;
+}) {
+  const parsedMm = initialDiameterMm ? parseWireMm(initialDiameterMm) : null;
   const [state, formAction, pending] = useActionState(
     submitInstantQuote,
     initialState,
   );
-  const [stockId, setStockId] = useState<string>(stockOptions[0].id);
-  const [customMm, setCustomMm] = useState("");
+  const [stockId, setStockId] = useState<string>(parsedMm ? "other" : stockOptions[0].id);
+  const [customMm, setCustomMm] = useState(parsedMm != null ? String(parsedMm) : "");
   const [cuts, setCuts] = useState("1");
   const [bends, setBends] = useState("4");
   const [lengthIn, setLengthIn] = useState("24");

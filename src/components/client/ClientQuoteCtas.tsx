@@ -2,8 +2,9 @@ import Link from "next/link";
 import { cx } from "@/lib/cx";
 import { HOME_QUOTE_NOTE } from "@/lib/client-landing";
 import { SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
+import { THIS_FLOOR_ESTIMATE_HREF, UPLOAD_PRINT_HREF } from "@/lib/print-fit";
 
-export const INSTANT_QUOTE_HREF = "/instant-quote";
+export const INSTANT_QUOTE_HREF = THIS_FLOOR_ESTIMATE_HREF;
 export const PRODUCTION_QUOTE_HREF = "/production-quote";
 export const SOURCE_JOB_HREF = "/source#job";
 export const SOURCE_SHOPS_HREF = "/source/shops";
@@ -83,14 +84,14 @@ export function ClientQuoteCtas({
           twoUp ? (
             <CtaAction
               label="Buyers"
-              href={SOURCE_JOB_HREF}
+              href={UPLOAD_PRINT_HREF}
               className={primary}
             >
-              Get a Quote
+              Upload a print
             </CtaAction>
           ) : (
-            <Link href={SOURCE_JOB_HREF} className={cx(primary, "w-full sm:w-auto")}>
-              Get a Quote
+            <Link href={UPLOAD_PRINT_HREF} className={cx(primary, "w-full sm:w-auto")}>
+              Upload a print
             </Link>
           )
         ) : null}
@@ -115,11 +116,11 @@ export function ClientQuoteCtas({
       </div>
     ) : (
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        <Link href={INSTANT_QUOTE_HREF} className={primary}>
-          Get instant quote
+        <Link href={UPLOAD_PRINT_HREF} className={primary}>
+          Upload a print
         </Link>
-        <Link href={PRODUCTION_QUOTE_HREF} className={secondary}>
-          Upload a drawing
+        <Link href={INSTANT_QUOTE_HREF} className={secondary}>
+          This-floor estimate
         </Link>
       </div>
     );

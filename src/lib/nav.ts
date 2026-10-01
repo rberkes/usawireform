@@ -101,6 +101,7 @@ export const NAV_FACTORIES: NavSection = {
   href: "/directory",
   items: [
     { href: "/directory", label: "Company directory" },
+    { href: "/#upload", label: "Upload a print" },
     { href: "/wire-form-factories-in-usa", label: "USA factories" },
     { href: "/find-factories-by-machine", label: "Machine or secondary" },
     { href: "/source", label: "Match a print" },
