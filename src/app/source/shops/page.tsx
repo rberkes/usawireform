@@ -11,6 +11,7 @@ import {
 import { SourceNewestMembers } from "@/components/SourceNewestMembers";
 import { SourceShopFinder } from "@/components/SourceShopFinder";
 import { directoryCompanies } from "@/lib/directory";
+import { prioritySourceClaimShops } from "@/lib/directory-profile";
 import { pageMeta } from "@/lib/seo";
 import { sourceClaimable } from "@/lib/source-directory";
 import { listNewestSourceDirectoryCompanies } from "@/lib/source";
@@ -56,7 +57,16 @@ export default async function SourceShopsPage() {
       name: shop.name,
       slug: shop.slug,
       location: shop.location,
+      machines: shop.machines?.slice(0, 2).join(", "),
+      wireDiameters: shop.wireDiameters,
     }));
+  const featured = prioritySourceClaimShops(directoryCompanies, 10).map((shop) => ({
+    name: shop.name,
+    slug: shop.slug,
+    location: shop.location,
+    machines: shop.machines?.slice(0, 2).join(", "),
+    wireDiameters: shop.wireDiameters,
+  }));
 
   return (
     <Page className="py-10 sm:py-20">
@@ -121,10 +131,11 @@ export default async function SourceShopsPage() {
         <p className="mt-4 max-w-xl text-sm leading-6 text-muted">
           Type the shop name. Claim keeps{" "}
           <span className="text-foreground">/directory/[your-shop]</span>. One
-          shop per account.
+          shop per account. Shops with a public equipment page are listed below
+          the search — file cells next so capacity, coil, and MOQ feed matching.
         </p>
         <div className="mt-8 max-w-xl">
-          <SourceShopFinder shops={usaShops} />
+          <SourceShopFinder shops={usaShops} featured={featured} />
         </div>
         <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
           Not in the directory?{" "}

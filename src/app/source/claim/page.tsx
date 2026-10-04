@@ -95,7 +95,9 @@ export default async function SourceClaimPage({ searchParams }: Props) {
         title={`Claim ${listed.name}`}
         lede={
           usaShop
-            ? `Three checks before this URL stays a factory listing: plant street, floor proof, not a sales or sourcing office. Then file cells from the shop dashboard.`
+            ? listed.equipmentSource
+              ? "Public equipment already named the iron. Three checks keep this URL a factory listing: plant street, floor proof, not a sales office. Then file cells — capacity, coil policy, and MOQ feed matching."
+              : "Three checks before this URL stays a factory listing: plant street, floor proof, not a sales or sourcing office. Then file cells from the shop dashboard."
             : "Source is USA shops for now. Europe later, on its own platform."
         }
       />
@@ -104,13 +106,25 @@ export default async function SourceClaimPage({ searchParams }: Props) {
           {listed.location}. Public equipment notes stay until you file cells.
           Email stays off the listing.
         </p>
+        {listed.equipmentSource ? (
+          <p>
+            Floor proof can be the public equipment page we already cite. After
+            claim, file each cell so capacity, coil policy, and MOQ show — those
+            also feed matching.
+          </p>
+        ) : null}
         <p>{SOURCE_PLAN_LINE}</p>
         {!usaShop ? (
           <p>This listing is outside the US Source floor.</p>
         ) : owner ? (
           <p>This page is already claimed.</p>
         ) : (
-          <DirectoryClaimForm slug={listed.slug} company={listed.name} />
+          <DirectoryClaimForm
+            slug={listed.slug}
+            company={listed.name}
+            plantStreet={listed.plantStreet ?? ""}
+            plantProofUrl={listed.plantProofUrl ?? listed.equipmentSource ?? ""}
+          />
         )}
         <div>
           <ButtonLink href={`/directory/${listed.slug}`} variant="ghost">

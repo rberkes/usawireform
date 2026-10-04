@@ -1,4 +1,5 @@
 import type { DirectoryCompany } from "./directory-types";
+import type { SourceBuyerFit } from "./source-fit";
 
 export const IRON_FILTERS = [
   {
@@ -44,7 +45,25 @@ type IronNote = {
   classes: IronClass[];
   machines: string[];
   source: string;
+  wireDiameters?: string;
+  certifications?: string[];
+  industries?: string[];
+  plantStreet?: string;
+  /** Extra public-page tokens so welding / coil inference can fire. */
+  extras?: string[];
+  /** Only when the shop published the cell — never guessed. */
+  buyerFit?: SourceBuyerFit;
 };
+
+function mergeLabels(existing?: string[], extra?: string[]) {
+  const out = [...(existing ?? [])];
+  for (const item of extra ?? []) {
+    if (!out.some((row) => row.toLowerCase() === item.toLowerCase())) {
+      out.push(item);
+    }
+  }
+  return out.length > 0 ? out : existing;
+}
 
 /**
  * Equipment named on a public shop page (Google → the shop’s own site).
@@ -79,9 +98,21 @@ export const DIRECTORY_IRON: Record<string, IronNote> = {
     source: "https://www.gemcomfg.com/fourslide-stamping/learn-more/",
   },
   "wire-products-company": {
-    classes: ["2d-cnc", "3d-cnc", "fourslide", "spring-cnc"],
-    machines: ["CNC bending (2D and 3D)", "Four-slide", "CNC coiling"],
+    classes: ["2d-cnc", "3d-cnc", "fourslide", "multi-slide", "spring-cnc", "straighten-cut"],
+    machines: [
+      "5 CNC wire formers (.020–.472 in, 2D and 3D)",
+      "20 four-slide (.005–.500 in)",
+      "9 multi-slide",
+      "32 spring coilers (.003–.312 in)",
+      "3 straighten & cut (.010–.250 in)",
+    ],
     source: "https://wire-products.com/wire-forms/",
+    wireDiameters: ".005–.500 in",
+    certifications: ["AS 9100 D", "ISO 9001:2015"],
+    industries: ["Aerospace", "Defense", "Automotive", "Medical", "Commercial"],
+    plantStreet: "14601 Industrial Parkway, Cleveland, OH 44135",
+    extras: ["MIG welding", "TIG welding", "Resistance welding", "from coil"],
+    buyerFit: { minOrderKind: "none" },
   },
   "keats-manufacturing": {
     classes: ["fourslide", "multi-slide", "cnc"],
@@ -110,17 +141,28 @@ export const DIRECTORY_IRON: Record<string, IronNote> = {
     classes: ["fourslide"],
     machines: ["Nilson Automatic Four Slide"],
     source: "https://ajaxspring.com/four-slide/",
+    wireDiameters: ".005–.250 in",
+    plantStreet: "700 Ajax Drive, Madison Heights, MI 48071",
+    industries: ["Automotive", "Medical", "Electronics"],
   },
   "wardzala-industries": {
-    classes: ["cnc", "fourslide"],
-    machines: ["CNC wire forming", "Fourslide"],
+    classes: ["cnc", "fourslide", "multi-slide"],
+    machines: ["CNC wire forming (.062–.500 in)", "Fourslide (.040–.375 in)", "Multislide"],
     source: "https://www.wardzalaind.com/capabilities/cnc-wire-forming/",
+    wireDiameters: ".040–.500 in",
+    plantStreet: "9330 W. Grand Ave., Franklin Park, IL 60131",
+    industries: ["Display", "Automotive", "Electronics", "Household"],
+    extras: ["Mesh welding", "Spot welding", "Butt welding"],
   },
   "marshall-manufacturing": {
     classes: ["2d-cnc", "3d-cnc"],
     machines: ["2D/3D CNC wire and tube bending"],
     source:
       "https://www.marshallmfg.com/marshall-manufacturing-capabilities/cnc-wire-tube-bending/",
+    wireDiameters: "Wire .062–.156 in · tube .062–.187 in",
+    plantStreet: "3820 Chandler Drive, Minneapolis, MN 55421",
+    industries: ["Medical devices"],
+    extras: ["Laser welding", "Stainless steel", "Titanium"],
   },
   "supro-spring": {
     classes: ["cnc", "fourslide"],
@@ -146,24 +188,43 @@ export const DIRECTORY_IRON: Record<string, IronNote> = {
     classes: ["2d-cnc", "3d-cnc"],
     machines: ["2D CNC wire forming", "3D CNC wire forming"],
     source: "https://www.apexwireproducts.com/cnc-wire-forming-services/",
+    wireDiameters: "0.008–0.75 in",
+    plantStreet: "9030 Gage Avenue, Franklin Park, IL 60131",
+    industries: ["Medical", "Food service", "Industrial", "Transportation"],
+    extras: [
+      "from coil",
+      "Welding",
+      "Aluminum",
+      "Steel",
+      "Stainless steel",
+    ],
+    buyerFit: { prototypePolicy: "yes" },
   },
   "progress-wire-products": {
-    classes: ["2d-cnc", "3d-cnc"],
+    classes: ["2d-cnc", "3d-cnc", "straighten-cut"],
     machines: [
-      "Two-dimensional CNC wire forming",
-      "Three-dimensional CNC wire forming",
+      "Two-dimensional CNC wire forming (up to 5/16 in)",
+      "Three-dimensional CNC wire forming (up to 5/16 in)",
+      "CNC straighten & cut (.060–.375 in)",
     ],
     source: "http://www.progresswire.com/capabilities.html",
+    wireDiameters: "Up to 5/16 in CNC · .060–.375 in straighten & cut",
+    plantStreet: "532 Co Rd 1600, Ashland, OH 44805",
+    extras: ["MIG welding", "Spot welding"],
   },
   "tusco-manufacturing": {
     classes: ["3d-cnc"],
     machines: ["AIM AFM3D1-TUF 3D CNC wire former"],
     source: "https://www.tuscomfg.com/capabilities/wire-forming/",
+    wireDiameters: "12 ga–5/16 in (stocked bright basic)",
+    industries: ["OEM", "Medical", "Retail fixtures"],
+    extras: ["from coil", "Resistance welding", "Carbon steel", "Stainless steel"],
   },
   "oregon-wire": {
     classes: ["3d-cnc"],
     machines: ["3D CNC wire forming"],
     source: "https://www.oregonwire.co/what-is-wire-forming/",
+    plantStreet: "13030 NE Whitaker Way, Portland, OR 97230",
   },
   "metco-fourslide": {
     classes: ["fourslide"],
@@ -211,6 +272,40 @@ export const DIRECTORY_IRON: Record<string, IronNote> = {
     source:
       "https://www.keatsmfg.com/high-volume-resources-and-relationship-management/",
   },
+  "marlin-steel": {
+    classes: ["2d-cnc", "3d-cnc"],
+    machines: [
+      "AIM 3D benders",
+      "Robomac 3D benders",
+      "IP Automation i10-S² 3D CNC",
+      "Ultimatum 100 2D benders",
+    ],
+    source: "https://www.marlinwire.com/custom-wire-forms",
+    wireDiameters: "0.003–0.625 in",
+    certifications: ["ISO 9001:2015"],
+    industries: ["Aerospace", "Defense", "Medical", "Food processing", "Automotive"],
+    plantStreet: "2648 Merchant Drive, Baltimore, MD 21230",
+    extras: ["Welding", "304 stainless", "316 stainless", "330 stainless", "Inconel"],
+  },
+  "newcomb-spring": {
+    classes: ["cnc", "spring-cnc"],
+    machines: [
+      "Wafios FMU 6.7",
+      "Wafios BM40 CNC horizontal wire bender",
+      "CNC spring coilers (.007–.625 in)",
+    ],
+    source: "https://newcombspring.com/capabilities/metal-spring-forming-equipment",
+    wireDiameters: ".007–.629 in",
+    certifications: ["ISO 9001:2015"],
+  },
+  "james-spring-wire": {
+    classes: ["fourslide", "cnc"],
+    machines: ["Fourslides", "CNC formers"],
+    source: "https://www.jamesspring.com",
+    wireDiameters: ".006–.250 in",
+    plantStreet: "6 N Bacton Hill Rd, Malvern, PA 19355",
+    industries: ["Aerospace", "Medical", "Filtration", "Electronics", "Industrial"],
+  },
 };
 
 const CLASS_RE: Record<IronClass, RegExp> = {
@@ -253,16 +348,20 @@ export function applyDirectoryIron(
 ): DirectoryCompany {
   const note = DIRECTORY_IRON[company.slug];
   if (!note) return company;
-  const capabilities = [...company.capabilities];
-  for (const machine of note.machines) {
-    if (!capabilities.some((cap) => cap.toLowerCase() === machine.toLowerCase())) {
-      capabilities.push(machine);
-    }
-  }
+  const capabilities = mergeLabels(company.capabilities, [
+    ...note.machines,
+    ...(note.extras ?? []),
+  ]) ?? [...company.capabilities];
   return {
     ...company,
     machines: note.machines,
     equipmentSource: note.source,
+    wireDiameters: note.wireDiameters ?? company.wireDiameters,
+    certifications: mergeLabels(company.certifications, note.certifications),
+    industries: mergeLabels(company.industries, note.industries),
+    plantStreet: company.plantStreet ?? note.plantStreet,
+    plantProofUrl: company.plantProofUrl ?? note.source,
+    buyerFit: company.buyerFit ?? note.buyerFit,
     capabilities,
   };
 }

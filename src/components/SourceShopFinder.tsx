@@ -8,13 +8,41 @@ export type SourceShopHit = {
   name: string;
   slug: string;
   location: string;
+  machines?: string;
+  wireDiameters?: string;
 };
 
 function claimHref(slug: string) {
   return `/source/claim?slug=${encodeURIComponent(slug)}`;
 }
 
-export function SourceShopFinder({ shops }: { shops: SourceShopHit[] }) {
+function ShopClaimRow({ shop }: { shop: SourceShopHit }) {
+  return (
+    <Link
+      href={claimHref(shop.slug)}
+      className="flex items-center justify-between gap-4 px-4 py-3 text-sm hover:bg-inset"
+    >
+      <span>
+        <span className="font-medium text-foreground">{shop.name}</span>
+        <span className="mt-1 block text-muted">{shop.location}</span>
+        {shop.machines || shop.wireDiameters ? (
+          <span className="mt-1 block text-xs leading-5 text-muted">
+            {[shop.machines, shop.wireDiameters].filter(Boolean).join(" · ")}
+          </span>
+        ) : null}
+      </span>
+      <span className="shrink-0 text-copper">Claim</span>
+    </Link>
+  );
+}
+
+export function SourceShopFinder({
+  shops,
+  featured = [],
+}: {
+  shops: SourceShopHit[];
+  featured?: SourceShopHit[];
+}) {
   const [query, setQuery] = useState("");
   const needle = query.trim().toLowerCase();
   const matches = useMemo(() => {
@@ -56,19 +84,29 @@ export function SourceShopFinder({ shops }: { shops: SourceShopHit[] }) {
         <ul id="source-shop-hits" className="mt-4 divide-y divide-line border border-line bg-background">
           {matches.map((shop) => (
             <li key={shop.slug}>
-              <Link
-                href={claimHref(shop.slug)}
-                className="flex items-center justify-between gap-4 px-4 py-3 text-sm hover:bg-inset"
-              >
-                <span>
-                  <span className="font-medium text-foreground">{shop.name}</span>
-                  <span className="mt-1 block text-muted">{shop.location}</span>
-                </span>
-                <span className="shrink-0 text-copper">Claim</span>
-              </Link>
+              <ShopClaimRow shop={shop} />
             </li>
           ))}
         </ul>
+      ) : null}
+      {needle.length === 0 && featured.length > 0 ? (
+        <div className="mt-8">
+          <p className="font-mono text-[11px] tracking-[0.22em] text-muted uppercase">
+            Public equipment — claim next
+          </p>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            These listings already name iron, wire band, or 2D vs 3D on a public
+            page. Claim and file cells so capacity, coil policy, and MOQ show —
+            those also feed matching.
+          </p>
+          <ul className="mt-4 divide-y divide-line border border-line bg-background">
+            {featured.map((shop) => (
+              <li key={shop.slug}>
+                <ShopClaimRow shop={shop} />
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
     </div>
   );
