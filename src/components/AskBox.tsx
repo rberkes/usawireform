@@ -85,8 +85,8 @@ export function AskBox() {
       </h2>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted sm:text-lg">
         AI matches wire form factories to the equipment and secondaries on the
-        floor. Not all factories are the same. The world’s most efficient
-        manufacturing sourcing engine.
+        floor. Not all factories are the same. Machine-level sourcing for U.S.
+        wire forming.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8">

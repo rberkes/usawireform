@@ -21,6 +21,8 @@ import {
 import { getStateByAbbr } from "@/lib/states";
 import { capabilityTopic } from "@/lib/directory-topics";
 import { directoryListingHasSubstance } from "@/lib/directory-substance";
+import { directoryShopFacts } from "@/lib/directory-profile";
+import { DirectoryFactList } from "@/components/DirectoryCompanyCards";
 import { pageMeta } from "@/lib/seo";
 import { directoryPlantStatus } from "@/lib/plant-verify";
 import {
@@ -30,7 +32,6 @@ import {
   sourceClaimable,
 } from "@/lib/source-directory";
 import { secondaryHref, secondaryLabel } from "@/lib/source-secondaries";
-import { sourceFitSpecs } from "@/lib/source-fit";
 import { getSourceDirectoryCompany, getSourceProfile } from "@/lib/source";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -73,13 +74,23 @@ export async function generateMetadata({ params }: Props) {
 
   return pageMeta({
     title: `${company.name} — Wire Forming Company | ${company.location}`,
-    description: `${company.name} in ${company.location}. ${company.description.slice(0, 150)}`,
+    description: [
+      `${company.name} in ${company.location}.`,
+      company.machines?.length
+        ? `Machines: ${company.machines.slice(0, 3).join(", ")}.`
+        : "",
+      company.wireDiameters ? `Wire range: ${company.wireDiameters}.` : "",
+      company.description.slice(0, 110),
+    ]
+      .filter(Boolean)
+      .join(" "),
     path: `/directory/${slug}`,
     keywords: [
       company.name,
       "wire forming",
       company.location,
       company.state,
+      ...(company.machines ?? []).slice(0, 2),
       ...company.capabilities.slice(0, 3),
     ],
     noindex: !directoryListingHasSubstance(company),
@@ -121,29 +132,6 @@ export default async function DirectoryCompanyPage({ params }: Props) {
       ? getStateByAbbr(company.state)?.slug
       : undefined;
 
-  const specs: { label: string; value: string }[] = [
-    { label: "Location", value: company.location },
-  ];
-  if (company.wireDiameters) {
-    specs.push({ label: "Wire", value: company.wireDiameters });
-  }
-  if (company.established) {
-    specs.push({ label: "Established", value: company.established });
-  }
-  if (company.certifications && company.certifications.length > 0) {
-    specs.push({ label: "Certifications", value: company.certifications.join(", ") });
-  }
-  if (company.plantStreet) {
-    specs.push({ label: "Plant", value: company.plantStreet });
-  }
-  if (company.phone) {
-    specs.push({ label: "Phone", value: company.phone });
-  }
-  specs.push(...sourceFitSpecs(company.buyerFit));
-  if (company.weeklyCapacity) {
-    specs.push({ label: "This week", value: company.weeklyCapacity });
-  }
-
   const plantStatus = directoryPlantStatus(company);
 
   return (
@@ -164,6 +152,9 @@ export default async function DirectoryCompanyPage({ params }: Props) {
         photoUrl={company.photoUrl}
         logoUrl={company.logoUrl}
         certifications={company.certifications}
+        machines={company.machines}
+        wireDiameters={company.wireDiameters}
+        facts={directoryShopFacts(company)}
       />
       <BreadcrumbJsonLd
         items={[
@@ -263,6 +254,18 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             <p className="mt-6 max-w-2xl text-base leading-7 text-muted">
               {company.description}
             </p>
+
+            <section className="mt-8 border border-line bg-inset/30 p-5 sm:p-6">
+              <h2 className="text-lg font-medium tracking-tight">
+                Machine-level facts
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+                Named iron, diameter band, 2D vs 3D, coil feed, welding, and
+                buyer-fit the shop published or filed — not a generic “custom
+                wire forms” blurb.
+              </p>
+              <DirectoryFactList facts={directoryShopFacts(company)} />
+            </section>
 
             <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
               {company.website ? (
@@ -392,19 +395,6 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                   {company.industries.join(" · ")}
                 </p>
               </section>
-            ) : null}
-
-            {specs.length > 1 ? (
-              <dl className="mt-12 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-                {specs.map((row) => (
-                  <div key={row.label}>
-                    <dt className="font-mono text-[11px] tracking-widest text-muted uppercase">
-                      {row.label}
-                    </dt>
-                    <dd className="mt-1 text-sm leading-6">{row.value}</dd>
-                  </div>
-                ))}
-              </dl>
             ) : null}
           </div>
 

@@ -34,7 +34,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: `Wire Form Suppliers, Manufacturers & CNC Wire Forming | ${COMPANY}`,
-  description: `${COMPANY}: Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity. Upload a STEP; quotes come from equipment that can form it.`,
+  description: `${COMPANY} connects buyers with U.S. custom wire forming manufacturers for 2D and 3D CNC wire forms, welded assemblies, wire baskets, racks and formed wire components. Upload a STEP file or drawing and match your part to equipment capable of producing it.`,
   path: "/",
   absoluteTitle: true,
   image: {
@@ -85,7 +85,7 @@ export default async function Home({
   return (
     <>
       <ClientHero
-        kicker="Source fast. Source easy."
+        kicker="Machine-level sourcing for U.S. wire forming."
         title={<BrandLockup size="hero" tone="onDark" />}
         lede={HOME_HERO_LEDE}
         flow={<PlatformFlowTabs tab={tab} />}

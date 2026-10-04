@@ -9,10 +9,56 @@ import {
   type IronClass,
 } from "@/lib/directory-iron";
 import type { DirectoryCompany } from "@/lib/directory-types";
+import { directoryCardFacts } from "@/lib/directory-profile";
 import { sourceFitCardLine } from "@/lib/source-fit";
+
+export function DirectoryFactList({
+  facts,
+  compact = false,
+}: {
+  facts: { label: string; value: string }[];
+  compact?: boolean;
+}) {
+  if (facts.length === 0) return null;
+  return (
+    <dl
+      className={
+        compact
+          ? "mt-3 space-y-1.5"
+          : "mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2"
+      }
+    >
+      {facts.map((fact) => (
+        <div
+          key={fact.label}
+          className={compact ? "grid grid-cols-[6.5rem_minmax(0,1fr)] gap-2" : undefined}
+        >
+          <dt
+            className={cx(
+              "font-mono uppercase tracking-widest text-muted",
+              compact ? "text-[10px] leading-5" : "text-[11px]",
+            )}
+          >
+            {fact.label}
+          </dt>
+          <dd
+            className={
+              compact
+                ? "text-xs leading-5 text-foreground"
+                : "mt-1 text-sm leading-6"
+            }
+          >
+            {fact.value}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
 
 export function DirectoryCompanyCard({ company }: { company: DirectoryCompany }) {
   const fitLine = sourceFitCardLine(company.buyerFit);
+  const facts = directoryCardFacts(company);
 
   return (
     <div className="flex flex-col bg-background hover:bg-inset transition-colors">
@@ -48,7 +94,7 @@ export function DirectoryCompanyCard({ company }: { company: DirectoryCompany })
           Plant
         </p>
       ) : null}
-      <p className="mt-1 text-xs text-muted">{company.location}</p>
+      <p className="mt-1 text-xs text-muted">Location: {company.location}</p>
       {company.website ? (
         <a
           href={company.website}
@@ -59,18 +105,17 @@ export function DirectoryCompanyCard({ company }: { company: DirectoryCompany })
           {publicHost(company.website)}
         </a>
       ) : null}
-      <p className="mt-2 text-sm text-muted line-clamp-2">
-        {company.description.slice(0, 100)}...
-      </p>
-      {fitLine ? (
+      {facts.length > 0 ? (
+        <DirectoryFactList facts={facts} compact />
+      ) : (
+        <p className="mt-2 text-sm text-muted line-clamp-2">
+          {company.description.slice(0, 100)}...
+        </p>
+      )}
+      {fitLine && !facts.some((fact) => fact.label === "MOQ" || fact.label === "Materials") ? (
         <p className="mt-2 text-xs leading-5 text-muted">{fitLine}</p>
       ) : null}
-      {company.weeklyCapacity ? (
-        <p className="mt-1 text-xs leading-5 text-muted">
-          {company.weeklyCapacity}
-        </p>
-      ) : null}
-      {(company.machines ?? company.capabilities).length > 0 && (
+      {(company.machines ?? company.capabilities).length > 0 && facts.length === 0 ? (
         <div className="mt-3 flex flex-wrap gap-1">
           {(company.machines ?? company.capabilities).slice(0, 4).map((cap) => (
             <span
@@ -81,8 +126,22 @@ export function DirectoryCompanyCard({ company }: { company: DirectoryCompany })
             </span>
           ))}
         </div>
-      )}
+      ) : null}
       </div>
+    </div>
+  );
+}
+
+export function DirectoryCompanyGrid({
+  companies,
+}: {
+  companies: DirectoryCompany[];
+}) {
+  return (
+    <div className="grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
+      {companies.map((company) => (
+        <DirectoryCompanyCard key={company.slug} company={company} />
+      ))}
     </div>
   );
 }

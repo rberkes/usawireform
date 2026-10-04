@@ -1,90 +1,175 @@
 import Link from "next/link";
-import { DocPage, QuoteBand } from "@/components/DocPage";
+import { BreadcrumbJsonLd } from "@/components/JsonLd";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { DirectoryCompanyGrid } from "@/components/DirectoryCompanyCards";
+import { FAQSchema, ServiceSchema } from "@/components/SeoSchemas";
+import { QuoteBand } from "@/components/DocPage";
+import { Page, PageHero, Kicker } from "@/components/ui";
+import { directoryCompanies } from "@/lib/directory";
+import { machineLevelDirectoryShops } from "@/lib/directory-profile";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Custom Wire Forming",
+  title: "Custom Wire Forming Services",
   description:
-    "Custom CNC wire forming in 4–14 mm: your print, our coil. 3D CNC, cut-to-length, resistance weld and TIG. 100-piece minimum. Northeast Ohio.",
+    "Custom wire forming company matching: diameter 0.010–0.625 in+, 2D/3D CNC, fourslide, multislide. Upload a drawing and see U.S. manufacturers that can run the part.",
   path: "/custom-wire-forming",
   keywords: [
     "custom wire forming",
+    "custom wire forming company",
+    "custom wire forming services",
     "custom CNC wire forms",
     "USA made wire baskets",
-    "USA made heat treat baskets",
     "custom wire baskets",
   ],
 });
 
+const specs = [
+  {
+    label: "Diameter",
+    value: "0.010”–0.625”+ depending on supplier",
+  },
+  {
+    label: "Processes",
+    value: "2D CNC / 3D CNC / fourslide / multislide",
+  },
+  {
+    label: "Materials",
+    value: "carbon / stainless / spring / aluminum / copper / brass",
+  },
+  {
+    label: "Secondary",
+    value: "welding / threading / flattening / coating / heat treatment",
+  },
+] as const;
+
+const faqs = [
+  {
+    question: "How do I get a custom wire forming quote?",
+    answer:
+      "Upload a STEP, SolidWorks file, or a PDF 3-view. Include diameter, alloy, and quantity. We match the print to cells that can form it — not a generic RFQ blast.",
+  },
+  {
+    question: "What diameters can custom wire forming shops run?",
+    answer:
+      "Across U.S. suppliers the published band is about 0.010 in to 0.625 in and heavier. Confirm the machine, not the company brochure. This floor quotes 4–14 mm.",
+  },
+  {
+    question: "Do I need a STEP file?",
+    answer:
+      "No. A dimensioned PDF 3-view is enough to start. We convert a print to STEP at no charge when the desk needs a solid to program.",
+  },
+];
+
 export default function CustomWireFormingPage() {
+  const shops = machineLevelDirectoryShops(directoryCompanies, 12);
+
   return (
-    <DocPage
-      kicker="Custom"
-      title="Custom wire forming"
-      lede="Your centerline, our coil. 4–14 mm 3D CNC, then the secondaries that make it install. Stock catalog parts exist. Custom is the job when the print is yours."
-      toc={[
-        { id: "print", label: "What custom means" },
-        { id: "band", label: "Band" },
-        { id: "send", label: "What to send" },
-        { id: "next", label: "Related" },
-      ]}
-    >
-      <h2 id="print">Print in, part out</h2>
-      <p>
-        Custom wire forming is a specified alloy, diameter, and centerline —
-        not a SKU from a rack. We program the Robomac, prove first article, then
-        run. Revisions that change the centerline are a new program. Rules:{" "}
-        <Link href="/guide/design-for-wire-forming">design for wire forming</Link>
-        .
-      </p>
-      <p>
-        Catalog families (hooks, grids,{" "}
-        <Link href="/stainless-steel-wire-basket">USA made wire baskets</Link>,{" "}
-        <Link href="/stainless-steel-wire-shelf">shelves</Link>) are still
-        custom when you change a dimension, a weld, or a grade. The{" "}
-        <Link href="/products">product directory</Link> is the shape language.
-        The print is the contract.
-      </p>
+    <>
+      <ServiceSchema
+        name="Custom Wire Forming Services"
+        description="Match a custom wire form print to U.S. manufacturers by diameter, 2D/3D CNC, fourslide, material, and secondaries."
+        url="/custom-wire-forming"
+        serviceType="Custom wire forming"
+      />
+      <FAQSchema questions={faqs} />
+      <BreadcrumbJsonLd
+        items={[{ name: "Custom Wire Forming Services", url: "/custom-wire-forming" }]}
+      />
+      <Page>
+        <Breadcrumbs items={[{ label: "Custom wire forming services" }]} />
+        <PageHero
+          kicker="Buy parts"
+          title="Custom Wire Forming Services"
+          lede="Someone searching “custom wire forming company” is trying to buy a part. Diameter, process, material, and secondaries first — then the drawing, then the shops that can run it."
+        />
 
-      <h2 id="band">4–14 mm, including 330</h2>
-      <p>
-        Production is 4–14 mm from coil, cut-to-length through 14 mm rod. Stock
-        diameters 3/8, 7/16, 1/2 in. USA made heat treat baskets in 330:{" "}
-        <Link href="/330-stainless-wire-bending-usa-parts">330 stainless USA parts</Link>
-        . Carbon and 304 for everything that is not a furnace.
-      </p>
+        <dl className="mt-10 grid gap-px bg-line sm:grid-cols-2">
+          {specs.map((row) => (
+            <div key={row.label} className="bg-background px-5 py-5">
+              <dt className="font-mono text-[11px] uppercase tracking-widest text-muted">
+                {row.label}
+              </dt>
+              <dd className="mt-2 text-base leading-7">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
 
-      <h2 id="send">What to send</h2>
-      <p>
-        STEP, STP, IGES, PDF, DXF, or SLDPRT —{" "}
-        <Link href="/contact">contact</Link>. Quantity, material, diameter.
-        Instant ballpark:{" "}
-        <Link href="/instant-quote">instant quote</Link>. Tooling on non-stock
-        sizes: <Link href="/quoting">quoting</Link>.
-      </p>
+        <section id="upload" className="mt-14">
+          <Kicker>Upload your drawing</Kicker>
+          <h2 className="mt-3 text-2xl tracking-tight">
+            STEP, SolidWorks, or a PDF 3-view
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted">
+            Quantity, alloy, and diameter help the first pass. No STEP? We
+            model one from the print. Matching is by machine class and wire
+            band —{" "}
+            <Link href="/source" className="text-copper hover:underline">
+              Source
+            </Link>{" "}
+            — not by who bought the biggest ad.
+          </p>
+        </section>
 
-      <h2 id="next">Related</h2>
-      <ul>
-        <li>
-          <Link href="/custom-cnc-wire-forming-services">
-            Custom CNC wire forming services
-          </Link>
-        </li>
-        <li>
-          <Link href="/powder-coating-hooks">Powder coating hooks</Link>
-        </li>
-        <li>
-          <Link href="/wire-forming-manufacturers">Wire forming manufacturers</Link>
-        </li>
-        <li>
-          <Link href="/wire-forming-process">Wire forming process</Link>
-        </li>
-        <li>
-          <Link href="/wire-forming-companies-near-me">Companies near me</Link>
-        </li>
-      </ul>
+        <QuoteBand title="Upload your drawing" />
 
-      <QuoteBand title="Custom print ready?" />
-    </DocPage>
+        <section id="manufacturers" className="mt-16">
+          <Kicker>Supplier network</Kicker>
+          <h2 className="mt-3 text-2xl tracking-tight">
+            Manufacturers capable of producing your part
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted">
+            These listings publish named iron, a diameter band, or buyer-fit —
+            the facts an engineer uses. Full index:{" "}
+            <Link href="/directory" className="text-copper hover:underline">
+              wire forming companies directory
+            </Link>
+            . Filter by{" "}
+            <Link
+              href="/directory?iron=3d-cnc"
+              className="text-copper hover:underline"
+            >
+              3D CNC
+            </Link>
+            ,{" "}
+            <Link
+              href="/directory?iron=fourslide"
+              className="text-copper hover:underline"
+            >
+              fourslide
+            </Link>
+            , or{" "}
+            <Link
+              href="/find-factories-by-machine"
+              className="text-copper hover:underline"
+            >
+              machine or secondary
+            </Link>
+            .
+          </p>
+          <div className="mt-8">
+            <DirectoryCompanyGrid companies={shops} />
+          </div>
+        </section>
+
+        <section className="mt-16 border-t border-line pt-12">
+          <h2 className="text-2xl tracking-tight">Need the textbook?</h2>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted">
+            Process, radius, springback, and machine classes live on{" "}
+            <Link href="/wire-forming" className="text-copper hover:underline">
+              the wire forming page
+            </Link>
+            . Design rules:{" "}
+            <Link
+              href="/guide/design-for-wire-forming"
+              className="text-copper hover:underline"
+            >
+              design for wire forming
+            </Link>
+            . This page stays the buy path.
+          </p>
+        </section>
+      </Page>
+    </>
   );
 }
