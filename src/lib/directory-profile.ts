@@ -7,6 +7,7 @@ import {
   formatStockedMaterials,
   sourceFitSpecs,
 } from "@/lib/source-fit";
+import { sourceClaimable } from "@/lib/source-directory";
 import { secondaryLabel } from "@/lib/source-secondaries";
 
 export type DirectoryShopFact = {
@@ -161,6 +162,21 @@ export function machineLevelDirectoryShops(
     .filter((company) => company.country === "USA")
     .filter((company) => directoryListingHasSubstance(company))
     .filter((company) => directoryFactScore(company) >= 3)
+    .sort((a, b) => directoryFactScore(b) - directoryFactScore(a))
+    .slice(0, limit);
+}
+
+/**
+ * Claimable USA shops that already publish equipment. Filing cells adds
+ * capacity, coil policy, and MOQ — those also feed matching.
+ */
+export function prioritySourceClaimShops(
+  companies: DirectoryCompany[],
+  limit = 12,
+): DirectoryCompany[] {
+  return companies
+    .filter((company) => sourceClaimable(company))
+    .filter((company) => Boolean(company.equipmentSource))
     .sort((a, b) => directoryFactScore(b) - directoryFactScore(a))
     .slice(0, limit);
 }

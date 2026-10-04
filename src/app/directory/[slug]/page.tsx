@@ -182,13 +182,23 @@ export default async function DirectoryCompanyPage({ params }: Props) {
             </ButtonLink>
           </div>
         ) : claimable && !isOwner ? (
-          <div className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2">
-            <ButtonLink href={sourceClaimPath(company.slug)}>
-              Claim this page
-            </ButtonLink>
-            <ButtonLink href="/#login" variant="ghost">
-              Log in
-            </ButtonLink>
+          <div className="mb-8 max-w-xl space-y-3 border border-line bg-inset/30 p-5">
+            <p className="font-mono text-[11px] tracking-[0.22em] text-copper uppercase">
+              Source
+            </p>
+            <p className="text-sm leading-6 text-muted">
+              {company.equipmentSource
+                ? "A public equipment page already named the iron, wire band, and 2D vs 3D. File cells to add capacity, coil policy, and MOQ — those fields also feed matching."
+                : "US shops keep this URL. File cells so buyers see capacity, coil policy, and MOQ — those fields also feed matching."}
+            </p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <ButtonLink href={sourceClaimPath(company.slug)}>
+                Claim this page
+              </ButtonLink>
+              <ButtonLink href="/#login" variant="ghost">
+                Log in
+              </ButtonLink>
+            </div>
           </div>
         ) : null}
 
@@ -265,6 +275,21 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                 wire forms” blurb.
               </p>
               <DirectoryFactList facts={directoryShopFacts(company)} />
+              {company.equipmentSource ? (
+                <p className="mt-4 text-xs leading-5 text-muted">
+                  Named iron is from the shop’s{" "}
+                  <a
+                    href={company.equipmentSource}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-copper hover:underline"
+                  >
+                    public equipment page
+                  </a>
+                  . Capacity, coil policy, and MOQ stay blank until the shop
+                  files cells on Source.
+                </p>
+              ) : null}
             </section>
 
             <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
@@ -276,6 +301,16 @@ export default async function DirectoryCompanyPage({ params }: Props) {
                   className="text-copper hover:underline"
                 >
                   {publicHost(company.website)}
+                </a>
+              ) : null}
+              {company.equipmentSource ? (
+                <a
+                  href={company.equipmentSource}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-copper hover:underline"
+                >
+                  Equipment page
                 </a>
               ) : null}
               {company.linkedin ? (

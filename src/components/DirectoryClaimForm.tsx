@@ -14,9 +14,13 @@ const initial: SourceFormState = { success: false, message: "" };
 export function DirectoryClaimForm({
   slug,
   company,
+  plantStreet = "",
+  plantProofUrl = "",
 }: {
   slug: string;
   company: string;
+  plantStreet?: string;
+  plantProofUrl?: string;
 }) {
   const [state, action, pending] = useActionState(
     claimDirectoryListing,
@@ -36,6 +40,7 @@ export function DirectoryClaimForm({
           required
           autoComplete="street-address"
           placeholder="123 Industrial Ave"
+          defaultValue={plantStreet}
         />
       </label>
       <label className="block text-sm">
@@ -47,6 +52,7 @@ export function DirectoryClaimForm({
           type="url"
           autoComplete="url"
           placeholder="https:// — equipment, facility, or machines page"
+          defaultValue={plantProofUrl}
         />
       </label>
       <label className="flex items-start gap-2 text-sm leading-6">
