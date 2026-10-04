@@ -1040,6 +1040,7 @@ export async function submitSourceJob(
     to: email,
     company,
     name,
+    fileName: drawingName,
     phone,
     city: parsed.spec.city,
     state: parsed.spec.state,

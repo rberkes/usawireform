@@ -8,6 +8,22 @@ below are cleared — not on a calendar date.
 
 ---
 
+## Buyer site vs supplier subdomain
+
+The apex (`usawireform.com`) is the buyer storefront — upload a file, see
+prices, get parts. That is the SendCutSend shape: a purchaser should never have
+to pick a “suppliers” tab to start a job.
+
+Shop filing, claim, NDA, dashboard, and lead unlocks live on
+`suppliers.usawireform.com` (path `/suppliers` until the CNAME is live). Same
+Clerk app, same deploy, not a satellite domain. Directory listings stay on the
+apex so buyer SEO does not move.
+
+This is distribution, not a new vertical. The four gates below still decide
+when to leave wire forming.
+
+---
+
 ## Why not expand now
 
 ### The pool math says depth, not breadth

@@ -7,6 +7,7 @@ import {
   type BlobAuth,
 } from "@/lib/blob";
 import { SITE_URL } from "@/lib/company";
+import { publicSupplierUrl } from "@/lib/hosts";
 import { directoryCompanies } from "@/lib/directory";
 import { leadIsClosed, leadPurchaseSlots, waitlistedMailed } from "@/lib/source-access";
 import {
@@ -51,7 +52,9 @@ export type {
 export { SOURCE_KINDS } from "@/lib/source-types";
 
 export function sourceInviteHref(id: string) {
-  return `${SITE_URL}/source/equipment?invite=${encodeURIComponent(id)}`;
+  return publicSupplierUrl(
+    `/source/equipment?invite=${encodeURIComponent(id)}`,
+  );
 }
 
 export function parseSourceMachines(raw: string): SourceMachine[] {

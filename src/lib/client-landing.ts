@@ -23,10 +23,14 @@ export const CLIENT_STEPS = [
 export const CLIENT_CTA_LEDE = `Upload a STEP and get quotes from cells that can run it. No STEP? We convert a PDF 3-view for free. Instant quote is still there for cuts, bends, and inches. ${PRICE_LINE}`;
 
 export const HOME_QUOTE_NOTE =
-  "Get wire forming quotes from suppliers that are ready to run! No STEP file? We convert PDF 3-view drawings for free.";
+  "Upload a STEP, SolidWorks file, or PDF 3-view. No CAD? We convert the print for free. Quotes come from U.S. shops whose machines can form the job.";
 
 export const HOME_HERO_LEDE =
-  "USA Wire Form connects buyers with U.S. custom wire forming manufacturers for 2D and 3D CNC wire forms, welded assemblies, wire baskets, racks and formed wire components. Upload a STEP file or drawing and match your part to equipment capable of producing it.";
+  "USA Wire Form connects buyers with U.S. custom wire forming manufacturers for 2D and 3D CNC wire forms, welded assemblies, wire baskets, racks and formed wire components. Upload a STEP or drawing and match your part to equipment capable of producing it.";
+
+export const HOME_HERO_TITLE = "Custom CNC wire forming from your file.";
+
+export const HOME_HERO_KICKER = "Machine-level sourcing for U.S. wire forming.";
 
 export const HOME_BUYER_STEPS = [
   {

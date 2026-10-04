@@ -10,16 +10,32 @@ import { cx } from "@/lib/cx";
 import {
   navSectionLinks,
   navSections,
+  supplierNavSections,
   type NavSection,
 } from "@/lib/nav";
-import { sourceHomeLoginHref } from "@/lib/source-plans";
+import type { SiteChromeHrefs } from "@/lib/hosts";
 
 const SearchDialog = dynamic(
   () => import("./Search").then((mod) => ({ default: mod.SearchDialog })),
   { ssr: false }
 );
 
-export function Header({ account }: { account: ReactNode }) {
+export function Header({
+  account,
+  chrome,
+}: {
+  account: ReactNode;
+  chrome: SiteChromeHrefs;
+}) {
+  const supplier = chrome.audience === "supplier";
+  const sections = supplier ? supplierNavSections : navSections;
+  const homeHref = supplier ? chrome.supplierHome : chrome.buyerHome;
+  const loginHref = supplier
+    ? "/sign-in?as=supplier&redirect_url=/source/enter"
+    : "/sign-in?as=buyer&redirect_url=/buyer/dashboard";
+  const ctaHref = supplier ? "/source/equipment" : "/source#job";
+  const ctaLabel = supplier ? "File equipment" : "Upload a file";
+  const ctaMobile = supplier ? "File equipment free" : "Upload a file";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -55,12 +71,17 @@ export function Header({ account }: { account: ReactNode }) {
     <>
       <header className="sticky top-0 z-50 border-b border-line bg-background/85 backdrop-blur-md">
         <Container className="flex h-16 items-center justify-between">
-          <Link href="/" onClick={() => setMobileOpen(false)}>
+          <Link href={homeHref} onClick={() => setMobileOpen(false)} className="flex items-center gap-2">
             <BrandLockup />
+            {supplier ? (
+              <span className="hidden font-mono text-[10px] tracking-[0.18em] text-muted uppercase sm:inline">
+                Shops
+              </span>
+            ) : null}
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" ref={dropdownRef}>
-            {navSections.map((section) => (
+            {sections.map((section) => (
               <div key={section.label} className="relative">
                 <button
                   type="button"
@@ -90,7 +111,9 @@ export function Header({ account }: { account: ReactNode }) {
                   <div
                     className={cx(
                       "absolute top-full pt-2",
-                      section.label === "Learn" || section.label === "Factories"
+                      section.label === "Learn" ||
+                        section.label === "Shops" ||
+                        section.label === "Your plant"
                         ? "right-0"
                         : "left-0"
                     )}
@@ -114,18 +137,33 @@ export function Header({ account }: { account: ReactNode }) {
 
           <div className="flex items-center gap-2">
             <SearchButton onClick={() => setSearchOpen(true)} />
+            {supplier ? (
+              <Link
+                href={chrome.buyerHome}
+                className="hidden px-2 py-2 text-sm text-muted transition-colors hover:text-foreground lg:inline"
+              >
+                Need parts?
+              </Link>
+            ) : (
+              <Link
+                href={chrome.supplierHome}
+                className="hidden px-2 py-2 text-sm text-muted transition-colors hover:text-foreground xl:inline"
+              >
+                Run a shop?
+              </Link>
+            )}
             <Link
-              href={sourceHomeLoginHref()}
+              href={loginHref}
               className="hidden px-2 py-2 text-sm text-muted transition-colors hover:text-foreground sm:inline"
             >
               Log in
             </Link>
             {account}
             <Link
-              href="/instant-quote"
+              href={ctaHref}
               className={cx(btn.quote, "hidden whitespace-nowrap sm:inline-flex")}
             >
-              Instant quote
+              {ctaLabel}
             </Link>
 
             <button
@@ -157,15 +195,25 @@ export function Header({ account }: { account: ReactNode }) {
           </div>
         </Container>
 
-        {mobileOpen && <MobileMenu onClose={() => setMobileOpen(false)} />}
+        {mobileOpen && (
+          <MobileMenu
+            onClose={() => setMobileOpen(false)}
+            sections={sections}
+            loginHref={loginHref}
+            ctaHref={ctaHref}
+            ctaLabel={ctaMobile}
+            otherHref={supplier ? chrome.buyerHome : chrome.supplierHome}
+            otherLabel={supplier ? "Need parts?" : "Run a shop?"}
+          />
+        )}
       </header>
 
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-background p-3 sm:hidden">
         <Link
-          href="/instant-quote"
+          href={ctaHref}
           className={cx(btn.quote, "w-full justify-center")}
         >
-          Get instant quote
+          {ctaMobile}
         </Link>
       </div>
 
@@ -253,13 +301,29 @@ function DropdownMenu({
   );
 }
 
-function MobileMenu({ onClose }: { onClose: () => void }) {
+function MobileMenu({
+  onClose,
+  sections,
+  loginHref,
+  ctaHref,
+  ctaLabel,
+  otherHref,
+  otherLabel,
+}: {
+  onClose: () => void;
+  sections: NavSection[];
+  loginHref: string;
+  ctaHref: string;
+  ctaLabel: string;
+  otherHref: string;
+  otherLabel: string;
+}) {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   return (
     <nav className="border-t border-line bg-background px-5 py-4 lg:hidden">
       <div className="mx-auto flex max-w-6xl flex-col gap-2">
-        {navSections.map((section) => {
+        {sections.map((section) => {
           const links = navSectionLinks(section);
           const shown =
             section.label === "Products" ? links.slice(0, 10) : links;
@@ -311,25 +375,25 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           Contact
         </Link>
         <Link
-          href={sourceHomeLoginHref()}
+          href={loginHref}
           className="py-2 text-base text-foreground"
           onClick={onClose}
         >
           Log in
         </Link>
         <Link
-          href="/source/enter"
+          href={otherHref}
           className="py-2 text-base text-foreground"
           onClick={onClose}
         >
-          Source shop
+          {otherLabel}
         </Link>
         <Link
-          href="/instant-quote"
+          href={ctaHref}
           className={`${btn.quote} mt-4 w-full justify-center`}
           onClick={onClose}
         >
-          Instant quote
+          {ctaLabel}
         </Link>
       </div>
     </nav>

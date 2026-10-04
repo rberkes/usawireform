@@ -2,6 +2,7 @@ import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { Page, PageHero } from "@/components/ui";
+import { isSupplierPath } from "@/lib/hosts";
 import { safeSourceNext } from "@/lib/source-gate";
 import { SOURCE_SMART_CONNECT_LINE } from "@/lib/source-plans";
 
@@ -20,8 +21,11 @@ type Props = {
 
 export default async function SignUpPage({ searchParams }: Props) {
   const { email_address: email, as, redirect_url: raw } = await searchParams;
-  const buyer = as === "buyer";
-  const next = buyer ? "" : safeSourceNext(raw);
+  const requestedNext = safeSourceNext(raw);
+  const buyer =
+    as === "buyer" ||
+    (as !== "supplier" && !isSupplierPath(requestedNext || ""));
+  const next = buyer ? "" : requestedNext;
   const after = buyer ? "/buyer/dashboard" : next || "/source/enter";
   const signInUrl = buyer
     ? "/sign-in?as=buyer&redirect_url=/buyer/dashboard"

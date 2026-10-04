@@ -83,7 +83,7 @@ export function siteArchitectureTree(): ArchNode[] {
       id: "home",
       name: "/",
       href: "/",
-      note: "Home — resource + this floor",
+      note: "Buyer home — upload a file, like SendCutSend",
       kind: "page",
     },
     {
@@ -111,6 +111,7 @@ export function siteArchitectureTree(): ArchNode[] {
       note: "How a print becomes a form",
       kind: "branch",
       children: [
+        leaf("/guide/how-to-order", "How to order"),
         leaf("/guide/design-for-wire-forming", "Design guide"),
         leaf("/guide/s-hooks-vs-v-hooks-vs-c-hooks", "S vs V vs C"),
         leaf("/processes", `Process hub · ${s.processes} pages`),
@@ -272,9 +273,13 @@ export function siteArchitectureTree(): ArchNode[] {
           note: "Match a print to a filed cell",
           kind: "branch" as const,
           children: [
-            leaf("/source", "Buyer — pick cell, then wire size"),
+            leaf("/source", "Buyer RFQ — stays on the apex"),
             leaf("/source/job", "Redirects to /source"),
             leaf("/source/privacy", "Buyer drawing privacy", "desk"),
+            leaf(
+              "/suppliers",
+              "Shop portal home — also suppliers.usawireform.com",
+            ),
             leaf("/source/shops", "Claim listing · cell and operating notes free"),
             leaf("/source/equipment", "Register plant · file cells"),
             leaf("/source/upgrade", "1 / 4 / 10 / 20 cells · operating notes free"),
