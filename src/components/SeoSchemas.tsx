@@ -243,6 +243,9 @@ export function DirectoryShopSchema({
   photoUrl,
   logoUrl,
   certifications,
+  machines,
+  wireDiameters,
+  facts,
 }: {
   name: string;
   path: string;
@@ -259,6 +262,9 @@ export function DirectoryShopSchema({
   photoUrl?: string;
   logoUrl?: string;
   certifications?: string[];
+  machines?: string[];
+  wireDiameters?: string;
+  facts?: { label: string; value: string }[];
 }) {
   const pageUrl = `${SITE_URL}${path}`;
   // `location` is stored as "City, ST"; drop the state so addressLocality is
@@ -268,7 +274,19 @@ export function DirectoryShopSchema({
     ? location.slice(0, -suffix.length).trim()
     : location;
   const sameAs = [website, linkedin].filter(Boolean) as string[];
-  const knowsAbout = [...capabilities, ...(certifications ?? [])];
+  const knowsAbout = [
+    ...capabilities,
+    ...(certifications ?? []),
+    ...(machines ?? []),
+    ...(wireDiameters ? [wireDiameters] : []),
+  ];
+  const additionalProperty = (facts ?? [])
+    .filter((fact) => fact.label !== "Location")
+    .map((fact) => ({
+      "@type": "PropertyValue",
+      name: fact.label,
+      value: fact.value,
+    }));
 
   const data = {
     "@context": "https://schema.org",
@@ -294,6 +312,7 @@ export function DirectoryShopSchema({
     ...(photoUrl ? { image: photoUrl } : {}),
     ...(logoUrl ? { logo: logoUrl } : {}),
     ...(knowsAbout.length > 0 ? { knowsAbout } : {}),
+    ...(additionalProperty.length > 0 ? { additionalProperty } : {}),
   };
 
   return (

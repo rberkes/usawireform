@@ -23,7 +23,7 @@ export const revalidate = 300;
 export const metadata = pageMeta({
   title: "Wire Forming Companies Directory — USA & Canada",
   description:
-    "Directory of wire forming shops: 3D CNC, 2D CNC, straighten & cut to length, fourslide, multi-slide, and spring CNC. Equipment tags come from public pages, not a floor walk.",
+    "Directory of U.S. and Canadian wire forming companies with machine-level facts: named CNC models, diameter range, 2D vs 3D, coil feed, welding, materials, and certifications.",
   path: "/directory",
   keywords: [
     "wire forming companies",
@@ -65,7 +65,7 @@ export default async function DirectoryPage({ searchParams }: Props) {
       <PageHero
         kicker="Industry Directory"
         title="Wire Forming Companies"
-        lede={`${companies.length} wire forming factories across the United States and Canada — part of the resource for the trade. Equipment tags come from public pages or cells the shop filed on Source.`}
+        lede={`${companies.length} wire forming factories across the United States and Canada. Listings show named machines, wire range, 2D vs 3D, coil feed, welding, and buyer-fit when the shop published or filed them — not a generic “custom wire forms” line.`}
       />
       <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
         Click a factory to open its listing. US shops:{" "}

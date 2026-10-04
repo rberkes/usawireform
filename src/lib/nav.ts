@@ -113,16 +113,17 @@ export const NAV_FACTORIES: NavSection = {
 
 export const NAV_LEARN: NavSection = {
   label: "Learn",
-  href: "/guide/design-for-wire-forming",
+  href: "/wire-forming",
   groups: [
     {
       title: "Guides",
       items: [
+        { href: "/wire-forming", label: "Wire forming" },
+        { href: "/custom-wire-forming", label: "Custom wire forming" },
         { href: "/guide/design-for-wire-forming", label: "Design guide" },
         { href: "/materials", label: "Materials" },
         { href: "/sizes", label: "Wire sizes" },
         { href: "/330-stainless-wire-bending-usa-parts", label: "330 stainless" },
-        { href: "/custom-wire-forming", label: "Custom wire forming" },
       ],
     },
     {

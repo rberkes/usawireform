@@ -21,6 +21,7 @@ const highPriorityPaths = new Set([
   "/contact",
   "/products",
   "/guide/design-for-wire-forming",
+  "/wire-forming",
   "/careers",
   "/330-stainless-wire-bending-usa-parts",
   "/wire-forming-companies-near-me",

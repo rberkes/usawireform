@@ -75,11 +75,19 @@ export const staticSeoPages: SeoRecord[] = [
   }),
   record({
     path: "/wire-forming",
-    title: "Wire Forming in the USA and Beyond",
+    title: "Wire Forming — Process, CNC, Fourslide, and U.S. Manufacturers",
     description:
-      "The resource for wire forming: learning, machines, factories, coil steel, and 3D CNC in 4–14 mm — United States and beyond.",
+      "What wire forming is: 2D vs 3D CNC, fourslide, multislide, coil-fed vs cut-to-length, diameter, bend radius, materials, springback, tolerances, welding, finishing, and how to pick a U.S. shop.",
     section: "forming",
-    keywords: ["wire forming USA", "heavy wire forming", "3D CNC"],
+    keywords: [
+      "wire forming",
+      "wire forming services",
+      "wire forming companies",
+      "custom wire forming",
+      "wire form manufacturing",
+      "CNC wire forming",
+    ],
+    priority: 0.95,
   }),
   record({
     path: "/wire-fabrication",
@@ -171,18 +179,19 @@ export const staticSeoPages: SeoRecord[] = [
   }),
   record({
     path: "/custom-wire-forming",
-    title: "Custom Wire Forming",
+    title: "Custom Wire Forming Services",
     description:
-      "Custom CNC wire forming in 4–14 mm: your print, our coil. 3D CNC, cut-to-length, resistance weld and TIG. 100-piece minimum. Northeast Ohio.",
+      "Custom wire forming company matching: 0.010–0.625 in+ diameter, 2D/3D CNC, fourslide, multislide. Upload a drawing and see U.S. manufacturers that can run the part.",
     section: "forming",
     keywords: [
       "custom wire forming",
+      "custom wire forming company",
+      "custom wire forming services",
       "custom CNC wire forms",
       "USA made wire baskets",
-      "USA made heat treat baskets",
       "custom wire baskets",
     ],
-    priority: 0.8,
+    priority: 0.9,
   }),
   record({
     path: "/powder-coating-hooks",
