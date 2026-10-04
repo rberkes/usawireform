@@ -15,10 +15,10 @@ export function HomeLogin() {
       <p className="font-mono text-[11px] tracking-[0.22em] text-[#0b1f33]/55 uppercase">
         Log in
       </p>
-      <h2 className="mt-2 text-xl font-medium tracking-tight">Source account</h2>
+      <h2 className="mt-2 text-xl font-medium tracking-tight">Shop log in</h2>
       <p className="mt-2 text-sm leading-6 text-[#111]/70">
-        Shops and buyers. Active Wireworks and every other Source shop use this
-        same login.
+        Claimed listings, filed cells, and unlocked leads. Buyers sign in on
+        the main site.
       </p>
       {isSignedIn ? (
         <p className="mt-6">
@@ -28,6 +28,7 @@ export function HomeLogin() {
         </p>
       ) : (
         <form action="/sign-in" method="get" className="mt-5 space-y-3">
+          <input type="hidden" name="as" value="supplier" />
           <input type="hidden" name="redirect_url" value="/source/enter" />
           <label className="block text-sm">
             Email
@@ -49,14 +50,6 @@ export function HomeLogin() {
           New shop?{" "}
           <Link href="/sign-up?as=supplier" className="text-[#0b6bcb] hover:underline">
             Shop sign-up
-          </Link>
-          {" · "}
-          <Link href="/sign-in?as=buyer" className="text-[#0b6bcb] hover:underline">
-            Buyer log in
-          </Link>
-          {" · "}
-          <Link href="/sign-up?as=buyer" className="text-[#0b6bcb] hover:underline">
-            Buyer sign-up
           </Link>
           {" · "}
           <Link href="/sign-in" className="text-[#0b6bcb] hover:underline">

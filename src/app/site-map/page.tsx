@@ -81,12 +81,17 @@ export default function SiteMapPage() {
             },
             {
               href: "/source",
-              title: "Find a wire form shop",
+              title: "Upload a print",
               body: "Send the print. We introduce shops whose machines can run it.",
             },
             {
+              href: "/suppliers",
+              title: "Supplier portal",
+              body: "Shop home. File cells free, claim a listing, unlock matched leads.",
+            },
+            {
               href: "/source/shops",
-              title: "Add a machine cell",
+              title: "Claim a listing",
               body: "Add one machine cell free. How the plant operates is free. Claim the listing or file a cell.",
             },
             {
@@ -201,6 +206,11 @@ export default function SiteMapPage() {
               href: "/materials",
               title: "Materials",
               body: "Coil grades from carbon through stainless and brass.",
+            },
+            {
+              href: "/guide/how-to-order",
+              title: "How to order",
+              body: "Upload a STEP or PDF. Website quoting is the lowest price.",
             },
             {
               href: "/guide/design-for-wire-forming",

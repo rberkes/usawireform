@@ -5,10 +5,23 @@ export const SITE_HOST = "usawireform.com";
 export const SITE_URL = `https://${SITE_HOST}`;
 export const QUOTE_EMAIL = `info@${SITE_HOST}`;
 
-/** Sitewide positioning. Production is still this floor; the site is the map. */
-export const SITE_PITCH =
-  "Where wire form suppliers, manufacturers, and buyers meet. Source by capability and capacity. Shops file the machine. Buyers upload a STEP. Quotes come from equipment that can form it.";
+/** Named desk on buyer nurture mail — the SendCutSend “Kegan” line. */
+export const DESK_FIRST_NAME =
+  process.env.DESK_FIRST_NAME?.trim() || "Ron";
+export const DESK_FROM = `${DESK_FIRST_NAME} at ${COMPANY}`;
 
-export const SITE_LINE =
-  "Where wire form suppliers, manufacturers, and buyers meet.";
+/**
+ * Buyer-facing pitch on the apex. The shop portal is a separate host
+ * (`suppliers.usawireform.com`) so this line never asks a purchaser to
+ * think about filing machines.
+ */
+export const SITE_PITCH =
+  "Custom CNC wire forming from your file. Upload a STEP or drawing and get quotes from U.S. shops whose machines can form it. No CAD? We convert a PDF 3-view free.";
+
+export const SITE_LINE = "Custom CNC wire forming from your file.";
+
+export const SUPPLIER_PITCH =
+  "File your cells free. Buyers upload a STEP; jobs that fit your machines show in the shop dashboard. Unlock a lead when you want the contact.";
+
+export const SUPPLIER_LINE = "Jobs that fit the machines you actually run.";
 
