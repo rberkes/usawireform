@@ -3,6 +3,8 @@
 **Decision (Sep 2026): make wire forming work first. Park
 `manufacturingeasy.com`. Renew the domain, do not build on it.**
 
+How that fights IQS, MFG.com, and Thomas: [COMPETITION.md](./COMPETITION.md).
+
 This is a decision record, not a permanent rule. Revisit when the four gates
 below are cleared — not on a calendar date.
 
