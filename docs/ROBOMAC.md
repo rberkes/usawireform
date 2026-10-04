@@ -1,0 +1,75 @@
+# Robomac 214TF digital twin
+
+First engineering layer for CAD → DFM → quote. **Not a site redesign.**
+
+The customer-facing upload page is later. This file is the machine.
+
+## Principle
+
+Geometry / physics / machine rules = truth.
+
+AI = explanation only. It does not decide whether a part fits the 214TF.
+
+## Where it lives
+
+| Piece | Path |
+| --- | --- |
+| Schema (table shapes) | `src/lib/robomac/types.ts` |
+| Seed tables | `src/lib/robomac/tables.ts` |
+| DFM engine | `src/lib/robomac/dfm.ts` |
+| Fixtures | `src/lib/robomac/fixtures.ts` |
+| Validate | `npx tsx src/lib/robomac/validate.ts` |
+| Desk inspector | `/admin/robomac` (password) |
+
+Rows are typed like Postgres tables (`machines`, `machine_capabilities`, `machine_tooling`, `machine_rules`, `materials`, plus empty production-feedback tables). The site still stores jobs in Blob. Do not stand up Supabase until the twin is being written from the floor.
+
+Every number has provenance: `published_catalog`, `shop_practice`, `shop_measured`, `production_observed`, `estimated`, or `unknown`. **Unknown stays unknown.** Do not invent bend-head millimeters.
+
+## What is known
+
+- Plate: Numalliance Robomac R214TF, 4–14 mm at 600 N/mm² (85 ksi). 3D from coil. Head orbits the wire.
+- This floor: one cell, Northeast Ohio. Instant estimate is this machine.
+- Stock pins: 3/8, 7/16, 1/2 in. Other sizes in band: 7–10 days, about $3,500.
+- Staple-crown wraps on those pins are documented in `ground-staple-builder.ts`. The 3/8 in 0.200 in IR is **staple only** — not a general 0.5×D override.
+- Design-guide floors: mild carbon ≥ 1×D inside radius; stainless / high-tensile 1.5–2×D; soft copper / aluminum can go tighter and marks.
+- Straights: fail below 2×D, review 2–3×D, pass at ≥ 3×D.
+- Closed loops trap on the mandrel unless there is a gap, a weld, or a strip sequence.
+- Shop eyes / S-hooks wrap ~240°. Phase 1 ceiling 270°.
+
+## What is not measured
+
+Do not ship collision DFM until these are tape / program values from this 214TF:
+
+- Bend-head solid and clearance envelope
+- Tool solids (beyond stock pin IR)
+- Feed axis limits
+- Rotation stops (orbit is free; formed legs are the limit)
+- Work-envelope / fence / decoiler
+- Springback by alloy × diameter × pin (current table is a starting guess)
+- Actual cycle time, setup, scrap
+
+The brief’s “bend 7, 28 mm required / 19 mm available” is the **shape** of a Phase 2 issue, not a number from this floor.
+
+## Phase 1 engine
+
+`evaluateWireForm(geometry)` takes a centerline sequence:
+
+```
+S1 straight 122.0 mm
+B1 90° R19.05
+S2 straight 181.4 mm
+B2 45° R19.05
+ROT 90°
+B3 90° R19.05
+```
+
+and returns PASS / REVIEW / FAIL plus structured issues (`problem`, `cause`, `availableMm`, `requiredMm`, `recommendedChange`, `customerExplanation`).
+
+Phase 2 checks are listed on every result as `pendingPhase2` and stay unimplemented.
+
+## What not to do yet
+
+- Do not redesign USAWireForm.com around this.
+- Do not tell Ask or public pages that CAD DFM is live.
+- Do not treat estimated tripwires (2 m / 6 m developed length, 2×D cutoff) as plate limits.
+- Do not fold a named-band Source schema migration into this work. See [STRATEGY.md](./STRATEGY.md).
