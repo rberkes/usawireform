@@ -15,7 +15,7 @@ import { pageMeta } from "@/lib/seo";
 const faqs = [
   {
     question: "How accurate is the instant wire forming quote?",
-    answer: "The instant estimate is a ballpark for budgeting — $1.00 per cut, $0.50 per bend, $0.05 per inch of wire. For a production quote with exact pricing, send your drawing to our production desk.",
+    answer: "The instant estimate is a ballpark for budgeting. For a production quote with exact pricing, send your drawing to our production desk.",
   },
   {
     question: "What wire diameters can you form?",
@@ -61,7 +61,7 @@ export default function InstantQuotePage() {
         <ClientHero
           kicker="Quote"
           title="Instant estimate"
-          lede={`$1.00 per cut, $0.50 per bend, $0.05 per inch. Email yourself the number. Instant is a ballpark. Production quote is a person on the print. ${QUOTE_REVIEW}`}
+          lede={`Enter diameter, cuts, bends, and length. Email yourself the number. Instant is a ballpark. Production quote is a person on the print. ${QUOTE_REVIEW}`}
         />
 
         <ClientSection
