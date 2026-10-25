@@ -29,10 +29,10 @@ export function SiteChrome({
   });
 
   return (
-    <>
+    <div className={pathname === "/" ? "home-green contents" : "contents"}>
       <Header account={account} chrome={chrome} />
       {children}
       <Footer chrome={chrome} />
-    </>
+    </div>
   );
 }
