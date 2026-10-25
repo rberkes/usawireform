@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { cx } from "@/lib/cx";
 
 export function BackToTop() {
+  const pathname = usePathname() || "/";
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export function BackToTop() {
       aria-label="Back to top"
       className={cx(
         "fixed bottom-20 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-background shadow-lg transition-all duration-300 hover:border-copper hover:text-copper sm:bottom-6",
+        pathname === "/" && "home-green",
         isVisible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-4 opacity-0"

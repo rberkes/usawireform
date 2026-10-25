@@ -8,7 +8,7 @@ import { PlatformFlow } from "./PlatformFlow";
 
 export { PlatformFlow };
 
-const NAVY = "bg-[#0b1f33]";
+const BAND = "bg-band";
 
 export function ClientHero({
   kicker,
@@ -30,7 +30,7 @@ export function ClientHero({
   children?: ReactNode;
 }) {
   return (
-    <section className={`${NAVY} text-white`}>
+    <section className={`${BAND} text-white`}>
       <Container className="relative py-16 sm:py-24">
         {mark ? (
           <div className="absolute right-5 top-16 sm:right-0 sm:top-24">
@@ -192,7 +192,7 @@ export function ClientCtaBand({
   cta?: ReactNode;
 }) {
   return (
-    <section className={`${NAVY} text-white`}>
+    <section className={`${BAND} text-white`}>
       <Container className="py-16 sm:py-20">
         <h2 className="max-w-3xl text-3xl tracking-tight sm:text-4xl">{title}</h2>
         <p className="mt-4 max-w-2xl text-base leading-7 text-white/70">{lede}</p>
